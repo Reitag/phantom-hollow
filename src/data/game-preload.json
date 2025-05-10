@@ -1,0 +1,81 @@
+{
+  "pack": {
+    "files": [
+      {
+        "type": "image",
+        "key": "sky",
+        "url": "assets/tileset/sky.png"
+      },
+      {
+        "type": "image",
+        "key": "mount",
+        "url": "assets/tileset/mount.png"
+      },
+      {
+        "type": "image",
+        "key": "grass",
+        "url": "assets/tileset/grass.png"
+      },
+      {
+        "type": "tilemapTiledJSON",
+        "key": "level-0",
+        "url": "assets/levels/level-0.tmj"
+      },
+      {
+        "type": "image",
+        "key": "ground",
+        "url": "assets/tileset/ground.png"
+      },
+      {
+        "type": "image",
+        "key": "plat",
+        "url": "assets/plat.png"
+      },
+      {
+        "type": "spritesheet",
+        "key": "player",
+        "url": "assets/characters/player.png",
+        "frameConfig": {
+          "frameWidth": 48,
+          "frameHeight": 48
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "skeleton-warrior",
+        "url": "assets/characters/skeleton-warrior.png",
+        "frameConfig": {
+          "frameWidth": 48,
+          "frameHeight": 48
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "fire-ball",
+        "url": "assets/spells/fire-ball.png",
+        "frameConfig": {
+          "frameWidth": 32,
+          "frameHeight": 32
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "blink",
+        "url": "assets/spells/blink.png",
+        "frameConfig": {
+          "frameWidth": 64,
+          "frameHeight": 64
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "portal",
+        "url": "assets/portal.png",
+        "frameConfig": {
+          "frameWidth": 32,
+          "frameHeight": 32
+        }
+      }
+    ]
+  }
+}
