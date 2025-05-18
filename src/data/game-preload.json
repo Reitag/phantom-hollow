@@ -32,6 +32,16 @@
         "url": "assets/plat.png"
       },
       {
+        "type": "image",
+        "key": "fire-ball-icon",
+        "url": "assets/icons/fire-ball-icon.png"
+      },
+      {
+        "type": "image",
+        "key": "blink-icon",
+        "url": "assets/icons/blink-icon.png"
+      },
+      {
         "type": "spritesheet",
         "key": "player",
         "url": "assets/characters/player.png",

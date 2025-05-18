@@ -39,7 +39,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.enemies = this.physics.add.group();
   
-    this.inputController = new InputController(this);
+    this.inputController = new InputController(this, this.spellFactory);
 
     this.createParallaxBackground();
     this.createTilemap();
@@ -53,6 +53,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.portal = this.add.sprite(500, 557, 'portal');
     
     this.portal.anims.play('portal-spin');
+
+    this.scene.launch('UiScene');
+    this.scene.bringToTop('UiScene');
   }
 
   update() {

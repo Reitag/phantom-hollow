@@ -5,7 +5,7 @@ export const VELOCITY = {
 
 export const SCENE_SIZE = {
   WIDTH: 800,
-  HEIGHT: 640,
+  HEIGHT: 650,
 };
 
 export const WORLD_BOUND = {
@@ -14,8 +14,13 @@ export const WORLD_BOUND = {
 };
 
 export const CHARACTER_STATES = Object.freeze({
-  IDLE: 'idle',
-  WALK: 'walk',
-  CHASE: 'chase',
-  ATTACK: 'attack',
+  IDLE: "idle",
+  WALK: "walk",
+  CHASE: "chase",
+  ATTACK: "attack",
 });
+
+export const SPELLS = {
+  FIREBALL: "fire-ball",
+  BLINK: "blink",
+};

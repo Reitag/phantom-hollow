@@ -1,5 +1,5 @@
 import { Character } from "./character.js";
-import { createZoneRectangle } from "../zones/zone-rect.js"
+import { createZoneRectangle } from "../zones/zone-rect.js";
 import { CHARACTER_STATES } from "../../config/constants.js";
 
 export class Enemy extends Character {
@@ -10,13 +10,13 @@ export class Enemy extends Character {
     this.needDamage = false;
     this.targetPlayer = null;
     this.shouldWalk = false;
-    this.isVulnerable = false;
+    //this.isVulnerable = false;
     this.switchNeedDamage = this.switchNeedDamage.bind(this);
 
-    this.visionRange = createZoneRectangle({ 
-      scene: scene, 
-      position: { x: this.x, y: this.y }, 
-      size: { width: 400, height: 50 }
+    this.visionRange = createZoneRectangle({
+      scene: scene,
+      position: { x: this.x, y: this.y },
+      size: { width: 400, height: 50 },
     });
 
     this.walkZone = null;
@@ -37,7 +37,7 @@ export class Enemy extends Character {
   }
 
   switchNeedDamage(anim, frame) {
-    if (anim.key === 'sk-warrior-simple-attack' && frame.index === 4) {
+    if (anim.key === "sk-warrior-simple-attack" && frame.index === 4) {
       this.needDamage = true;
     }
   }
@@ -74,7 +74,7 @@ export class Enemy extends Character {
 
   handleIdle() {
     this.setVelocityX(0);
-    this.anims.play('sk-warrior-idle', true);
+    this.anims.play("sk-warrior-idle", true);
 
     if (this.isAlignedWithTarget()) {
       this.anims.stop();
@@ -85,7 +85,7 @@ export class Enemy extends Character {
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.state = CHARACTER_STATES.WALK;
       if (this.shouldWalk) {
-        this.scene.time.delayedCall(100, () => this.shouldWalk = false);
+        this.scene.time.delayedCall(100, () => (this.shouldWalk = false));
       }
     });
   }
@@ -108,14 +108,13 @@ export class Enemy extends Character {
     this.walkZone = createZoneRectangle({
       scene: this.scene,
       position: { x: this.x, y: this.y },
-      size: { width: 500, height: 50 }
+      size: { width: 500, height: 50 },
     });
-
   }
 
   patrol() {
     const direction = this.facingRight ? 1 : -1;
-    const animKey = this.facingRight ? 'sk-warrior-right' : 'sk-warrior-left';
+    const animKey = this.facingRight ? "sk-warrior-right" : "sk-warrior-left";
 
     this.setFlipX(!this.facingRight);
     this.setVelocityX(60 * direction);
@@ -139,7 +138,7 @@ export class Enemy extends Character {
       } else {
         this.facingRight = false;
         this.setFlipX(false);
-      } 
+      }
     }
   }
 
@@ -150,8 +149,8 @@ export class Enemy extends Character {
 
   chasingPlayer() {
     const direction = this.x > this.targetPlayer.x ? -1 : 1;
-    this.facingRight = direction === 1 ? true: false;
-    const animKey = this.facingRight ? 'sk-warrior-right' : 'sk-warrior-left';
+    this.facingRight = direction === 1 ? true : false;
+    const animKey = this.facingRight ? "sk-warrior-right" : "sk-warrior-left";
 
     this.setFlipX(!this.facingRight);
     this.setVelocityX(130 * direction);
@@ -174,7 +173,7 @@ export class Enemy extends Character {
   attackPlayer() {
     this.state = CHARACTER_STATES.ATTACK;
     this.setVelocityX(0);
-    this.anims.play('sk-warrior-simple-attack', true);
+    this.anims.play("sk-warrior-simple-attack", true);
 
     if (this.targetPlayer.isDead === true) {
       this.anims.stop();
@@ -205,7 +204,7 @@ export class Enemy extends Character {
       }
     }
 
-    this.scene.time.delayedCall(1500, () => this.isVulnerable = false);
+    this.scene.time.delayedCall(1500, () => (this.isVulnerable = false));
 
     if (this.health <= 0) {
       this.destroyEnemy();
@@ -217,7 +216,7 @@ export class Enemy extends Character {
     this.isDead = true;
 
     this.setVelocityX(0);
-    this.play('sk-warrior-death', true);
+    this.play("sk-warrior-death", true);
     this.body.enable = false;
     this.removeAllListeners();
 
@@ -232,7 +231,7 @@ export class Enemy extends Character {
     }
 
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-      this.setTexture('skeleton-warrior', 37);
+      this.setTexture("skeleton-warrior", 37);
     });
   }
 }

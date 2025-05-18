@@ -1,18 +1,23 @@
-import { Character } from './character.js';
+import { Character } from "./character.js";
 import { VELOCITY } from "../../config/constants.js";
 
 export class Player extends Character {
-  constructor({ scene, position, keyName, health, frame, facingRight, spellFactory }) {
+  constructor({
+    scene,
+    position,
+    keyName,
+    health,
+    frame,
+    facingRight,
+    spellFactory,
+  }) {
     super({ scene, position, keyName, health, frame, facingRight });
 
+    this.scene = scene;
     this.spellFactory = spellFactory; // Spell Factory
-    this.isAttacking = false;
+    this.isCasting = false;
 
     this.body.setSize(20, 48);
-
-    this.on('animationcomplete-simple-attack', () => {
-      this.isAttacking = false;
-    });
   }
 
   update() {
@@ -22,34 +27,43 @@ export class Player extends Character {
   }
 
   leftBound() {
-    this.setVelocityX(VELOCITY.PLAYER_VELOCITY.MOVE * (-1));
+    this.setVelocityX(VELOCITY.PLAYER_VELOCITY.MOVE * -1);
     this.setFlipX(true);
     this.facingRight = false;
-    this.anims.play('left', true);
+    this.anims.play("left", true);
   }
 
   rightBound() {
     this.setVelocityX(VELOCITY.PLAYER_VELOCITY.MOVE);
     this.setFlipX(false);
     this.facingRight = true;
-    this.anims.play('right', true);
+    this.anims.play("right", true);
   }
 
-  playerJump(){
-    this.setVelocityY(VELOCITY.PLAYER_VELOCITY.JUMP * (-1));
+  playerJump() {
+    this.setVelocityY(VELOCITY.PLAYER_VELOCITY.JUMP * -1);
   }
 
   playerIdle() {
-    if (this.anims.currentAnim?.key !== 'idle') {
-      this.anims.play('idle');
+    if (this.anims.currentAnim?.key !== "idle") {
+      this.anims.play("idle");
     }
   }
 
   playerAttack() {
-    this.isAttacking = true;
-    this.anims.play('simple-attack', true);
+    if (this.isCasting) return;
+    this.isCasting = true;
+    this.anims.play("simple-attack", true);
     this.setFlipX(!this.facingRight);
-    this.scene.time.delayedCall(500, () => this.fireBall());
+
+    // grab your UiScene and start the bar:
+    const ui = this.scene.scene.get("UiScene");
+    ui.startCast(500, () => {
+      // this will fire exactly after 500ms AND after the bar empties
+      this.fireBall();
+      this.isCasting = false;
+    });
+
     return;
   }
 
@@ -75,11 +89,11 @@ export class Player extends Character {
     if (this.isDead) return;
     this.isDead = true;
 
-    this.anims.play('death', true);
+    this.anims.play("death", true);
     this.removeAllListeners();
 
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-      this.setTexture('player', 101);
+      this.setTexture("player", 101);
       this.body.enable = false;
     });
   }

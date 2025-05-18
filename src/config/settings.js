@@ -1,4 +1,5 @@
 import { PreloadScene } from '../scenes/preload.js';
+import { UiScene } from '../scenes/ui-scene.js';
 import { LevelOneScene } from '../scenes/level-one.js';
 import { VELOCITY, SCENE_SIZE } from './constants.js';
 
@@ -17,7 +18,7 @@ export default {
       debug: false,
     }
   },
-  scene: [PreloadScene, LevelOneScene],
+  scene: [PreloadScene, UiScene, LevelOneScene],
   pixelArt: true,
   roundPixels: true
 };
