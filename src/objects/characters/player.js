@@ -1,5 +1,6 @@
 import { Character } from "./character.js";
 import { VELOCITY } from "../../config/constants.js";
+import { KEYS } from "../../globals/keys.js";
 
 export class Player extends Character {
   constructor({
@@ -28,6 +29,17 @@ export class Player extends Character {
     if (this.isDead) return;
 
     this.setVelocityX(0);
+
+    this.on("animationupdate", () => {
+      if (
+        (KEYS.cursors.left.isDown ||
+          KEYS.cursors.right.isDown ||
+          KEYS.cursors.up.isDown) &&
+        this.isCasting
+      ) {
+        this.playerStopCasting();
+      }
+    });
   }
 
   leftBound() {
@@ -56,17 +68,26 @@ export class Player extends Character {
 
   playerAttack() {
     if (this.isCasting) return;
+
+    const duration = 500;
+
     this.isCasting = true;
     this.anims.play("simple-attack", true);
     this.setFlipX(!this.facingRight);
 
-    this.ui.startCast(500, () => {
+    this.ui.startCast(duration, () => {
       // this will fire exactly after 500ms AND after the bar empties
       this.fireBall();
       this.isCasting = false;
     });
+  }
 
-    return;
+  playerStopCasting() {
+    if (!this.isCasting) return;
+
+    this.isCasting = false;
+    this.anims.stop();
+    this.ui.stopCast();
   }
 
   playerBlink() {

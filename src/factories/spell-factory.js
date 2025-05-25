@@ -1,6 +1,6 @@
 import { FireBall } from "../objects/spells/fire-ball";
 import { Blink } from "../objects/spells/blink";
-import { SPELLS } from "../config/constants";
+import { SPELLS, SPELLS_COOLDOWNS } from "../config/constants";
 import { PLAYER_COOLDWON_SPELLS } from "../globals/spell-cooldowns";
 
 export class SpellFactory {
@@ -34,7 +34,11 @@ export class SpellFactory {
     if (PLAYER_COOLDWON_SPELLS.blink) return;
 
     const direction = facingRight ? 1 : -1;
+    const distance = 300;
+    const delay = 500;
+
     player.setVisible(false);
+    player.body.enable = false;
     const blink = new Blink({
       scene: this.scene,
       position: { x: player.x - 4 * direction, y: player.y + 5 },
@@ -43,14 +47,15 @@ export class SpellFactory {
     });
     blink.useBlink();
     PLAYER_COOLDWON_SPELLS.blink = true;
-    this.scene.time.delayedCall(500, () => {
-      player.x = player.x + 300 * direction;
+    this.scene.time.delayedCall(delay, () => {
+      player.body.enable = true;
+      player.x = player.x + distance * direction;
       player.setVisible(true);
     });
 
-    this.ui.startIconCooldown(SPELLS.BLINK, 6000);
+    this.ui.startIconCooldown(SPELLS.BLINK, SPELLS_COOLDOWNS.BLINK);
     this.scene.time.delayedCall(
-      6000,
+      SPELLS_COOLDOWNS.BLINK,
       () => (PLAYER_COOLDWON_SPELLS.blink = false)
     );
 
@@ -58,10 +63,13 @@ export class SpellFactory {
   }
 
   setGlobalCooldown() {
-    this.ui.startGlobalCooldown(1000);
+    const delay = SPELLS_COOLDOWNS.GLOBAL;
+
+    this.ui.startGlobalCooldown(delay);
     PLAYER_COOLDWON_SPELLS.global = true;
+
     this.scene.time.delayedCall(
-      1000,
+      delay,
       () => (PLAYER_COOLDWON_SPELLS.global = false)
     );
   }

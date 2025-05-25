@@ -24,3 +24,8 @@ export const SPELLS = {
   FIREBALL: "fire-ball",
   BLINK: "blink",
 };
+
+export const SPELLS_COOLDOWNS = {
+  GLOBAL: 1000,
+  BLINK: 6000,
+};

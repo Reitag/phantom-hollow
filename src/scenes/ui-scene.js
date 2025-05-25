@@ -10,6 +10,7 @@ export class UiScene extends Phaser.Scene {
     this.fireBallIcon = null;
     this.blinkIcon = null;
     this.spellBg = null;
+    this.lightSpellIcon = null;
 
     this.castBg = null;
     this.castEnv = null;
@@ -124,10 +125,45 @@ export class UiScene extends Phaser.Scene {
     );
   }
 
+  addLightSpellIcon(spell) {
+    if (this.lightSpellIcon) return;
+
+    const size = 32;
+    let x, y;
+
+    switch (spell) {
+      case SPELLS.FIREBALL:
+        ({ x, y } = this.coords.fireBall);
+        break;
+
+      case SPELLS.BLINK:
+        ({ x, y } = this.coords.blink);
+        break;
+
+      default:
+        return;
+    }
+
+    this.lightSpellIcon = this.add
+      .rectangle(x, y, size, size)
+      .setOrigin(0.5)
+      .setFillStyle(0xfff8c9, 0.4)
+      .setStrokeStyle(2, 0xffffff, 1);
+  }
+
+  removeLightSpellIcon() {
+    if (this.lightSpellIcon) {
+      this.lightSpellIcon.destroy();
+      this.lightSpellIcon = null;
+    }
+  }
+
   startCast(duration, onComplete) {
     if (this.currentCastTween) {
       this.currentCastTween.kill();
     }
+
+    const { x, y, width, height } = this.coords.castBar;
 
     this.currentCastTween = this.tweens.add({
       targets: this.castMask,
@@ -135,16 +171,48 @@ export class UiScene extends Phaser.Scene {
       ease: "Linear",
       duration,
       onComplete: () => {
-        this.tweens.add({
-          targets: this.castMask,
-          scaleX: 0,
-          ease: "Linear",
-          duration: 1500,
-        });
+        this.castBg.setTexture("cast-bar-green");
+        this.finishCast(x, y, width, height);
         this.currentCastTween = null;
         onComplete();
       },
     });
+  }
+
+  finishCast(x, y, width, height) {
+    const flash = this.add
+      .rectangle(x, y, width, height, 0xfff8c9, 0.4)
+      .setOrigin(0, 0.5);
+
+    this.tweens.add({
+      targets: flash,
+      alpha: { from: 1, to: 0 },
+      duration: 200,
+      ease: "Cubic.easeOut",
+      onComplete: () => {
+        flash.destroy();
+        this.tweens.add({
+          targets: this.castBg,
+          alpha: { from: 1, to: 0 },
+          ease: "Sine.InOut",
+          duration: 500,
+          onComplete: () => {
+            this.castMask.scaleX = 0;
+            this.castBg.alpha = 1;
+            this.castBg.setTexture("cast-bar");
+          },
+        });
+      },
+    });
+  }
+
+  stopCast() {
+    if (this.currentCastTween) {
+      this.currentCastTween.stop();
+      this.castMask.scaleX = 0;
+      this.castBg.alpha = 1;
+      this.currentCastTween = null;
+    }
   }
 
   startIconCooldown(spellKey, duration) {

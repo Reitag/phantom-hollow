@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 import { WORLD_BOUND } from "../config/constants.js";
 import { Player } from "../objects/characters/player.js";
-import { StaticObject } from '../objects/static/static-object.js';
+import { StaticObject } from "../objects/static/static-object.js";
 import { Enemy } from "../objects/characters/enemy.js";
 import { InputController } from "../components/input-controller.js";
 import { SpellFactory } from "../factories/spell-factory.js";
@@ -11,7 +11,7 @@ export class LevelOneScene extends Phaser.Scene {
   #platforms = [];
 
   constructor() {
-    super('LevelOneScene');
+    super("LevelOneScene");
 
     this.spellFactory = null; // spell factory
 
@@ -29,8 +29,8 @@ export class LevelOneScene extends Phaser.Scene {
       ground: {
         groundTiles: null,
         groundLayer: null,
-      }
-    }
+      },
+    };
   }
 
   create() {
@@ -38,7 +38,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.spellFactory = new SpellFactory(this);
 
     this.enemies = this.physics.add.group();
-  
+
     this.inputController = new InputController(this, this.spellFactory);
 
     this.createParallaxBackground();
@@ -50,12 +50,12 @@ export class LevelOneScene extends Phaser.Scene {
     this.createCollisions();
     this.setupCamera();
 
-    this.portal = this.add.sprite(500, 557, 'portal');
-    
-    this.portal.anims.play('portal-spin');
+    this.portal = this.add.sprite(500, 557, "portal");
 
-    this.scene.launch('UiScene');
-    this.scene.bringToTop('UiScene');
+    this.portal.anims.play("portal-spin");
+
+    this.scene.launch("UiScene");
+    this.scene.bringToTop("UiScene");
   }
 
   update() {
@@ -74,24 +74,26 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   createParallaxBackground() {
-    this.add.image(0, 0, 'sky').setOrigin(0);
+    this.add.image(0, 0, "sky").setOrigin(0);
 
-    this.mount = this.add.tileSprite(0, 310, WORLD_BOUND.WIDTH, 338, 'mount')
+    this.mount = this.add
+      .tileSprite(0, 310, WORLD_BOUND.WIDTH, 338, "mount")
       .setOrigin(0)
       .setScrollFactor(0);
 
-    this.grass = this.add.tileSprite(0, 490, WORLD_BOUND.WIDTH, 114, 'grass')
+    this.grass = this.add
+      .tileSprite(0, 490, WORLD_BOUND.WIDTH, 114, "grass")
       .setOrigin(0)
       .setScrollFactor(0);
   }
 
   createTilemap() {
-    const map = this.make.tilemap({ key: 'level-0' });
-    const groundTiles = map.addTilesetImage('ground-collide', 'ground');
-    const groundLayer = map.createLayer('ground-layer', groundTiles, 0, 0);
+    const map = this.make.tilemap({ key: "level-0" });
+    const groundTiles = map.addTilesetImage("ground-collide", "ground");
+    const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
     groundLayer.setCollisionByProperty({ collides: true });
 
-    this.mapTile.map = map
+    this.mapTile.map = map;
     this.mapTile.ground.groundTiles = groundTiles;
     this.mapTile.ground.groundLayer = groundLayer;
   }
@@ -104,14 +106,14 @@ export class LevelOneScene extends Phaser.Scene {
     this.#platforms = new StaticObject({
       scene: this,
       objects: [
-        { objectName: 'plat', position: { x: 950, y: 530 } },
-        { objectName: 'plat', position: { x: 600, y: 500 } },
-        { objectName: 'plat', position: { x: 1400, y: 500 } },
-        { objectName: 'plat', position: { x: 1500, y: 450 } },
-        { objectName: 'plat', position: { x: 1540, y: 390 } },
-        { objectName: 'plat', position: { x: 1480, y: 330 } },
-        { objectName: 'plat', position: { x: 1510, y: 200 } },
-      ]
+        { objectName: "plat", position: { x: 950, y: 530 } },
+        { objectName: "plat", position: { x: 600, y: 500 } },
+        { objectName: "plat", position: { x: 1400, y: 500 } },
+        { objectName: "plat", position: { x: 1500, y: 450 } },
+        { objectName: "plat", position: { x: 1540, y: 390 } },
+        { objectName: "plat", position: { x: 1480, y: 330 } },
+        { objectName: "plat", position: { x: 1510, y: 200 } },
+      ],
     });
   }
 
@@ -119,11 +121,11 @@ export class LevelOneScene extends Phaser.Scene {
     this.player = new Player({
       scene: this,
       position: { x: 200, y: 500 },
-      keyName: 'player',
+      keyName: "player",
       health: 100,
       frame: 0,
       facingRight: true,
-      spellFactory: this.spellFactory
+      spellFactory: this.spellFactory,
     });
   }
 
@@ -131,10 +133,10 @@ export class LevelOneScene extends Phaser.Scene {
     const enemy = new Enemy({
       scene: this,
       position: { x: 450, y: 550 },
-      keyName: 'skeleton-warrior',
+      keyName: "skeleton-warrior",
       health: 200,
       frame: 0,
-      facingRight: false
+      facingRight: false,
     });
 
     this.enemies.add(enemy);
@@ -144,16 +146,34 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.mapTile.ground.groundLayer);
     this.physics.add.collider(this.player, this.#platforms);
     this.physics.add.collider(this.enemies, this.mapTile.ground.groundLayer);
-    this.physics.add.overlap(this.spellFactory.getSpells(), this.enemies, this.handleFireballHit, null, this);
-    this.enemies.children.iterate(enemy => {
-      this.physics.add.overlap(enemy.visionRange, this.player, () => {
-        enemy.startChase(this.player);
-      }, null, this);
+    this.physics.add.overlap(
+      this.spellFactory.getSpells(),
+      this.enemies,
+      this.handleFireballHit,
+      null,
+      this
+    );
+    this.enemies.children.iterate((enemy) => {
+      this.physics.add.overlap(
+        enemy.visionRange,
+        this.player,
+        () => {
+          enemy.startChase(this.player);
+        },
+        null,
+        this
+      );
     });
-    this.enemies.children.iterate(enemy => {
-      this.physics.add.overlap(enemy, this.player, () => {
-        enemy.attackPlayer();
-      }, null, this);
+    this.enemies.children.iterate((enemy) => {
+      this.physics.add.overlap(
+        enemy,
+        this.player,
+        () => {
+          enemy.attackPlayer();
+        },
+        null,
+        this
+      );
     });
 
     // For better collisions
