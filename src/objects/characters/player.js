@@ -15,7 +15,11 @@ export class Player extends Character {
 
     this.scene = scene;
     this.spellFactory = spellFactory; // Spell Factory
+    this.maxHealth = health;
     this.isCasting = false;
+
+    // grab your UiScene and start the bar:
+    this.ui = this.scene.scene.get("UiScene");
 
     this.body.setSize(20, 48);
   }
@@ -56,9 +60,7 @@ export class Player extends Character {
     this.anims.play("simple-attack", true);
     this.setFlipX(!this.facingRight);
 
-    // grab your UiScene and start the bar:
-    const ui = this.scene.scene.get("UiScene");
-    ui.startCast(500, () => {
+    this.ui.startCast(500, () => {
       // this will fire exactly after 500ms AND after the bar empties
       this.fireBall();
       this.isCasting = false;
@@ -79,6 +81,8 @@ export class Player extends Character {
     this.health -= amount;
     this.playHitEffect();
     console.log(`Health: ${this.health}, amount: ${amount}`);
+
+    this.ui.reducePlayersHealth(this.health, this.maxHealth);
 
     if (this.health <= 0) {
       this.die();
