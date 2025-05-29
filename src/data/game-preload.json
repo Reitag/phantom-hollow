@@ -27,6 +27,26 @@
         "url": "assets/tileset/ground.png"
       },
       {
+        "type": "tilemapTiledJSON",
+        "key": "level-1",
+        "url": "assets/levels/level-1.tmj"
+      },
+      {
+        "type": "image",
+        "key": "ground-cliff",
+        "url": "assets/tileset/ground-cliff-green.png"
+      },
+      {
+        "type": "image",
+        "key": "bush1",
+        "url": "assets/tileset/bush.png"
+      },
+      {
+        "type": "image",
+        "key": "tree",
+        "url": "assets/tileset/tree-1.png"
+      },
+      {
         "type": "image",
         "key": "plat",
         "url": "assets/plat.png"

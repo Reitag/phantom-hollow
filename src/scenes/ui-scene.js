@@ -1,4 +1,6 @@
 import Phaser from "phaser";
+import { ImageBase } from "../objects/base/image-base";
+import { GraphicsMask } from "../components/graphics-mask";
 
 import { SCENE_SIZE, SPELLS } from "../config/constants";
 import { PLAYER_COOLDWON_SPELLS } from "../globals/spell-cooldowns";
@@ -72,16 +74,16 @@ export class UiScene extends Phaser.Scene {
     const { uiBg, castBar, castEnv, healthBar, healthEnv, fireBall, blink } =
       this.coords;
 
-    this.addImage(uiBg, "bg-ui", true);
+    new ImageBase(this, uiBg, "bg-ui", 0, 0.5);
 
-    this.castBg = this.addImage(castBar, "cast-bar", true);
-    this.castEnv = this.addImage(castEnv, "cast-env", true);
+    this.castBg = new ImageBase(this, castBar, "cast-bar", 0, 0.5);
+    this.castEnv = new ImageBase(this, castEnv, "cast-env", 0, 0.5);
 
-    this.playerHealth = this.addImage(healthBar, "health-bar", true);
-    this.healthEnv = this.addImage(healthEnv, "health-env", true);
+    this.playerHealth = new ImageBase(this, healthBar, "health-bar", 0, 0.5);
+    this.healthEnv = new ImageBase(this, healthEnv, "health-env", 0, 0.5);
 
-    this.fireBallIcon = this.addImage(fireBall, "fire-ball-icon", false);
-    this.blinkIcon = this.addImage(blink, "blink-icon", false);
+    this.fireBallIcon = new ImageBase(this, fireBall, "fire-ball-icon");
+    this.blinkIcon = new ImageBase(this, blink, "blink-icon");
 
     this.createHealthMask();
     this.createCastMask();
@@ -89,27 +91,17 @@ export class UiScene extends Phaser.Scene {
 
   createHealthMask() {
     const { x, y, width, height } = this.coords.healthBar;
-    const radius = height / 2;
-    const [_, healthMask, mask] = this.createMask();
-
-    healthMask.fillStyle(0xffffff);
-    healthMask.fillRoundedRect(x, y - height / 2, width, height, radius);
-    healthMask.visible = false;
-    this.playerHealth.setMask(mask);
-    this.healthMask = healthMask;
+    this.healthMask = new GraphicsMask(this)
+      .roundedRect({ x, y, width, height })
+      .applyTo(this.playerHealth);
   }
 
   createCastMask() {
     const { x, y, width, height } = this.coords.castBar;
-    const radius = height / 2;
-    const [_, castMask, mask] = this.createMask();
-
-    castMask.fillStyle(0xffffff);
-    castMask.fillRoundedRect(x, y - height / 2, width, height, radius);
-    castMask.visible = false;
-    castMask.scaleX = 0;
-    this.castBg.setMask(mask);
-    this.castMask = castMask;
+    this.castMask = new GraphicsMask(this)
+      .roundedRect({ x, y, width, height })
+      .applyTo(this.castBg);
+    this.castMask.scaleX = 0;
   }
 
   reducePlayersHealth(currentHealth, maxHealth) {
@@ -321,38 +313,14 @@ export class UiScene extends Phaser.Scene {
   }
 
   createOverlayMask(x, y) {
-    const [spell, spellShape, mask] = this.createMask();
-
     const size = 32;
-    const offset = size / 2;
+    const half = size / 2;
 
-    spellShape.fillStyle(0xffffff);
-    spellShape.fillRect(x - offset, y - offset, size, size);
-
-    spellShape.setVisible(false);
-    spell.setMask(mask);
+    const spell = this.add.graphics();
+    new GraphicsMask(this)
+      .squareOverlay({ x: x - half, y: y - half, size: size })
+      .applyTo(spell);
 
     return spell;
-  }
-
-  createMask() {
-    const graphics = this.add.graphics();
-    const graphicsShape = this.add.graphics();
-    const mask = graphicsShape.createGeometryMask();
-
-    return [graphics, graphicsShape, mask];
-  }
-
-  addRectangle({ x, y, width, height }, color) {
-    return this.add.rectangle(x, y, width, height, color);
-  }
-
-  addImage({ x, y }, key, setOrigin) {
-    const image = this.add.image(x, y, key);
-
-    if (setOrigin === true) {
-      return image.setOrigin(0, 0.5);
-    }
-    return image;
   }
 }

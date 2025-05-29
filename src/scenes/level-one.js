@@ -5,6 +5,7 @@ import { Player } from "../objects/characters/player.js";
 import { StaticObject } from "../objects/static/static-object.js";
 import { Enemy } from "../objects/characters/enemy.js";
 import { InputController } from "../components/input-controller.js";
+import { Tilemap } from "../components/tilemap.js";
 import { SpellFactory } from "../factories/spell-factory.js";
 
 export class LevelOneScene extends Phaser.Scene {
@@ -24,13 +25,23 @@ export class LevelOneScene extends Phaser.Scene {
     this.fireballs = [];
     this.inputController = null;
 
+    /*this.mapTile = {
+      map: null,
+      ground: {
+        groundTiles: null,
+        groundLayer: null,
+      },
+    };*/
     this.mapTile = {
       map: null,
       ground: {
         groundTiles: null,
         groundLayer: null,
       },
+      treesLayer: null,
+      bushLayer: null,
     };
+    this.tilemap = null;
   }
 
   create() {
@@ -87,15 +98,77 @@ export class LevelOneScene extends Phaser.Scene {
       .setScrollFactor(0);
   }
 
-  createTilemap() {
-    const map = this.make.tilemap({ key: "level-0" });
+  //createTilemap() {
+  //const map = this.make.tilemap({ key: "level-0" });
+  //const groundTiles = map.addTilesetImage("ground-collide", "ground");
+  //const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
+  /*const map = this.make.tilemap({ key: "level-1" });
+
     const groundTiles = map.addTilesetImage("ground-collide", "ground");
+    const groundCliff = map.addTilesetImage("ground-cliff-green", "ground-cliff");
+    const bush = map.addTilesetImage("bush", "bush1");
+    const tree1 = map.addTilesetImage("tree-1", "tree");
+
     const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
+    const treesLayer = map.createLayer("trees", tree1, 0, 0);
+    const bushLayer = map.createLayer("bushes", bush, 0, 0);
+
+    groundLayer.setCollisionByProperty({ collides: true });
+  
+
+    this.mapTile.map = map;
+    this.mapTile.ground.groundTiles = groundTiles;
+    this.mapTile.ground.groundLayer = groundLayer;
+  }*/
+  /*createTilemap() {
+    const map = this.make.tilemap({ key: "level-1" });
+
+    const groundTiles = map.addTilesetImage("ground-collide", "ground");
+    const groundCliff = map.addTilesetImage(
+      "ground-cliff-green",
+      "ground-cliff"
+    );
+    const bush = map.addTilesetImage("bush", "bush1");
+    const tree1 = map.addTilesetImage("tree-1", "tree");
+
+    const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
+    const treesLayer = map.createLayer("trees", tree1, 0, 0);
+    const bushLayer = map.createLayer("bushes", bush, 0, 0);
+
     groundLayer.setCollisionByProperty({ collides: true });
 
     this.mapTile.map = map;
     this.mapTile.ground.groundTiles = groundTiles;
     this.mapTile.ground.groundLayer = groundLayer;
+    this.mapTile.treesLayer = treesLayer;
+    this.mapTile.bushLayer = bushLayer;
+  }*/
+
+  createTilemap() {
+    this.tilemap = new Tilemap(
+      this,
+      "level-1",
+      [
+        { name: "ground-collide", key: "ground" },
+        { name: "ground-cliff-green", key: "ground-cliff" },
+        { name: "bush", key: "bush1" },
+        { name: "tree-1", key: "tree" },
+      ],
+      [
+        {
+          name: "ground-layer",
+          tilesets: ["ground-collide", "ground-cliff-green"],
+          x: 0,
+          y: 0,
+          collide: true,
+        },
+        { name: "trees", tilesets: ["tree-1"], x: 0, y: -95, collide: false },
+        { name: "bushes", tilesets: ["bush"], x: 0, y: 0, collide: false },
+      ]
+    ).create();
+
+    // Example: access the ground layer
+    this.mapTile.ground.groundLayer = this.tilemap.getLayer("ground-layer");
   }
 
   createWorldBounds() {
@@ -120,7 +193,8 @@ export class LevelOneScene extends Phaser.Scene {
   createPlayer() {
     this.player = new Player({
       scene: this,
-      position: { x: 200, y: 500 },
+      //position: { x: 200, y: 500 },
+      position: { x: 200, y: 400 },
       keyName: "player",
       health: 100,
       frame: 0,
@@ -132,7 +206,8 @@ export class LevelOneScene extends Phaser.Scene {
   createEnemies() {
     const enemy = new Enemy({
       scene: this,
-      position: { x: 450, y: 550 },
+      //position: { x: 450, y: 550 },
+      position: { x: 450, y: 520 },
       keyName: "skeleton-warrior",
       health: 200,
       frame: 0,
