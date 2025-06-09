@@ -1,0 +1,24 @@
+{
+  "files": [
+    { "type": "image", "key": "bg-ui", "url": "assets/ui/bg-ui.png" },
+    {
+      "type": "image",
+      "key": "fire-ball-icon",
+      "url": "assets/icons/fire-ball-icon.png"
+    },
+    {
+      "type": "image",
+      "key": "blink-icon",
+      "url": "assets/icons/blink-icon.png"
+    },
+    { "type": "image", "key": "health-bar", "url": "assets/ui/health-bar.png" },
+    { "type": "image", "key": "health-env", "url": "assets/ui/health-env.png" },
+    { "type": "image", "key": "cast-bar", "url": "assets/ui/cast-bar.png" },
+    {
+      "type": "image",
+      "key": "cast-bar-green",
+      "url": "assets/ui/cast-bar-green.png"
+    },
+    { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" }
+  ]
+}

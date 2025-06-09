@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "type": "tilemapTiledJSON",
+      "key": "level-0",
+      "url": "assets/levels/level-0.tmj"
+    },
+    {
+      "type": "tilemapTiledJSON",
+      "key": "level-1",
+      "url": "assets/levels/level-1.tmj"
+    }
+  ]
+}

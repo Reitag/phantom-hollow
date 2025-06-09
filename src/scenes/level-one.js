@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import { WORLD_BOUND } from "../config/constants.js";
+import { WORLD_BOUND, DEPTH } from "../config/constants.js";
 import { Player } from "../objects/characters/player.js";
 import { StaticObject } from "../objects/static/static-object.js";
 import { Enemy } from "../objects/characters/enemy.js";
@@ -9,8 +9,6 @@ import { Tilemap } from "../components/tilemap.js";
 import { SpellFactory } from "../factories/spell-factory.js";
 
 export class LevelOneScene extends Phaser.Scene {
-  #platforms = [];
-
   constructor() {
     super("LevelOneScene");
 
@@ -23,25 +21,16 @@ export class LevelOneScene extends Phaser.Scene {
     this.portal = null;
     this.enemies = [];
     this.fireballs = [];
+    this.platforms = [];
     this.inputController = null;
 
-    /*this.mapTile = {
-      map: null,
-      ground: {
-        groundTiles: null,
-        groundLayer: null,
-      },
-    };*/
     this.mapTile = {
       map: null,
-      ground: {
-        groundTiles: null,
-        groundLayer: null,
-      },
+      platformLayer: null,
+      groundLayer: null,
       treesLayer: null,
       bushLayer: null,
     };
-    this.tilemap = null;
   }
 
   create() {
@@ -55,7 +44,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.createParallaxBackground();
     this.createTilemap();
     this.createWorldBounds();
-    this.createPlatforms();
+    //this.createPlatforms();
     this.createPlayer();
     this.createEnemies(); // enemies
     this.createCollisions();
@@ -63,7 +52,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.portal = this.add.sprite(500, 557, "portal");
 
-    this.portal.anims.play("portal-spin");
+    this.portal.anims.play("portal-spin").setDepth(DEPTH.PORTAL);
 
     this.scene.launch("UiScene");
     this.scene.bringToTop("UiScene");
@@ -82,6 +71,8 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
     this.grass.tilePositionX = this.camera.scrollX * 0.5;
+
+    this.spellFactory.getSpells().setDepth(DEPTH.SPELL);
   }
 
   createParallaxBackground() {
@@ -98,77 +89,107 @@ export class LevelOneScene extends Phaser.Scene {
       .setScrollFactor(0);
   }
 
-  //createTilemap() {
-  //const map = this.make.tilemap({ key: "level-0" });
-  //const groundTiles = map.addTilesetImage("ground-collide", "ground");
-  //const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
-  /*const map = this.make.tilemap({ key: "level-1" });
-
-    const groundTiles = map.addTilesetImage("ground-collide", "ground");
-    const groundCliff = map.addTilesetImage("ground-cliff-green", "ground-cliff");
-    const bush = map.addTilesetImage("bush", "bush1");
-    const tree1 = map.addTilesetImage("tree-1", "tree");
-
-    const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
-    const treesLayer = map.createLayer("trees", tree1, 0, 0);
-    const bushLayer = map.createLayer("bushes", bush, 0, 0);
-
-    groundLayer.setCollisionByProperty({ collides: true });
-  
-
-    this.mapTile.map = map;
-    this.mapTile.ground.groundTiles = groundTiles;
-    this.mapTile.ground.groundLayer = groundLayer;
-  }*/
-  /*createTilemap() {
-    const map = this.make.tilemap({ key: "level-1" });
-
-    const groundTiles = map.addTilesetImage("ground-collide", "ground");
-    const groundCliff = map.addTilesetImage(
-      "ground-cliff-green",
-      "ground-cliff"
-    );
-    const bush = map.addTilesetImage("bush", "bush1");
-    const tree1 = map.addTilesetImage("tree-1", "tree");
-
-    const groundLayer = map.createLayer("ground-layer", groundTiles, 0, 0);
-    const treesLayer = map.createLayer("trees", tree1, 0, 0);
-    const bushLayer = map.createLayer("bushes", bush, 0, 0);
-
-    groundLayer.setCollisionByProperty({ collides: true });
-
-    this.mapTile.map = map;
-    this.mapTile.ground.groundTiles = groundTiles;
-    this.mapTile.ground.groundLayer = groundLayer;
-    this.mapTile.treesLayer = treesLayer;
-    this.mapTile.bushLayer = bushLayer;
-  }*/
-
   createTilemap() {
-    this.tilemap = new Tilemap(
+    // somewhere in your Scene.create():
+    this.mapTile.map = new Tilemap(
       this,
+      // 1) The Tiled map key
       "level-1",
+
+      // 2) tilesetsConfig: name must match the tileset.name in your .tmj,
+      //    key must match what you preloaded in JSON
       [
-        { name: "ground-collide", key: "ground" },
-        { name: "ground-cliff-green", key: "ground-cliff" },
-        { name: "bush", key: "bush1" },
-        { name: "tree-1", key: "tree" },
+        { name: "platform-blocks-tile", key: "platform-blocks" }, // Tiled: ground-collide tileset
+        { name: "ground-collide", key: "ground" }, // Tiled: ground-collide tileset
+        { name: "bush-tile", key: "bush-green" }, // Tiled: bush-tile image collection
+        { name: "ancient-tile", key: "ancient-tiles" }, // Tiled: tree-dark-tile
       ],
+
+      // 3) layersConfig: must match your layer names in Tiled
       [
         {
+          name: "ancient-build-dark-layer",
+          tilesets: ["ancient-tile"],
+          x: 0,
+          y: 0,
+          collide: false,
+        },
+        {
+          name: "ancient-builds-layer",
+          tilesets: ["ancient-tile"],
+          x: 0,
+          y: 0,
+          collide: false,
+        },
+        {
+          name: "ancient-plants-layer",
+          tilesets: ["ancient-tile"],
+          x: 0,
+          y: 0,
+          collide: false,
+        },
+        {
+          name: "bush-layer",
+          tilesets: ["bush-tile"],
+          x: 0,
+          y: 0,
+          collide: false,
+        },
+        {
           name: "ground-layer",
-          tilesets: ["ground-collide", "ground-cliff-green"],
+          tilesets: ["ground-collide"],
           x: 0,
           y: 0,
           collide: true,
         },
-        { name: "trees", tilesets: ["tree-1"], x: 0, y: -95, collide: false },
-        { name: "bushes", tilesets: ["bush"], x: 0, y: 0, collide: false },
-      ]
+        {
+          name: "platform-layer",
+          tilesets: ["platform-blocks-tile"],
+          x: 0,
+          y: 0,
+          collide: true,
+        },
+      ],
+
+      // 4) objectLayerConfig
+      [
+        {
+          name: "tree-normal-layer",
+          render: function (obj, depth) {
+            const image = this.add
+              .image(obj.x, obj.y, "tree-normal")
+              .setOrigin(0, 1);
+            image.setDepth(depth);
+          },
+        },
+        {
+          name: "tree-dark-layer",
+          render: function (obj, depth) {
+            const image = this.add
+              .image(obj.x, obj.y, "tree-dark")
+              .setOrigin(0, 1);
+            image.setDepth(depth);
+          },
+        },
+      ],
+
+      // 5) layers
+      {
+        "platform-layer": DEPTH.PLATFORMS,
+        "ground-layer": DEPTH.GROUND,
+        "bush-layer": DEPTH.BUSH,
+        "tree-normal-layer": DEPTH.TREES_NORMAL,
+        "ancient-plants-layer": DEPTH.ANCIENT_PLANTS,
+        "ancient-builds-layer": DEPTH.ANCIENT_NORMAL,
+        "ancient-build-dark-layer": DEPTH.ANCIENT_DARK,
+        "tree-dark-layer": DEPTH.TREES_DARK,
+      }
     ).create();
 
     // Example: access the ground layer
-    this.mapTile.ground.groundLayer = this.tilemap.getLayer("ground-layer");
+    this.mapTile.groundLayer = this.mapTile.map.getTileLayer("ground-layer");
+    this.mapTile.platformLayer =
+      this.mapTile.map.getTileLayer("platform-layer");
   }
 
   createWorldBounds() {
@@ -176,51 +197,57 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   createPlatforms() {
-    this.#platforms = new StaticObject({
+    this.platforms = new StaticObject({
       scene: this,
       objects: [
-        { objectName: "plat", position: { x: 950, y: 530 } },
+        { objectName: "plat", position: { x: 200, y: 500 } },
         { objectName: "plat", position: { x: 600, y: 500 } },
         { objectName: "plat", position: { x: 1400, y: 500 } },
-        { objectName: "plat", position: { x: 1500, y: 450 } },
-        { objectName: "plat", position: { x: 1540, y: 390 } },
-        { objectName: "plat", position: { x: 1480, y: 330 } },
-        { objectName: "plat", position: { x: 1510, y: 200 } },
+        { objectName: "plat", position: { x: 1560, y: 430 } },
+        { objectName: "plat", position: { x: 1550, y: 360 } },
+        { objectName: "plat", position: { x: 1480, y: 290 } },
+        { objectName: "plat", position: { x: 1510, y: 220 } },
       ],
-    });
+    }).setDepth(DEPTH.PLATFORMS);
   }
 
   createPlayer() {
     this.player = new Player({
       scene: this,
-      //position: { x: 200, y: 500 },
-      position: { x: 200, y: 400 },
+      position: { x: 200, y: 500 },
       keyName: "player",
       health: 100,
       frame: 0,
       facingRight: true,
       spellFactory: this.spellFactory,
-    });
+    }).setDepth(DEPTH.PLAYER);
   }
 
   createEnemies() {
-    const enemy = new Enemy({
-      scene: this,
-      //position: { x: 450, y: 550 },
-      position: { x: 450, y: 520 },
-      keyName: "skeleton-warrior",
-      health: 200,
-      frame: 0,
-      facingRight: false,
-    });
+    const step = 550;
+    let xCoord = 450;
 
-    this.enemies.add(enemy);
+    for (let i = 0; i < 10; i++) {
+      const enemy = new Enemy({
+        scene: this,
+        position: { x: xCoord, y: 550 },
+        keyName: "skeleton-warrior",
+        health: 200,
+        frame: 0,
+        facingRight: false,
+      }).setDepth(DEPTH.ENEMY);
+
+      this.enemies.add(enemy);
+      xCoord += step;
+    }
   }
 
   createCollisions() {
-    this.physics.add.collider(this.player, this.mapTile.ground.groundLayer);
-    this.physics.add.collider(this.player, this.#platforms);
-    this.physics.add.collider(this.enemies, this.mapTile.ground.groundLayer);
+    this.physics.add.collider(this.player, this.mapTile.groundLayer); // ground
+    this.physics.add.collider(this.player, this.mapTile.platformLayer); // platform
+    //this.physics.add.collider(this.player, this.platforms);
+    this.physics.add.collider(this.enemies, this.mapTile.groundLayer); // ground
+    this.physics.add.collider(this.enemies, this.mapTile.platformLayer); // platgorm
     this.physics.add.overlap(
       this.spellFactory.getSpells(),
       this.enemies,

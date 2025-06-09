@@ -1,6 +1,6 @@
 import { FireBall } from "../objects/spells/fire-ball";
 import { Blink } from "../objects/spells/blink";
-import { SPELLS, SPELLS_COOLDOWNS } from "../config/constants";
+import { SPELLS, SPELLS_COOLDOWNS, DEPTH } from "../config/constants";
 import { PLAYER_COOLDWON_SPELLS } from "../globals/spell-cooldowns";
 
 export class SpellFactory {
@@ -45,6 +45,7 @@ export class SpellFactory {
       keyName: SPELLS.BLINK,
       frame: 0,
     });
+    blink.setDepth(DEPTH.SPELL);
     blink.useBlink();
     PLAYER_COOLDWON_SPELLS.blink = true;
     this.scene.time.delayedCall(delay, () => {

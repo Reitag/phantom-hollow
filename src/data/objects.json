@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "type": "image",
+      "key": "tree-normal",
+      "url": "assets/objects/tree-normal.png"
+    },
+    {
+      "type": "image",
+      "key": "tree-dark",
+      "url": "assets/objects/tree-dark.png"
+    }
+  ]
+}

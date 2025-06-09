@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "type": "image",
+      "key": "platform-blocks",
+      "url": "assets/tileset/platform-blocks.png"
+    },
+    {
+      "type": "image",
+      "key": "ancient-tiles",
+      "url": "assets/tileset/ancient-tiles.png"
+    },
+    { "type": "image", "key": "ground", "url": "assets/tileset/ground.png" },
+    { "type": "image", "key": "bush-green", "url": "assets/tileset/bush.png" },
+    { "type": "image", "key": "grass", "url": "assets/tileset/grass.png" },
+    { "type": "image", "key": "mount", "url": "assets/tileset/mount.png" },
+    { "type": "image", "key": "sky", "url": "assets/tileset/sky.png" }
+  ]
+}

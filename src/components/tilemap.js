@@ -1,13 +1,23 @@
 export class Tilemap {
-  constructor(scene, mapKey, tilesetsConfig = [], layersConfig = []) {
+  constructor(
+    scene,
+    mapKey,
+    tilesetsConfig = [],
+    tileLayersConfig = [],
+    objectLayersConfig = [],
+    layerDepths = {}
+  ) {
     this.scene = scene;
     this.mapKey = mapKey;
     this.tilesetsConfig = tilesetsConfig;
-    this.layersConfig = layersConfig;
+    this.tileLayersConfig = tileLayersConfig;
+    this.objectLayersConfig = objectLayersConfig;
+    this.layerDepths = layerDepths;
 
     this.map = null;
     this.tilesets = {};
-    this.layers = {};
+    this.tileLayers = {};
+    this.objectLayers = {};
   }
 
   create() {
@@ -17,12 +27,34 @@ export class Tilemap {
       this.tilesets[name] = this.map.addTilesetImage(name, key);
     });
 
-    this.layersConfig.forEach(({ name, tilesets: tsNames, x, y, collide }) => {
-      const tsObjects = tsNames.map((ts) => this.tilesets[ts]).filter(Boolean);
-      this.layers[name] = this.map.createLayer(name, tsObjects, x, y);
+    this.tileLayersConfig.forEach(
+      ({ name, tilesets: tsNames, x, y, collide }) => {
+        const tsObjects = tsNames
+          .map((ts) => this.tilesets[ts])
+          .filter(Boolean);
+        this.tileLayers[name] = this.map.createLayer(name, tsObjects, x, y);
+        this.tileLayers[name].setDepth(this.layerDepths[name] ?? 0);
 
-      if (collide) {
-        this.layers[name].setCollisionByProperty({ collides: true });
+        if (collide) {
+          this.tileLayers[name].setCollisionByProperty({ collides: true });
+        }
+      }
+    );
+
+    this.objectLayersConfig.forEach(({ name, render }) => {
+      const objectLayer = this.map.getObjectLayer(name);
+      if (!objectLayer) {
+        console.warn(`Object layer "${name}" not found`);
+        return;
+      }
+
+      this.objectLayers[name] = objectLayer;
+
+      if (typeof render === "function") {
+        const layerDepth = this.layerDepths[name] ?? 0;
+        objectLayer.objects.forEach((obj) =>
+          render.call(this.scene, obj, layerDepth)
+        );
       }
     });
 
@@ -32,8 +64,12 @@ export class Tilemap {
     return this;
   }
 
-  getLayer(name) {
-    return this.layers[name] || null;
+  getObjectLayer(name) {
+    return this.objectLayers[name] || null;
+  }
+
+  getTileLayer(name) {
+    return this.tileLayers[name] || null;
   }
 
   getMap() {

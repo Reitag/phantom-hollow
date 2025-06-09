@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "type": "spritesheet",
+      "key": "portal",
+      "url": "assets/portal.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    { "type": "image", "key": "plat", "url": "assets/plat.png" }
+  ]
+}

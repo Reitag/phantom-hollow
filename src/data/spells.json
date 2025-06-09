@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "type": "spritesheet",
+      "key": "fire-ball",
+      "url": "assets/spells/fire-ball.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "blink",
+      "url": "assets/spells/blink.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    }
+  ]
+}
