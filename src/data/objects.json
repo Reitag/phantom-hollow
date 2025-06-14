@@ -3,12 +3,27 @@
     {
       "type": "image",
       "key": "tree-normal",
-      "url": "assets/objects/tree-normal.png"
+      "url": "assets/objects/trees/tree-normal.png"
     },
     {
       "type": "image",
-      "key": "tree-dark",
-      "url": "assets/objects/tree-dark.png"
+      "key": "tree-shadow",
+      "url": "assets/objects/trees/tree-shadow.png"
+    },
+    {
+      "type": "image",
+      "key": "bush-1",
+      "url": "assets/objects/bushes/Bush-1.png"
+    },
+    {
+      "type": "image",
+      "key": "bush-2",
+      "url": "assets/objects/bushes/Bush-2.png"
+    },
+    {
+      "type": "image",
+      "key": "bush-3",
+      "url": "assets/objects/bushes/Bush-3.png"
     }
   ]
 }

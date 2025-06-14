@@ -52,9 +52,9 @@ export class Tilemap {
 
       if (typeof render === "function") {
         const layerDepth = this.layerDepths[name] ?? 0;
-        objectLayer.objects.forEach((obj) =>
-          render.call(this.scene, obj, layerDepth)
-        );
+        objectLayer.objects.forEach((obj) => {
+          render.call(this.scene, obj, layerDepth);
+        });
       }
     });
 

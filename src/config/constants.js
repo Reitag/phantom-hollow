@@ -9,7 +9,7 @@ export const SCENE_SIZE = {
 };
 
 export const WORLD_BOUND = {
-  WIDTH: 4800,
+  WIDTH: 5760,
   HEIGHT: SCENE_SIZE.HEIGHT,
 };
 
@@ -31,20 +31,26 @@ export const SPELLS_COOLDOWNS = {
 };
 
 export const DEPTH = {
+  // Environment
+  /// -backgound
   SKY: 0,
   MOUNTAINS: 10,
   GRASS: 20,
-  TREES_DARK: 30,
-  ANCIENT_DARK: 40,
-  ANCIENT_NORMAL: 50,
-  ANCIENT_PLANTS: 60,
-  TREES_NORMAL: 70,
-  BUSH: 80,
-  GROUND: 90,
-  PLATFORMS: 100,
+  /// -objects
+  TREES_SHADOW: 30,
+  TREES_NORMAL: 40,
+  BUSH: 50,
+  /// -tilesets
+  GROUND: 60,
+  SPIKE: 70,
+  PLATFORMS: 80,
+
+  // Sprite objects
   PORTAL: 110,
   PLAYER: 120,
   ENEMY: 130,
   SPELL: 140,
+
+  // UI
   UI: 1000,
 };

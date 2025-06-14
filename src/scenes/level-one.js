@@ -21,15 +21,15 @@ export class LevelOneScene extends Phaser.Scene {
     this.portal = null;
     this.enemies = [];
     this.fireballs = [];
-    this.platforms = [];
     this.inputController = null;
+
+    this.canTakeSpikeDamage = true; // KOSTYL!!!
 
     this.mapTile = {
       map: null,
       platformLayer: null,
+      spikeLayer: null,
       groundLayer: null,
-      treesLayer: null,
-      bushLayer: null,
     };
   }
 
@@ -44,9 +44,8 @@ export class LevelOneScene extends Phaser.Scene {
     this.createParallaxBackground();
     this.createTilemap();
     this.createWorldBounds();
-    //this.createPlatforms();
     this.createPlayer();
-    this.createEnemies(); // enemies
+    //this.createEnemies(); // enemies
     this.createCollisions();
     this.setupCamera();
 
@@ -84,7 +83,8 @@ export class LevelOneScene extends Phaser.Scene {
       .setScrollFactor(0);
 
     this.grass = this.add
-      .tileSprite(0, 490, WORLD_BOUND.WIDTH, 114, "grass")
+      //.tileSprite(0, 490, WORLD_BOUND.WIDTH, 114, "grass")
+      .tileSprite(0, 450, WORLD_BOUND.WIDTH, 114, "grass")
       .setOrigin(0)
       .setScrollFactor(0);
   }
@@ -99,52 +99,38 @@ export class LevelOneScene extends Phaser.Scene {
       // 2) tilesetsConfig: name must match the tileset.name in your .tmj,
       //    key must match what you preloaded in JSON
       [
-        { name: "platform-blocks-tile", key: "platform-blocks" }, // Tiled: ground-collide tileset
-        { name: "ground-collide", key: "ground" }, // Tiled: ground-collide tileset
-        { name: "bush-tile", key: "bush-green" }, // Tiled: bush-tile image collection
-        { name: "ancient-tile", key: "ancient-tiles" }, // Tiled: tree-dark-tile
+        { name: "ancient-tile", key: "ancient-tiles" },
+        { name: "ground-tile", key: "ground" },
+        { name: "cliff-tile", key: "cliff" },
+        { name: "grass-tile", key: "grass-2" },
       ],
 
       // 3) layersConfig: must match your layer names in Tiled
       [
         {
-          name: "ancient-build-dark-layer",
-          tilesets: ["ancient-tile"],
-          x: 0,
-          y: 0,
-          collide: false,
-        },
-        {
-          name: "ancient-builds-layer",
-          tilesets: ["ancient-tile"],
-          x: 0,
-          y: 0,
-          collide: false,
-        },
-        {
-          name: "ancient-plants-layer",
-          tilesets: ["ancient-tile"],
-          x: 0,
-          y: 0,
-          collide: false,
-        },
-        {
           name: "bush-layer",
-          tilesets: ["bush-tile"],
+          tilesets: ["grass-tile"],
           x: 0,
           y: 0,
           collide: false,
         },
         {
           name: "ground-layer",
-          tilesets: ["ground-collide"],
+          tilesets: ["ground-tile", "cliff-tile"],
+          x: 0,
+          y: 0,
+          collide: true,
+        },
+        {
+          name: "spike-layer",
+          tilesets: ["ground-tile"],
           x: 0,
           y: 0,
           collide: true,
         },
         {
           name: "platform-layer",
-          tilesets: ["platform-blocks-tile"],
+          tilesets: ["ancient-tile"],
           x: 0,
           y: 0,
           collide: true,
@@ -153,21 +139,42 @@ export class LevelOneScene extends Phaser.Scene {
 
       // 4) objectLayerConfig
       [
+        /*{
+          name: "bush-layer",
+          render: function (obj, depth) {
+            const name = obj.name;
+            if (!name) {
+              console.warn("Object missing name for bush-layer:", obj);
+              return;
+            }
+
+            const image = this.add.image(obj.x, obj.y, name).setOrigin(0, 1);
+            image.setDepth(depth);
+          },
+        },*/
         {
           name: "tree-normal-layer",
           render: function (obj, depth) {
-            const image = this.add
-              .image(obj.x, obj.y, "tree-normal")
-              .setOrigin(0, 1);
+            const name = obj.name;
+            if (!name) {
+              console.warn("Object missing name for tree-layer:", obj);
+              return;
+            }
+
+            const image = this.add.image(obj.x, obj.y, name).setOrigin(0, 1);
             image.setDepth(depth);
           },
         },
         {
-          name: "tree-dark-layer",
+          name: "tree-shadow-layer",
           render: function (obj, depth) {
-            const image = this.add
-              .image(obj.x, obj.y, "tree-dark")
-              .setOrigin(0, 1);
+            const name = obj.name;
+            if (!name) {
+              console.warn("Object missing name for tree-layer:", obj);
+              return;
+            }
+
+            const image = this.add.image(obj.x, obj.y, name).setOrigin(0, 1);
             image.setDepth(depth);
           },
         },
@@ -176,45 +183,29 @@ export class LevelOneScene extends Phaser.Scene {
       // 5) layers
       {
         "platform-layer": DEPTH.PLATFORMS,
+        "spike-layer": DEPTH.SPIKE,
         "ground-layer": DEPTH.GROUND,
-        "bush-layer": DEPTH.BUSH,
         "tree-normal-layer": DEPTH.TREES_NORMAL,
-        "ancient-plants-layer": DEPTH.ANCIENT_PLANTS,
-        "ancient-builds-layer": DEPTH.ANCIENT_NORMAL,
-        "ancient-build-dark-layer": DEPTH.ANCIENT_DARK,
-        "tree-dark-layer": DEPTH.TREES_DARK,
+        "tree-shadow-layer": DEPTH.TREES_SHADOW,
+        "bush-layer": DEPTH.BUSH,
       }
     ).create();
 
     // Example: access the ground layer
-    this.mapTile.groundLayer = this.mapTile.map.getTileLayer("ground-layer");
     this.mapTile.platformLayer =
       this.mapTile.map.getTileLayer("platform-layer");
+    this.mapTile.spikeLayer = this.mapTile.map.getTileLayer("spike-layer");
+    this.mapTile.groundLayer = this.mapTile.map.getTileLayer("ground-layer");
   }
 
   createWorldBounds() {
     this.physics.world.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
   }
 
-  createPlatforms() {
-    this.platforms = new StaticObject({
-      scene: this,
-      objects: [
-        { objectName: "plat", position: { x: 200, y: 500 } },
-        { objectName: "plat", position: { x: 600, y: 500 } },
-        { objectName: "plat", position: { x: 1400, y: 500 } },
-        { objectName: "plat", position: { x: 1560, y: 430 } },
-        { objectName: "plat", position: { x: 1550, y: 360 } },
-        { objectName: "plat", position: { x: 1480, y: 290 } },
-        { objectName: "plat", position: { x: 1510, y: 220 } },
-      ],
-    }).setDepth(DEPTH.PLATFORMS);
-  }
-
   createPlayer() {
     this.player = new Player({
       scene: this,
-      position: { x: 200, y: 500 },
+      position: { x: 50, y: 450 },
       keyName: "player",
       health: 100,
       frame: 0,
@@ -243,9 +234,18 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   createCollisions() {
+    // Player
     this.physics.add.collider(this.player, this.mapTile.groundLayer); // ground
+    this.physics.add.collider(
+      this.player,
+      this.mapTile.spikeLayer,
+      this.handleSpikeHit,
+      null,
+      this
+    ); // spike
     this.physics.add.collider(this.player, this.mapTile.platformLayer); // platform
-    //this.physics.add.collider(this.player, this.platforms);
+
+    // Enemy
     this.physics.add.collider(this.enemies, this.mapTile.groundLayer); // ground
     this.physics.add.collider(this.enemies, this.mapTile.platformLayer); // platgorm
     this.physics.add.overlap(
@@ -285,6 +285,17 @@ export class LevelOneScene extends Phaser.Scene {
   handleFireballHit(fireball, enemy) {
     fireball.destroyFireBall();
     enemy.takeDamage(fireball.damage, this.player);
+  }
+
+  handleSpikeHit() {
+    if (!this.canTakeSpikeDamage) return;
+
+    this.player.takeDamage(25);
+    this.canTakeSpikeDamage = false;
+
+    this.time.delayedCall(500, () => {
+      this.canTakeSpikeDamage = true;
+    });
   }
 
   setupCamera() {

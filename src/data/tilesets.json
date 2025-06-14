@@ -2,18 +2,34 @@
   "files": [
     {
       "type": "image",
-      "key": "platform-blocks",
-      "url": "assets/tileset/platform-blocks.png"
+      "key": "ancient-tiles",
+      "url": "assets/tilesets/level-1/ancient-tiles.png"
     },
     {
       "type": "image",
-      "key": "ancient-tiles",
-      "url": "assets/tileset/ancient-tiles.png"
+      "key": "ground",
+      "url": "assets/tilesets/level-1/ground.png"
     },
-    { "type": "image", "key": "ground", "url": "assets/tileset/ground.png" },
-    { "type": "image", "key": "bush-green", "url": "assets/tileset/bush.png" },
-    { "type": "image", "key": "grass", "url": "assets/tileset/grass.png" },
-    { "type": "image", "key": "mount", "url": "assets/tileset/mount.png" },
-    { "type": "image", "key": "sky", "url": "assets/tileset/sky.png" }
+    {
+      "type": "image",
+      "key": "cliff",
+      "url": "assets/tilesets/level-1/cliff.png"
+    },
+    {
+      "type": "image",
+      "key": "grass-2",
+      "url": "assets/tilesets/grass.png"
+    },
+    {
+      "type": "image",
+      "key": "grass",
+      "url": "assets/tilesets/level-1/grass.png"
+    },
+    {
+      "type": "image",
+      "key": "mount",
+      "url": "assets/tilesets/level-1/mount.png"
+    },
+    { "type": "image", "key": "sky", "url": "assets/tilesets/level-1/sky.png" }
   ]
 }
