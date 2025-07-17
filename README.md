@@ -15,7 +15,7 @@ git clone https://github.com/Reitag/phantom-hollow.git
 cd phantom-hollow
 ```
 
-### 2. Install dependencies
+### 2. Clean install dependencies
 
 ```bash
 npm ci

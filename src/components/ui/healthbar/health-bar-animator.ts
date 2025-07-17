@@ -1,5 +1,5 @@
-import { HealthBar } from './health-bar';
 import { healthBar } from '@/utils/coordinates';
+import { HealthBar } from './health-bar';
 
 export class HealthBarAnimator {
   private healthBar: HealthBar;

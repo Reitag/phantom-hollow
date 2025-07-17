@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
-
-import { CastBar } from './cast-bar';
 import { castBar } from '@/utils/coordinates';
+import { CastBar } from './cast-bar';
 
 export class CastBarAnimator {
   private readonly FLASH_COLOR = 0xfff8c9;
