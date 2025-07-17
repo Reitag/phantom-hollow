@@ -4,6 +4,8 @@
 
 This is the core codebase for building a game — refactored from a JavaScript prototype into TypeScript for maintainability, clarity, and future development.
 
+For the latest version and changes, see [CHANGELOG.md](./CHANGELOG.md).
+
 ---
 
 ## 🛠 Getting Started
@@ -41,11 +43,3 @@ npm run build
 - 💻 [TypeScript](https://www.typescriptlang.org/)
 - ⚡ [Vite](https://vitejs.dev/)
 - 🔍 [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/)
-
----
-
-## 📈 Project Milestone
-
-- `v0.1.0`
-  - Completed full TypeScript migration
-  - Reorganized structure: managers, input, components, reusable UI system
