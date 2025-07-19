@@ -11,6 +11,7 @@ export class PhysicsSprite extends Phaser.Physics.Arcade.Sprite {
     const { x, y } = position;
     super(scene, x, y, keyName, frame);
 
+    //this.scene = scene;
     scene.add.existing(this);
     scene.physics.add.existing(this);
 

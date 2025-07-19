@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 
 import { WORLD_BOUND, DEPTH } from '@/utils/constants';
 import { Player } from '@/objects/characters/player/player';
+import { AiSkeletonWarrior } from '@/components/ai/ai-skeleton-warrior';
+import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 //import { Enemy } from '../objects/characters/enemies/enemy.js';
 import { InputHandler } from '@/components/input/handlers/input-handler';
 import { Tilemap } from '@/components/map/tilemap';
@@ -11,10 +13,13 @@ import { UiManager } from '@/managers/ui-manager';
 import { UiScene } from './ui-scene';
 
 export class LevelOneScene extends Phaser.Scene {
+  private readonly skeletonSpawnPositions = [700, 1700, 2500, 4000, 4500];
+
   private spellFactory!: SpellFactory;
   private spellManager!: SpellManager;
   private uiManager!: UiManager;
   private player!: Player;
+  private aiSkeletonWarrior!: AiSkeletonWarrior;
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
@@ -41,9 +46,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.player.update();
     this.inputHandler.update();
 
-    /*this.enemies.children.each((enemy) => {
-      enemy.update();
-    }, this);*/
+    this.aiSkeletonWarrior.update();
 
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
     this.grass.tilePositionX = this.camera.scrollX * 0.5;
@@ -69,12 +72,14 @@ export class LevelOneScene extends Phaser.Scene {
     this.initSpellFactory();
     this.initSpellManager();
 
-    this.createPlayerAndSetToSpellManager();
-    this.initInputHandler();
-
     this.createParallaxBackground();
     this.createTilemap();
     this.createWorldBounds();
+
+    this.createPlayerAndSetToSpellManager();
+    this.initInputHandler();
+
+    this.createSkeletonWarriors();
 
     this.registerCollisions();
     this.setupCamera();
@@ -86,25 +91,6 @@ export class LevelOneScene extends Phaser.Scene {
 
   private initSpellManager(): void {
     this.spellManager = new SpellManager(this, this.spellFactory, this.uiManager);
-  }
-
-  private createPlayerAndSetToSpellManager(): void {
-    this.player = new Player({
-      scene: this,
-      position: { x: 50, y: 450 },
-      keyName: 'player',
-      health: 100,
-      frame: 0,
-      facingRight: true,
-      spellManager: this.spellManager,
-      ui: this.uiManager,
-    }).setDepth(DEPTH.PLAYER);
-
-    this.spellManager.setPlayer(this.player);
-  }
-
-  private initInputHandler(): void {
-    this.inputHandler = new InputHandler(this, this.player, this.spellManager, this.uiManager);
   }
 
   private createParallaxBackground(): void {
@@ -211,6 +197,44 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
   }
 
+  private createPlayerAndSetToSpellManager(): void {
+    this.player = new Player({
+      scene: this,
+      position: { x: 50, y: 450 },
+      keyName: 'player',
+      health: 100,
+      frame: 0,
+      facingRight: true,
+      spellManager: this.spellManager,
+      ui: this.uiManager,
+    }).setDepth(DEPTH.PLAYER);
+
+    this.spellManager.setPlayer(this.player);
+  }
+
+  private initInputHandler(): void {
+    this.inputHandler = new InputHandler(this, this.player, this.spellManager, this.uiManager);
+  }
+
+  private createSkeletonWarriors(): void {
+    const platformLayer = this.map.getTileLayer('platform-layer');
+    this.aiSkeletonWarrior = new AiSkeletonWarrior(this.player, platformLayer);
+
+    this.skeletonSpawnPositions.forEach((xPos) => {
+      const skeleton = new SkeletonWarrior({
+        scene: this,
+        position: { x: xPos, y: 500 },
+        keyName: 'skeleton-warrior',
+        health: 200,
+        frame: 0,
+        facingRight: false,
+      });
+
+      skeleton.setDepth(DEPTH.ENEMY);
+      this.aiSkeletonWarrior.addSkeleton(skeleton);
+    });
+  }
+
   /*createEnemies() {
     const step = 550;
     let xCoord = 450;
@@ -235,17 +259,30 @@ export class LevelOneScene extends Phaser.Scene {
     const spikeLayer = this.map.getTileLayer('spike-layer');
     const groundLayer = this.map.getTileLayer('ground-layer');
 
-    // Player
+    const skeletons = this.aiSkeletonWarrior.getSkeletons();
+
+    // Ground
     if (groundLayer) {
-      this.physics.add.collider(this.player, groundLayer); // ground
+      this.physics.add.collider(this.player, groundLayer); // Player
+      this.physics.add.collider(skeletons, groundLayer); // Skeleton warrior
     }
 
+    // Spike
     if (spikeLayer) {
-      this.physics.add.collider(this.player, spikeLayer, this.handleSpikeHit, undefined, this); // spike
+      this.physics.add.collider(this.player, spikeLayer, this.handleSpikeHit, undefined, this);
+      this.physics.add.collider(skeletons, spikeLayer); // Skeleton warrior
     }
 
+    // Platform
     if (platformLayer) {
-      this.physics.add.collider(this.player, platformLayer); // platform
+      this.physics.add.collider(this.player, platformLayer); // Player
+      this.physics.add.collider(
+        skeletons,
+        platformLayer,
+        this.handleSkeletonPlatformCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      ); // Skeleton warrior
     }
 
     // Enemy
@@ -285,6 +322,18 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.setFPS(120);
   }
 
+  private setupCamera(): void {
+    this.camera = this.cameras.main;
+    this.camera.startFollow(this.player, true, 0.09, 0.09);
+    this.camera.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
+  }
+
+  private handleSkeletonPlatformCollision(skeleton: Phaser.GameObjects.GameObject): void {
+    if (skeleton instanceof SkeletonWarrior) {
+      skeleton.handlePlatformCollision();
+    }
+  }
+
   /*handleFireballHit(fireball, enemy) {
     fireball.destroyFireBall();
     enemy.takeDamage(fireball.damage, this.player);
@@ -299,11 +348,5 @@ export class LevelOneScene extends Phaser.Scene {
     this.time.delayedCall(500, () => {
       this.canTakeSpikeDamage = true;
     });
-  }
-
-  private setupCamera(): void {
-    this.camera = this.cameras.main;
-    this.camera.startFollow(this.player, true, 0.09, 0.09);
-    this.camera.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
   }
 }

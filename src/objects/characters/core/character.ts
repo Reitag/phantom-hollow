@@ -8,7 +8,7 @@ export interface CharacterConfig extends PhysicsSpriteConfig {
 
 export class Character extends PhysicsSprite {
   protected health: number;
-  protected facingRight: boolean;
+  protected facingRight!: boolean;
   protected isDead: boolean;
   protected isVulnerable: boolean;
 
@@ -16,9 +16,13 @@ export class Character extends PhysicsSprite {
     super({ scene, position, keyName, frame });
 
     this.health = health;
-    this.facingRight = facingRight;
     this.isDead = false;
     this.isVulnerable = false;
+    this.facingRight = facingRight;
+
+    if (!this.facingRight) {
+      this.setFlipX(true);
+    }
 
     this.setCollideWorldBounds(true);
   }

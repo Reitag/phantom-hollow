@@ -37,15 +37,6 @@ export class Player extends Character {
 
   update(): void {
     this.setVelocityX(0);
-
-    /*this.on('animationupdate', () => {
-      if (
-        (KEYS.cursors.left.isDown || KEYS.cursors.right.isDown || KEYS.cursors.up.isDown) &&
-        this.isCasting
-      ) {
-        this.playerStopCasting();
-      }
-    });*/
   }
 
   moveLeft(): void {
