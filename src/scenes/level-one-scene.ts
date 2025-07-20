@@ -13,7 +13,7 @@ import { UiManager } from '@/managers/ui-manager';
 import { UiScene } from './ui-scene';
 
 export class LevelOneScene extends Phaser.Scene {
-  private readonly skeletonSpawnPositions = [700, 1700, 2500, 4000, 4500];
+  private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600];
 
   private spellFactory!: SpellFactory;
   private spellManager!: SpellManager;

@@ -1,5 +1,9 @@
 import { Character, CharacterConfig } from '@/objects/characters/core/character';
 import { Player } from '@/objects/characters/player/player';
+import { IdleState } from '@/components/states/characters-states/idle-state';
+import { PatrolState } from '@/components/states/characters-states/patrol-state';
+import { ChaseState } from '@/components/states/characters-states/chase-state';
+import { AttackState } from '@/components/states/characters-states/attack-state';
 
 export class SkeletonWarrior extends Character {
   private walkBound = 470;
@@ -14,13 +18,36 @@ export class SkeletonWarrior extends Character {
     this.patrolRightX = this.x + this.walkBound;
     this.patrolLeftX = this.x - this.walkBound;
 
+    // State Machine
+    this.stateMachine.addState(new IdleState(this));
+    this.stateMachine.addState(new PatrolState(this));
+    this.stateMachine.addState(new ChaseState(this));
+    this.stateMachine.addState(new AttackState(this));
+    this.stateMachine.changeState('Idle');
+
     this.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.hit, this);
     this.arcadeBody.setSize(25, 48);
+  }
+
+  update(): void {
+    this.stateMachine.update();
   }
 
   idle() {
     this.setVelocityX(0);
     this.anims.play('sk-warrior-idle', true);
+  }
+
+  moveLeft(speed: number): void {
+    this.setVelocityX(speed * -1);
+    this.setFlipX(true);
+    this.anims.play('sk-warrior-left', true);
+  }
+
+  moveRight(speed: number): void {
+    this.setVelocityX(speed);
+    this.setFlipX(false);
+    this.anims.play('sk-warrior-right', true);
   }
 
   patrol(): void {
@@ -41,7 +68,9 @@ export class SkeletonWarrior extends Character {
     }
   }
 
-  chase(player: Player): void {
+  chase(player: Player | null): void {
+    if (!player) return;
+
     const direction = this.x > player.x ? -1 : 1;
     this.facingRight = direction === 1 ? true : false;
 
@@ -52,7 +81,9 @@ export class SkeletonWarrior extends Character {
     }
   }
 
-  attack(player: Player): void {
+  attack(player: Player | null): void {
+    if (!player) return;
+
     this.setVelocityX(0);
     this.anims.play('sk-warrior-simple-attack', true);
 
@@ -71,18 +102,6 @@ export class SkeletonWarrior extends Character {
     if (anim.key === 'sk-warrior-simple-attack' && frame.index === 4) {
       this.canHit = true;
     }
-  }
-
-  moveLeft(speed: number): void {
-    this.setVelocityX(speed * -1);
-    this.setFlipX(true);
-    this.anims.play('sk-warrior-left', true);
-  }
-
-  moveRight(speed: number): void {
-    this.setVelocityX(speed);
-    this.setFlipX(false);
-    this.anims.play('sk-warrior-right', true);
   }
 
   private pausePatrol(): void {

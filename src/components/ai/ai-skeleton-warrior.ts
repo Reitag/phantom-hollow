@@ -14,30 +14,32 @@ export class AiSkeletonWarrior {
   update(): void {
     this.skeletons.forEach((skeleton) => {
       if (skeleton.getDead()) return;
-
-      const dx = Math.abs(this.player.x - skeleton.x);
-      const dy = Math.abs(this.player.y - skeleton.y);
-
-      if (dx > 300) {
-        skeleton.patrol();
-        return;
-      }
-
-      const sameYLevel = dy < 40;
-      const canSeePlayer = this.hasLineOfSight(skeleton, this.player);
-
-      if (sameYLevel && dx < 300 && canSeePlayer) {
-        if (this.player.getDead()) {
-          skeleton.patrol();
-        } else if (dx < 20) {
-          skeleton.attack(this.player);
-        } else {
-          skeleton.chase(this.player);
-        }
-      } else {
-        skeleton.patrol();
-      }
+      this.updateSkeletonState(skeleton);
     });
+  }
+
+  private updateSkeletonState(skeleton: SkeletonWarrior): void {
+    skeleton.update();
+
+    const dx = Math.abs(this.player.x - skeleton.x);
+    const dy = Math.abs(this.player.y - skeleton.y);
+
+    const isPlayerFar = dx > 300;
+    const isSameYLevel = dy < 40;
+    const canSeePlayer = this.hasLineOfSight(skeleton, this.player);
+
+    const fsm = skeleton.getStateMachine();
+
+    if (isPlayerFar || this.player.getDead() || !canSeePlayer || !isSameYLevel) {
+      fsm.changeState('Patrol');
+      return;
+    }
+
+    if (dx < 20) {
+      fsm.changeState('Attack', this.player);
+    } else {
+      fsm.changeState('Chase', this.player);
+    }
   }
 
   addSkeleton(skeleton: SkeletonWarrior): void {
@@ -48,7 +50,7 @@ export class AiSkeletonWarrior {
     return this.skeletons;
   }
 
-  hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {
+  private hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {
     if (!this.collisionLayer) return true;
 
     const fromY = from.getCenter().y;

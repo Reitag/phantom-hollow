@@ -1,3 +1,4 @@
+import { StateMachine } from '@/managers/state-machine';
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
 import { PhysicsSpriteConfig } from '@/utils/types';
 
@@ -11,6 +12,7 @@ export class Character extends PhysicsSprite {
   protected facingRight!: boolean;
   protected isDead: boolean;
   protected isVulnerable: boolean;
+  protected stateMachine: StateMachine;
 
   constructor({ scene, position, keyName, frame, health, facingRight }: CharacterConfig) {
     super({ scene, position, keyName, frame });
@@ -19,12 +21,17 @@ export class Character extends PhysicsSprite {
     this.isDead = false;
     this.isVulnerable = false;
     this.facingRight = facingRight;
+    this.stateMachine = new StateMachine();
 
     if (!this.facingRight) {
       this.setFlipX(true);
     }
 
     this.setCollideWorldBounds(true);
+  }
+
+  getStateMachine(): StateMachine {
+    return this.stateMachine;
   }
 
   getFacingRight(): boolean {
