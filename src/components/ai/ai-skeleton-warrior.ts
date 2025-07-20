@@ -18,14 +18,13 @@ export class AiSkeletonWarrior {
       const dx = Math.abs(this.player.x - skeleton.x);
       const dy = Math.abs(this.player.y - skeleton.y);
 
-      const sameYLevel = dy < 40;
-
-      const canSeePlayer = this.hasLineOfSight(skeleton, this.player);
-
       if (dx > 300) {
         skeleton.patrol();
         return;
       }
+
+      const sameYLevel = dy < 40;
+      const canSeePlayer = this.hasLineOfSight(skeleton, this.player);
 
       if (sameYLevel && dx < 300 && canSeePlayer) {
         if (this.player.getDead()) {
@@ -52,8 +51,8 @@ export class AiSkeletonWarrior {
   hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {
     if (!this.collisionLayer) return true;
 
-    const fromY = from.y + from.height / 2;
-    const toY = to.y + to.height / 2;
+    const fromY = from.getCenter().y;
+    const toY = to.getCenter().y;
 
     const ray = new Phaser.Geom.Line(from.x, fromY, to.x, toY);
     const points = ray.getPoints(10);
