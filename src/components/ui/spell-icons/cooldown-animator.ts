@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { GraphicsMask } from '@/components/rendering/graphic-mask';
-import { CooldownsState } from '@/components/states/cooldowns-state';
+import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { Position } from '@/utils/types';
 import { iconOverlays } from '@/utils/coordinates';
 import { SPELLS } from '@/utils/constants';

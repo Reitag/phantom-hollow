@@ -4,7 +4,7 @@ import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
-import { CooldownsState } from '@/components/states/cooldowns-state';
+import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { Position } from '@/utils/types';
 
 export class UiManager {

@@ -1,3 +1,5 @@
+const ENABLE_LOGGING = false;
+
 export interface State {
   stateMachine: StateMachine;
   name: string;
@@ -29,7 +31,9 @@ export class StateMachine {
 
   public changeState(name: string, ...args: unknown[]): void {
     if (!this.states.has(name)) {
-      console.log(`[${this.id}] Unknown state: ${name}`);
+      if (ENABLE_LOGGING) {
+        console.log(`[${this.id}] Unknown state: ${name}`);
+      }
       return;
     }
 
@@ -42,7 +46,11 @@ export class StateMachine {
 
     this.isChangingState = true;
 
-    console.log(`[${this.id}] Switching from '${this.currentState?.name ?? 'none'}' to '${name}'`);
+    if (ENABLE_LOGGING) {
+      console.log(
+        `[${this.id}] Switching from '${this.currentState?.name ?? 'none'}' to '${name}'`
+      );
+    }
     this.currentState = this.states.get(name);
     this.currentState?.onEnter?.(...args);
 

@@ -1,9 +1,9 @@
 import { Character, CharacterConfig } from '@/objects/characters/core/character';
 import { Player } from '@/objects/characters/player/player';
-import { IdleState } from '@/components/states/characters-states/idle-state';
-import { PatrolState } from '@/components/states/characters-states/patrol-state';
-import { ChaseState } from '@/components/states/characters-states/chase-state';
-import { AttackState } from '@/components/states/characters-states/attack-state';
+import { Idle } from '@/components/states/characters/enemy-states/idle';
+import { Patrol } from '@/components/states/characters/enemy-states/patrol';
+import { Chase } from '@/components/states/characters/enemy-states/chase';
+import { Attack } from '@/components/states/characters/enemy-states/attack';
 
 export class SkeletonWarrior extends Character {
   private walkBound = 470;
@@ -19,10 +19,10 @@ export class SkeletonWarrior extends Character {
     this.patrolLeftX = this.x - this.walkBound;
 
     // State Machine
-    this.stateMachine.addState(new IdleState(this));
-    this.stateMachine.addState(new PatrolState(this));
-    this.stateMachine.addState(new ChaseState(this));
-    this.stateMachine.addState(new AttackState(this));
+    this.stateMachine.addState(new Idle(this));
+    this.stateMachine.addState(new Patrol(this));
+    this.stateMachine.addState(new Chase(this));
+    this.stateMachine.addState(new Attack(this));
     this.stateMachine.changeState('Idle');
 
     this.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.hit, this);

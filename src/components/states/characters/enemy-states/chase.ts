@@ -1,11 +1,11 @@
-import { BaseState } from '@/components/states/characters-states/base-state';
+import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Player } from '@/objects/characters/player/player';
 
-export class AttackState extends BaseState {
+export class Chase extends CharacterState {
   private player: Player | null = null;
   constructor(character: SkeletonWarrior) {
-    super('Attack', character);
+    super('Chase', character);
   }
 
   onEnter(...args: unknown[]): void {
@@ -18,6 +18,12 @@ export class AttackState extends BaseState {
       return;
     }
 
-    this.character.attack(this.player);
+    const dx = Math.abs(this.player.x - this.character.x);
+    if (dx < 20) {
+      this.stateMachine.changeState('Attack', this.player);
+      return;
+    }
+
+    this.character.chase(this.player);
   }
 }

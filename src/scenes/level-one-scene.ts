@@ -5,7 +5,6 @@ import { Player } from '@/objects/characters/player/player';
 import { AiSkeletonWarrior } from '@/components/ai/ai-skeleton-warrior';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 //import { Enemy } from '../objects/characters/enemies/enemy.js';
-import { InputHandler } from '@/components/input/handlers/input-handler';
 import { Tilemap } from '@/components/map/tilemap';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
@@ -23,7 +22,6 @@ export class LevelOneScene extends Phaser.Scene {
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
-  private inputHandler!: InputHandler;
   private map!: Tilemap;
   private canTakeSpikeDamage = true;
   private isGameInitialized = false;
@@ -44,8 +42,6 @@ export class LevelOneScene extends Phaser.Scene {
 
   update(): void {
     this.player.update();
-    this.inputHandler.update();
-
     this.aiSkeletonWarrior.update();
 
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
@@ -77,7 +73,6 @@ export class LevelOneScene extends Phaser.Scene {
     this.createWorldBounds();
 
     this.createPlayerAndSetToSpellManager();
-    this.initInputHandler();
 
     this.createSkeletonWarriors();
 
@@ -212,10 +207,6 @@ export class LevelOneScene extends Phaser.Scene {
     this.spellManager.setPlayer(this.player);
   }
 
-  private initInputHandler(): void {
-    this.inputHandler = new InputHandler(this, this.player, this.spellManager, this.uiManager);
-  }
-
   private createSkeletonWarriors(): void {
     const platformLayer = this.map.getTileLayer('platform-layer');
     this.aiSkeletonWarrior = new AiSkeletonWarrior(this.player, platformLayer);
@@ -234,25 +225,6 @@ export class LevelOneScene extends Phaser.Scene {
       this.aiSkeletonWarrior.addSkeleton(skeleton);
     });
   }
-
-  /*createEnemies() {
-    const step = 550;
-    let xCoord = 450;
-
-    for (let i = 0; i < 10; i++) {
-      const enemy = new Enemy({
-        scene: this,
-        position: { x: xCoord, y: 550 },
-        keyName: 'skeleton-warrior',
-        health: 200,
-        frame: 0,
-        facingRight: false,
-      }).setDepth(DEPTH.ENEMY);
-
-      this.enemies.add(enemy);
-      xCoord += step;
-    }
-  }*/
 
   private registerCollisions(): void {
     const platformLayer = this.map.getTileLayer('platform-layer');

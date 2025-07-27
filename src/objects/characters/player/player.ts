@@ -1,7 +1,13 @@
+import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
+import { Idle } from '@/components/states/characters/player-states/states/idle';
+import { Movement } from '@/components/states/characters/player-states/states/movement';
+import { Casting } from '@/components/states/characters/player-states/states/casting';
+import { Ready } from '@/components/states/characters/player-states/states/ready';
+import { Death } from '@/components/states/characters/player-states/states/death';
 import { Character, CharacterConfig } from '@/objects/characters/core/character';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
-import { VELOCITY } from '@/utils/constants';
+import { VELOCITY, SPELLS } from '@/utils/constants';
 
 interface PlayerConfig extends CharacterConfig {
   spellManager: SpellManager;
@@ -10,10 +16,11 @@ interface PlayerConfig extends CharacterConfig {
 
 export class Player extends Character {
   scene: Phaser.Scene;
+  private controls!: KeyboardController;
   private spellManager: SpellManager;
   private maxHealth: number;
-  private isCasting = false;
   private ui: UiManager;
+  private isCasting = false;
 
   constructor({
     scene,
@@ -32,11 +39,34 @@ export class Player extends Character {
     this.maxHealth = health;
     this.ui = ui;
 
+    this.initKeyboard();
+    this.initStateMachine();
     this.arcadeBody.setSize(20, 48);
+  }
+
+  private initKeyboard(): void {
+    const keyboard = this.scene.input.keyboard;
+    if (!keyboard) {
+      throw new Error('Keyboard input not available yet.');
+    }
+
+    this.controls = new KeyboardController(keyboard);
+  }
+
+  private initStateMachine(): void {
+    this.stateMachine.addState(new Idle(this, this.controls, this.spellManager));
+    this.stateMachine.addState(new Movement(this, this.controls, this.spellManager));
+    this.stateMachine.addState(new Casting(this, this.controls));
+    this.stateMachine.addState(new Ready(this, this.controls, this.ui));
+    this.stateMachine.addState(new Death(this));
+
+    this.stateMachine.changeState('Idle');
   }
 
   update(): void {
     this.setVelocityX(0);
+    this.stateMachine.update();
+    this.controls.update();
   }
 
   moveLeft(): void {
@@ -60,16 +90,12 @@ export class Player extends Character {
   }
 
   idle(): void {
-    if (this.isCasting) return;
-
     if (this.anims.currentAnim?.key !== 'idle') {
       this.anims.play('idle');
     }
   }
 
   primarySpell(): void {
-    if (this.isCasting) return;
-
     const duration = 800;
 
     this.isCasting = true;
@@ -85,9 +111,7 @@ export class Player extends Character {
     this.spellManager.castBlink();
   }
 
-  playerStopCasting(): void {
-    if (!this.isCasting) return;
-
+  stopCasting(): void {
     this.isCasting = false;
     this.anims.stop();
     this.ui.stopCast();
@@ -124,14 +148,18 @@ export class Player extends Character {
 
   die(): void {
     if (this.isDead) return;
+
     this.isDead = true;
+    this.arcadeBody.enable = false;
+    this.controls.disable();
 
     this.anims.play('death', true);
     this.removeAllListeners();
 
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.setTexture('player', 101);
-      this.arcadeBody.enable = false;
     });
+
+    this.stateMachine.changeState('Death');
   }
 }

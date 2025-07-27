@@ -6,6 +6,7 @@ export class KeyboardController extends InputController {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private primaryKey: Phaser.Input.Keyboard.Key;
   private secondaryKey: Phaser.Input.Keyboard.Key;
+  private disabled = false;
 
   constructor(input: Phaser.Input.Keyboard.KeyboardPlugin) {
     super();
@@ -15,6 +16,8 @@ export class KeyboardController extends InputController {
   }
 
   override update(): void {
+    if (this.disabled) return;
+
     // Movement keys
     this.left = this.cursors.left?.isDown ?? false;
     this.right = this.cursors.right?.isDown ?? false;
@@ -30,5 +33,9 @@ export class KeyboardController extends InputController {
     // Secondary action
     this.secondaryActionDown = this.secondaryKey.isDown;
     this.secondaryActionReleased = Phaser.Input.Keyboard.JustUp(this.secondaryKey);
+  }
+
+  disable(): void {
+    this.disabled = true;
   }
 }

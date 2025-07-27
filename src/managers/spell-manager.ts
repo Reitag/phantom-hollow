@@ -1,7 +1,7 @@
 import { Player } from '@/objects/characters/player/player';
 import { SpellFactory } from '@/factories/spell-factory';
 import { UiManager } from '@/managers/ui-manager';
-import { CooldownsState } from '@/components/states/cooldowns-state';
+import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { SPELLS, SPELLS_COOLDOWNS } from '@/utils/constants';
 import { blinkIcon } from '@/utils/coordinates';
 

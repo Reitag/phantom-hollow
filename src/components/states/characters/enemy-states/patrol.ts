@@ -1,7 +1,7 @@
-import { BaseState } from '@/components/states/characters-states/base-state';
+import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 
-export class PatrolState extends BaseState {
+export class Patrol extends CharacterState {
   constructor(character: SkeletonWarrior) {
     super('Patrol', character);
   }
