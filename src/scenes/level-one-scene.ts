@@ -302,7 +302,7 @@ export class LevelOneScene extends Phaser.Scene {
 
   private handleSkeletonPlatformCollision(skeleton: Phaser.GameObjects.GameObject): void {
     if (skeleton instanceof SkeletonWarrior) {
-      skeleton.handlePlatformCollision();
+      this.aiSkeletonWarrior.handleLayerCollision(skeleton);
     }
   }
 

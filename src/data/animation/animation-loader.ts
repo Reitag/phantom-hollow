@@ -1,44 +1,46 @@
+import { AnimationKeys } from '@/utils/animation-keys';
+
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // player
-  if (!anims.get('left')) {
+  if (!anims.get(AnimationKeys.Player.Left)) {
     anims.create({
-      key: 'left',
+      key: AnimationKeys.Player.Left,
       frames: anims.generateFrameNumbers('player', { start: 42, end: 47 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get('right')) {
+  if (!anims.get(AnimationKeys.Player.Right)) {
     anims.create({
-      key: 'right',
+      key: AnimationKeys.Player.Right,
       frames: anims.generateFrameNumbers('player', { start: 42, end: 47 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get('idle')) {
+  if (!anims.get(AnimationKeys.Player.Idle)) {
     anims.create({
-      key: 'idle',
+      key: AnimationKeys.Player.Idle,
       frames: anims.generateFrameNumbers('player', { start: 0, end: 7 }),
       frameRate: 6,
       repeat: -1,
     });
   }
 
-  if (!anims.get('simple-attack')) {
+  if (!anims.get(AnimationKeys.Player.SimpleAttack)) {
     anims.create({
-      key: 'simple-attack',
+      key: AnimationKeys.Player.SimpleAttack,
       frames: anims.generateFrameNumbers('player', { start: 21, end: 41 }),
       frameRate: 14,
       repeat: 0,
     });
   }
 
-  if (!anims.get('death')) {
+  if (!anims.get(AnimationKeys.Player.Death)) {
     anims.create({
-      key: 'death',
+      key: AnimationKeys.Player.Death,
       frames: anims.generateFrameNumbers('player', { start: 84, end: 101 }),
       frameRate: 14,
       repeat: 0,
@@ -46,18 +48,18 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // fire-ball
-  if (!anims.get('fire-ball-anim')) {
+  if (!anims.get(AnimationKeys.Spells.Fireball.Loop)) {
     anims.create({
-      key: 'fire-ball-anim',
+      key: AnimationKeys.Spells.Fireball.Loop,
       frames: anims.generateFrameNumbers('fire-ball', { start: 0, end: 3 }),
       frameRate: 20,
       repeat: -1,
     });
   }
 
-  if (!anims.get('fire-ball-anim-destroy')) {
+  if (!anims.get(AnimationKeys.Spells.Fireball.Destroy)) {
     anims.create({
-      key: 'fire-ball-anim-destroy',
+      key: AnimationKeys.Spells.Fireball.Destroy,
       frames: anims.generateFrameNumbers('fire-ball', { start: 4, end: 9 }),
       frameRate: 20,
       repeat: 0,
@@ -66,9 +68,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // blink
-  if (!anims.get('blink-anim')) {
+  if (!anims.get(AnimationKeys.Spells.Blink.BlinkAnim)) {
     anims.create({
-      key: 'blink-anim',
+      key: AnimationKeys.Spells.Blink.BlinkAnim,
       frames: anims.generateFrameNumbers('blink', { start: 0, end: 9 }),
       frameRate: 16,
       repeat: 0,
@@ -77,54 +79,54 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // skeleton-warrior
-  if (!anims.get('sk-warrior-left')) {
+  if (!anims.get(AnimationKeys.Enemies.Melee.SkeletonWarrior.Left)) {
     anims.create({
-      key: 'sk-warrior-left',
+      key: AnimationKeys.Enemies.Melee.SkeletonWarrior.Left,
       frames: anims.generateFrameNumbers('skeleton-warrior', { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get('sk-warrior-right')) {
+  if (!anims.get(AnimationKeys.Enemies.Melee.SkeletonWarrior.Right)) {
     anims.create({
-      key: 'sk-warrior-right',
+      key: AnimationKeys.Enemies.Melee.SkeletonWarrior.Right,
       frames: anims.generateFrameNumbers('skeleton-warrior', { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get('sk-warrior-idle')) {
+  if (!anims.get(AnimationKeys.Enemies.Melee.SkeletonWarrior.Idle)) {
     anims.create({
-      key: 'sk-warrior-idle',
+      key: AnimationKeys.Enemies.Melee.SkeletonWarrior.Idle,
       frames: anims.generateFrameNumbers('skeleton-warrior', { start: 0, end: 2 }),
       frameRate: 6,
-      repeat: 6,
+      repeat: -1,
     });
   }
 
-  if (!anims.get('sk-warrior-simple-attack')) {
+  if (!anims.get(AnimationKeys.Enemies.Melee.SkeletonWarrior.SimpleAttack)) {
     anims.create({
-      key: 'sk-warrior-simple-attack',
+      key: AnimationKeys.Enemies.Melee.SkeletonWarrior.SimpleAttack,
       frames: anims.generateFrameNumbers('skeleton-warrior', { start: 16, end: 19 }),
       frameRate: 10,
       repeat: 0,
     });
   }
 
-  if (!anims.get('sk-warrior-hurt')) {
+  if (!anims.get(AnimationKeys.Enemies.Melee.SkeletonWarrior.Hurt)) {
     anims.create({
-      key: 'sk-warrior-hurt',
+      key: AnimationKeys.Enemies.Melee.SkeletonWarrior.Hurt,
       frames: anims.generateFrameNumbers('skeleton-warrior', { start: 24, end: 25 }),
       frameRate: 10,
       repeat: 0,
     });
   }
 
-  if (!anims.get('sk-warrior-death')) {
+  if (!anims.get(AnimationKeys.Enemies.Melee.SkeletonWarrior.Death)) {
     anims.create({
-      key: 'sk-warrior-death',
+      key: AnimationKeys.Enemies.Melee.SkeletonWarrior.Death,
       frames: anims.generateFrameNumbers('skeleton-warrior', { start: 32, end: 37 }),
       frameRate: 10,
       repeat: 0,
@@ -132,9 +134,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // portal
-  if (!anims.get('portal-spin')) {
+  if (!anims.get(AnimationKeys.Portal.Spin)) {
     anims.create({
-      key: 'portal-spin',
+      key: AnimationKeys.Portal.Spin,
       frames: anims.generateFrameNumbers('portal', { start: 0, end: 5 }),
       frameRate: 10,
       repeat: -1,

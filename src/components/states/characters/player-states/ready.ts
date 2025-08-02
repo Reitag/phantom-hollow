@@ -1,9 +1,10 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
-import { PlayerState } from '@/components/states/characters/player-states/core/player-state';
+import { CharacterState } from '@/components/states/characters/core/character-state';
 import { UiManager } from '@/managers/ui-manager';
 import { Player } from '@/objects/characters/player/player';
+import { SPELLS, VELOCITY } from '@/utils/constants';
 
-export class Ready extends PlayerState {
+export class Ready extends CharacterState {
   constructor(player: Player, input?: KeyboardController, ui?: UiManager) {
     super('Ready', player, input, undefined, ui);
   }
@@ -11,36 +12,50 @@ export class Ready extends PlayerState {
   onEnter(...args: unknown[]): void {}
 
   onUpdate(): void {
-    this.useMovement();
-    this.useJump();
+    this.movement();
 
-    // Handle idle animation if no movement input
-    if (!this.input?.isLeftDown && !this.input?.isRightDown) {
-      this.player.idle(); // <- reset animation to idle
+    if (this.input?.isUpPressed) {
+      this.jump();
     }
 
-    // Return to idle if no keys are held
+    if (!this.input?.isLeftDown && !this.input?.isRightDown) {
+      this.setToZeroVelocityX();
+      this.playAnimation(this.animations.idle);
+    }
+
     if (!this.input?.isPrimaryActionDown && !this.input?.isSecondaryActionDown) {
       this.ui?.removeHighlight();
-      this.stateMachine.changeState('Idle');
+      if (this.input?.isLeftDown || this.input?.isRightDown) {
+        this.stateMachine.changeState('Movement');
+      } else {
+        this.stateMachine.changeState('Idle');
+      }
     }
 
-    // Primary spell logic
     if (this.input?.isPrimaryActionDown) {
-      this.ui?.highlightSpell(this.primaryActionName);
+      this.ui?.highlightSpell(SPELLS.FIREBALL);
     } else if (this.input?.isPrimaryActionReleased) {
       this.ui?.removeHighlight();
       this.stateMachine.changeState('Casting');
       return;
     }
 
-    // Secondary spell logic
     if (this.input?.isSecondaryActionDown) {
-      this.ui?.highlightSpell(this.secondaryActionName);
+      this.ui?.highlightSpell(SPELLS.BLINK);
     } else if (this.input?.isSecondaryActionReleased) {
       this.ui?.removeHighlight();
       this.stateMachine.changeState('Idle');
       return;
+    }
+  }
+
+  private movement(): void {
+    const speed = VELOCITY.PLAYER_VELOCITY.MOVE;
+
+    if (this.input?.isLeftDown) {
+      this.moveLeft(speed);
+    } else if (this.input?.isRightDown) {
+      this.moveRight(speed);
     }
   }
 }

@@ -10,6 +10,14 @@ export type Size = {
 
 export type Rectangle = Position & Size;
 
+export type AnimationConfig = {
+  idle?: string;
+  moveLeft?: string;
+  moveRight?: string;
+  attack?: string;
+  death?: string;
+};
+
 export interface PhysicsSpriteConfig {
   scene: Phaser.Scene;
   position: Position;

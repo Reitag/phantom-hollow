@@ -1,18 +1,20 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
-import { PlayerState } from '@/components/states/characters/player-states/core/player-state';
+import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SpellManager } from '@/managers/spell-manager';
 import { Player } from '@/objects/characters/player/player';
+import { SPELLS } from '@/utils/constants';
 
-export class Idle extends PlayerState {
-  constructor(player: Player, input?: KeyboardController, spellManager?: SpellManager) {
-    super('Idle', player, input, spellManager);
+export class Idle extends CharacterState {
+  constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
+    super('Idle', character, input, spellManager);
   }
 
   onEnter(...args: unknown[]): void {
     if (this.input?.isSecondaryActionReleased) {
-      this.player.secondarySpell();
+      this.spellManager?.castBlink();
     }
-    this.player.idle();
+    this.character.setVelocityX(0);
+    this.playAnimation(this.animations.idle);
   }
 
   onUpdate(): void {
@@ -21,11 +23,11 @@ export class Idle extends PlayerState {
     }
 
     if (this.input?.isPrimaryActionDown) {
-      this.initToCastSpell(this.primaryActionName);
+      this.initToCastSpell(SPELLS.FIREBALL);
     }
 
     if (this.input?.isSecondaryActionDown) {
-      this.initToCastSpell(this.secondaryActionName);
+      this.initToCastSpell(SPELLS.BLINK);
     }
   }
 }

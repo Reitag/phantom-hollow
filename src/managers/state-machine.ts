@@ -5,6 +5,7 @@ export interface State {
   name: string;
   onEnter?: (...args: unknown[]) => void;
   onUpdate?: () => void;
+  onExit?: () => void;
 }
 
 export class StateMachine {
@@ -51,6 +52,7 @@ export class StateMachine {
         `[${this.id}] Switching from '${this.currentState?.name ?? 'none'}' to '${name}'`
       );
     }
+    this.currentState?.onExit?.();
     this.currentState = this.states.get(name);
     this.currentState?.onEnter?.(...args);
 

@@ -1,16 +1,15 @@
 import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 
-export class Idle extends CharacterState {
+export class Wait extends CharacterState {
   constructor(character: SkeletonWarrior) {
-    super('Idle', character);
+    super('Wait', character);
   }
 
   onEnter(...args: unknown[]): void {
-    this.character.idle();
+    this.setToZeroVelocityX();
+    this.playAnimation(this.animations.idle, true);
   }
 
-  onUpdate(): void {
-    this.stateMachine.changeState('Patrol');
-  }
+  onUpdate(): void {}
 }

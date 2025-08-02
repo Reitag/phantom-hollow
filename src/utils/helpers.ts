@@ -8,3 +8,7 @@ export function isArcadePhysicsBody(
   }
   return body instanceof Phaser.Physics.Arcade.Body;
 }
+
+export function isAnimationKeyExist(...keys: (string | undefined)[]): boolean {
+  return keys.every((key) => typeof key === 'string' && key.length > 0);
+}

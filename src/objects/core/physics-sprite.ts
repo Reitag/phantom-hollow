@@ -12,6 +12,8 @@ export class PhysicsSprite extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, keyName, frame);
 
     this.scene = scene;
+    this.keyName = keyName;
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -22,8 +24,6 @@ export class PhysicsSprite extends Phaser.Physics.Arcade.Sprite {
         `[PhysicsSprite] - Body is not an Arcade Physics Body. Check physics config.`
       );
     }
-
-    this.keyName = keyName;
   }
 
   getArcadeBody(): Phaser.Physics.Arcade.Body {

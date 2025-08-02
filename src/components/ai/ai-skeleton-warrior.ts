@@ -1,5 +1,11 @@
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Player } from '@/objects/characters/player/player';
+import { Position } from '@/utils/types';
+
+const ENGAGE_DISTANCE = 300;
+const ATTACK_RANGE = 20;
+const SAME_Y_THRESHOLD = 40;
+const FRAME_ON_HIT = 4;
 
 export class AiSkeletonWarrior {
   private skeletons: SkeletonWarrior[] = [];
@@ -11,43 +17,87 @@ export class AiSkeletonWarrior {
     this.collisionLayer = collisionLayer;
   }
 
-  update(): void {
+  public update(): void {
     this.skeletons.forEach((skeleton) => {
       if (skeleton.getDead()) return;
       this.updateSkeletonState(skeleton);
     });
   }
 
-  private updateSkeletonState(skeleton: SkeletonWarrior): void {
-    skeleton.update();
-
-    const dx = Math.abs(this.player.x - skeleton.x);
-    const dy = Math.abs(this.player.y - skeleton.y);
-
-    const isPlayerFar = dx > 300;
-    const isSameYLevel = dy < 40;
-    const canSeePlayer = this.hasLineOfSight(skeleton, this.player);
-
-    const fsm = skeleton.getStateMachine();
-
-    if (isPlayerFar || this.player.getDead() || !canSeePlayer || !isSameYLevel) {
-      fsm.changeState('Patrol');
-      return;
-    }
-
-    if (dx < 20) {
-      fsm.changeState('Attack', this.player);
-    } else {
-      fsm.changeState('Chase', this.player);
-    }
-  }
-
-  addSkeleton(skeleton: SkeletonWarrior): void {
+  public addSkeleton(skeleton: SkeletonWarrior): void {
     this.skeletons.push(skeleton);
   }
 
-  getSkeletons(): SkeletonWarrior[] {
+  public getSkeletons(): SkeletonWarrior[] {
     return this.skeletons;
+  }
+
+  public handleLayerCollision(skeleton: SkeletonWarrior): void {
+    const { x, y } = this.distanceToPlayer(skeleton);
+
+    if (!this.canEngage(skeleton, x, y)) {
+      skeleton.flipCharacterToRight(!skeleton.getFacingRight());
+      return;
+    }
+
+    const fsm = skeleton.getStateMachine();
+    if (y < SAME_Y_THRESHOLD && fsm.currentStateName !== 'Wait') {
+      fsm.changeState('Wait');
+    }
+  }
+
+  private updateSkeletonState(skeleton: SkeletonWarrior): void {
+    skeleton.update();
+
+    const { x, y } = this.distanceToPlayer(skeleton);
+    const fsm = skeleton.getStateMachine();
+    const currentState = fsm.currentStateName;
+
+    const canEngage = this.canEngage(skeleton, x, y);
+
+    if (!canEngage) {
+      if (currentState !== 'Patrol') {
+        fsm.changeState('Patrol');
+      }
+      return;
+    }
+
+    if (currentState === 'Wait') {
+      if (x < ATTACK_RANGE) {
+        fsm.changeState('Attack', this.player, FRAME_ON_HIT);
+        return;
+      }
+      if (y === 0) {
+        fsm.changeState('Chase', this.player);
+        return;
+      }
+      return;
+    }
+
+    if (x < ATTACK_RANGE) {
+      if (currentState !== 'Attack') {
+        fsm.changeState('Attack', this.player, FRAME_ON_HIT);
+      }
+    } else {
+      if (currentState !== 'Chase') {
+        fsm.changeState('Chase', this.player);
+      }
+    }
+  }
+
+  private distanceToPlayer(skeleton: SkeletonWarrior): Position {
+    return {
+      x: Math.abs(this.player.x - skeleton.x),
+      y: Math.abs(this.player.y - skeleton.y),
+    };
+  }
+
+  private canEngage(skeleton: SkeletonWarrior, dx: number, dy: number): boolean {
+    if (this.player.getDead()) return false;
+    if (dx > ENGAGE_DISTANCE) return false;
+    if (dy > SAME_Y_THRESHOLD) return false;
+    if (!this.hasLineOfSight(skeleton, this.player)) return false;
+    return true;
   }
 
   private hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {
