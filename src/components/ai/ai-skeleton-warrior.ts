@@ -2,7 +2,7 @@ import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Player } from '@/objects/characters/player/player';
 import { Position } from '@/utils/types';
 
-const ENGAGE_DISTANCE = 300;
+const ENGAGE_DISTANCE = 400;
 const ATTACK_RANGE = 20;
 const SAME_Y_THRESHOLD = 40;
 const FRAME_ON_HIT = 4;

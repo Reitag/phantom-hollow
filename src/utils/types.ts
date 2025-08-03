@@ -18,6 +18,11 @@ export type AnimationConfig = {
   death?: string;
 };
 
+export type SpellAnimationConfig = {
+  main?: string;
+  destroy?: string;
+};
+
 export interface PhysicsSpriteConfig {
   scene: Phaser.Scene;
   position: Position;

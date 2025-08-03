@@ -1,6 +1,7 @@
 import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
 import { Blink } from '@/objects/spells/effect-spells/blink';
 import { SPELLS } from '@/utils/constants';
+import { AnimationKeys } from '@/utils/animation-keys';
 
 export class SpellFactory {
   spellGroup: Phaser.Physics.Arcade.Group;
@@ -22,6 +23,12 @@ export class SpellFactory {
       position: { x: x + offsetX, y: y },
       keyName: SPELLS.FIREBALL,
       frame: 0,
+      animation: {
+        main: AnimationKeys.Spells.Fireball.Main,
+        destroy: AnimationKeys.Spells.Fireball.Destroy,
+      },
+      damage: 120,
+      speed: 300,
       direction: direction,
     });
 
@@ -34,6 +41,9 @@ export class SpellFactory {
       position: { x: x - 4 * direction, y: y + 5 },
       keyName: SPELLS.BLINK,
       frame: 0,
+      animation: {
+        main: AnimationKeys.Spells.Blink.Main,
+      },
     });
   }
 

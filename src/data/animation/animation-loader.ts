@@ -48,9 +48,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // fire-ball
-  if (!anims.get(AnimationKeys.Spells.Fireball.Loop)) {
+  if (!anims.get(AnimationKeys.Spells.Fireball.Main)) {
     anims.create({
-      key: AnimationKeys.Spells.Fireball.Loop,
+      key: AnimationKeys.Spells.Fireball.Main,
       frames: anims.generateFrameNumbers('fire-ball', { start: 0, end: 3 }),
       frameRate: 20,
       repeat: -1,
@@ -68,9 +68,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // blink
-  if (!anims.get(AnimationKeys.Spells.Blink.BlinkAnim)) {
+  if (!anims.get(AnimationKeys.Spells.Blink.Main)) {
     anims.create({
-      key: AnimationKeys.Spells.Blink.BlinkAnim,
+      key: AnimationKeys.Spells.Blink.Main,
       frames: anims.generateFrameNumbers('blink', { start: 0, end: 9 }),
       frameRate: 16,
       repeat: 0,

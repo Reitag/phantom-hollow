@@ -8,11 +8,11 @@ export const AnimationKeys = {
   },
   Spells: {
     Fireball: {
-      Loop: 'fire-ball-anim',
+      Main: 'fire-ball-anim',
       Destroy: 'fire-ball-anim-destroy',
     },
     Blink: {
-      BlinkAnim: 'blink-anim',
+      Main: 'blink-anim',
     },
   },
   Enemies: {

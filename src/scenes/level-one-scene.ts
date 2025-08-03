@@ -4,11 +4,13 @@ import { WORLD_BOUND, DEPTH } from '@/utils/constants';
 import { Player } from '@/objects/characters/player/player';
 import { AiSkeletonWarrior } from '@/components/ai/ai-skeleton-warrior';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
-//import { Enemy } from '../objects/characters/enemies/enemy.js';
 import { Tilemap } from '@/components/map/tilemap';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
+import { Character } from '@/objects/core/character';
+import { Spell } from '@/objects/core/spell';
+import { isValidTeleportPosition } from '@/utils/helpers';
 import { UiScene } from './ui-scene';
 
 export class LevelOneScene extends Phaser.Scene {
@@ -26,8 +28,6 @@ export class LevelOneScene extends Phaser.Scene {
   private canTakeSpikeDamage = true;
   private isGameInitialized = false;
 
-  //private enemies = [];
-  //private fireballs = [];
   constructor() {
     super('LevelOneScene');
   }
@@ -202,6 +202,11 @@ export class LevelOneScene extends Phaser.Scene {
       facingRight: true,
       spellManager: this.spellManager,
       ui: this.uiManager,
+      isValidTeleportPositionCallback: isValidTeleportPosition([
+        this.map.getTileLayer('platform-layer')!,
+        this.map.getTileLayer('spike-layer')!,
+        this.map.getTileLayer('ground-layer')!,
+      ]),
     }).setDepth(DEPTH.PLAYER);
 
     this.spellManager.setPlayer(this.player);
@@ -232,6 +237,7 @@ export class LevelOneScene extends Phaser.Scene {
     const groundLayer = this.map.getTileLayer('ground-layer');
 
     const skeletons = this.aiSkeletonWarrior.getSkeletons();
+    const spells = this.spellFactory.getSpells();
 
     // Ground
     if (groundLayer) {
@@ -255,40 +261,23 @@ export class LevelOneScene extends Phaser.Scene {
         undefined,
         this
       ); // Skeleton warrior
-    }
+      this.physics.add.collider(
+        spells,
+        platformLayer,
+        this.handleFireballPlatformCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      ); // Spells
 
-    // Enemy
-    /*this.physics.add.collider(this.enemies, this.mapTile.groundLayer); // ground
-    this.physics.add.collider(this.enemies, this.mapTile.platformLayer); // platgorm
-    this.physics.add.overlap(
-      this.spellFactory.getSpells(),
-      this.enemies,
-      this.handleFireballHit,
-      null,
-      this
-    );
-    this.enemies.children.iterate((enemy) => {
+      // Skeleton warrior
       this.physics.add.overlap(
-        enemy.visionRange,
-        this.player,
-        () => {
-          enemy.startChase(this.player);
-        },
-        null,
+        spells,
+        skeletons,
+        this.handleFireballHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
         this
       );
-    });
-    this.enemies.children.iterate((enemy) => {
-      this.physics.add.overlap(
-        enemy,
-        this.player,
-        () => {
-          enemy.attackPlayer();
-        },
-        null,
-        this
-      );
-    });*/
+    }
 
     // For better collisions
     this.physics.world.setFPS(120);
@@ -306,10 +295,21 @@ export class LevelOneScene extends Phaser.Scene {
     }
   }
 
-  /*handleFireballHit(fireball, enemy) {
-    fireball.destroyFireBall();
-    enemy.takeDamage(fireball.damage, this.player);
-  }*/
+  private handleFireballPlatformCollision(fireball: Phaser.GameObjects.GameObject): void {
+    if (fireball instanceof Spell) {
+      fireball.destroySpell();
+    }
+  }
+
+  private handleFireballHit(
+    victim: Phaser.GameObjects.GameObject,
+    spell: Phaser.GameObjects.GameObject
+  ): void {
+    if (victim instanceof Character && spell instanceof Spell && victim.y === spell.y) {
+      victim.takeDamage(spell.causeDamage());
+      spell.destroySpell();
+    }
+  }
 
   private handleSpikeHit(): void {
     if (!this.canTakeSpikeDamage) return;

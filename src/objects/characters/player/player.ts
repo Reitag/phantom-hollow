@@ -12,6 +12,7 @@ import { AnimationKeys } from '@/utils/animation-keys';
 interface PlayerConfig extends CharacterConfig {
   spellManager: SpellManager;
   ui: UiManager;
+  isValidTeleportPositionCallback: (x: number, y: number) => boolean;
 }
 
 export class Player extends Character {
@@ -19,6 +20,7 @@ export class Player extends Character {
   private controls!: KeyboardController;
   private spellManager: SpellManager;
   private ui: UiManager;
+  private isValidTeleportPositionCallback: (x: number, y: number) => boolean;
 
   constructor({
     scene,
@@ -29,12 +31,14 @@ export class Player extends Character {
     facingRight,
     spellManager,
     ui,
+    isValidTeleportPositionCallback,
   }: PlayerConfig) {
     super({ scene, position, keyName, health, frame, facingRight });
 
     this.scene = scene;
     this.spellManager = spellManager;
     this.ui = ui;
+    this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
 
     this.animations = {
       idle: AnimationKeys.Player.Idle,
@@ -68,9 +72,35 @@ export class Player extends Character {
     this.stateMachine.changeState('Idle');
   }
 
-  update(): void {
+  public update(): void {
     this.stateMachine.update();
     this.controls.update();
+  }
+
+  public hide(): void {
+    this.arcadeBody.enable = false;
+    this.setVisible(false);
+  }
+
+  public show(): void {
+    this.arcadeBody.enable = true;
+    this.setVisible(true);
+  }
+
+  public teleportTo(distance: number, direction: number): void {
+    const step = 5;
+
+    let targetX = this.x + distance * direction;
+    let backoff = 0;
+
+    while (targetX !== this.x) {
+      if (this.isValidTeleportPositionCallback(targetX, this.y)) {
+        this.x = targetX;
+        return;
+      }
+      backoff += step;
+      targetX = this.x + (distance - backoff) * direction;
+    }
   }
 
   protected override onDamaged(): void {
@@ -79,19 +109,5 @@ export class Player extends Character {
 
   protected override onDeathStart(): void {
     this.controls.disable();
-  }
-
-  hide(): void {
-    this.arcadeBody.enable = false;
-    this.setVisible(false);
-  }
-
-  show(): void {
-    this.arcadeBody.enable = true;
-    this.setVisible(true);
-  }
-
-  teleportTo(distance: number, direction: number): void {
-    this.x = this.x + distance * direction;
   }
 }
