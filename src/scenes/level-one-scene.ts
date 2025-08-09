@@ -5,9 +5,11 @@ import { Player } from '@/objects/characters/player/player';
 import { AiSkeletonWarrior } from '@/components/ai/ai-skeleton-warrior';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Tilemap } from '@/components/map/tilemap';
+import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
-import { UiManager } from '@/managers/ui-manager';
+import { Sandbox } from '@/components/sandbox/sandbox';
+import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { Character } from '@/objects/core/character';
 import { Spell } from '@/objects/core/spell';
 import { isValidTeleportPosition } from '@/utils/helpers';
@@ -16,9 +18,6 @@ import { UiScene } from './ui-scene';
 export class LevelOneScene extends Phaser.Scene {
   private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600];
 
-  private spellFactory!: SpellFactory;
-  private spellManager!: SpellManager;
-  private uiManager!: UiManager;
   private player!: Player;
   private aiSkeletonWarrior!: AiSkeletonWarrior;
   private mount!: Phaser.GameObjects.TileSprite;
@@ -48,7 +47,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.grass.tilePositionX = this.camera.scrollX * 0.5;
   }
 
-  private initUiScene(callback: () => void): void {
+  private initUiScene(initWorld: () => void): void {
     this.scene.launch('UiScene');
     this.scene.bringToTop('UiScene');
 
@@ -56,36 +55,26 @@ export class LevelOneScene extends Phaser.Scene {
 
     uiScene.events.once(Phaser.Scenes.Events.CREATE, () => {
       if (uiScene instanceof UiScene) {
-        this.uiManager = uiScene.getUI();
-        callback();
+        ServiceLocator.register(ServiceKeys.ui, uiScene.getUI());
+        initWorld();
       } else {
-        console.error('UiScene not found or not an instance of UiScene!');
+        throw new Error('UiScene not found or not an instance of UiScene!');
       }
     });
   }
 
   private createGameWorld(): void {
-    this.initSpellFactory();
-    this.initSpellManager();
-
     this.createParallaxBackground();
     this.createTilemap();
     this.createWorldBounds();
 
-    this.createPlayerAndSetToSpellManager();
+    this.createSpellSystems();
+    this.createPlayer();
 
     this.createSkeletonWarriors();
 
     this.registerCollisions();
     this.setupCamera();
-  }
-
-  private initSpellFactory(): void {
-    this.spellFactory = new SpellFactory(this);
-  }
-
-  private initSpellManager(): void {
-    this.spellManager = new SpellManager(this, this.spellFactory, this.uiManager);
   }
 
   private createParallaxBackground(): void {
@@ -192,7 +181,14 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
   }
 
-  private createPlayerAndSetToSpellManager(): void {
+  private createSpellSystems(): void {
+    ServiceLocator.register(ServiceKeys.cooldowns, new CooldownsState(this));
+    ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
+    ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
+    ServiceLocator.register(ServiceKeys.spellManager, new SpellManager());
+  }
+
+  private createPlayer(): void {
     this.player = new Player({
       scene: this,
       position: { x: 50, y: 450 },
@@ -200,8 +196,6 @@ export class LevelOneScene extends Phaser.Scene {
       health: 100,
       frame: 0,
       facingRight: true,
-      spellManager: this.spellManager,
-      ui: this.uiManager,
       isValidTeleportPositionCallback: isValidTeleportPosition([
         this.map.getTileLayer('platform-layer')!,
         this.map.getTileLayer('spike-layer')!,
@@ -209,7 +203,7 @@ export class LevelOneScene extends Phaser.Scene {
       ]),
     }).setDepth(DEPTH.PLAYER);
 
-    this.spellManager.setPlayer(this.player);
+    ServiceLocator.register(ServiceKeys.player, this.player);
   }
 
   private createSkeletonWarriors(): void {
@@ -237,7 +231,7 @@ export class LevelOneScene extends Phaser.Scene {
     const groundLayer = this.map.getTileLayer('ground-layer');
 
     const skeletons = this.aiSkeletonWarrior.getSkeletons();
-    const spells = this.spellFactory.getSpells();
+    const spells = ServiceLocator.resolve(ServiceKeys.spellFactory).getSpells();
 
     // Ground
     if (groundLayer) {

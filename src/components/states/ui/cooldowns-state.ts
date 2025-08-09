@@ -7,19 +7,19 @@ export class CooldownsState {
 
   constructor(private scene: Phaser.Scene) {}
 
-  isOnCooldown(key: string): boolean {
+  public isOnCooldown(key: string): boolean {
     return this.activeCooldowns[key];
   }
 
-  startGlobalCooldowns() {
+  public startGlobalCooldowns() {
     this.startCooldown(SPELLS.GLOBAL, SPELLS_COOLDOWNS.GLOBAL);
   }
 
-  startBlinkCooldown() {
+  public startBlinkCooldown() {
     this.startCooldown(SPELLS.BLINK, SPELLS_COOLDOWNS.BLINK);
   }
 
-  private startCooldown(key: string, delay: number): void {
+  public startCooldown(key: string, delay: number): void {
     this.activeCooldowns[key] = true;
     this.scene.time.delayedCall(delay, () => {
       this.activeCooldowns[key] = false;

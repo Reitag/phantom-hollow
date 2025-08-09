@@ -40,10 +40,6 @@ export class UiManager {
     this.castBarAnimator.stopCast();
   }
 
-  setCooldownsToCooldownAnimator(cooldowns: CooldownsState): void {
-    this.cooldownAnimator.setCooldownsState(cooldowns);
-  }
-
   startIconCooldown(coordinates: Position, duration: number): void {
     this.cooldownAnimator.startSingleCooldown(coordinates, duration);
   }

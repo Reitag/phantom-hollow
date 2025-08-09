@@ -22,7 +22,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   scene: [PreloadScene, UiScene, LevelOneScene],
   render: {
     pixelArt: true,
-    antialias: true,
-    roundPixels: false,
+    antialias: false,
+    roundPixels: true,
   },
 };

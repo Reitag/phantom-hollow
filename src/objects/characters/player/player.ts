@@ -1,4 +1,5 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
+import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Idle } from '@/components/states/characters/player-states/idle';
 import { Movement } from '@/components/states/characters/player-states/movement';
 import { Casting } from '@/components/states/characters/player-states/casting';
@@ -10,8 +11,6 @@ import { UiManager } from '@/managers/ui-manager';
 import { AnimationKeys } from '@/utils/animation-keys';
 
 interface PlayerConfig extends CharacterConfig {
-  spellManager: SpellManager;
-  ui: UiManager;
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
 }
 
@@ -29,15 +28,13 @@ export class Player extends Character {
     frame,
     health,
     facingRight,
-    spellManager,
-    ui,
     isValidTeleportPositionCallback,
   }: PlayerConfig) {
     super({ scene, position, keyName, health, frame, facingRight });
 
     this.scene = scene;
-    this.spellManager = spellManager;
-    this.ui = ui;
+    this.spellManager = ServiceLocator.resolve(ServiceKeys.spellManager);
+    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
 
     this.animations = {

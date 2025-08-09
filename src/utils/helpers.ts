@@ -31,3 +31,13 @@ export function isValidTeleportPosition(
     return true;
   };
 }
+
+export function playAnimation(
+  object: Phaser.GameObjects.Sprite,
+  key: string | undefined,
+  force = false
+): void {
+  if (!object || !key) return;
+  if (!force && object.anims.currentAnim?.key === key) return;
+  object.anims.play(key, true);
+}
