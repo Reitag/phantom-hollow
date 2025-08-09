@@ -1,8 +1,11 @@
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
+import { Sandbox } from '@/components/sandbox/sandbox';
 import { PhysicsSpriteConfig, SpellAnimationConfig } from '@/utils/types';
 import { DEPTH } from '@/utils/constants';
+import { playAnimation } from '@/utils/helpers';
 
 export interface SpellConfig extends PhysicsSpriteConfig {
+  sandbox: Sandbox;
   animation: SpellAnimationConfig;
   damage?: number;
   speed?: number;
@@ -10,6 +13,7 @@ export interface SpellConfig extends PhysicsSpriteConfig {
 }
 
 export abstract class Spell extends PhysicsSprite {
+  protected sandbox: Sandbox;
   protected animation: SpellAnimationConfig;
   protected damage: number | null = null;
   protected speed: number | null = null;
@@ -20,6 +24,7 @@ export abstract class Spell extends PhysicsSprite {
     position,
     keyName,
     frame,
+    sandbox,
     animation,
     damage,
     speed,
@@ -31,16 +36,18 @@ export abstract class Spell extends PhysicsSprite {
     this.speed = speed || null;
     this.direction = direction || null;
     this.animation = animation;
+    this.sandbox = sandbox;
 
     this.setDepth(DEPTH.SPELL);
-    this.setSpellGravity();
   }
+
+  abstract cast(): void;
 
   public destroySpell(): void {
     if (this.direction) {
       this.setVelocityX(80 * this.direction);
     }
-    this.playAnimation(this.animation.destroy);
+    playAnimation(this, this.animation.destroy);
 
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.destroy();
@@ -58,17 +65,11 @@ export abstract class Spell extends PhysicsSprite {
     return damage;
   }
 
-  protected playAnimation(key: string | undefined, force = false): void {
-    if (!key) return;
-    if (!force && this.anims.currentAnim?.key === key) return;
-    this.anims.play(key, true);
-  }
-
   protected playMainAnimation(): void {
     if (this.direction !== 1) {
       this.setFlipX(true);
     }
-    this.playAnimation(this.animation.main);
+    playAnimation(this, this.animation.main);
   }
 
   protected setSpellVelocity(): void {
@@ -77,9 +78,5 @@ export abstract class Spell extends PhysicsSprite {
         this.setVelocityX(this.speed * this.direction);
       }
     });
-  }
-
-  protected setSpellGravity(): void {
-    this.arcadeBody.setAllowGravity(false);
   }
 }

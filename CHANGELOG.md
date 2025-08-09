@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2025-08-09
+
+### Added
+
+- Sandbox interface, a central gameplay API that lets spells and other game systems safely interact with the player, cooldowns, and UI without hard coupling.
+- Service locator, a global service registry to make accessing managers (UI, cooldowns, spell factory, etc.) easier and more modular.
+
 ## [0.7.0] - 2025-08-04
 
 ### Added

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { GraphicsMask } from '@/components/rendering/graphic-mask';
-import { CooldownsState } from '@/components/states/ui/cooldowns-state';
+import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Position } from '@/utils/types';
 import { iconOverlays } from '@/utils/coordinates';
 import { SPELLS } from '@/utils/constants';
@@ -10,16 +10,11 @@ type CooldownOverlay = [Position, Phaser.GameObjects.Graphics, boolean];
 
 export class CooldownAnimator {
   private scene: Phaser.Scene;
-  private cooldowns!: CooldownsState;
   private fullCircle: number;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.fullCircle = 360;
-  }
-
-  setCooldownsState(cooldowns: CooldownsState): void {
-    this.cooldowns = cooldowns;
   }
 
   startSingleCooldown(coordinates: Position, duration: number): void {
@@ -52,9 +47,10 @@ export class CooldownAnimator {
       iconOverlays[SPELLS.BLINK].y
     );
 
+    const cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     const overlays: CooldownOverlay[] = [
       [iconOverlays[SPELLS.FIREBALL], fireBallOverlay, false],
-      [iconOverlays[SPELLS.BLINK], blinkOverlay, this.cooldowns.isOnCooldown(SPELLS.BLINK)],
+      [iconOverlays[SPELLS.BLINK], blinkOverlay, cooldowns.isOnCooldown(SPELLS.BLINK)],
     ];
 
     this.scene.tweens.addCounter({

@@ -6,6 +6,7 @@ export class FireBall extends Spell {
     position,
     keyName,
     frame,
+    sandbox,
     animation,
     damage,
     speed,
@@ -16,16 +17,19 @@ export class FireBall extends Spell {
       position,
       keyName,
       frame,
+      sandbox,
       animation,
       damage,
       speed,
       direction,
     });
+  }
 
+  public cast(): void {
     this.setSpellVelocity();
     this.playMainAnimation();
 
-    scene.time.delayedCall(1100, () => {
+    this.scene.time.delayedCall(1100, () => {
       if (!this.active) return;
       this.destroySpell();
     });

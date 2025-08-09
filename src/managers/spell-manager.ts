@@ -1,64 +1,38 @@
-import { Player } from '@/objects/characters/player/player';
+import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
+import { Sandbox } from '@/components/sandbox/sandbox';
 import { SpellFactory } from '@/factories/spell-factory';
-import { UiManager } from '@/managers/ui-manager';
 import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { SPELLS, SPELLS_COOLDOWNS } from '@/utils/constants';
-import { blinkIcon } from '@/utils/coordinates';
 
 export class SpellManager {
   private cooldowns: CooldownsState;
-  private player!: Player;
-
-  constructor(
-    private scene: Phaser.Scene,
-    private spellFactory: SpellFactory,
-    private ui: UiManager
-  ) {
-    this.cooldowns = new CooldownsState(scene);
-    ui.setCooldownsToCooldownAnimator(this.cooldowns);
+  private spellFactory: SpellFactory;
+  private sandbox: Sandbox;
+  constructor() {
+    this.cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
+    this.spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
+    this.sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
   }
 
-  setPlayer(player: Player): void {
-    this.player = player;
-  }
-
-  canCast(spellKey: string): boolean {
+  public canCast(spellKey: string): boolean {
     return !this.cooldowns.isOnCooldown(spellKey) && !this.cooldowns.isOnCooldown(SPELLS.GLOBAL);
   }
 
-  castFireball(): void {
-    const [x, y, direction] = this.getPlayerStats();
+  public castFireball(): void {
+    const { x, y, direction } = this.sandbox.getPlayerPosition();
 
-    this.spellFactory.createFireball(x, y, direction);
+    const fireball = this.spellFactory.createFireball(x, y, direction);
 
-    this.cooldowns.startGlobalCooldowns();
-    this.ui.startGlobalIconsCooldown(SPELLS_COOLDOWNS.GLOBAL);
+    fireball.cast();
+    this.sandbox.startGlobalCooldown();
   }
 
-  castBlink(): void {
-    const distance = 300;
-    const blinkDelay = 500;
-    const [x, y, direction] = this.getPlayerStats();
+  public castBlink(): void {
+    const { x, y, direction } = this.sandbox.getPlayerPosition();
 
-    this.player.hide();
-    this.spellFactory.createBlink(x, y, direction);
+    const blink = this.spellFactory.createBlink(x, y, direction);
 
-    this.cooldowns.startBlinkCooldown();
-    this.cooldowns.startGlobalCooldowns();
-
-    this.ui.startIconCooldown(blinkIcon, SPELLS_COOLDOWNS.BLINK);
-    this.ui.startGlobalIconsCooldown(SPELLS_COOLDOWNS.GLOBAL);
-
-    this.scene.time.delayedCall(blinkDelay, () => {
-      this.player.teleportTo(distance, direction);
-      this.player.show();
-    });
-  }
-
-  private getPlayerStats(): number[] {
-    const { x, y } = this.player;
-    const direction = this.player.getFacingRight() ? 1 : -1;
-
-    return [x, y, direction];
+    blink.cast();
+    this.sandbox.startCooldown(SPELLS.BLINK, SPELLS_COOLDOWNS.BLINK);
   }
 }
