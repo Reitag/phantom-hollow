@@ -86,8 +86,7 @@ export class LevelOneScene extends Phaser.Scene {
       .setScrollFactor(0);
 
     this.grass = this.add
-      //.tileSprite(0, 490, WORLD_BOUND.WIDTH, 114, "grass")
-      .tileSprite(0, 450, WORLD_BOUND.WIDTH, 114, 'grass')
+      .tileSprite(0, 450, WORLD_BOUND.WIDTH, 130, 'grass')
       .setOrigin(0)
       .setScrollFactor(0);
   }

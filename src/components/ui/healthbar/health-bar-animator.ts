@@ -17,7 +17,7 @@ export class HealthBarAnimator {
 
     mask.clear();
     mask.fillStyle(0xffffff);
-    mask.fillRoundedRect(x, y - height / 2, width * percentage, height, height / 2);
+    mask.fillRoundedRect(x, y - height / 2, width * percentage, height, 1);
   }
 
   private clamp(value: number, min: number, max: number): number {

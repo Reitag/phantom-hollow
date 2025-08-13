@@ -29,7 +29,7 @@ export class GraphicsMask extends Phaser.GameObjects.Graphics {
     this.color = 0xffffff;
   }
 
-  roundedRect({ x, y, width, height, radius = height / 2 }: RoundedRect): this {
+  roundedRect({ x, y, width, height, radius = /*height / 2*/ 1 }: RoundedRect): this {
     this.shape.fillStyle(this.color);
     this.shape.fillRoundedRect(x, y - height / 2, width, height, radius);
 

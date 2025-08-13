@@ -7,6 +7,8 @@ import { VELOCITY, SCENE_SIZE } from '@/utils/constants';
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#eeeeee',
+  title: 'Phantom hollow',
+  version: '0.8.0',
   scale: {
     parent: 'app',
     width: SCENE_SIZE.WIDTH,
@@ -20,9 +22,4 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     },
   },
   scene: [PreloadScene, UiScene, LevelOneScene],
-  render: {
-    pixelArt: true,
-    antialias: false,
-    roundPixels: true,
-  },
 };

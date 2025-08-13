@@ -1,10 +1,7 @@
 import Phaser from 'phaser';
-import { castBar } from '@/utils/coordinates';
 import { CastBar } from './cast-bar';
 
 export class CastBarAnimator {
-  private readonly FLASH_COLOR = 0xfff8c9;
-  private readonly FLASH_DURATION = 200;
   private readonly FADE_DURATION = 500;
 
   private scene: Phaser.Scene;
@@ -20,6 +17,8 @@ export class CastBarAnimator {
     if (this.currentTween) {
       this.currentTween.stop();
     }
+
+    this.castBar.setCastBar();
 
     this.currentTween = this.scene.tweens.add({
       targets: this.castBar.mask,
@@ -37,35 +36,20 @@ export class CastBarAnimator {
   stopCast() {
     if (this.currentTween) {
       this.currentTween.stop();
-      this.castBar.reset();
+      this.castBar.destroy();
       this.currentTween = null;
     }
   }
 
   private finishCast() {
-    const { x, y, width, height } = castBar;
-
-    const flash = this.scene.add
-      .rectangle(x, y, width, height, this.FLASH_COLOR, 0.4)
-      .setOrigin(0, 0.5);
-
     this.scene.tweens.add({
-      targets: flash,
+      targets: this.castBar.bar,
       alpha: { from: 1, to: 0 },
-      duration: this.FLASH_DURATION,
-      ease: 'Cubic.easeOut',
+      ease: 'Sine.InOut',
+      duration: this.FADE_DURATION,
       onComplete: () => {
-        flash.destroy();
-        this.scene.tweens.add({
-          targets: this.castBar.bar,
-          alpha: { from: 1, to: 0 },
-          ease: 'Sine.InOut',
-          duration: this.FADE_DURATION,
-          onComplete: () => {
-            this.castBar.reset();
-            this.currentTween = null;
-          },
-        });
+        this.castBar.destroy();
+        this.currentTween = null;
       },
     });
   }

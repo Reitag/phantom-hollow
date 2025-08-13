@@ -4,8 +4,8 @@ export const VELOCITY = {
 };
 
 export const SCENE_SIZE = {
-  WIDTH: 800,
-  HEIGHT: 650,
+  WIDTH: 1000,
+  HEIGHT: 640,
 };
 
 export const WORLD_BOUND = {

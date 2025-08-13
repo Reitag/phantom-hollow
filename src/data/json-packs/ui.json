@@ -1,6 +1,6 @@
 {
   "files": [
-    { "type": "image", "key": "bg-ui", "url": "assets/ui/bg-ui.png" },
+    { "type": "image", "key": "spell-ui", "url": "assets/ui/spell-ui.png" },
     {
       "type": "image",
       "key": "fire-ball-icon",
