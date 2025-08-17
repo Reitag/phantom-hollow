@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 
 import { GraphicsMask } from '@/components/rendering/graphic-mask';
-import { castUi, castBar } from '@/utils/coordinates';
+import { UI } from '@/constants/asset-keys';
+import { CAST_UI, CAST_BAR } from '@/constants/ui-coordinates';
 
 export class CastBar {
   public frame!: Phaser.GameObjects.Image;
@@ -11,15 +12,15 @@ export class CastBar {
   constructor(private scene: Phaser.Scene) {}
 
   setCastBar(): void {
-    this.bar = this.scene.add.image(castBar.x, castBar.y, 'cast-bar').setOrigin(0, 0.5);
-    this.frame = this.scene.add.image(castUi.x, castUi.y, 'cast-env').setOrigin(0, 0.5);
+    this.bar = this.scene.add.image(CAST_BAR.X, CAST_BAR.Y, UI.CAST_BAR).setOrigin(0, 0.5);
+    this.frame = this.scene.add.image(CAST_UI.X, CAST_UI.Y, UI.CAST_ENV).setOrigin(0, 0.5);
 
     this.mask = new GraphicsMask(this.scene)
       .roundedRect({
-        x: castBar.x,
-        y: castBar.y,
-        width: castBar.width,
-        height: castBar.height,
+        x: CAST_BAR.X,
+        y: CAST_BAR.Y,
+        width: CAST_BAR.WIDTH,
+        height: CAST_BAR.HEIGHT,
       })
       .applyTo(this.bar);
 
@@ -27,7 +28,7 @@ export class CastBar {
   }
 
   setCompletedTexture(): void {
-    this.bar.setTexture('cast-bar-green');
+    this.bar.setTexture(UI.CAST_BAR_GREEN);
   }
 
   destroy(): void {

@@ -1,7 +1,7 @@
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
 import { Sandbox } from '@/components/sandbox/sandbox';
 import { PhysicsSpriteConfig, SpellAnimationConfig } from '@/utils/types';
-import { DEPTH } from '@/utils/constants';
+import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
 
 export interface SpellConfig extends PhysicsSpriteConfig {
@@ -38,7 +38,7 @@ export abstract class Spell extends PhysicsSprite {
     this.animation = animation;
     this.sandbox = sandbox;
 
-    this.setDepth(DEPTH.SPELL);
+    this.setDepth(Z_POSITION.SPELL);
   }
 
   abstract cast(): void;

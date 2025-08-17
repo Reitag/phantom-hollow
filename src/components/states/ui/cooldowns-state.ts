@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { SPELLS, SPELLS_COOLDOWNS } from '@/utils/constants';
+import { GLOBAL, BLINK } from '@/constants/spell-cooldowns';
 
 export class CooldownsState {
   private activeCooldowns: Record<string, boolean> = {};
@@ -12,11 +12,11 @@ export class CooldownsState {
   }
 
   public startGlobalCooldowns() {
-    this.startCooldown(SPELLS.GLOBAL, SPELLS_COOLDOWNS.GLOBAL);
+    this.startCooldown(GLOBAL.NAME, GLOBAL.DURATION);
   }
 
   public startBlinkCooldown() {
-    this.startCooldown(SPELLS.BLINK, SPELLS_COOLDOWNS.BLINK);
+    this.startCooldown(BLINK.NAME, BLINK.DURATION);
   }
 
   public startCooldown(key: string, delay: number): void {

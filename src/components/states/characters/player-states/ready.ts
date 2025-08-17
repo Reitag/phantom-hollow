@@ -2,7 +2,8 @@ import { KeyboardController } from '@/components/input/controllers/keyboard-cont
 import { CharacterState } from '@/components/states/characters/core/character-state';
 import { UiManager } from '@/managers/ui-manager';
 import { Player } from '@/objects/characters/player/player';
-import { SPELLS, VELOCITY } from '@/utils/constants';
+import { SPELLS } from '@/constants/asset-keys';
+import { PLAYER_VELOCITY } from '@/constants/physics';
 
 export class Ready extends CharacterState {
   constructor(player: Player, input?: KeyboardController, ui?: UiManager) {
@@ -33,7 +34,7 @@ export class Ready extends CharacterState {
     }
 
     if (this.input?.isPrimaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.FIREBALL);
+      this.ui?.highlightSpell(SPELLS.FIRE_BALL);
     } else if (this.input?.isPrimaryActionReleased) {
       this.ui?.removeHighlight();
       this.stateMachine.changeState('Casting');
@@ -50,7 +51,7 @@ export class Ready extends CharacterState {
   }
 
   private movement(): void {
-    const speed = VELOCITY.PLAYER_VELOCITY.MOVE;
+    const speed = PLAYER_VELOCITY.MOVE;
 
     if (this.input?.isLeftDown) {
       this.moveLeft(speed);

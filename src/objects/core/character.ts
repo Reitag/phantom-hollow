@@ -12,6 +12,7 @@ export class Character extends PhysicsSprite {
   protected maxHealth: number;
   protected facingRight!: boolean;
   protected isDead = false;
+  protected dazed = false;
   protected stateMachine: StateMachine;
   protected animations!: AnimationConfig;
   protected walkBound!: number;
@@ -32,6 +33,19 @@ export class Character extends PhysicsSprite {
     }
 
     this.setCollideWorldBounds(true);
+  }
+
+  public get isDazed(): boolean {
+    return this.dazed;
+  }
+
+  public dazeCharacter(): void {
+    if (this.isDazed) return;
+
+    this.dazed = true;
+    this.scene.time.delayedCall(2000, () => {
+      this.dazed = false;
+    });
   }
 
   public getPatrolLeftX(): number {

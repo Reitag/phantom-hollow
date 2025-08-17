@@ -2,7 +2,7 @@ import { KeyboardController } from '@/components/input/controllers/keyboard-cont
 import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SpellManager } from '@/managers/spell-manager';
 import { Player } from '@/objects/characters/player/player';
-import { SPELLS } from '@/utils/constants';
+import { SPELLS } from '@/constants/asset-keys';
 
 export class Idle extends CharacterState {
   constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
@@ -23,7 +23,7 @@ export class Idle extends CharacterState {
     }
 
     if (this.input?.isPrimaryActionDown) {
-      this.initToCastSpell(SPELLS.FIREBALL);
+      this.initToCastSpell(SPELLS.FIRE_BALL);
     }
 
     if (this.input?.isSecondaryActionDown) {

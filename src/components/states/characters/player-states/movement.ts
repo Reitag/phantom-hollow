@@ -2,7 +2,8 @@ import { KeyboardController } from '@/components/input/controllers/keyboard-cont
 import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SpellManager } from '@/managers/spell-manager';
 import { Player } from '@/objects/characters/player/player';
-import { SPELLS, VELOCITY } from '@/utils/constants';
+import { SPELLS } from '@/constants/asset-keys';
+import { PLAYER_VELOCITY } from '@/constants/physics';
 
 export class Movement extends CharacterState {
   constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
@@ -27,7 +28,7 @@ export class Movement extends CharacterState {
     }
 
     if (this.input?.isPrimaryActionDown) {
-      this.initToCastSpell(SPELLS.FIREBALL);
+      this.initToCastSpell(SPELLS.FIRE_BALL);
     }
 
     if (this.input?.isSecondaryActionDown) {
@@ -42,7 +43,11 @@ export class Movement extends CharacterState {
   }
 
   private movement(): void {
-    const speed = VELOCITY.PLAYER_VELOCITY.MOVE;
+    let speed = PLAYER_VELOCITY.MOVE;
+
+    if (this.character.isDazed) {
+      speed /= 8;
+    }
 
     if (this.input?.isLeftDown) {
       this.moveLeft(speed);

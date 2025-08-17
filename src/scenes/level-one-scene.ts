@@ -1,10 +1,21 @@
 import Phaser from 'phaser';
 
-import { WORLD_BOUND, DEPTH } from '@/utils/constants';
+import { WORLD_PARAMS } from '@/constants/physics';
+import {
+  SPEAR_HIT,
+  SPIKE_HIT,
+  SKELETON_WARRIOR_STATS,
+  ZOMBIE_STATS,
+} from '@/constants/object-stats';
+import { Z_POSITION } from '@/constants/z-position';
+import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/objects/characters/player/player';
-import { AiSkeletonWarrior } from '@/components/ai/ai-skeleton-warrior';
+import { AiSkeletonWarrior } from '@/components/ai/enemies/ai-skeleton-warrior';
+import { AiZombie } from '@/components/ai/enemies/ai-zombie';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
+import { Zombie } from '@/objects/characters/enemies/zombie';
 import { Tilemap } from '@/components/map/tilemap';
+import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
@@ -13,18 +24,22 @@ import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { Character } from '@/objects/core/character';
 import { Spell } from '@/objects/core/spell';
 import { isValidTeleportPosition } from '@/utils/helpers';
+// @ts-expect-error JS import
+import { MemoryMonitor } from '@/debug/memory-monitor.js';
 import { UiScene } from './ui-scene';
 
 export class LevelOneScene extends Phaser.Scene {
-  private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600];
+  private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600, 6500, 8600, 10800];
+  private readonly zombieSpawnPositions = [4700, 5000, 5500, 6400, 7700, 8700, 8800, 10900];
 
   private player!: Player;
   private aiSkeletonWarrior!: AiSkeletonWarrior;
+  private aiZombie!: AiZombie;
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
-  private canTakeSpikeDamage = true;
+  private canPlayerGetDamage = true;
   private isGameInitialized = false;
 
   constructor() {
@@ -42,6 +57,7 @@ export class LevelOneScene extends Phaser.Scene {
   update(): void {
     this.player.update();
     this.aiSkeletonWarrior.update();
+    this.aiZombie.update();
 
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
     this.grass.tilePositionX = this.camera.scrollX * 0.5;
@@ -57,6 +73,12 @@ export class LevelOneScene extends Phaser.Scene {
       if (uiScene instanceof UiScene) {
         ServiceLocator.register(ServiceKeys.ui, uiScene.getUI());
         initWorld();
+
+        // Debug
+        if (process.env.NODE_ENV === 'development') {
+          this.scene.add('MemoryMonitor', MemoryMonitor, true);
+        }
+        // Debug
       } else {
         throw new Error('UiScene not found or not an instance of UiScene!');
       }
@@ -72,112 +94,32 @@ export class LevelOneScene extends Phaser.Scene {
     this.createPlayer();
 
     this.createSkeletonWarriors();
+    this.createZombies();
 
     this.registerCollisions();
     this.setupCamera();
   }
 
   private createParallaxBackground(): void {
-    this.add.image(0, 0, 'sky').setOrigin(0);
+    this.add.image(0, 0, TILESETS.SKY).setOrigin(0);
 
     this.mount = this.add
-      .tileSprite(0, 310, WORLD_BOUND.WIDTH, 338, 'mount')
+      .tileSprite(0, 310, WORLD_PARAMS.WIDTH, 338, TILESETS.MOUNT)
       .setOrigin(0)
       .setScrollFactor(0);
 
     this.grass = this.add
-      .tileSprite(0, 450, WORLD_BOUND.WIDTH, 130, 'grass')
+      .tileSprite(0, 450, WORLD_PARAMS.WIDTH, 130, TILESETS.GRASS)
       .setOrigin(0)
       .setScrollFactor(0);
   }
 
   private createTilemap(): void {
-    const mapKey = 'level-1';
-    const tilesetsConfig = [
-      { name: 'ancient-tile', key: 'ancient-tiles' },
-      { name: 'ground-tile', key: 'ground' },
-      { name: 'cliff-tile', key: 'cliff' },
-      { name: 'grass-tile', key: 'grass-2' },
-    ];
-    const tileLayersConfig = [
-      {
-        name: 'bush-layer',
-        tilesets: ['grass-tile'],
-        x: 0,
-        y: 0,
-        collide: false,
-      },
-      {
-        name: 'ground-layer',
-        tilesets: ['ground-tile', 'cliff-tile'],
-        x: 0,
-        y: 0,
-        collide: true,
-      },
-      {
-        name: 'spike-layer',
-        tilesets: ['ground-tile'],
-        x: 0,
-        y: 0,
-        collide: true,
-      },
-      {
-        name: 'platform-layer',
-        tilesets: ['ancient-tile'],
-        x: 0,
-        y: 0,
-        collide: true,
-      },
-    ];
-    const objectLayersConfig = [
-      {
-        name: 'tree-normal-layer',
-        render: (obj: Phaser.Types.Tilemaps.TiledObject, depth: number) => {
-          const name = obj.name;
-          if (!name) {
-            console.warn('Object missing name for tree-layer:', obj);
-            return;
-          }
-
-          const image = this.add.image(obj.x ?? 0, obj.y ?? 0, name).setOrigin(0, 1);
-          image.setDepth(depth);
-        },
-      },
-      {
-        name: 'tree-shadow-layer',
-        render: (obj: Phaser.Types.Tilemaps.TiledObject, depth: number) => {
-          const name = obj.name;
-          if (!name) {
-            console.warn('Object missing name for tree-layer:', obj);
-            return;
-          }
-
-          const image = this.add.image(obj.x ?? 0, obj.y ?? 0, name).setOrigin(0, 1);
-          image.setDepth(depth);
-        },
-      },
-    ];
-    const layerDepths = {
-      'platform-layer': DEPTH.PLATFORMS,
-      'spike-layer': DEPTH.SPIKE,
-      'ground-layer': DEPTH.GROUND,
-      'tree-normal-layer': DEPTH.TREES_NORMAL,
-      'tree-shadow-layer': DEPTH.TREES_SHADOW,
-      'bush-layer': DEPTH.BUSH,
-    };
-
-    this.map = new Tilemap(
-      this,
-      mapKey,
-      tilesetsConfig,
-      tileLayersConfig,
-      objectLayersConfig,
-      layerDepths
-    ).create();
+    this.map = createTilemapOne(this);
   }
 
   private createWorldBounds(): void {
-    this.physics.world.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
+    this.physics.world.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 
   private createSpellSystems(): void {
@@ -191,69 +133,96 @@ export class LevelOneScene extends Phaser.Scene {
     this.player = new Player({
       scene: this,
       position: { x: 50, y: 450 },
-      keyName: 'player',
+      keyName: CHARACTERS.PLAYER,
       health: 100,
       frame: 0,
       facingRight: true,
       isValidTeleportPositionCallback: isValidTeleportPosition([
-        this.map.getTileLayer('platform-layer')!,
-        this.map.getTileLayer('spike-layer')!,
-        this.map.getTileLayer('ground-layer')!,
+        this.map.getTileLayer(TILELAYER_NAMES.PLATFORM)!,
+        this.map.getTileLayer(TILELAYER_NAMES.SPIKE)!,
+        this.map.getTileLayer(TILELAYER_NAMES.GROUND)!,
       ]),
-    }).setDepth(DEPTH.PLAYER);
+    }).setDepth(Z_POSITION.PLAYER);
 
     ServiceLocator.register(ServiceKeys.player, this.player);
   }
 
   private createSkeletonWarriors(): void {
-    const platformLayer = this.map.getTileLayer('platform-layer');
-    this.aiSkeletonWarrior = new AiSkeletonWarrior(this.player, platformLayer);
+    const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
+    this.aiSkeletonWarrior = new AiSkeletonWarrior(this.player, collideLayer);
 
     this.skeletonSpawnPositions.forEach((xPos) => {
       const skeleton = new SkeletonWarrior({
         scene: this,
         position: { x: xPos, y: 500 },
-        keyName: 'skeleton-warrior',
-        health: 200,
+        keyName: CHARACTERS.SKELETON_WARRIOR,
+        health: SKELETON_WARRIOR_STATS.HEALTH,
         frame: 0,
         facingRight: false,
       });
 
-      skeleton.setDepth(DEPTH.ENEMY);
-      this.aiSkeletonWarrior.addSkeleton(skeleton);
+      skeleton.setDepth(Z_POSITION.ENEMY);
+      this.aiSkeletonWarrior.addEnemy(skeleton);
+    });
+  }
+  private createZombies(): void {
+    const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
+    this.aiZombie = new AiZombie(this.player, collideLayer);
+
+    this.zombieSpawnPositions.forEach((xPos) => {
+      const zombie = new Zombie({
+        scene: this,
+        position: { x: xPos, y: 500 },
+        keyName: CHARACTERS.ZOMBIE,
+        health: ZOMBIE_STATS.HEALTH,
+        frame: 0,
+        facingRight: false,
+      });
+
+      zombie.setDepth(Z_POSITION.ENEMY);
+      this.aiZombie.addEnemy(zombie);
     });
   }
 
   private registerCollisions(): void {
-    const platformLayer = this.map.getTileLayer('platform-layer');
-    const spikeLayer = this.map.getTileLayer('spike-layer');
-    const groundLayer = this.map.getTileLayer('ground-layer');
+    const platformLayer = this.map.getTileLayer(TILELAYER_NAMES.PLATFORM);
+    const spikeLayer = this.map.getTileLayer(TILELAYER_NAMES.SPIKE);
+    const groundLayer = this.map.getTileLayer(TILELAYER_NAMES.GROUND);
+    const spearLayer = this.map.getTileLayer(TILELAYER_NAMES.SPEAR);
+    const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
 
-    const skeletons = this.aiSkeletonWarrior.getSkeletons();
+    const skeletons = this.aiSkeletonWarrior.getEnemies();
+    const zombies = this.aiZombie.getEnemies();
     const spells = ServiceLocator.resolve(ServiceKeys.spellFactory).getSpells();
 
     // Ground
     if (groundLayer) {
       this.physics.add.collider(this.player, groundLayer); // Player
       this.physics.add.collider(skeletons, groundLayer); // Skeleton warrior
+      this.physics.add.collider(zombies, groundLayer); // Zombie
     }
 
     // Spike
     if (spikeLayer) {
       this.physics.add.collider(this.player, spikeLayer, this.handleSpikeHit, undefined, this);
       this.physics.add.collider(skeletons, spikeLayer); // Skeleton warrior
+      this.physics.add.collider(zombies, spikeLayer); // Zombie
+    }
+
+    // Spear
+    if (spearLayer) {
+      this.physics.add.overlap(
+        this.player,
+        spearLayer,
+        this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      ); // Player
     }
 
     // Platform
     if (platformLayer) {
       this.physics.add.collider(this.player, platformLayer); // Player
-      this.physics.add.collider(
-        skeletons,
-        platformLayer,
-        this.handleSkeletonPlatformCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Skeleton warrior
       this.physics.add.collider(
         spells,
         platformLayer,
@@ -261,16 +230,41 @@ export class LevelOneScene extends Phaser.Scene {
         undefined,
         this
       ); // Spells
+    }
 
-      // Skeleton warrior
-      this.physics.add.overlap(
-        spells,
+    // Collide
+    if (collideLayer) {
+      this.physics.add.collider(
         skeletons,
-        this.handleFireballHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        collideLayer,
+        this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         undefined,
         this
-      );
+      ); // Skeleton warrior
+      this.physics.add.collider(
+        zombies,
+        collideLayer,
+        this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      ); // Zombies
     }
+
+    // Fireball
+    this.physics.add.overlap(
+      spells,
+      skeletons,
+      this.handleFireballHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
+      this
+    ); // Skeleton warrior
+    this.physics.add.overlap(
+      spells,
+      zombies,
+      this.handleFireballHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
+      this
+    ); // Zombies
 
     // For better collisions
     this.physics.world.setFPS(120);
@@ -279,12 +273,16 @@ export class LevelOneScene extends Phaser.Scene {
   private setupCamera(): void {
     this.camera = this.cameras.main;
     this.camera.startFollow(this.player, true, 0.09, 0.09);
-    this.camera.setBounds(0, 0, WORLD_BOUND.WIDTH, WORLD_BOUND.HEIGHT);
+    this.camera.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 
-  private handleSkeletonPlatformCollision(skeleton: Phaser.GameObjects.GameObject): void {
-    if (skeleton instanceof SkeletonWarrior) {
-      this.aiSkeletonWarrior.handleLayerCollision(skeleton);
+  private handleEnemyCollision(enemy: Phaser.GameObjects.GameObject): void {
+    if (enemy instanceof Character) {
+      if (this.aiSkeletonWarrior.getEnemies().includes(enemy)) {
+        this.aiSkeletonWarrior.handleCollision(enemy);
+      } else if (this.aiZombie.getEnemies().includes(enemy)) {
+        this.aiZombie.handleCollision(enemy);
+      }
     }
   }
 
@@ -305,13 +303,26 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private handleSpikeHit(): void {
-    if (!this.canTakeSpikeDamage) return;
+    if (!this.canPlayerGetDamage) return;
 
-    this.player.takeDamage(25);
-    this.canTakeSpikeDamage = false;
+    this.player.takeDamage(SPIKE_HIT);
+    this.canPlayerGetDamage = false;
 
     this.time.delayedCall(500, () => {
-      this.canTakeSpikeDamage = true;
+      this.canPlayerGetDamage = true;
     });
+  }
+
+  private handleSpearHit(_: Phaser.GameObjects.GameObject, tile: Phaser.Tilemaps.Tile): void {
+    if (!this.canPlayerGetDamage && !tile) return;
+
+    if (tile.properties.collides) {
+      this.player.takeDamage(SPEAR_HIT);
+      this.canPlayerGetDamage = false;
+
+      this.time.delayedCall(500, () => {
+        this.canPlayerGetDamage = true;
+      });
+    }
   }
 }

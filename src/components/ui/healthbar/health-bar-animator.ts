@@ -1,4 +1,4 @@
-import { healthBar } from '@/utils/coordinates';
+import { HEALTH_BAR } from '@/constants/ui-coordinates';
 import { HealthBar } from './health-bar';
 
 export class HealthBarAnimator {
@@ -10,14 +10,14 @@ export class HealthBarAnimator {
 
   reducePlayerHealth(currentHealth: number, maxHealth: number): void {
     const percentage = this.clamp(currentHealth / maxHealth, 0, 1);
-    const { x, y, width, height } = healthBar;
+    const { X, Y, WIDTH, HEIGHT } = HEALTH_BAR;
 
     const mask = this.healthBar.getMask();
     if (!mask) return;
 
     mask.clear();
     mask.fillStyle(0xffffff);
-    mask.fillRoundedRect(x, y - height / 2, width * percentage, height, 1);
+    mask.fillRoundedRect(X, Y - HEIGHT / 2, WIDTH * percentage, HEIGHT, 1);
   }
 
   private clamp(value: number, min: number, max: number): number {

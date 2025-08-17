@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
-import { iconOverlays } from '@/utils/coordinates';
+import { SPELLS } from '@/constants/asset-keys';
+import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 
 export class SpellIconHighlighter {
   private scene: Phaser.Scene;
@@ -10,15 +11,15 @@ export class SpellIconHighlighter {
     this.scene = scene;
   }
 
-  addHighlight(spellKey: string): void {
+  addHighlight(spellKey: typeof SPELLS.FIRE_BALL | typeof SPELLS.BLINK): void {
     if (this.highlightRect) return;
 
-    const position = iconOverlays[spellKey];
+    const position = ICON_OVERLAYS[spellKey];
     if (!position) return;
 
     const size = 32;
     this.highlightRect = this.scene.add
-      .rectangle(position.x, position.y, size, size)
+      .rectangle(position.X, position.Y, size, size)
       .setOrigin(0.5)
       .setFillStyle(0xfff8c9, 0.4)
       .setStrokeStyle(2, 0xffffff, 1);

@@ -5,7 +5,8 @@ import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
 import { AnimationConfig } from '@/utils/types';
-import { SPELLS, VELOCITY } from '@/utils/constants';
+import { PLAYER_VELOCITY } from '@/constants/physics';
+import { SPELLS } from '@/constants/asset-keys';
 
 export abstract class CharacterState implements State {
   readonly name: string;
@@ -68,7 +69,7 @@ export abstract class CharacterState implements State {
 
   protected jump(): void {
     if (this.characterBody.blocked.down) {
-      this.character.setVelocityY(VELOCITY.PLAYER_VELOCITY.JUMP * -1);
+      this.character.setVelocityY(PLAYER_VELOCITY.JUMP * -1);
     }
   }
 
@@ -84,7 +85,7 @@ export abstract class CharacterState implements State {
   }
 
   private canTransitionToCast(spell: string): boolean {
-    if (this.name === 'Movement' && spell === SPELLS.FIREBALL) {
+    if (this.name === 'Movement' && spell === SPELLS.FIRE_BALL) {
       return false;
     }
 
