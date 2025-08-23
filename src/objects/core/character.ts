@@ -1,3 +1,4 @@
+import { DebuffManager } from '@/managers/debuff-manager';
 import { StateMachine } from '@/managers/state-machine';
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
 import { AnimationConfig, PhysicsSpriteConfig } from '@/utils/types';
@@ -12,9 +13,9 @@ export class Character extends PhysicsSprite {
   protected maxHealth: number;
   protected facingRight!: boolean;
   protected isDead = false;
-  protected dazed = false;
   protected stateMachine: StateMachine;
   protected animations!: AnimationConfig;
+  protected debuff: DebuffManager;
   protected walkBound!: number;
   protected patrolRightX!: number;
   protected patrolLeftX!: number;
@@ -27,6 +28,7 @@ export class Character extends PhysicsSprite {
     this.facingRight = facingRight;
 
     this.stateMachine = new StateMachine();
+    this.debuff = new DebuffManager(this.scene);
 
     if (!this.facingRight) {
       this.setFlipX(true);
@@ -35,17 +37,8 @@ export class Character extends PhysicsSprite {
     this.setCollideWorldBounds(true);
   }
 
-  public get isDazed(): boolean {
-    return this.dazed;
-  }
-
-  public dazeCharacter(): void {
-    if (this.isDazed) return;
-
-    this.dazed = true;
-    this.scene.time.delayedCall(2000, () => {
-      this.dazed = false;
-    });
+  public getDebuff(): DebuffManager {
+    return this.debuff;
   }
 
   public getPatrolLeftX(): number {

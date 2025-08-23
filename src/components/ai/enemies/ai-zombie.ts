@@ -1,3 +1,4 @@
+import { DISEASE } from '@/constants/modifier-stats';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 import { Zombie } from '@/objects/characters/enemies/zombie';
 import { Ai } from '../core/ai';
@@ -19,23 +20,17 @@ export class AiZombie extends Ai {
       return;
     }
 
-    const isOverlap = Phaser.Geom.Intersects.RectangleToRectangle(
-      zombie.getBounds(),
-      this.player.getBounds()
-    );
-
     if (currentState === 'Wait') {
       if (x < ZOMBIE_STATS.ATTACK_RANGE) {
         fsm.changeState(
           'Attack',
           this.player,
           [ZOMBIE_STATS.HIT, ZOMBIE_STATS.FRAME_ON_HIT],
-          this.dazePlayer
+          this.diseaseTarget
         );
         return;
       }
-      //if (y === 0 && x > ZOMBIE_STATS.ATTACK_RANGE) {
-      if (!isOverlap) {
+      if (y === 0 && x > ZOMBIE_STATS.ATTACK_RANGE) {
         fsm.changeState('Chase', this.player, ZOMBIE_STATS.CHASE);
         return;
       }
@@ -48,7 +43,7 @@ export class AiZombie extends Ai {
           'Attack',
           this.player,
           [ZOMBIE_STATS.HIT, ZOMBIE_STATS.FRAME_ON_HIT],
-          this.dazePlayer
+          this.diseaseTarget
         );
       }
     } else {
@@ -66,8 +61,13 @@ export class AiZombie extends Ai {
     return ZOMBIE_STATS.SAME_Y_THRESHOLD;
   }
 
-  private dazePlayer(): void {
+  private diseaseTarget(): void {
     const player = this.player;
-    player.dazeCharacter();
+    const debuff = player.getDebuff();
+
+    if (!debuff.isDebuffExist(DISEASE.id)) {
+      debuff.addDebuff(DISEASE.id);
+      debuff.startDebuff(DISEASE.id, player);
+    }
   }
 }

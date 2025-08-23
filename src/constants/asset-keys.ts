@@ -48,4 +48,5 @@ export const UI = {
   CAST_BAR: 'cast-bar',
   CAST_BAR_GREEN: 'cast-bar-green',
   CAST_ENV: 'cast-env',
+  DISEASE_DEBUFF: 'disease-debuff',
 } as const;

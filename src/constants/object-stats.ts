@@ -1,10 +1,8 @@
 export const FIRE_BALL_HIT = 120;
 
-//export const SPIKE_HIT = 10;
-export const SPIKE_HIT = 0;
+export const SPIKE_HIT = 10;
 
-//export const SPEAR_HIT = 50;
-export const SPEAR_HIT = 0;
+export const SPEAR_HIT = 50;
 
 export const SKELETON_WARRIOR_STATS = {
   HEALTH: 200,
@@ -12,8 +10,7 @@ export const SKELETON_WARRIOR_STATS = {
   ENGAGE_DISTANCE: 400,
   ATTACK_RANGE: 20,
   FRAME_ON_HIT: 4,
-  //HIT: 25,
-  HIT: 0,
+  HIT: 25,
   SAME_Y_THRESHOLD: 40,
   PATROL: 60,
   CHASE: 120,
@@ -25,8 +22,7 @@ export const ZOMBIE_STATS = {
   ENGAGE_DISTANCE: 500,
   ATTACK_RANGE: 20,
   FRAME_ON_HIT: 3,
-  //HIT: 15,
-  HIT: 0,
+  HIT: 15,
   SAME_Y_THRESHOLD: 40,
   PATROL: 50,
   CHASE: 100,

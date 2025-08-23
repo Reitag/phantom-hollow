@@ -43,11 +43,7 @@ export class Movement extends CharacterState {
   }
 
   private movement(): void {
-    let speed = PLAYER_VELOCITY.MOVE;
-
-    if (this.character.isDazed) {
-      speed /= 8;
-    }
+    const speed = PLAYER_VELOCITY.MOVE;
 
     if (this.input?.isLeftDown) {
       this.moveLeft(speed);

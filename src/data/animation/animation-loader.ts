@@ -167,7 +167,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
       key: ENEMIES.ZOMBIE.SIMPLE_ATTACK,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 32, end: 34 }),
       frameRate: 10,
-      repeat: 0,
+      repeat: -1,
     });
   }
 

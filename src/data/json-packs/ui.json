@@ -19,6 +19,11 @@
       "key": "cast-bar-green",
       "url": "assets/ui/cast-bar-green.png"
     },
-    { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" }
+    { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" },
+    {
+      "type": "image",
+      "key": "disease-debuff",
+      "url": "assets/icons/debuffs/disease.png"
+    }
   ]
 }
