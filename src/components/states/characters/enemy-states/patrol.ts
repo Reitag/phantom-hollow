@@ -3,15 +3,21 @@ import { Character } from '@/objects/core/character';
 
 export class Patrol extends CharacterState {
   private isWaiting = false;
+  private patrol!: number;
   constructor(character: Character) {
     super('Patrol', character);
   }
 
   onEnter(...args: unknown[]): void {
+    const patrol = args.find((elem): elem is number => typeof elem === 'number');
+    if (patrol === undefined) throw new Error('Expected numeric patrol argument');
+
+    this.patrol = patrol;
+
     if (this.character.getFacingRight()) {
-      this.moveRight(60);
+      this.moveRight(this.patrol);
     } else {
-      this.moveLeft(60);
+      this.moveLeft(this.patrol);
     }
   }
 
@@ -24,10 +30,10 @@ export class Patrol extends CharacterState {
     const isFacingRight = this.character.getFacingRight();
 
     if (isFacingRight) {
-      this.moveRight(60);
+      this.moveRight(this.patrol);
       if (posX >= rightX) this.pausePatrol();
     } else {
-      this.moveLeft(60);
+      this.moveLeft(this.patrol);
       if (posX <= leftX) this.pausePatrol();
     }
   }

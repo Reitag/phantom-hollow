@@ -30,6 +30,7 @@
       "key": "mount",
       "url": "assets/tilesets/level-1/mount.png"
     },
-    { "type": "image", "key": "sky", "url": "assets/tilesets/level-1/sky.png" }
+    { "type": "image", "key": "sky", "url": "assets/tilesets/level-1/sky.png" },
+    { "type": "image", "key": "collide", "url": "assets/tilesets/utils/collide-tile.png" }
   ]
 }

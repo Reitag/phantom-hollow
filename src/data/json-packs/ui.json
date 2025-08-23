@@ -1,6 +1,6 @@
 {
   "files": [
-    { "type": "image", "key": "bg-ui", "url": "assets/ui/bg-ui.png" },
+    { "type": "image", "key": "spell-ui", "url": "assets/ui/spell-ui.png" },
     {
       "type": "image",
       "key": "fire-ball-icon",
@@ -19,6 +19,11 @@
       "key": "cast-bar-green",
       "url": "assets/ui/cast-bar-green.png"
     },
-    { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" }
+    { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" },
+    {
+      "type": "image",
+      "key": "disease-debuff",
+      "url": "assets/icons/debuffs/disease.png"
+    }
   ]
 }

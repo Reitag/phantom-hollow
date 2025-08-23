@@ -1,10 +1,11 @@
+import { DebuffIconContainer } from '@/components/ui/debuff-icons/debuff-icon-container';
 import { CooldownAnimator } from '@/components/ui/spell-icons/cooldown-animator';
 import { HealthBar } from '@/components/ui/healthbar/health-bar';
 import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator';
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
-import { CooldownsState } from '@/components/states/ui/cooldowns-state';
+import { SPELLS } from '@/constants/asset-keys';
 import { Position } from '@/utils/types';
 
 export class UiManager {
@@ -17,6 +18,8 @@ export class UiManager {
   cooldownAnimator: CooldownAnimator;
   spellIconHighlighter: SpellIconHighlighter;
 
+  debuffIconContainer: DebuffIconContainer;
+
   constructor(uiScene: Phaser.Scene) {
     this.healthBar = new HealthBar(uiScene);
     this.healthBarAnimator = new HealthBarAnimator(this.healthBar);
@@ -26,33 +29,44 @@ export class UiManager {
 
     this.cooldownAnimator = new CooldownAnimator(uiScene);
     this.spellIconHighlighter = new SpellIconHighlighter(uiScene);
+
+    this.debuffIconContainer = new DebuffIconContainer(uiScene);
   }
 
-  reducePlayerHealth(currentHealth: number, maxHealth: number): void {
+  public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
     this.healthBarAnimator.reducePlayerHealth(currentHealth, maxHealth);
   }
 
-  startCast(duration: number, onComplete: () => void): void {
+  public startCast(duration: number, onComplete: () => void): void {
     this.castBarAnimator.startCast(duration, onComplete);
   }
 
-  stopCast(): void {
+  public stopCast(): void {
     this.castBarAnimator.stopCast();
   }
 
-  startIconCooldown(coordinates: Position, duration: number): void {
+  public startIconCooldown(coordinates: Position, duration: number): void {
     this.cooldownAnimator.startSingleCooldown(coordinates, duration);
   }
 
-  startGlobalIconsCooldown(duration: number): void {
+  public startGlobalIconsCooldown(duration: number): void {
     this.cooldownAnimator.startGlobalCooldown(duration);
   }
 
-  highlightSpell(spellKey: string): void {
+  public highlightSpell(spellKey: typeof SPELLS.FIRE_BALL | typeof SPELLS.BLINK): void {
     this.spellIconHighlighter.addHighlight(spellKey);
   }
 
-  removeHighlight(): void {
+  public removeHighlight(): void {
     this.spellIconHighlighter.removeHighlight();
+  }
+
+  public setDebuffIcon(key: string, duration: number): void {
+    this.debuffIconContainer.addDebuffIcon(key, duration);
+    this.debuffIconContainer.startCountdown(key, duration);
+  }
+
+  public removeDebuffIcon(key: string): void {
+    this.debuffIconContainer.removeDebuffIcon(key);
   }
 }

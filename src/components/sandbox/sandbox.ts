@@ -2,8 +2,8 @@ import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Player } from '@/objects/characters/player/player';
 import { UiManager } from '@/managers/ui-manager';
 import { CooldownsState } from '@/components/states/ui/cooldowns-state';
-import { SPELLS_COOLDOWNS } from '@/utils/constants';
-import { blinkIcon } from '@/utils/coordinates';
+import { GLOBAL, BLINK } from '@/constants/spell-cooldowns';
+import { BLINK_ICON } from '@/constants/ui-coordinates';
 import { Position } from '@/utils/types';
 
 type PlayerPosition = Position & {
@@ -13,6 +13,7 @@ type PlayerPosition = Position & {
 export class Sandbox {
   private cooldowns: CooldownsState;
   private ui: UiManager;
+
   constructor() {
     this.cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
@@ -42,13 +43,13 @@ export class Sandbox {
     this.cooldowns.startCooldown(spellKey, delay);
     this.startGlobalCooldown();
 
-    this.ui.startIconCooldown(blinkIcon, SPELLS_COOLDOWNS.BLINK);
-    this.ui.startGlobalIconsCooldown(SPELLS_COOLDOWNS.GLOBAL);
+    this.ui.startIconCooldown({ x: BLINK_ICON.X, y: BLINK_ICON.Y }, BLINK.DURATION);
+    this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
   }
 
   public startGlobalCooldown(): void {
     this.cooldowns.startGlobalCooldowns();
-    this.ui.startGlobalIconsCooldown(SPELLS_COOLDOWNS.GLOBAL);
+    this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
   }
 
   private get player(): Player {

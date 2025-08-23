@@ -3,10 +3,10 @@ import Phaser from 'phaser';
 import { GraphicsMask } from '@/components/rendering/graphic-mask';
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Position } from '@/utils/types';
-import { iconOverlays } from '@/utils/coordinates';
-import { SPELLS } from '@/utils/constants';
+import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
+import { SPELLS } from '@/constants/asset-keys';
 
-type CooldownOverlay = [Position, Phaser.GameObjects.Graphics, boolean];
+type CooldownOverlay = [{ X: number; Y: number }, Phaser.GameObjects.Graphics, boolean];
 
 export class CooldownAnimator {
   private scene: Phaser.Scene;
@@ -39,18 +39,18 @@ export class CooldownAnimator {
 
   startGlobalCooldown(duration: number): void {
     const fireBallOverlay = this.createOverlayMask(
-      iconOverlays[SPELLS.FIREBALL].x,
-      iconOverlays[SPELLS.FIREBALL].y
+      ICON_OVERLAYS[SPELLS.FIRE_BALL].X,
+      ICON_OVERLAYS[SPELLS.FIRE_BALL].Y
     );
     const blinkOverlay = this.createOverlayMask(
-      iconOverlays[SPELLS.BLINK].x,
-      iconOverlays[SPELLS.BLINK].y
+      ICON_OVERLAYS[SPELLS.BLINK].X,
+      ICON_OVERLAYS[SPELLS.BLINK].Y
     );
 
     const cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     const overlays: CooldownOverlay[] = [
-      [iconOverlays[SPELLS.FIREBALL], fireBallOverlay, false],
-      [iconOverlays[SPELLS.BLINK], blinkOverlay, cooldowns.isOnCooldown(SPELLS.BLINK)],
+      [ICON_OVERLAYS[SPELLS.FIRE_BALL], fireBallOverlay, false],
+      [ICON_OVERLAYS[SPELLS.BLINK], blinkOverlay, cooldowns.isOnCooldown(SPELLS.BLINK)],
     ];
 
     this.scene.tweens.addCounter({
@@ -63,12 +63,12 @@ export class CooldownAnimator {
 
         overlays.forEach(([iconOverlay, overlayCoordinates, isCooldown]) => {
           if (!isCooldown)
-            this.drawCooldownEffect(iconOverlay.x, iconOverlay.y, overlayCoordinates, value);
+            this.drawCooldownEffect(iconOverlay.X, iconOverlay.Y, overlayCoordinates, value);
         });
       },
       onComplete: () => {
         overlays.forEach(([iconOverlay, overlayCoordinates, isCooldown]) => {
-          if (!isCooldown) this.flashEffect(iconOverlay.x, iconOverlay.y);
+          if (!isCooldown) this.flashEffect(iconOverlay.X, iconOverlay.Y);
           overlayCoordinates.destroy();
         });
       },

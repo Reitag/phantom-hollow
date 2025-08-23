@@ -11,6 +11,12 @@
       "key": "skeleton-warrior",
       "url": "assets/characters/skeleton-warrior.png",
       "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "zombie",
+      "url": "assets/characters/zombie.png",
+      "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
     }
   ]
 }
