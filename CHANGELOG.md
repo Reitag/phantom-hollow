@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2025-08-23
+
+### Added
+
+- Debugger for development.
+- Asset-keys generator and constants for cleaner asset management.
+- Zombie enemy with a new disease ability.
+- Debuff system for status effects.
+- Spears as a new weapon type.
+- Expanded map size to 11200px.
+
+### Changed
+
+- Re-created the entire UI kit for better usability.
+- Updated castbar behavior for more accurate spell timing.
+
+### Fixed
+
+- Background grass rendering issues.
+
+
 ## [0.8.0] - 2025-08-09
 
 ### Added
@@ -38,9 +59,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Old JavaScript files containing outdated and unreliable code, replaced with cleaner TypeScript implementations.
 
+## [0.6.0] - 2025-08-02
+
+### Changed
+
+- Improved player and enemy state logic.
+- Fixed various code issues to increase stability.
+
+## [0.5.2] - 2025-07-27
+
+### Added
+
+- Player-specific states (Idle, Movement, etc.).
+
+### Changed
+
+- Reworked folder structures for better project organization.
+
+
+## [0.5.0] - 2025-07-21
+
+### Added
+
+- Core state machine implementation.
+- Skeleton enemy now uses the new state machine for cleaner AI logic.
+
+## [0.4.0] - 2025-07-19
+
+### Added
+
+- Skeleton Warrior enemy with basic AI tools and combat behavior.
+
+## [0.2.0] - 2025-07-17
+
+### Added
+
+- ESLint 9.x and Prettier integration for consistent code style.
+- Initial changelog documentation.
+
 ## [0.1.0] - 2025-07-09
 
 ### Changed
 
 - Completed full TypeScript migration
 - Reorganized structure: managers, input, components, reusable UI system
+
+## [Pre-Release] - Prototype Phase (JavaScript, pre-0.1.0)
+
+### Added
+
+- Initial game prototype with core mechanics.
+- UI components and cooldown effects.
+- GraphicsMask and tilemap components.
+- Skeleton Warrior prototype and basic AI (pre-TypeScript refactor).
+
+### Changed
+
+- Background rendering improvements (middle layer rework).
+- Added first complete level layout.
+
+### Fixed
+
+- Code issues related to background rendering and UI integration.
