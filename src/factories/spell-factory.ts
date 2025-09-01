@@ -1,9 +1,9 @@
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
 import { Blink } from '@/objects/spells/effect-spells/blink';
-import { SPELLS as SPELL_ASSET } from '@/constants/asset-keys';
-import { SPELLS as SPELL_ANIM } from '@/constants/animation-keys';
-import { FIRE_BALL_HIT } from '@/constants/object-stats';
+import { SPELLS } from '@/constants/asset-keys';
+import { SPELLS_ANIMATION } from '@/constants/animation-keys';
+import { FIRE_BALL_STATS } from '@/constants/object-stats';
 
 export class SpellFactory {
   private spellGroup: Phaser.Physics.Arcade.Group;
@@ -22,15 +22,15 @@ export class SpellFactory {
     const fireBall = new FireBall({
       scene: this.scene,
       position: { x: x + offsetX, y: y },
-      keyName: SPELL_ASSET.FIRE_BALL,
+      keyName: SPELLS.FIRE_BALL,
       frame: 0,
       sandbox,
       animation: {
-        main: SPELL_ANIM.FIRE_BALL.MAIN,
-        destroy: SPELL_ANIM.FIRE_BALL.DESTROY,
+        main: SPELLS_ANIMATION.FIRE_BALL.MAIN,
+        destroy: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
       },
-      damage: FIRE_BALL_HIT,
-      speed: 300,
+      damage: FIRE_BALL_STATS.HIT,
+      speed: FIRE_BALL_STATS.SPEED,
       direction: direction,
     });
 
@@ -45,11 +45,11 @@ export class SpellFactory {
     const blink = new Blink({
       scene: this.scene,
       position: { x: x - 4 * direction, y: y + 5 },
-      keyName: SPELL_ASSET.BLINK,
+      keyName: SPELLS.BLINK,
       frame: 0,
       sandbox,
       animation: {
-        main: SPELL_ANIM.BLINK.MAIN,
+        main: SPELLS_ANIMATION.BLINK.MAIN,
       },
       direction: direction,
     });

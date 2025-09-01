@@ -1,3 +1,4 @@
+import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { DISEASE } from '@/constants/modifier-stats';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 import { Zombie } from '@/objects/characters/enemies/zombie';
@@ -37,7 +38,12 @@ export class AiZombie extends Ai {
       return;
     }
 
-    if (x < ZOMBIE_STATS.ATTACK_RANGE) {
+    if (
+      zombie.anims.isPlaying &&
+      zombie.anims.currentAnim?.key === ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK
+    ) {
+      return;
+    } else if (x < ZOMBIE_STATS.ATTACK_RANGE) {
       if (currentState !== 'Attack') {
         fsm.changeState(
           'Attack',

@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 
-import { WORLD_PARAMS } from '@/constants/physics';
+import { WORLD_PARAMS } from '@/constants/world-params';
 import {
   SPEAR_HIT,
   SPIKE_HIT,
+  PLAYER_STATS,
   SKELETON_WARRIOR_STATS,
   ZOMBIE_STATS,
 } from '@/constants/object-stats';
@@ -29,6 +30,8 @@ import { MemoryMonitor } from '@/debug/memory-monitor.js';
 import { UiScene } from './ui-scene';
 
 export class LevelOneScene extends Phaser.Scene {
+  private readonly playerSpawnPosition = 50;
+  //private readonly playerSpawnPosition = 10300;
   private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600, 6500, 8600, 10800];
   private readonly zombieSpawnPositions = [4700, 5000, 5500, 6400, 7700, 8700, 8800, 10900];
 
@@ -132,9 +135,9 @@ export class LevelOneScene extends Phaser.Scene {
   private createPlayer(): void {
     this.player = new Player({
       scene: this,
-      position: { x: 50, y: 450 },
+      position: { x: this.playerSpawnPosition, y: 450 },
       keyName: CHARACTERS.PLAYER,
-      health: 100,
+      health: PLAYER_STATS.HEALTH,
       frame: 0,
       facingRight: true,
       isValidTeleportPositionCallback: isValidTeleportPosition([
@@ -200,6 +203,13 @@ export class LevelOneScene extends Phaser.Scene {
       this.physics.add.collider(this.player, groundLayer); // Player
       this.physics.add.collider(skeletons, groundLayer); // Skeleton warrior
       this.physics.add.collider(zombies, groundLayer); // Zombie
+      this.physics.add.collider(
+        spells,
+        groundLayer,
+        this.handleFireballCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      ); // Spells
     }
 
     // Spike
@@ -226,7 +236,7 @@ export class LevelOneScene extends Phaser.Scene {
       this.physics.add.collider(
         spells,
         platformLayer,
-        this.handleFireballPlatformCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        this.handleFireballCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         undefined,
         this
       ); // Spells
@@ -286,7 +296,7 @@ export class LevelOneScene extends Phaser.Scene {
     }
   }
 
-  private handleFireballPlatformCollision(fireball: Phaser.GameObjects.GameObject): void {
+  private handleFireballCollision(fireball: Phaser.GameObjects.GameObject): void {
     if (fireball instanceof Spell) {
       fireball.destroySpell();
     }

@@ -1,47 +1,52 @@
-import { PLAYER, ENEMIES, PORTAL, SPELLS as SPELL_ANIM } from '@/constants/animation-keys';
+import {
+  PLAYER_ANIMATION,
+  SPELLS_ANIMATION,
+  ENEMIES_ANIMATION,
+  PORTAL_ANIMATION,
+} from '@/constants/animation-keys';
 import { CHARACTERS, MISC, SPELLS as SPELL_ASSET } from '@/constants/asset-keys';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // player
-  if (!anims.get(PLAYER.LEFT)) {
+  if (!anims.get(PLAYER_ANIMATION.LEFT)) {
     anims.create({
-      key: PLAYER.LEFT,
+      key: PLAYER_ANIMATION.LEFT,
       frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 42, end: 47 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(PLAYER.RIGHT)) {
+  if (!anims.get(PLAYER_ANIMATION.RIGHT)) {
     anims.create({
-      key: PLAYER.RIGHT,
+      key: PLAYER_ANIMATION.RIGHT,
       frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 42, end: 47 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(PLAYER.IDLE)) {
+  if (!anims.get(PLAYER_ANIMATION.IDLE)) {
     anims.create({
-      key: PLAYER.IDLE,
+      key: PLAYER_ANIMATION.IDLE,
       frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 0, end: 7 }),
       frameRate: 6,
       repeat: -1,
     });
   }
 
-  if (!anims.get(PLAYER.SIMPLE_ATTACK)) {
+  if (!anims.get(PLAYER_ANIMATION.SIMPLE_ATTACK)) {
     anims.create({
-      key: PLAYER.SIMPLE_ATTACK,
+      key: PLAYER_ANIMATION.SIMPLE_ATTACK,
       frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 21, end: 41 }),
       frameRate: 14,
       repeat: 0,
     });
   }
 
-  if (!anims.get(PLAYER.DEATH)) {
+  if (!anims.get(PLAYER_ANIMATION.DEATH)) {
     anims.create({
-      key: PLAYER.DEATH,
+      key: PLAYER_ANIMATION.DEATH,
       frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 84, end: 101 }),
       frameRate: 14,
       repeat: 0,
@@ -49,18 +54,18 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // fire-ball
-  if (!anims.get(SPELL_ANIM.FIRE_BALL.MAIN)) {
+  if (!anims.get(SPELLS_ANIMATION.FIRE_BALL.MAIN)) {
     anims.create({
-      key: SPELL_ANIM.FIRE_BALL.MAIN,
+      key: SPELLS_ANIMATION.FIRE_BALL.MAIN,
       frames: anims.generateFrameNumbers(SPELL_ASSET.FIRE_BALL, { start: 0, end: 3 }),
       frameRate: 20,
       repeat: -1,
     });
   }
 
-  if (!anims.get(SPELL_ANIM.FIRE_BALL.DESTROY)) {
+  if (!anims.get(SPELLS_ANIMATION.FIRE_BALL.DESTROY)) {
     anims.create({
-      key: SPELL_ANIM.FIRE_BALL.DESTROY,
+      key: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
       frames: anims.generateFrameNumbers(SPELL_ASSET.FIRE_BALL, { start: 4, end: 9 }),
       frameRate: 20,
       repeat: 0,
@@ -69,9 +74,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // blink
-  if (!anims.get(SPELL_ANIM.BLINK.MAIN)) {
+  if (!anims.get(SPELLS_ANIMATION.BLINK.MAIN)) {
     anims.create({
-      key: SPELL_ANIM.BLINK.MAIN,
+      key: SPELLS_ANIMATION.BLINK.MAIN,
       frames: anims.generateFrameNumbers(SPELL_ASSET.BLINK, { start: 0, end: 9 }),
       frameRate: 16,
       repeat: 0,
@@ -80,54 +85,54 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // skeleton-warrior
-  if (!anims.get(ENEMIES.SKELETON_WARRIOR.LEFT)) {
+  if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.LEFT)) {
     anims.create({
-      key: ENEMIES.SKELETON_WARRIOR.LEFT,
+      key: ENEMIES_ANIMATION.SKELETON_WARRIOR.LEFT,
       frames: anims.generateFrameNumbers(CHARACTERS.SKELETON_WARRIOR, { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.SKELETON_WARRIOR.RIGHT)) {
+  if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.RIGHT)) {
     anims.create({
-      key: ENEMIES.SKELETON_WARRIOR.RIGHT,
+      key: ENEMIES_ANIMATION.SKELETON_WARRIOR.RIGHT,
       frames: anims.generateFrameNumbers(CHARACTERS.SKELETON_WARRIOR, { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.SKELETON_WARRIOR.IDLE)) {
+  if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.IDLE)) {
     anims.create({
-      key: ENEMIES.SKELETON_WARRIOR.IDLE,
+      key: ENEMIES_ANIMATION.SKELETON_WARRIOR.IDLE,
       frames: anims.generateFrameNumbers(CHARACTERS.SKELETON_WARRIOR, { start: 0, end: 2 }),
       frameRate: 6,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.SKELETON_WARRIOR.SIMPLE_ATTACK)) {
+  if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.SIMPLE_ATTACK)) {
     anims.create({
-      key: ENEMIES.SKELETON_WARRIOR.SIMPLE_ATTACK,
+      key: ENEMIES_ANIMATION.SKELETON_WARRIOR.SIMPLE_ATTACK,
       frames: anims.generateFrameNumbers(CHARACTERS.SKELETON_WARRIOR, { start: 16, end: 19 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.SKELETON_WARRIOR.HURT)) {
+  if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.HURT)) {
     anims.create({
-      key: ENEMIES.SKELETON_WARRIOR.HURT,
+      key: ENEMIES_ANIMATION.SKELETON_WARRIOR.HURT,
       frames: anims.generateFrameNumbers(CHARACTERS.SKELETON_WARRIOR, { start: 24, end: 25 }),
       frameRate: 10,
       repeat: 0,
     });
   }
 
-  if (!anims.get(ENEMIES.SKELETON_WARRIOR.DEATH)) {
+  if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.DEATH)) {
     anims.create({
-      key: ENEMIES.SKELETON_WARRIOR.DEATH,
+      key: ENEMIES_ANIMATION.SKELETON_WARRIOR.DEATH,
       frames: anims.generateFrameNumbers(CHARACTERS.SKELETON_WARRIOR, { start: 32, end: 37 }),
       frameRate: 10,
       repeat: 0,
@@ -135,54 +140,54 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // zombie
-  if (!anims.get(ENEMIES.ZOMBIE.LEFT)) {
+  if (!anims.get(ENEMIES_ANIMATION.ZOMBIE.LEFT)) {
     anims.create({
-      key: ENEMIES.ZOMBIE.LEFT,
+      key: ENEMIES_ANIMATION.ZOMBIE.LEFT,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.ZOMBIE.RIGHT)) {
+  if (!anims.get(ENEMIES_ANIMATION.ZOMBIE.RIGHT)) {
     anims.create({
-      key: ENEMIES.ZOMBIE.RIGHT,
+      key: ENEMIES_ANIMATION.ZOMBIE.RIGHT,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 8, end: 15 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.ZOMBIE.IDLE)) {
+  if (!anims.get(ENEMIES_ANIMATION.ZOMBIE.IDLE)) {
     anims.create({
-      key: ENEMIES.ZOMBIE.IDLE,
+      key: ENEMIES_ANIMATION.ZOMBIE.IDLE,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 0, end: 3 }),
       frameRate: 6,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.ZOMBIE.SIMPLE_ATTACK)) {
+  if (!anims.get(ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK)) {
     anims.create({
-      key: ENEMIES.ZOMBIE.SIMPLE_ATTACK,
+      key: ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 32, end: 34 }),
       frameRate: 10,
       repeat: -1,
     });
   }
 
-  if (!anims.get(ENEMIES.ZOMBIE.HURT)) {
+  if (!anims.get(ENEMIES_ANIMATION.ZOMBIE.HURT)) {
     anims.create({
-      key: ENEMIES.ZOMBIE.HURT,
+      key: ENEMIES_ANIMATION.ZOMBIE.HURT,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 16, end: 16 }),
       frameRate: 10,
       repeat: 0,
     });
   }
 
-  if (!anims.get(ENEMIES.ZOMBIE.DEATH)) {
+  if (!anims.get(ENEMIES_ANIMATION.ZOMBIE.DEATH)) {
     anims.create({
-      key: ENEMIES.ZOMBIE.DEATH,
+      key: ENEMIES_ANIMATION.ZOMBIE.DEATH,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 24, end: 25 }),
       frameRate: 10,
       repeat: 0,
@@ -190,9 +195,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   }
 
   // portal
-  if (!anims.get(PORTAL.SPIN)) {
+  if (!anims.get(PORTAL_ANIMATION.SPIN)) {
     anims.create({
-      key: PORTAL.SPIN,
+      key: PORTAL_ANIMATION.SPIN,
       frames: anims.generateFrameNumbers(MISC.PORTAL, { start: 0, end: 5 }),
       frameRate: 10,
       repeat: -1,

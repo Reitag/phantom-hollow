@@ -3,7 +3,7 @@ import { CharacterState } from '@/components/states/characters/core/character-st
 import { UiManager } from '@/managers/ui-manager';
 import { Player } from '@/objects/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
-import { PLAYER_VELOCITY } from '@/constants/physics';
+import { PLAYER_STATS } from '@/constants/object-stats';
 
 export class Ready extends CharacterState {
   constructor(player: Player, input?: KeyboardController, ui?: UiManager) {
@@ -51,7 +51,7 @@ export class Ready extends CharacterState {
   }
 
   private movement(): void {
-    const speed = PLAYER_VELOCITY.MOVE;
+    const speed = PLAYER_STATS.MOVE;
 
     if (this.input?.isLeftDown) {
       this.moveLeft(speed);

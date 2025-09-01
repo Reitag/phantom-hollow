@@ -1,4 +1,4 @@
-export const PLAYER = {
+export const PLAYER_ANIMATION = {
   LEFT: 'left',
   RIGHT: 'right',
   IDLE: 'idle',
@@ -6,7 +6,7 @@ export const PLAYER = {
   DEATH: 'death',
 } as const;
 
-export const SPELLS = {
+export const SPELLS_ANIMATION = {
   FIRE_BALL: {
     MAIN: 'fire-ball-anim',
     DESTROY: 'fire-ball-anim-destroy',
@@ -16,7 +16,7 @@ export const SPELLS = {
   },
 } as const;
 
-export const ENEMIES = {
+export const ENEMIES_ANIMATION = {
   SKELETON_WARRIOR: {
     LEFT: 'sk-warrior-left',
     RIGHT: 'sk-warrior-right',
@@ -25,6 +25,7 @@ export const ENEMIES = {
     HURT: 'sk-warrior-hurt',
     DEATH: 'sk-warrior-death',
   },
+
   ZOMBIE: {
     LEFT: 'zombie-left',
     RIGHT: 'zombie-right',
@@ -35,6 +36,6 @@ export const ENEMIES = {
   },
 } as const;
 
-export const PORTAL = {
+export const PORTAL_ANIMATION = {
   SPIN: 'portal-spin',
 } as const;

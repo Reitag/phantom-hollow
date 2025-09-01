@@ -83,6 +83,8 @@ export class Character extends PhysicsSprite {
   }
 
   public takeDamage(amount: number): void {
+    if (this.isDead) return;
+
     this.currentHealth -= amount;
     this.playHitEffect();
 
@@ -105,7 +107,6 @@ export class Character extends PhysicsSprite {
     if (this.isDead) return;
 
     this.isDead = true;
-    this.arcadeBody.enable = false;
     this.onDeathStart?.();
     this.stateMachine.changeState('Death');
   }

@@ -8,7 +8,7 @@ import { Death } from '@/components/states/characters/core/death';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
-import { PLAYER } from '@/constants/animation-keys';
+import { PLAYER_ANIMATION } from '@/constants/animation-keys';
 
 interface PlayerConfig extends CharacterConfig {
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
@@ -38,11 +38,11 @@ export class Player extends Character {
     this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
 
     this.animations = {
-      idle: PLAYER.IDLE,
-      moveLeft: PLAYER.LEFT,
-      moveRight: PLAYER.RIGHT,
-      attack: PLAYER.SIMPLE_ATTACK,
-      death: PLAYER.DEATH,
+      idle: PLAYER_ANIMATION.IDLE,
+      moveLeft: PLAYER_ANIMATION.LEFT,
+      moveRight: PLAYER_ANIMATION.RIGHT,
+      attack: PLAYER_ANIMATION.SIMPLE_ATTACK,
+      death: PLAYER_ANIMATION.DEATH,
     };
 
     this.initKeyboard();

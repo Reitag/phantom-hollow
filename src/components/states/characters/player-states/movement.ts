@@ -3,7 +3,7 @@ import { CharacterState } from '@/components/states/characters/core/character-st
 import { SpellManager } from '@/managers/spell-manager';
 import { Player } from '@/objects/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
-import { PLAYER_VELOCITY } from '@/constants/physics';
+import { PLAYER_STATS } from '@/constants/object-stats';
 
 export class Movement extends CharacterState {
   constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
@@ -43,7 +43,7 @@ export class Movement extends CharacterState {
   }
 
   private movement(): void {
-    const speed = PLAYER_VELOCITY.MOVE;
+    const speed = PLAYER_STATS.MOVE;
 
     if (this.input?.isLeftDown) {
       this.moveLeft(speed);

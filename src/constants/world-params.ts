@@ -5,8 +5,3 @@ export const WORLD_PARAMS = {
   HEIGHT: SCENE_SIZE.HEIGHT,
   GRAVITY: 2000,
 } as const;
-
-export const PLAYER_VELOCITY = {
-  MOVE: 230,
-  JUMP: 730,
-} as const;

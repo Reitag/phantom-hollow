@@ -1,8 +1,18 @@
-export const FIRE_BALL_HIT = 120;
-
 export const SPIKE_HIT = 10;
 
 export const SPEAR_HIT = 50;
+
+export const FIRE_BALL_STATS = {
+  HIT: 120,
+  SPEED: 300,
+  LIFE_TIME: 1100,
+} as const;
+
+export const PLAYER_STATS = {
+  HEALTH: 100,
+  MOVE: 190,
+  JUMP: 510,
+} as const;
 
 export const SKELETON_WARRIOR_STATS = {
   HEALTH: 200,
@@ -13,7 +23,7 @@ export const SKELETON_WARRIOR_STATS = {
   HIT: 25,
   SAME_Y_THRESHOLD: 40,
   PATROL: 60,
-  CHASE: 120,
+  CHASE: 160,
 } as const;
 
 export const ZOMBIE_STATS = {
@@ -25,5 +35,5 @@ export const ZOMBIE_STATS = {
   HIT: 15,
   SAME_Y_THRESHOLD: 40,
   PATROL: 50,
-  CHASE: 100,
+  CHASE: 150,
 } as const;

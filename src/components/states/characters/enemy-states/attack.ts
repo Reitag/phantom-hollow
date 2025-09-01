@@ -40,14 +40,16 @@ export class Attack extends CharacterState {
   onUpdate(): void {
     if (!this.player) return;
 
-    const isOverlapping = this.isWithinWeaponReach();
+    const isOverlapping = this.isWithinAttackReach();
 
     if (this.canHit) {
       this.player.takeDamage(this.damage);
-      this.canHit = false;
       this.additionAbility?.();
-
       this.canHit = false;
+    }
+
+    if (!isOverlapping) {
+      this.character.stop();
     }
 
     if (this.player.getDead()) {
@@ -60,10 +62,10 @@ export class Attack extends CharacterState {
     this.character.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
   }
 
-  private isWithinWeaponReach(): boolean {
+  private isWithinAttackReach(): boolean {
     if (!this.player) return false;
 
-    const buffer = 10; // ← weapon reach
+    const buffer = 20; // ← attack reach
     const charBounds = this.character.getBounds();
     const playerBounds = this.player.getBounds();
 

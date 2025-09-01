@@ -5,7 +5,7 @@ import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
 import { AnimationConfig } from '@/utils/types';
-import { PLAYER_VELOCITY } from '@/constants/physics';
+import { PLAYER_STATS } from '@/constants/object-stats';
 import { SPELLS } from '@/constants/asset-keys';
 
 export abstract class CharacterState implements State {
@@ -69,7 +69,7 @@ export abstract class CharacterState implements State {
 
   protected jump(): void {
     if (this.characterBody.blocked.down) {
-      this.character.setVelocityY(PLAYER_VELOCITY.JUMP * -1);
+      this.character.setVelocityY(PLAYER_STATS.JUMP * -1);
     }
   }
 
