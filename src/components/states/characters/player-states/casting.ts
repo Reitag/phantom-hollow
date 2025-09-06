@@ -1,5 +1,6 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
 import { CharacterState } from '@/components/states/characters/core/character-state';
+import { SPELLS } from '@/constants/asset-keys';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
 import { Player } from '@/objects/characters/player/player';
@@ -17,17 +18,28 @@ export class Casting extends CharacterState {
   }
 
   onEnter(...args: unknown[]): void {
-    if (this.input?.isPrimaryActionReleased) {
-      this.isCasting = true;
-      const duration = 800;
-      this.playAnimation(this.animations.attack);
+    const spell = args.find((elem): elem is string => typeof elem === 'string');
+    if (spell === undefined) throw new Error('Expected string spell argument');
 
-      this.ui?.startCast(duration, () => {
-        if (this.character.getDead()) return;
+    switch (spell) {
+      case SPELLS.FIRE_BALL:
+        this.startCast(spell, 800, () => {
+          if (!this.character.getDead()) {
+            this.spellManager?.castFireball();
+          }
+        });
+        break;
 
-        this.spellManager?.castFireball();
-        this.isCasting = false;
-      });
+      case SPELLS.BLINK:
+        this.spellManager?.castBlink();
+        break;
+
+      case SPELLS.WIND:
+        this.spellManager?.castWind();
+        break;
+
+      default:
+        break;
     }
   }
 
@@ -43,5 +55,15 @@ export class Casting extends CharacterState {
       this.ui?.stopCast();
       this.stateMachine.changeState('Movement');
     }
+  }
+
+  private startCast(spell: string, duration: number, onComplete: () => void): void {
+    this.isCasting = true;
+    this.playAnimation(this.animations.attack);
+
+    this.ui?.startCast(duration, () => {
+      this.isCasting = false;
+      onComplete();
+    });
   }
 }

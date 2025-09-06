@@ -11,6 +11,11 @@
       "key": "blink-icon",
       "url": "assets/icons/blink-icon.png"
     },
+    {
+      "type": "image",
+      "key": "wind-icon",
+      "url": "assets/icons/wind-icon.png"
+    },
     { "type": "image", "key": "health-bar", "url": "assets/ui/health-bar.png" },
     { "type": "image", "key": "health-env", "url": "assets/ui/health-env.png" },
     { "type": "image", "key": "cast-bar", "url": "assets/ui/cast-bar.png" },

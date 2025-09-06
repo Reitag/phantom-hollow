@@ -1,9 +1,10 @@
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
 import { Blink } from '@/objects/spells/effect-spells/blink';
+import { Wind } from '@/objects/spells/direct-spells/wind';
 import { SPELLS } from '@/constants/asset-keys';
 import { SPELLS_ANIMATION } from '@/constants/animation-keys';
-import { FIRE_BALL_STATS } from '@/constants/object-stats';
+import { FIRE_BALL_STATS, WIND_STATS } from '@/constants/object-stats';
 
 export class SpellFactory {
   private spellGroup: Phaser.Physics.Arcade.Group;
@@ -57,6 +58,29 @@ export class SpellFactory {
     this.spellGroup.add(blink, true);
 
     return blink;
+  }
+
+  public createWind(x: number, y: number, direction: number): Wind {
+    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+    const offsetX = direction * 20;
+
+    const wind = new Wind({
+      scene: this.scene,
+      position: { x: x + offsetX, y: y },
+      keyName: SPELLS.WIND,
+      frame: 0,
+      sandbox,
+      animation: {
+        main: SPELLS_ANIMATION.WIND.MAIN,
+        destroy: SPELLS_ANIMATION.WIND.DESTROY,
+      },
+      speed: WIND_STATS.SPEED,
+      direction: direction,
+    });
+
+    this.spellGroup.add(wind, true);
+
+    return wind;
   }
 
   public getSpells(): Phaser.Physics.Arcade.Group {

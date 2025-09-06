@@ -8,6 +8,11 @@ export const FIRE_BALL_STATS = {
   LIFE_TIME: 1100,
 } as const;
 
+export const WIND_STATS = {
+  SPEED: 300,
+  LIFE_TIME: 700,
+} as const;
+
 export const PLAYER_STATS = {
   HEALTH: 100,
   MOVE: 190,
@@ -22,8 +27,8 @@ export const SKELETON_WARRIOR_STATS = {
   FRAME_ON_HIT: 4,
   HIT: 25,
   SAME_Y_THRESHOLD: 40,
-  PATROL: 60,
-  CHASE: 160,
+  WALK: 60,
+  CHASE: 1.7,
 } as const;
 
 export const ZOMBIE_STATS = {

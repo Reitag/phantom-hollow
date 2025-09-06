@@ -10,9 +10,6 @@ export class Idle extends CharacterState {
   }
 
   onEnter(...args: unknown[]): void {
-    if (this.input?.isSecondaryActionReleased) {
-      this.spellManager?.castBlink();
-    }
     this.character.setVelocityX(0);
     this.playAnimation(this.animations.idle);
   }
@@ -28,6 +25,10 @@ export class Idle extends CharacterState {
 
     if (this.input?.isSecondaryActionDown) {
       this.initToCastSpell(SPELLS.BLINK);
+    }
+
+    if (this.input?.isTertiaryActionDown) {
+      this.initToCastSpell(SPELLS.WIND);
     }
   }
 }

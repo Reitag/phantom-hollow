@@ -2,7 +2,7 @@ import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Sandbox } from '@/components/sandbox/sandbox';
 import { SpellFactory } from '@/factories/spell-factory';
 import { CooldownsState } from '@/components/states/ui/cooldowns-state';
-import { BLINK, GLOBAL } from '@/constants/spell-cooldowns';
+import { BLINK, GLOBAL, WIND } from '@/constants/spell-cooldowns';
 
 export class SpellManager {
   private cooldowns: CooldownsState;
@@ -35,5 +35,14 @@ export class SpellManager {
 
     blink.cast();
     this.sandbox.startCooldown(BLINK.NAME, BLINK.DURATION);
+  }
+
+  public castWind(): void {
+    const { x, y, direction } = this.sandbox.getPlayerPosition();
+
+    const wind = this.spellFactory.createWind(x, y, direction);
+
+    wind.cast();
+    this.sandbox.startCooldown(WIND.NAME, WIND.DURATION);
   }
 }

@@ -11,6 +11,12 @@
       "key": "blink",
       "url": "assets/spells/blink.png",
       "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "wind",
+      "url": "assets/spells/wind.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
     }
   ]
 }

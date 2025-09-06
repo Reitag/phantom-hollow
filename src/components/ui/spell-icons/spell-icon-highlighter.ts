@@ -11,10 +11,11 @@ export class SpellIconHighlighter {
     this.scene = scene;
   }
 
-  addHighlight(spellKey: typeof SPELLS.FIRE_BALL | typeof SPELLS.BLINK): void {
+  addHighlight(spellKey: string): void {
     if (this.highlightRect) return;
 
-    const position = ICON_OVERLAYS[spellKey];
+    const key = spellKey as keyof typeof ICON_OVERLAYS;
+    const position = ICON_OVERLAYS[key];
     if (!position) return;
 
     const size = 32;

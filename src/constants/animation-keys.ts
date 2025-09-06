@@ -14,6 +14,10 @@ export const SPELLS_ANIMATION = {
   BLINK: {
     MAIN: 'blink-anim',
   },
+  WIND: {
+    MAIN: 'wind-anim',
+    DESTROY: 'wind-anim-destroy',
+  },
 } as const;
 
 export const ENEMIES_ANIMATION = {

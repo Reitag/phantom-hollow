@@ -26,6 +26,7 @@ export const OBJECTS = {
 export const SPELLS = {
   FIRE_BALL: 'fire-ball',
   BLINK: 'blink',
+  WIND: 'wind',
 } as const;
 
 export const TILESETS = {
@@ -43,6 +44,7 @@ export const UI = {
   SPELL_UI: 'spell-ui',
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
+  WIND_ICON: 'wind-icon',
   HEALTH_BAR: 'health-bar',
   HEALTH_ENV: 'health-env',
   CAST_BAR: 'cast-bar',

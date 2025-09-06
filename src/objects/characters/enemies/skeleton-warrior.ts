@@ -1,4 +1,5 @@
 import { Character, CharacterConfig } from '@/objects/core/character';
+import { Movement } from '@/components/movement/movement';
 import { Wait } from '@/components/states/characters/enemy-states/wait';
 import { Patrol } from '@/components/states/characters/enemy-states/patrol';
 import { Chase } from '@/components/states/characters/enemy-states/chase';
@@ -23,6 +24,8 @@ export class SkeletonWarrior extends Character {
       attack: ENEMIES_ANIMATION.SKELETON_WARRIOR.SIMPLE_ATTACK,
       death: ENEMIES_ANIMATION.SKELETON_WARRIOR.DEATH,
     };
+
+    this.movement = new Movement(SKELETON_WARRIOR_STATS.WALK);
 
     this.stateMachine.addState(new Patrol(this));
     this.stateMachine.addState(new Wait(this));

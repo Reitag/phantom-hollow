@@ -3,6 +3,7 @@ import { Sandbox } from '@/components/sandbox/sandbox';
 import { PhysicsSpriteConfig, SpellAnimationConfig } from '@/utils/types';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
+import { Character } from './character';
 
 export interface SpellConfig extends PhysicsSpriteConfig {
   sandbox: Sandbox;
@@ -18,6 +19,8 @@ export abstract class Spell extends PhysicsSprite {
   protected damage: number | null = null;
   protected speed: number | null = null;
   protected direction: number | null = null;
+
+  private hittedEnemies = new Set<Character>();
 
   constructor({
     scene,
@@ -54,15 +57,19 @@ export abstract class Spell extends PhysicsSprite {
     });
   }
 
+  public hasAlreadyHit(enemy: Character): boolean {
+    return this.hittedEnemies.has(enemy);
+  }
+
+  public registerHit(enemy: Character): void {
+    this.hittedEnemies.add(enemy);
+  }
+
   public causeDamage(): number {
     if (!this.damage) {
       return 0;
     }
-
-    const damage = this.damage;
-    this.damage = 0;
-
-    return damage;
+    return this.damage;
   }
 
   protected playMainAnimation(): void {

@@ -34,6 +34,10 @@ export class Movement extends CharacterState {
     if (this.input?.isSecondaryActionDown) {
       this.initToCastSpell(SPELLS.BLINK);
     }
+
+    if (this.input?.isTertiaryActionDown) {
+      this.initToCastSpell(SPELLS.WIND);
+    }
   }
 
   private changeToIdleState(): void {

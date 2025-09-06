@@ -24,7 +24,11 @@ export class Ready extends CharacterState {
       this.playAnimation(this.animations.idle);
     }
 
-    if (!this.input?.isPrimaryActionDown && !this.input?.isSecondaryActionDown) {
+    if (
+      !this.input?.isPrimaryActionDown &&
+      !this.input?.isSecondaryActionDown &&
+      !this.input?.isTertiaryActionDown
+    ) {
       this.ui?.removeHighlight();
       if (this.input?.isLeftDown || this.input?.isRightDown) {
         this.stateMachine.changeState('Movement');
@@ -36,18 +40,27 @@ export class Ready extends CharacterState {
     if (this.input?.isPrimaryActionDown) {
       this.ui?.highlightSpell(SPELLS.FIRE_BALL);
     } else if (this.input?.isPrimaryActionReleased) {
-      this.ui?.removeHighlight();
-      this.stateMachine.changeState('Casting');
+      this.stateMachine.changeState('Casting', SPELLS.FIRE_BALL);
       return;
     }
 
     if (this.input?.isSecondaryActionDown) {
       this.ui?.highlightSpell(SPELLS.BLINK);
     } else if (this.input?.isSecondaryActionReleased) {
-      this.ui?.removeHighlight();
-      this.stateMachine.changeState('Idle');
+      this.stateMachine.changeState('Casting', SPELLS.BLINK);
       return;
     }
+
+    if (this.input?.isTertiaryActionDown) {
+      this.ui?.highlightSpell(SPELLS.WIND);
+    } else if (this.input?.isTertiaryActionReleased) {
+      this.stateMachine.changeState('Casting', SPELLS.WIND);
+      return;
+    }
+  }
+
+  onExit(): void {
+    this.ui?.removeHighlight();
   }
 
   private movement(): void {

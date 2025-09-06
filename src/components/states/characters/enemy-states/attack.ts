@@ -1,6 +1,7 @@
 import { CharacterState } from '@/components/states/characters/core/character-state';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Player } from '@/objects/characters/player/player';
+import { Character } from '@/objects/core/character';
 
 export class Attack extends CharacterState {
   private player: Player | null = null;
@@ -9,7 +10,8 @@ export class Attack extends CharacterState {
   private additionAbility: (() => void) | undefined = undefined;
   private canHit = false;
 
-  constructor(character: SkeletonWarrior) {
+  //constructor(character: SkeletonWarrior) {
+  constructor(character: Character) {
     super('Attack', character);
   }
 

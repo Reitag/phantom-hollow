@@ -5,7 +5,7 @@ import { Zombie } from '@/objects/characters/enemies/zombie';
 import { Ai } from '../core/ai';
 
 export class AiZombie extends Ai {
-  protected updateEnemyState(zombie: Zombie): void {
+  protected updateEnemyState(zombie: Zombie, delta: number): void {
     zombie.update();
 
     const { x, y } = this.distanceToPlayer(zombie);

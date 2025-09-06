@@ -1,4 +1,5 @@
 import { isAnimationKeyExist } from '@/utils/helpers';
+import { Movement } from '@/components/movement/movement';
 import { Character } from '@/objects/core/character';
 import { State, StateMachine } from '@/managers/state-machine';
 import { SpellManager } from '@/managers/spell-manager';
@@ -13,6 +14,7 @@ export abstract class CharacterState implements State {
 
   protected character: Character;
   protected characterBody: Phaser.Physics.Arcade.Body;
+  protected move: Movement;
   protected input: KeyboardController | null = null;
   protected spellManager: SpellManager | null = null;
   protected ui: UiManager | null = null;
@@ -29,6 +31,7 @@ export abstract class CharacterState implements State {
   ) {
     this.name = name;
     this.character = character;
+    this.move = character.getMovement();
     this.input = input || null;
     this.spellManager = spellManager || null;
     this.ui = ui || null;

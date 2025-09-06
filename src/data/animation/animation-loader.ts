@@ -4,7 +4,7 @@ import {
   ENEMIES_ANIMATION,
   PORTAL_ANIMATION,
 } from '@/constants/animation-keys';
-import { CHARACTERS, MISC, SPELLS as SPELL_ASSET } from '@/constants/asset-keys';
+import { CHARACTERS, MISC, SPELLS } from '@/constants/asset-keys';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // player
@@ -57,7 +57,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   if (!anims.get(SPELLS_ANIMATION.FIRE_BALL.MAIN)) {
     anims.create({
       key: SPELLS_ANIMATION.FIRE_BALL.MAIN,
-      frames: anims.generateFrameNumbers(SPELL_ASSET.FIRE_BALL, { start: 0, end: 3 }),
+      frames: anims.generateFrameNumbers(SPELLS.FIRE_BALL, { start: 0, end: 3 }),
       frameRate: 20,
       repeat: -1,
     });
@@ -66,7 +66,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   if (!anims.get(SPELLS_ANIMATION.FIRE_BALL.DESTROY)) {
     anims.create({
       key: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
-      frames: anims.generateFrameNumbers(SPELL_ASSET.FIRE_BALL, { start: 4, end: 9 }),
+      frames: anims.generateFrameNumbers(SPELLS.FIRE_BALL, { start: 4, end: 9 }),
       frameRate: 20,
       repeat: 0,
       hideOnComplete: true,
@@ -77,8 +77,28 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   if (!anims.get(SPELLS_ANIMATION.BLINK.MAIN)) {
     anims.create({
       key: SPELLS_ANIMATION.BLINK.MAIN,
-      frames: anims.generateFrameNumbers(SPELL_ASSET.BLINK, { start: 0, end: 9 }),
+      frames: anims.generateFrameNumbers(SPELLS.BLINK, { start: 0, end: 9 }),
       frameRate: 16,
+      repeat: 0,
+      hideOnComplete: true,
+    });
+  }
+
+  // wind
+  if (!anims.get(SPELLS_ANIMATION.WIND.MAIN)) {
+    anims.create({
+      key: SPELLS_ANIMATION.WIND.MAIN,
+      frames: anims.generateFrameNumbers(SPELLS.WIND, { start: 0, end: 3 }),
+      frameRate: 20,
+      repeat: -1,
+    });
+  }
+
+  if (!anims.get(SPELLS_ANIMATION.WIND.DESTROY)) {
+    anims.create({
+      key: SPELLS_ANIMATION.WIND.DESTROY,
+      frames: anims.generateFrameNumbers(SPELLS.WIND, { start: 4, end: 9 }),
+      frameRate: 20,
       repeat: 0,
       hideOnComplete: true,
     });

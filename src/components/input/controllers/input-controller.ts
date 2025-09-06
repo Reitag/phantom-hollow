@@ -12,6 +12,9 @@ export abstract class InputController {
   protected secondaryActionDown = false;
   protected secondaryActionReleased = false;
 
+  protected tertiaryActionDown = false;
+  protected tertiaryActionReleased = false;
+
   get isLeftDown(): boolean {
     return this.left;
   }
@@ -48,6 +51,14 @@ export abstract class InputController {
     return this.secondaryActionReleased;
   }
 
+  get isTertiaryActionDown(): boolean {
+    return this.tertiaryActionDown;
+  }
+
+  get isTertiaryActionReleased(): boolean {
+    return this.tertiaryActionReleased;
+  }
+
   abstract update(): void;
 
   reset(): void {
@@ -60,5 +71,7 @@ export abstract class InputController {
     this.primaryActionReleased = false;
     this.secondaryActionDown = false;
     this.secondaryActionReleased = false;
+    this.tertiaryActionDown = false;
+    this.tertiaryActionReleased = false;
   }
 }

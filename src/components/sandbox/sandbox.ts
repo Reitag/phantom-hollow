@@ -3,7 +3,7 @@ import { Player } from '@/objects/characters/player/player';
 import { UiManager } from '@/managers/ui-manager';
 import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { GLOBAL, BLINK } from '@/constants/spell-cooldowns';
-import { BLINK_ICON } from '@/constants/ui-coordinates';
+import { BLINK_ICON, ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { Position } from '@/utils/types';
 
 type PlayerPosition = Position & {
@@ -43,7 +43,11 @@ export class Sandbox {
     this.cooldowns.startCooldown(spellKey, delay);
     this.startGlobalCooldown();
 
-    this.ui.startIconCooldown({ x: BLINK_ICON.X, y: BLINK_ICON.Y }, BLINK.DURATION);
+    const key = spellKey as keyof typeof ICON_OVERLAYS;
+    const icon = ICON_OVERLAYS[key];
+    if (icon) {
+      this.ui.startIconCooldown({ x: icon.X, y: icon.Y }, delay);
+    }
     this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
   }
 

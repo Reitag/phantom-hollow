@@ -5,6 +5,7 @@ import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
+import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { SPELLS } from '@/constants/asset-keys';
 import { Position } from '@/utils/types';
 
@@ -53,8 +54,10 @@ export class UiManager {
     this.cooldownAnimator.startGlobalCooldown(duration);
   }
 
-  public highlightSpell(spellKey: typeof SPELLS.FIRE_BALL | typeof SPELLS.BLINK): void {
-    this.spellIconHighlighter.addHighlight(spellKey);
+  //public highlightSpell(spellKey: typeof SPELLS.FIRE_BALL | typeof SPELLS.BLINK): void {
+  public highlightSpell(spellKey: string): void {
+    const key = spellKey as keyof typeof ICON_OVERLAYS;
+    this.spellIconHighlighter.addHighlight(key);
   }
 
   public removeHighlight(): void {

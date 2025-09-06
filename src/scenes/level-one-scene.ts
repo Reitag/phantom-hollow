@@ -24,6 +24,8 @@ import { Sandbox } from '@/components/sandbox/sandbox';
 import { CooldownsState } from '@/components/states/ui/cooldowns-state';
 import { Character } from '@/objects/core/character';
 import { Spell } from '@/objects/core/spell';
+import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
+import { Wind } from '@/objects/spells/direct-spells/wind';
 import { isValidTeleportPosition } from '@/utils/helpers';
 // @ts-expect-error JS import
 import { MemoryMonitor } from '@/debug/memory-monitor.js';
@@ -206,7 +208,7 @@ export class LevelOneScene extends Phaser.Scene {
       this.physics.add.collider(
         spells,
         groundLayer,
-        this.handleFireballCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         undefined,
         this
       ); // Spells
@@ -236,7 +238,7 @@ export class LevelOneScene extends Phaser.Scene {
       this.physics.add.collider(
         spells,
         platformLayer,
-        this.handleFireballCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         undefined,
         this
       ); // Spells
@@ -264,14 +266,14 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.add.overlap(
       spells,
       skeletons,
-      this.handleFireballHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
     ); // Skeleton warrior
     this.physics.add.overlap(
       spells,
       zombies,
-      this.handleFireballHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
       undefined,
       this
     ); // Zombies
@@ -296,19 +298,31 @@ export class LevelOneScene extends Phaser.Scene {
     }
   }
 
-  private handleFireballCollision(fireball: Phaser.GameObjects.GameObject): void {
-    if (fireball instanceof Spell) {
-      fireball.destroySpell();
+  private handleSpellCollision(spell: Phaser.GameObjects.GameObject): void {
+    if (spell instanceof Spell) {
+      spell.destroySpell();
     }
   }
 
-  private handleFireballHit(
+  private handleSpellHit(
     victim: Phaser.GameObjects.GameObject,
     spell: Phaser.GameObjects.GameObject
   ): void {
-    if (victim instanceof Character && spell instanceof Spell && victim.y === spell.y) {
+    if (!(victim instanceof Character) || victim.getDead()) return;
+    if (spell instanceof Spell && spell.hasAlreadyHit(victim)) return;
+
+    (spell as Spell).registerHit(victim);
+
+    const tolerance = 10;
+    if (Math.abs(victim.y - (spell as Spell).y) > tolerance) return;
+
+    if (spell instanceof FireBall) {
       victim.takeDamage(spell.causeDamage());
       spell.destroySpell();
+    } else if (spell instanceof Wind) {
+      const direction = victim.getArcadeBody().x > spell.getArcadeBody().x ? -1 : 1;
+      const movement = victim.getMovement();
+      movement.applyForce(-200);
     }
   }
 

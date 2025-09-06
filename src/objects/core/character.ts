@@ -1,3 +1,4 @@
+import { Movement } from '@/components/movement/movement';
 import { DebuffManager } from '@/managers/debuff-manager';
 import { StateMachine } from '@/managers/state-machine';
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
@@ -16,6 +17,7 @@ export class Character extends PhysicsSprite {
   protected stateMachine: StateMachine;
   protected animations!: AnimationConfig;
   protected debuff: DebuffManager;
+  protected movement!: Movement;
   protected walkBound!: number;
   protected patrolRightX!: number;
   protected patrolLeftX!: number;
@@ -76,6 +78,10 @@ export class Character extends PhysicsSprite {
 
   public hasVelocity(): boolean {
     return this.arcadeBody.velocity.lengthSq() > 0;
+  }
+
+  public getMovement(): Movement {
+    return this.movement;
   }
 
   public switchToState(state: string): void {
