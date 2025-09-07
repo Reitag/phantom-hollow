@@ -6,10 +6,14 @@ export class Wait extends CharacterState {
     super('Wait', character);
   }
 
-  onEnter(...args: unknown[]): void {
-    this.setToZeroVelocityX();
+  public onEnter(...args: unknown[]): void {
+    this.characterMovement.setMovementLock(true);
     this.playAnimation(this.animations.idle, true);
   }
 
-  onUpdate(): void {}
+  public onUpdate(): void {}
+
+  public onExit(): void {
+    this.characterMovement.setMovementLock(false);
+  }
 }

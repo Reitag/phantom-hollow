@@ -9,12 +9,12 @@ export class Idle extends CharacterState {
     super('Idle', character, input, spellManager);
   }
 
-  onEnter(...args: unknown[]): void {
+  public onEnter(...args: unknown[]): void {
     this.character.setVelocityX(0);
     this.playAnimation(this.animations.idle);
   }
 
-  onUpdate(): void {
+  public onUpdate(): void {
     if (this.input?.isLeftDown || this.input?.isRightDown || this.input?.isUpPressed) {
       this.stateMachine.changeState('Movement');
     }

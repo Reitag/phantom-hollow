@@ -10,13 +10,13 @@ export class Movement extends CharacterState {
     super('Movement', character, input, spellManager);
   }
 
-  onEnter(...args: unknown[]): void {
+  public onEnter(...args: unknown[]): void {
     if (this.input?.isUpPressed) {
       this.jump();
     }
   }
 
-  onUpdate(): void {
+  public onUpdate(): void {
     this.movement();
 
     if (!this.input?.isLeftDown && !this.input?.isRightDown) {
@@ -47,12 +47,10 @@ export class Movement extends CharacterState {
   }
 
   private movement(): void {
-    const speed = PLAYER_STATS.MOVE;
-
     if (this.input?.isLeftDown) {
-      this.moveLeft(speed);
+      this.moveLeft(this.characterMovement.getCurrentSpeed());
     } else if (this.input?.isRightDown) {
-      this.moveRight(speed);
+      this.moveRight(this.characterMovement.getCurrentSpeed());
     } else {
       this.character.setVelocityX(0);
     }

@@ -5,7 +5,7 @@ import { Zombie } from '@/objects/characters/enemies/zombie';
 import { Ai } from '../core/ai';
 
 export class AiZombie extends Ai {
-  protected updateEnemyState(zombie: Zombie, delta: number): void {
+  protected updateEnemyState(zombie: Zombie): void {
     zombie.update();
 
     const { x, y } = this.distanceToPlayer(zombie);
@@ -16,7 +16,7 @@ export class AiZombie extends Ai {
 
     if (!canEngage) {
       if (currentState !== 'Patrol') {
-        fsm.changeState('Patrol', ZOMBIE_STATS.PATROL);
+        fsm.changeState('Patrol');
       }
       return;
     }

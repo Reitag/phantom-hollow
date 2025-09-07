@@ -3,6 +3,7 @@ export const PLAYER_ANIMATION = {
   RIGHT: 'right',
   IDLE: 'idle',
   SIMPLE_ATTACK: 'simple-attack',
+  INSTANT_CAST: 'instant-cast',
   DEATH: 'death',
 } as const;
 

@@ -5,6 +5,7 @@ export const SPEAR_HIT = 50;
 export const FIRE_BALL_STATS = {
   HIT: 120,
   SPEED: 300,
+  CAST_TIME: 800,
   LIFE_TIME: 1100,
 } as const;
 
@@ -25,7 +26,8 @@ export const SKELETON_WARRIOR_STATS = {
   ENGAGE_DISTANCE: 400,
   ATTACK_RANGE: 20,
   FRAME_ON_HIT: 4,
-  HIT: 25,
+  //HIT: 25,
+  HIT: 0,
   SAME_Y_THRESHOLD: 40,
   WALK: 60,
   CHASE: 1.7,
@@ -39,6 +41,6 @@ export const ZOMBIE_STATS = {
   FRAME_ON_HIT: 3,
   HIT: 15,
   SAME_Y_THRESHOLD: 40,
-  PATROL: 50,
-  CHASE: 150,
+  WALK: 50,
+  CHASE: 1.7,
 } as const;

@@ -3,16 +3,15 @@ import { CharacterState } from '@/components/states/characters/core/character-st
 import { UiManager } from '@/managers/ui-manager';
 import { Player } from '@/objects/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
-import { PLAYER_STATS } from '@/constants/object-stats';
 
 export class Ready extends CharacterState {
   constructor(player: Player, input?: KeyboardController, ui?: UiManager) {
     super('Ready', player, input, undefined, ui);
   }
 
-  onEnter(...args: unknown[]): void {}
+  public onEnter(...args: unknown[]): void {}
 
-  onUpdate(): void {
+  public onUpdate(): void {
     this.movement();
 
     if (this.input?.isUpPressed) {
@@ -59,17 +58,15 @@ export class Ready extends CharacterState {
     }
   }
 
-  onExit(): void {
+  public onExit(): void {
     this.ui?.removeHighlight();
   }
 
   private movement(): void {
-    const speed = PLAYER_STATS.MOVE;
-
     if (this.input?.isLeftDown) {
-      this.moveLeft(speed);
+      this.moveLeft(this.characterMovement.getCurrentSpeed());
     } else if (this.input?.isRightDown) {
-      this.moveRight(speed);
+      this.moveRight(this.characterMovement.getCurrentSpeed());
     }
   }
 }

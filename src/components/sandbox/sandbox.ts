@@ -2,8 +2,8 @@ import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Player } from '@/objects/characters/player/player';
 import { UiManager } from '@/managers/ui-manager';
 import { CooldownsState } from '@/components/states/ui/cooldowns-state';
-import { GLOBAL, BLINK } from '@/constants/spell-cooldowns';
-import { BLINK_ICON, ICON_OVERLAYS } from '@/constants/ui-coordinates';
+import { GLOBAL } from '@/constants/spell-cooldowns';
+import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { Position } from '@/utils/types';
 
 type PlayerPosition = Position & {

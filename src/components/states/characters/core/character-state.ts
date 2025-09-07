@@ -14,7 +14,7 @@ export abstract class CharacterState implements State {
 
   protected character: Character;
   protected characterBody: Phaser.Physics.Arcade.Body;
-  protected move: Movement;
+  protected characterMovement: Movement;
   protected input: KeyboardController | null = null;
   protected spellManager: SpellManager | null = null;
   protected ui: UiManager | null = null;
@@ -31,7 +31,7 @@ export abstract class CharacterState implements State {
   ) {
     this.name = name;
     this.character = character;
-    this.move = character.getMovement();
+    this.characterMovement = character.getMovement();
     this.input = input || null;
     this.spellManager = spellManager || null;
     this.ui = ui || null;
@@ -45,6 +45,7 @@ export abstract class CharacterState implements State {
         this.animations.moveLeft,
         this.animations.moveRight,
         this.animations.attack,
+        this.animations.instantCast,
         this.animations.death
       )
     ) {
@@ -99,7 +100,7 @@ export abstract class CharacterState implements State {
     return true;
   }
 
-  onEnter?(): void {}
-  onUpdate?(): void {}
-  onExit?(): void {}
+  public onEnter?(): void {}
+  public onUpdate?(): void {}
+  public onExit?(): void {}
 }

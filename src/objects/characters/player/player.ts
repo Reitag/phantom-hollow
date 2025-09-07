@@ -5,10 +5,12 @@ import { Movement } from '@/components/states/characters/player-states/movement'
 import { Casting } from '@/components/states/characters/player-states/casting';
 import { Ready } from '@/components/states/characters/player-states/ready';
 import { Death } from '@/components/states/characters/core/death';
+import { Movement as CharacterMovement } from '@/components/movement/movement';
+import { PLAYER_ANIMATION } from '@/constants/animation-keys';
+import { PLAYER_STATS } from '@/constants/object-stats';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
-import { PLAYER_ANIMATION } from '@/constants/animation-keys';
 
 interface PlayerConfig extends CharacterConfig {
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
@@ -42,8 +44,11 @@ export class Player extends Character {
       moveLeft: PLAYER_ANIMATION.LEFT,
       moveRight: PLAYER_ANIMATION.RIGHT,
       attack: PLAYER_ANIMATION.SIMPLE_ATTACK,
+      instantCast: PLAYER_ANIMATION.INSTANT_CAST,
       death: PLAYER_ANIMATION.DEATH,
     };
+
+    this.movement = new CharacterMovement(PLAYER_STATS.MOVE);
 
     this.initKeyboard();
     this.initStateMachine();

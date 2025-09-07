@@ -44,6 +44,15 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
     });
   }
 
+  if (!anims.get(PLAYER_ANIMATION.INSTANT_CAST)) {
+    anims.create({
+      key: PLAYER_ANIMATION.INSTANT_CAST,
+      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 34, end: 37 }),
+      frameRate: 14,
+      repeat: 0,
+    });
+  }
+
   if (!anims.get(PLAYER_ANIMATION.DEATH)) {
     anims.create({
       key: PLAYER_ANIMATION.DEATH,

@@ -10,14 +10,12 @@ export class AiSkeletonWarrior extends Ai {
     const { x, y } = this.distanceToPlayer(skeleton);
     const fsm = skeleton.getStateMachine();
     const currentState = fsm.currentStateName;
-    const movement = skeleton.getMovement();
 
     const canEngage = this.canEngage(skeleton, x, y);
 
     if (!canEngage) {
       if (currentState !== 'Patrol') {
-        movement.removeAllModifiers();
-        fsm.changeState('Patrol', movement.getCurrentSpeed());
+        fsm.changeState('Patrol');
       }
       return;
     }
@@ -31,8 +29,7 @@ export class AiSkeletonWarrior extends Ai {
         return;
       }
       if (y === 0 && x > SKELETON_WARRIOR_STATS.ATTACK_RANGE) {
-        movement.addModifier(SKELETON_WARRIOR_STATS.CHASE);
-        fsm.changeState('Chase', this.player);
+        fsm.changeState('Chase', this.player, SKELETON_WARRIOR_STATS.CHASE);
         return;
       }
       return;
@@ -52,8 +49,7 @@ export class AiSkeletonWarrior extends Ai {
       }
     } else {
       if (currentState !== 'Chase') {
-        movement.addModifier(SKELETON_WARRIOR_STATS.CHASE);
-        fsm.changeState('Chase', this.player);
+        fsm.changeState('Chase', this.player, SKELETON_WARRIOR_STATS.CHASE);
       }
     }
   }

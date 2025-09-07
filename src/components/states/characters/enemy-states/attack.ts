@@ -1,5 +1,4 @@
 import { CharacterState } from '@/components/states/characters/core/character-state';
-import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Player } from '@/objects/characters/player/player';
 import { Character } from '@/objects/core/character';
 
@@ -10,12 +9,11 @@ export class Attack extends CharacterState {
   private additionAbility: (() => void) | undefined = undefined;
   private canHit = false;
 
-  //constructor(character: SkeletonWarrior) {
   constructor(character: Character) {
     super('Attack', character);
   }
 
-  onEnter(...args: unknown[]): void {
+  public onEnter(...args: unknown[]): void {
     const player = args.find((elem): elem is Player => elem instanceof Player);
     if (!player) throw new Error('Player not found');
 
@@ -35,12 +33,15 @@ export class Attack extends CharacterState {
 
     this.character.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
 
-    this.setToZeroVelocityX();
+    this.characterMovement.setMovementLock(true);
     this.playAnimation(this.animations.attack, true);
   }
 
-  onUpdate(): void {
+  public onUpdate(): void {
     if (!this.player) return;
+
+    const direction = this.character.x > this.player.x ? -1 : 1;
+    this.character.setVelocityX(direction * this.characterMovement.getCurrentSpeed());
 
     const isOverlapping = this.isWithinAttackReach();
 
@@ -60,14 +61,15 @@ export class Attack extends CharacterState {
     }
   }
 
-  onExit(): void {
+  public onExit(): void {
+    this.characterMovement.setMovementLock(false);
     this.character.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
   }
 
   private isWithinAttackReach(): boolean {
     if (!this.player) return false;
 
-    const buffer = 20; // ← attack reach
+    const buffer = 20; // attack reach
     const charBounds = this.character.getBounds();
     const playerBounds = this.player.getBounds();
 

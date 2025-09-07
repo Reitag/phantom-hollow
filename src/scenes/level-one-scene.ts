@@ -309,20 +309,21 @@ export class LevelOneScene extends Phaser.Scene {
     spell: Phaser.GameObjects.GameObject
   ): void {
     if (!(victim instanceof Character) || victim.getDead()) return;
-    if (spell instanceof Spell && spell.hasAlreadyHit(victim)) return;
-
-    (spell as Spell).registerHit(victim);
+    if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
     const tolerance = 10;
-    if (Math.abs(victim.y - (spell as Spell).y) > tolerance) return;
+    if (Math.abs(victim.y - spell.y) > tolerance) return;
+
+    spell.registerHit(victim);
+
+    spell.applyEffect(victim);
+
+    if (spell.causeDamage() > 0) {
+      victim.takeDamage(spell.causeDamage());
+    }
 
     if (spell instanceof FireBall) {
-      victim.takeDamage(spell.causeDamage());
       spell.destroySpell();
-    } else if (spell instanceof Wind) {
-      const direction = victim.getArcadeBody().x > spell.getArcadeBody().x ? -1 : 1;
-      const movement = victim.getMovement();
-      movement.applyForce(-200);
     }
   }
 

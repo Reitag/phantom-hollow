@@ -46,6 +46,8 @@ export abstract class Spell extends PhysicsSprite {
 
   abstract cast(): void;
 
+  public applyEffect(target: Character): void {}
+
   public destroySpell(): void {
     if (this.direction) {
       this.setVelocityX(80 * this.direction);

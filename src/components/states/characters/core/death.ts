@@ -17,7 +17,7 @@ export class Death extends CharacterState {
     this.lastFrame = lastFrame;
   }
 
-  onEnter(): void {
+  public onEnter(): void {
     this.ui?.removeHighlight();
     this.setToZeroVelocityX();
 
@@ -28,5 +28,5 @@ export class Death extends CharacterState {
     });
   }
 
-  onUpdate(): void {}
+  public onUpdate(): void {}
 }
