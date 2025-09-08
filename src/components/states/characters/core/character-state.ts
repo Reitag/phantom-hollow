@@ -39,18 +39,6 @@ export abstract class CharacterState implements State {
     this.characterBody = this.character.getArcadeBody();
 
     this.animations = this.character.getAnimations();
-    if (
-      !isAnimationKeyExist(
-        this.animations.idle,
-        this.animations.moveLeft,
-        this.animations.moveRight,
-        this.animations.attack,
-        this.animations.instantCast,
-        this.animations.death
-      )
-    ) {
-      throw new Error('Missing animation keys');
-    }
   }
 
   protected setToZeroVelocityX(): void {
