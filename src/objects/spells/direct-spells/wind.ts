@@ -3,8 +3,6 @@ import { WIND_STATS } from '@/constants/object-stats';
 import { Character } from '@/objects/core/character';
 
 export class Wind extends Spell {
-  private readonly force = 200;
-
   constructor({
     scene,
     position,
@@ -40,6 +38,7 @@ export class Wind extends Spell {
   }
 
   public override applyEffect(target: Character): void {
-    target.getMovement().applyForce(this.force);
+    if (!target) return;
+    target.getMovement().applyForce(WIND_STATS.FORCE);
   }
 }

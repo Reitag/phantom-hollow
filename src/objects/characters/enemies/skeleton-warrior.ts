@@ -1,10 +1,10 @@
 import { Character, CharacterConfig } from '@/objects/core/character';
-import { Movement } from '@/components/movement/movement';
-import { Wait } from '@/components/states/characters/enemy-states/wait';
-import { Patrol } from '@/components/states/characters/enemy-states/patrol';
-import { Chase } from '@/components/states/characters/enemy-states/chase';
-import { Attack } from '@/components/states/characters/enemy-states/attack';
-import { Death } from '@/components/states/characters/core/death';
+import { Movement } from '@/components/modules/movement';
+import { Wait } from '@/components/states/enemy-states/wait';
+import { Patrol } from '@/components/states/enemy-states/patrol';
+import { Chase } from '@/components/states/enemy-states/chase';
+import { Attack } from '@/components/states/enemy-states/attack';
+import { Death } from '@/components/states/core/death';
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { SKELETON_WARRIOR_STATS } from '@/constants/object-stats';

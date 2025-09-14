@@ -1,6 +1,6 @@
 import { Player } from '@/objects/characters/player/player';
 import { UiManager } from '@/managers/ui-manager';
-import { CooldownsState } from '@/components/states/ui/cooldowns-state';
+import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
 import { Sandbox } from '@/components/sandbox/sandbox';
@@ -8,7 +8,7 @@ import { Sandbox } from '@/components/sandbox/sandbox';
 interface ServiceMap {
   player: Player;
   ui: UiManager;
-  cooldowns: CooldownsState;
+  cooldowns: SpellCooldowns;
   spellFactory: SpellFactory;
   spellManager: SpellManager;
   sandbox: Sandbox;

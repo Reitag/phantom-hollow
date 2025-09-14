@@ -6,16 +6,16 @@ import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
 
 export interface SpellConfig extends PhysicsSpriteConfig {
-  sandbox: Sandbox;
-  animation: SpellAnimationConfig;
+  sandbox?: Sandbox;
+  animation?: SpellAnimationConfig;
   damage?: number;
   speed?: number;
   direction?: number;
 }
 
 export abstract class Spell extends PhysicsSprite {
-  protected sandbox: Sandbox;
-  protected animation: SpellAnimationConfig;
+  protected sandbox: Sandbox | null = null;
+  protected animation: SpellAnimationConfig | null = null;
   protected damage: number | null = null;
   protected speed: number | null = null;
   protected direction: number | null = null;
@@ -38,17 +38,18 @@ export abstract class Spell extends PhysicsSprite {
     this.damage = damage || null;
     this.speed = speed || null;
     this.direction = direction || null;
-    this.animation = animation;
-    this.sandbox = sandbox;
+    this.animation = animation || null;
+    this.sandbox = sandbox || null;
 
     this.setDepth(Z_POSITION.SPELL);
   }
 
-  abstract cast(): void;
+  public abstract cast(): void;
 
   public applyEffect(target: Character): void {}
 
   public destroySpell(): void {
+    if (!this.animation) return;
     if (this.direction) {
       this.setVelocityX(80 * this.direction);
     }
@@ -75,6 +76,7 @@ export abstract class Spell extends PhysicsSprite {
   }
 
   protected playMainAnimation(): void {
+    if (!this.animation) return;
     if (this.direction !== 1) {
       this.setFlipX(true);
     }

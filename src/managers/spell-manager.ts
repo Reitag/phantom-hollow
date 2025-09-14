@@ -1,11 +1,11 @@
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { Sandbox } from '@/components/sandbox/sandbox';
 import { SpellFactory } from '@/factories/spell-factory';
-import { CooldownsState } from '@/components/states/ui/cooldowns-state';
+import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { BLINK, GLOBAL, WIND } from '@/constants/spell-cooldowns';
 
 export class SpellManager {
-  private cooldowns: CooldownsState;
+  private cooldowns: SpellCooldowns;
   private spellFactory: SpellFactory;
   private sandbox: Sandbox;
 

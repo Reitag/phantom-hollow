@@ -14,7 +14,10 @@ export abstract class Ai {
 
   public update(): void {
     this.enemies.forEach((enemy) => {
-      if (enemy.getDead()) return;
+      if (enemy.getDead()) {
+        this.removeEnemy(enemy);
+        return;
+      }
       this.updateEnemyState(enemy);
     });
   }
@@ -58,6 +61,10 @@ export abstract class Ai {
     if (dy > this.sameYThreshold) return false;
     if (!this.hasLineOfSight(enemy, this.player)) return false;
     return true;
+  }
+
+  protected removeEnemy(enemy: Character): void {
+    this.enemies = this.enemies.filter((e) => e !== enemy);
   }
 
   private hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {

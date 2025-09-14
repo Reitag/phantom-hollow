@@ -2,9 +2,10 @@ import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
 import { Blink } from '@/objects/spells/effect-spells/blink';
 import { Wind } from '@/objects/spells/direct-spells/wind';
+import { ShadowBolt } from '@/objects/spells/direct-spells/shadow-bolt';
 import { SPELLS } from '@/constants/asset-keys';
 import { SPELLS_ANIMATION } from '@/constants/animation-keys';
-import { FIRE_BALL_STATS, WIND_STATS } from '@/constants/object-stats';
+import { FIRE_BALL_STATS, WIND_STATS, SHADOW_BOLT_STATS } from '@/constants/object-stats';
 
 export class SpellFactory {
   private spellGroup: Phaser.Physics.Arcade.Group;
@@ -18,7 +19,7 @@ export class SpellFactory {
 
   public createFireball(x: number, y: number, direction: number): FireBall {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 20;
+    const offsetX = direction * 30;
 
     const fireBall = new FireBall({
       scene: this.scene,
@@ -62,7 +63,7 @@ export class SpellFactory {
 
   public createWind(x: number, y: number, direction: number): Wind {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 20;
+    const offsetX = direction * 30;
 
     const wind = new Wind({
       scene: this.scene,
@@ -81,6 +82,26 @@ export class SpellFactory {
     this.spellGroup.add(wind, true);
 
     return wind;
+  }
+
+  public createShadowBolt(x: number, y: number, direction: number): ShadowBolt {
+    const shadowBolt = new ShadowBolt({
+      scene: this.scene,
+      position: { x: x, y: y },
+      keyName: SPELLS.SHADOW_BOLT,
+      frame: 0,
+      animation: {
+        main: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,
+        destroy: SPELLS_ANIMATION.SHADOW_BOLT.DESTROY,
+      },
+      damage: SHADOW_BOLT_STATS.HIT,
+      speed: SHADOW_BOLT_STATS.SPEED,
+      direction: direction,
+    });
+
+    this.spellGroup.add(shadowBolt, true);
+
+    return shadowBolt;
   }
 
   public getSpells(): Phaser.Physics.Arcade.Group {

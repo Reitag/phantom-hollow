@@ -2,6 +2,7 @@ import {
   PLAYER_ANIMATION,
   SPELLS_ANIMATION,
   ENEMIES_ANIMATION,
+  BOSSES_ANIMATION,
   PORTAL_ANIMATION,
 } from '@/constants/animation-keys';
 import { CHARACTERS, MISC, SPELLS } from '@/constants/asset-keys';
@@ -113,6 +114,25 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
     });
   }
 
+  // shadow bolt
+  if (!anims.get(SPELLS_ANIMATION.SHADOW_BOLT.MAIN)) {
+    anims.create({
+      key: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,
+      frames: anims.generateFrameNumbers(SPELLS.SHADOW_BOLT, { start: 0, end: 3 }),
+      frameRate: 20,
+      repeat: -1,
+    });
+  }
+
+  if (!anims.get(SPELLS_ANIMATION.SHADOW_BOLT.DESTROY)) {
+    anims.create({
+      key: SPELLS_ANIMATION.SHADOW_BOLT.DESTROY,
+      frames: anims.generateFrameNumbers(SPELLS.SHADOW_BOLT, { start: 4, end: 10 }),
+      frameRate: 20,
+      repeat: 0,
+    });
+  }
+
   // skeleton-warrior
   if (!anims.get(ENEMIES_ANIMATION.SKELETON_WARRIOR.LEFT)) {
     anims.create({
@@ -218,6 +238,53 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
     anims.create({
       key: ENEMIES_ANIMATION.ZOMBIE.DEATH,
       frames: anims.generateFrameNumbers(CHARACTERS.ZOMBIE, { start: 24, end: 25 }),
+      frameRate: 10,
+      repeat: 0,
+    });
+  }
+
+  // mutaded bat
+  if (!anims.get(ENEMIES_ANIMATION.MUTADED_BAT.IDLE)) {
+    anims.create({
+      key: ENEMIES_ANIMATION.MUTADED_BAT.IDLE,
+      frames: anims.generateFrameNumbers(CHARACTERS.MUTATED_BAT, { start: 0, end: 5 }),
+      frameRate: 20,
+      repeat: -1,
+    });
+  }
+
+  if (!anims.get(ENEMIES_ANIMATION.MUTADED_BAT.DEATH)) {
+    anims.create({
+      key: ENEMIES_ANIMATION.MUTADED_BAT.DEATH,
+      frames: anims.generateFrameNumbers(CHARACTERS.MUTATED_BAT, { start: 8, end: 15 }),
+      frameRate: 20,
+      repeat: 0,
+    });
+  }
+
+  // evil wizard
+  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.IDLE)) {
+    anims.create({
+      key: BOSSES_ANIMATION.EVIL_WIZARD.IDLE,
+      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 1, end: 9 }),
+      frameRate: 6,
+      repeat: -1,
+    });
+  }
+
+  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.SIMPLE_ATTACK)) {
+    anims.create({
+      key: BOSSES_ANIMATION.EVIL_WIZARD.SIMPLE_ATTACK,
+      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 18, end: 30 }),
+      frameRate: 15,
+      repeat: 0,
+    });
+  }
+
+  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.DEATH)) {
+    anims.create({
+      key: BOSSES_ANIMATION.EVIL_WIZARD.DEATH,
+      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 36, end: 53 }),
       frameRate: 10,
       repeat: 0,
     });

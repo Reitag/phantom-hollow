@@ -2,9 +2,9 @@ import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { DISEASE } from '@/constants/modifier-stats';
 import { UiManager } from '@/managers/ui-manager';
 import { Character } from '@/objects/core/character';
-import { Debuff } from '../core/debuff';
+import { Modifier } from '../core/modifier';
 
-export class Disease implements Debuff {
+export class Disease implements Modifier {
   id = DISEASE.id;
   duration = DISEASE.duration;
 

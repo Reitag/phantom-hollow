@@ -1,11 +1,12 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
-import { Idle } from '@/components/states/characters/player-states/idle';
-import { Movement } from '@/components/states/characters/player-states/movement';
-import { Casting } from '@/components/states/characters/player-states/casting';
-import { Ready } from '@/components/states/characters/player-states/ready';
-import { Death } from '@/components/states/characters/core/death';
-import { Movement as CharacterMovement } from '@/components/movement/movement';
+import { Idle } from '@/components/states/player-states/idle';
+import { Movement } from '@/components/states/player-states/movement';
+import { Casting } from '@/components/states/player-states/casting';
+import { Ready } from '@/components/states/player-states/ready';
+import { Death } from '@/components/states/core/death';
+import { Movement as CharacterMovement } from '@/components/modules/movement';
+import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_ANIMATION } from '@/constants/animation-keys';
 import { PLAYER_STATS } from '@/constants/object-stats';
 import { Character, CharacterConfig } from '@/objects/core/character';
@@ -69,7 +70,7 @@ export class Player extends Character {
     this.stateMachine.addState(new Movement(this, this.controls, this.spellManager));
     this.stateMachine.addState(new Casting(this, this.controls, this.spellManager, this.ui));
     this.stateMachine.addState(new Ready(this, this.controls, this.ui));
-    this.stateMachine.addState(new Death(this, 'player', 101, this.ui));
+    this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 101, this.ui));
 
     this.stateMachine.changeState('Idle');
   }

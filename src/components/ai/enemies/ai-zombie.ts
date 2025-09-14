@@ -69,11 +69,11 @@ export class AiZombie extends Ai {
 
   private diseaseTarget(): void {
     const player = this.player;
-    const debuff = player.getDebuff();
+    const debuff = player.getModifier();
 
-    if (!debuff.isDebuffExist(DISEASE.id)) {
-      debuff.addDebuff(DISEASE.id);
-      debuff.startDebuff(DISEASE.id, player);
+    if (!debuff.isModifierExist(DISEASE.id)) {
+      debuff.addModifier(DISEASE.id);
+      debuff.startModifier(DISEASE.id, player);
     }
   }
 }

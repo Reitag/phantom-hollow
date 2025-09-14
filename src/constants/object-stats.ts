@@ -1,3 +1,5 @@
+import { UI } from './asset-keys';
+
 export const SPIKE_HIT = 10;
 
 export const SPEAR_HIT = 50;
@@ -9,9 +11,27 @@ export const FIRE_BALL_STATS = {
   LIFE_TIME: 1100,
 } as const;
 
+export const BLINK_STATS = {
+  DISTANCE: 300,
+  DELAY: 500,
+} as const;
+
 export const WIND_STATS = {
+  FORCE: 200,
   SPEED: 300,
   LIFE_TIME: 700,
+} as const;
+
+export const DREAD_AURA_STATS = {
+  KEY_NAME: UI.DREAD_AURA_DEBUFF,
+  DAMAGE: 10,
+  RANGE: 250,
+};
+
+export const SHADOW_BOLT_STATS = {
+  HIT: 30,
+  SPEED: 300,
+  LIFE_TIME: 2000,
 } as const;
 
 export const PLAYER_STATS = {
@@ -26,8 +46,7 @@ export const SKELETON_WARRIOR_STATS = {
   ENGAGE_DISTANCE: 400,
   ATTACK_RANGE: 20,
   FRAME_ON_HIT: 4,
-  //HIT: 25,
-  HIT: 0,
+  HIT: 25,
   SAME_Y_THRESHOLD: 40,
   WALK: 60,
   CHASE: 1.7,
@@ -43,4 +62,17 @@ export const ZOMBIE_STATS = {
   SAME_Y_THRESHOLD: 40,
   WALK: 50,
   CHASE: 1.7,
+} as const;
+
+export const MUTATED_BAT_STATS = {
+  HEALTH: 10,
+  FLY: 70,
+  CHASE: 2,
+  HIT: 10,
+  LIFE_TIME: 1500,
+} as const;
+
+export const EVIL_WIZARD_STATS = {
+  HEALTH: 1000,
+  ENGAGE_DISTANCE: 400,
 } as const;

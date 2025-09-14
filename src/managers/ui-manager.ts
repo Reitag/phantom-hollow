@@ -1,4 +1,4 @@
-import { DebuffIconContainer } from '@/components/ui/debuff-icons/debuff-icon-container';
+import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
 import { CooldownAnimator } from '@/components/ui/spell-icons/cooldown-animator';
 import { HealthBar } from '@/components/ui/healthbar/health-bar';
 import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator';
@@ -6,7 +6,6 @@ import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
-import { SPELLS } from '@/constants/asset-keys';
 import { Position } from '@/utils/types';
 
 export class UiManager {
@@ -19,7 +18,7 @@ export class UiManager {
   cooldownAnimator: CooldownAnimator;
   spellIconHighlighter: SpellIconHighlighter;
 
-  debuffIconContainer: DebuffIconContainer;
+  modifierIconContainer: ModifierIconContainer;
 
   constructor(uiScene: Phaser.Scene) {
     this.healthBar = new HealthBar(uiScene);
@@ -31,7 +30,7 @@ export class UiManager {
     this.cooldownAnimator = new CooldownAnimator(uiScene);
     this.spellIconHighlighter = new SpellIconHighlighter(uiScene);
 
-    this.debuffIconContainer = new DebuffIconContainer(uiScene);
+    this.modifierIconContainer = new ModifierIconContainer(uiScene);
   }
 
   public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
@@ -54,7 +53,6 @@ export class UiManager {
     this.cooldownAnimator.startGlobalCooldown(duration);
   }
 
-  //public highlightSpell(spellKey: typeof SPELLS.FIRE_BALL | typeof SPELLS.BLINK): void {
   public highlightSpell(spellKey: string): void {
     const key = spellKey as keyof typeof ICON_OVERLAYS;
     this.spellIconHighlighter.addHighlight(key);
@@ -64,12 +62,15 @@ export class UiManager {
     this.spellIconHighlighter.removeHighlight();
   }
 
-  public setDebuffIcon(key: string, duration: number): void {
-    this.debuffIconContainer.addDebuffIcon(key, duration);
-    this.debuffIconContainer.startCountdown(key, duration);
+  public setDebuffIcon(key: string, duration: number | undefined): void {
+    this.modifierIconContainer.addModifierIcon(key, duration);
+
+    if (duration) {
+      this.modifierIconContainer.startCountdown(key, duration);
+    }
   }
 
   public removeDebuffIcon(key: string): void {
-    this.debuffIconContainer.removeDebuffIcon(key);
+    this.modifierIconContainer.removeModifierIcon(key);
   }
 }

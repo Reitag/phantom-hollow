@@ -19,6 +19,10 @@ export const SPELLS_ANIMATION = {
     MAIN: 'wind-anim',
     DESTROY: 'wind-anim-destroy',
   },
+  SHADOW_BOLT: {
+    MAIN: 'shadow-bolt-anim',
+    DESTROY: 'shadow-bolt-anim-destroy',
+  },
 } as const;
 
 export const ENEMIES_ANIMATION = {
@@ -30,7 +34,6 @@ export const ENEMIES_ANIMATION = {
     HURT: 'sk-warrior-hurt',
     DEATH: 'sk-warrior-death',
   },
-
   ZOMBIE: {
     LEFT: 'zombie-left',
     RIGHT: 'zombie-right',
@@ -38,6 +41,18 @@ export const ENEMIES_ANIMATION = {
     SIMPLE_ATTACK: 'zombie-simple-attack',
     HURT: 'zombie-hurt',
     DEATH: 'zombie-death',
+  },
+  MUTADED_BAT: {
+    IDLE: 'bat-idle',
+    DEATH: 'bat-death',
+  },
+} as const;
+
+export const BOSSES_ANIMATION = {
+  EVIL_WIZARD: {
+    IDLE: 'evil-wizard-idle',
+    SIMPLE_ATTACK: 'evil-wizard-simple-attack',
+    DEATH: 'evil-wizard-death',
   },
 } as const;
 

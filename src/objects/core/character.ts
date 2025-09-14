@@ -1,5 +1,6 @@
-import { Movement } from '@/components/movement/movement';
-import { DebuffManager } from '@/managers/debuff-manager';
+import { DamageMultiplier } from '@/components/modules/damage-multiplier';
+import { Movement } from '@/components/modules/movement';
+import { ModifierManager } from '@/managers/modifier-manager';
 import { StateMachine } from '@/managers/state-machine';
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
 import { AnimationConfig, PhysicsSpriteConfig } from '@/utils/types';
@@ -16,8 +17,9 @@ export class Character extends PhysicsSprite {
   protected isDead = false;
   protected stateMachine: StateMachine;
   protected animations!: AnimationConfig;
-  protected debuff: DebuffManager;
+  protected modifier: ModifierManager;
   protected movement!: Movement;
+  protected damageMultiplier: DamageMultiplier;
   protected walkBound!: number;
   protected patrolRightX!: number;
   protected patrolLeftX!: number;
@@ -30,7 +32,8 @@ export class Character extends PhysicsSprite {
     this.facingRight = facingRight;
 
     this.stateMachine = new StateMachine();
-    this.debuff = new DebuffManager(this.scene);
+    this.modifier = new ModifierManager(this.scene);
+    this.damageMultiplier = new DamageMultiplier();
 
     if (!this.facingRight) {
       this.setFlipX(true);
@@ -39,8 +42,12 @@ export class Character extends PhysicsSprite {
     this.setCollideWorldBounds(true);
   }
 
-  public getDebuff(): DebuffManager {
-    return this.debuff;
+  public getModifier(): ModifierManager {
+    return this.modifier;
+  }
+
+  public getDamageMultiplier(): DamageMultiplier {
+    return this.damageMultiplier;
   }
 
   public getPatrolLeftX(): number {
@@ -91,8 +98,28 @@ export class Character extends PhysicsSprite {
   public takeDamage(amount: number): void {
     if (this.isDead) return;
 
-    this.currentHealth -= amount;
+    const finalDamage = this.damageMultiplier.calculateTotal(amount);
+    this.currentHealth -= finalDamage;
+
     this.playHitEffect();
+    this.onDamaged?.();
+
+    if (this.currentHealth <= 0) {
+      this.die();
+    }
+  }
+
+  public takeAuraDamage(amount: number): void {
+    if (this.isDead) return;
+
+    this.currentHealth -= amount;
+    this.setTint(0x8844cc);
+    this.setAlpha(0.8);
+
+    this.scene.time.delayedCall(150, () => {
+      this.clearTint();
+      this.setAlpha(1);
+    });
 
     this.onDamaged?.();
 

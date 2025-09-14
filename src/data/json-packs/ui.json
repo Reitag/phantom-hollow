@@ -29,6 +29,16 @@
       "type": "image",
       "key": "disease-debuff",
       "url": "assets/icons/debuffs/disease.png"
+    },
+    {
+      "type": "image",
+      "key": "dread-aura-debuff",
+      "url": "assets/icons/debuffs/dread-aura.png"
+    },
+    {
+      "type": "image",
+      "key": "shadow-vulnerability-debuff",
+      "url": "assets/icons/debuffs/shadow-vulnerability.png"
     }
   ]
 }
