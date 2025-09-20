@@ -26,6 +26,10 @@ export abstract class Ai {
     this.enemies.push(enemy);
   }
 
+  public removeEnemy(enemy: Character): void {
+    this.enemies = this.enemies.filter((e) => e !== enemy);
+  }
+
   public getEnemies(): Character[] {
     return this.enemies;
   }
@@ -61,10 +65,6 @@ export abstract class Ai {
     if (dy > this.sameYThreshold) return false;
     if (!this.hasLineOfSight(enemy, this.player)) return false;
     return true;
-  }
-
-  protected removeEnemy(enemy: Character): void {
-    this.enemies = this.enemies.filter((e) => e !== enemy);
   }
 
   private hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {

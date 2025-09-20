@@ -19,7 +19,7 @@ export class SpellFactory {
 
   public createFireball(x: number, y: number, direction: number): FireBall {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 30;
+    const offsetX = direction * 31;
 
     const fireBall = new FireBall({
       scene: this.scene,
@@ -63,7 +63,7 @@ export class SpellFactory {
 
   public createWind(x: number, y: number, direction: number): Wind {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 30;
+    const offsetX = direction * 31;
 
     const wind = new Wind({
       scene: this.scene,

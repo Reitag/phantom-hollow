@@ -1,3 +1,4 @@
+import { Movement } from '@/components/modules/movement';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { BOSSES_ANIMATION } from '@/constants/animation-keys';
 import { Idle } from '@/components/states/boss-states/idle';
@@ -14,6 +15,8 @@ export class EvilWizzard extends Character {
       attack: BOSSES_ANIMATION.EVIL_WIZARD.SIMPLE_ATTACK,
       death: BOSSES_ANIMATION.EVIL_WIZARD.DEATH,
     };
+
+    this.movement = new Movement(undefined);
 
     this.stateMachine.addState(new Idle(this));
     this.stateMachine.addState(new Casting(this));

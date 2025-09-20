@@ -34,7 +34,8 @@ import { MemoryMonitor } from '../../tools/memory-monitor.js';
 
 export class LevelOneScene extends Phaser.Scene {
   //private readonly playerSpawnPosition = 50;
-  private readonly playerSpawnPosition = 11200;
+  private readonly playerSpawnPosition = 6200;
+  //private readonly playerSpawnPosition = 11200;
   private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600, 6500, 8600, 10800];
   private readonly zombieSpawnPositions = [4700, 5000, 5500, 6400, 7700, 8700, 8800, 10900];
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
@@ -62,11 +63,11 @@ export class LevelOneScene extends Phaser.Scene {
     this.initUiScene(() => this.createGameWorld());
   }
 
-  update(time: number, delta: number): void {
+  update(_: number, delta: number): void {
     this.player.update();
     this.aiSkeletonWarrior.update();
     this.aiZombie.update();
-    this.aiEvilWizard.update(time, delta);
+    this.aiEvilWizard.update(delta);
 
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
     this.grass.tilePositionX = this.camera.scrollX * 0.5;

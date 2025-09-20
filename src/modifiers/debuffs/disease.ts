@@ -20,7 +20,6 @@ export class Disease implements Modifier {
 
   public apply(target: Character): void {
     if (target.getDead()) {
-      this.ui.removeDebuffIcon(this.id);
       this.tick.remove();
     }
     target.takeDamage(this.damagePerTick);

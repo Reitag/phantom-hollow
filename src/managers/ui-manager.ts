@@ -73,4 +73,8 @@ export class UiManager {
   public removeDebuffIcon(key: string): void {
     this.modifierIconContainer.removeModifierIcon(key);
   }
+
+  public removeAllModfierIcons(): void {
+    this.modifierIconContainer.removeAllModifierIcons();
+  }
 }

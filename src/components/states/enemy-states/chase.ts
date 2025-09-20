@@ -19,7 +19,7 @@ export class Chase extends CharacterState {
 
     this.player = player;
     this.chase = chase;
-    this.characterMovement.addModifier(this.chase);
+    this.characterMovement.addModifier('Chase-player', this.chase);
   }
 
   public onUpdate(): void {
@@ -34,6 +34,6 @@ export class Chase extends CharacterState {
   }
 
   public onExit(): void {
-    this.characterMovement.removeModifier(this.chase);
+    this.characterMovement.removeModifier('Chase-player');
   }
 }

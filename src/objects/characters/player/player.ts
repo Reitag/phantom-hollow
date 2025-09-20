@@ -112,5 +112,6 @@ export class Player extends Character {
 
   protected override onDeathStart(): void {
     this.controls.disable();
+    this.ui.removeAllModfierIcons();
   }
 }

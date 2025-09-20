@@ -35,11 +35,12 @@ export class AiEvilWizard extends Boss {
     this.castShadowBoltBind = this.castShadowBolt.bind(this);
   }
 
-  public update(time: number, delta: number): void {
+  public update(delta: number): void {
+    this.aiMutatedBat.update();
+
     if (this.boss.getDead()) {
       return;
     }
-    this.aiMutatedBat.update();
 
     if (!this.canEngage(EVIL_WIZARD_STATS.ENGAGE_DISTANCE)) return;
     if (this.player.x > this.boss.x) {

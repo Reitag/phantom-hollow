@@ -23,7 +23,7 @@ export class Dive extends CharacterState {
 
     this.player = player;
     this.damage = damage;
-    this.characterMovement.addModifier(diveSpeed);
+    this.characterMovement.addModifier('Dive-speed', diveSpeed);
     this.playAnimation(this.animations.idle);
 
     this.character.scene.time.delayedCall(lifeTime, () => {

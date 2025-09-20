@@ -117,15 +117,15 @@ export class Tilemap {
     }
   }
 
-  getTileLayer(name: string): Phaser.Tilemaps.TilemapLayer | null {
+  public getTileLayer(name: string): Phaser.Tilemaps.TilemapLayer | null {
     return this.tileLayers[name] ?? null;
   }
 
-  getObjectLayer(name: string): Phaser.Tilemaps.ObjectLayer | null {
+  public getObjectLayer(name: string): Phaser.Tilemaps.ObjectLayer | null {
     return this.objectLayers[name] ?? null;
   }
 
-  getTilemap(): Phaser.Tilemaps.Tilemap {
+  public getTilemap(): Phaser.Tilemaps.Tilemap {
     return this.tilemap;
   }
 }

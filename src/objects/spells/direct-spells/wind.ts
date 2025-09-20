@@ -39,6 +39,7 @@ export class Wind extends Spell {
 
   public override applyEffect(target: Character): void {
     if (!target) return;
+    console.log(target.x, this.x);
     target.getMovement().applyForce(WIND_STATS.FORCE);
   }
 }

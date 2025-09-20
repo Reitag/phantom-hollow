@@ -1,28 +1,30 @@
 export class Movement {
-  private baseSpeed: number;
+  private baseSpeed: number | undefined;
   private savedBaseSpeed: number | null = null;
   private externalForce: number = 0;
-  private speedModifiers: number[] = [];
+  private speedModifiers: Map<string, number> = new Map();
 
   private static readonly FORCE_DECAY = 0.97;
   private static readonly MIN_FORCE_THRESHOLD = 20;
 
-  constructor(baseSpeed: number) {
+  constructor(baseSpeed: number | undefined) {
     this.baseSpeed = baseSpeed;
   }
 
-  public addModifier(modifier: number): void {
-    if (!this.speedModifiers.includes(modifier)) {
-      this.speedModifiers.push(modifier);
+  public addModifier(key: string, value: number): void {
+    if (!this.speedModifiers.has(key)) {
+      this.speedModifiers.set(key, value);
     }
   }
 
-  public removeModifier(modifier: number): void {
-    this.speedModifiers = this.speedModifiers.filter((m) => m !== modifier);
+  public removeModifier(key: string): void {
+    if (this.speedModifiers.has(key)) {
+      this.speedModifiers.delete(key);
+    }
   }
 
   public clearModifiers(): void {
-    this.speedModifiers.length = 0;
+    this.speedModifiers.clear();
   }
 
   public applyForce(force: number): void {
@@ -30,6 +32,7 @@ export class Movement {
   }
 
   public setMovementLock(isLocked: boolean): void {
+    if (this.baseSpeed === undefined) return;
     if (isLocked && this.savedBaseSpeed === null) {
       this.savedBaseSpeed = this.baseSpeed;
       this.baseSpeed = 0;
@@ -40,7 +43,8 @@ export class Movement {
   }
 
   public getCurrentSpeed(): number {
-    const totalMultiplier = this.speedModifiers.reduce((acc, m) => acc + m, 1);
+    if (!this.baseSpeed) return 0;
+    const totalMultiplier = this.speedModifiers.values().reduce((acc, m) => acc + m, 1);
     const finalSpeed = (this.baseSpeed - this.externalForce) * totalMultiplier;
 
     if (this.externalForce != 0) {

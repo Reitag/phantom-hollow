@@ -74,6 +74,15 @@ export class ModifierIconContainer {
     this.modifierIcons = this.modifierIcons.filter((elem) => elem.icon.name !== key);
   }
 
+  public removeAllModifierIcons(): void {
+    for (const entry of this.modifierIcons) {
+      entry.icon?.destroy();
+      entry.timerText?.destroy();
+    }
+
+    this.modifierIcons = [];
+  }
+
   private findModifierIcon(key: string): ModifierContainerConfig | undefined {
     return this.modifierIcons.find((elem) => elem.icon.name === key);
   }
