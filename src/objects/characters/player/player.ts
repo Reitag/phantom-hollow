@@ -1,14 +1,17 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
-import { Idle } from '@/components/states/characters/player-states/idle';
-import { Movement } from '@/components/states/characters/player-states/movement';
-import { Casting } from '@/components/states/characters/player-states/casting';
-import { Ready } from '@/components/states/characters/player-states/ready';
-import { Death } from '@/components/states/characters/core/death';
+import { Idle } from '@/components/states/player-states/idle';
+import { Movement } from '@/components/states/player-states/movement';
+import { Casting } from '@/components/states/player-states/casting';
+import { Ready } from '@/components/states/player-states/ready';
+import { Death } from '@/components/states/core/death';
+import { Movement as CharacterMovement } from '@/components/modules/movement';
+import { CHARACTERS } from '@/constants/asset-keys';
+import { PLAYER_ANIMATION } from '@/constants/animation-keys';
+import { PLAYER_STATS } from '@/constants/object-stats';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
-import { PLAYER } from '@/constants/animation-keys';
 
 interface PlayerConfig extends CharacterConfig {
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
@@ -38,12 +41,15 @@ export class Player extends Character {
     this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
 
     this.animations = {
-      idle: PLAYER.IDLE,
-      moveLeft: PLAYER.LEFT,
-      moveRight: PLAYER.RIGHT,
-      attack: PLAYER.SIMPLE_ATTACK,
-      death: PLAYER.DEATH,
+      idle: PLAYER_ANIMATION.IDLE,
+      moveLeft: PLAYER_ANIMATION.LEFT,
+      moveRight: PLAYER_ANIMATION.RIGHT,
+      attack: PLAYER_ANIMATION.SIMPLE_ATTACK,
+      instantCast: PLAYER_ANIMATION.INSTANT_CAST,
+      death: PLAYER_ANIMATION.DEATH,
     };
+
+    this.movement = new CharacterMovement(PLAYER_STATS.MOVE);
 
     this.initKeyboard();
     this.initStateMachine();
@@ -64,7 +70,7 @@ export class Player extends Character {
     this.stateMachine.addState(new Movement(this, this.controls, this.spellManager));
     this.stateMachine.addState(new Casting(this, this.controls, this.spellManager, this.ui));
     this.stateMachine.addState(new Ready(this, this.controls, this.ui));
-    this.stateMachine.addState(new Death(this, 'player', 101, this.ui));
+    this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 101, this.ui));
 
     this.stateMachine.changeState('Idle');
   }
@@ -106,5 +112,6 @@ export class Player extends Character {
 
   protected override onDeathStart(): void {
     this.controls.disable();
+    this.ui.removeAllModfierIcons();
   }
 }

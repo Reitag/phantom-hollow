@@ -15,6 +15,7 @@ export type AnimationConfig = {
   moveLeft?: string;
   moveRight?: string;
   attack?: string;
+  instantCast?: string;
   death?: string;
 };
 

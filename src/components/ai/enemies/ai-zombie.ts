@@ -1,3 +1,4 @@
+import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { DISEASE } from '@/constants/modifier-stats';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 import { Zombie } from '@/objects/characters/enemies/zombie';
@@ -15,7 +16,7 @@ export class AiZombie extends Ai {
 
     if (!canEngage) {
       if (currentState !== 'Patrol') {
-        fsm.changeState('Patrol', ZOMBIE_STATS.PATROL);
+        fsm.changeState('Patrol');
       }
       return;
     }
@@ -37,7 +38,12 @@ export class AiZombie extends Ai {
       return;
     }
 
-    if (x < ZOMBIE_STATS.ATTACK_RANGE) {
+    if (
+      zombie.anims.isPlaying &&
+      zombie.anims.currentAnim?.key === ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK
+    ) {
+      return;
+    } else if (x < ZOMBIE_STATS.ATTACK_RANGE) {
       if (currentState !== 'Attack') {
         fsm.changeState(
           'Attack',
@@ -63,11 +69,11 @@ export class AiZombie extends Ai {
 
   private diseaseTarget(): void {
     const player = this.player;
-    const debuff = player.getDebuff();
+    const debuff = player.getModifier();
 
-    if (!debuff.isDebuffExist(DISEASE.id)) {
-      debuff.addDebuff(DISEASE.id);
-      debuff.startDebuff(DISEASE.id, player);
+    if (!debuff.isModifierExist(DISEASE.id)) {
+      debuff.addModifier(DISEASE.id);
+      debuff.startModifier(DISEASE.id, player);
     }
   }
 }

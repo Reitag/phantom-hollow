@@ -14,13 +14,20 @@ export abstract class Ai {
 
   public update(): void {
     this.enemies.forEach((enemy) => {
-      if (enemy.getDead()) return;
+      if (enemy.getDead()) {
+        this.removeEnemy(enemy);
+        return;
+      }
       this.updateEnemyState(enemy);
     });
   }
 
   public addEnemy(enemy: Character): void {
     this.enemies.push(enemy);
+  }
+
+  public removeEnemy(enemy: Character): void {
+    this.enemies = this.enemies.filter((e) => e !== enemy);
   }
 
   public getEnemies(): Character[] {

@@ -5,6 +5,8 @@ export const CHARACTERS = {
   PLAYER: 'player',
   SKELETON_WARRIOR: 'skeleton-warrior',
   ZOMBIE: 'zombie',
+  MUTATED_BAT: 'mutated-bat',
+  EVIL_WIZARD: 'evil-wizard',
 } as const;
 
 export const MAPS = {
@@ -26,6 +28,8 @@ export const OBJECTS = {
 export const SPELLS = {
   FIRE_BALL: 'fire-ball',
   BLINK: 'blink',
+  WIND: 'wind',
+  SHADOW_BOLT: 'shadow-bolt',
 } as const;
 
 export const TILESETS = {
@@ -43,10 +47,13 @@ export const UI = {
   SPELL_UI: 'spell-ui',
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
+  WIND_ICON: 'wind-icon',
   HEALTH_BAR: 'health-bar',
   HEALTH_ENV: 'health-env',
   CAST_BAR: 'cast-bar',
   CAST_BAR_GREEN: 'cast-bar-green',
   CAST_ENV: 'cast-env',
   DISEASE_DEBUFF: 'disease-debuff',
+  DREAD_AURA_DEBUFF: 'dread-aura-debuff',
+  SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
 } as const;

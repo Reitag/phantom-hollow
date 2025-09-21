@@ -1,3 +1,4 @@
+import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { SKELETON_WARRIOR_STATS } from '@/constants/object-stats';
 import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Ai } from '../core/ai';
@@ -14,7 +15,7 @@ export class AiSkeletonWarrior extends Ai {
 
     if (!canEngage) {
       if (currentState !== 'Patrol') {
-        fsm.changeState('Patrol', SKELETON_WARRIOR_STATS.PATROL);
+        fsm.changeState('Patrol');
       }
       return;
     }
@@ -34,7 +35,12 @@ export class AiSkeletonWarrior extends Ai {
       return;
     }
 
-    if (x < SKELETON_WARRIOR_STATS.ATTACK_RANGE) {
+    if (
+      skeleton.anims.isPlaying &&
+      skeleton.anims.currentAnim?.key === ENEMIES_ANIMATION.SKELETON_WARRIOR.SIMPLE_ATTACK
+    ) {
+      return;
+    } else if (x < SKELETON_WARRIOR_STATS.ATTACK_RANGE) {
       if (currentState !== 'Attack') {
         fsm.changeState('Attack', this.player, [
           SKELETON_WARRIOR_STATS.HIT,

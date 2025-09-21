@@ -53,7 +53,13 @@ export const BLINK_ICON = {
   Y: ICON_Y,
 } as const;
 
+export const WIND_ICON = {
+  X: ICON_X_FIRST + 2 * X_STEP,
+  Y: ICON_Y,
+} as const;
+
 export const ICON_OVERLAYS = {
   [SPELLS.FIRE_BALL]: FIREBALL_ICON,
   [SPELLS.BLINK]: BLINK_ICON,
+  [SPELLS.WIND]: WIND_ICON,
 } as const;

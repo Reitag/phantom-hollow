@@ -3,21 +3,24 @@ import { Sandbox } from '@/components/sandbox/sandbox';
 import { PhysicsSpriteConfig, SpellAnimationConfig } from '@/utils/types';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
+import { Character } from './character';
 
 export interface SpellConfig extends PhysicsSpriteConfig {
-  sandbox: Sandbox;
-  animation: SpellAnimationConfig;
+  sandbox?: Sandbox;
+  animation?: SpellAnimationConfig;
   damage?: number;
   speed?: number;
   direction?: number;
 }
 
 export abstract class Spell extends PhysicsSprite {
-  protected sandbox: Sandbox;
-  protected animation: SpellAnimationConfig;
+  protected sandbox: Sandbox | null = null;
+  protected animation: SpellAnimationConfig | null = null;
   protected damage: number | null = null;
   protected speed: number | null = null;
   protected direction: number | null = null;
+
+  private hittedEnemies = new Set<Character>();
 
   constructor({
     scene,
@@ -35,15 +38,18 @@ export abstract class Spell extends PhysicsSprite {
     this.damage = damage || null;
     this.speed = speed || null;
     this.direction = direction || null;
-    this.animation = animation;
-    this.sandbox = sandbox;
+    this.animation = animation || null;
+    this.sandbox = sandbox || null;
 
     this.setDepth(Z_POSITION.SPELL);
   }
 
-  abstract cast(): void;
+  public abstract cast(): void;
+
+  public applyEffect(target: Character): void {}
 
   public destroySpell(): void {
+    if (!this.animation) return;
     if (this.direction) {
       this.setVelocityX(80 * this.direction);
     }
@@ -54,18 +60,23 @@ export abstract class Spell extends PhysicsSprite {
     });
   }
 
+  public hasAlreadyHit(enemy: Character): boolean {
+    return this.hittedEnemies.has(enemy);
+  }
+
+  public registerHit(enemy: Character): void {
+    this.hittedEnemies.add(enemy);
+  }
+
   public causeDamage(): number {
     if (!this.damage) {
       return 0;
     }
-
-    const damage = this.damage;
-    this.damage = 0;
-
-    return damage;
+    return this.damage;
   }
 
   protected playMainAnimation(): void {
+    if (!this.animation) return;
     if (this.direction !== 1) {
       this.setFlipX(true);
     }

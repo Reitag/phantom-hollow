@@ -1,4 +1,5 @@
 import { Spell, SpellConfig } from '@/objects/core/spell';
+import { FIRE_BALL_STATS } from '@/constants/object-stats';
 
 export class FireBall extends Spell {
   constructor({
@@ -29,7 +30,7 @@ export class FireBall extends Spell {
     this.setSpellVelocity();
     this.playMainAnimation();
 
-    this.scene.time.delayedCall(1100, () => {
+    this.scene.time.delayedCall(FIRE_BALL_STATS.LIFE_TIME, () => {
       if (!this.active) return;
       this.destroySpell();
     });

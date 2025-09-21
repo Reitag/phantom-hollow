@@ -1,10 +1,11 @@
 import { Character, CharacterConfig } from '@/objects/core/character';
-import { Wait } from '@/components/states/characters/enemy-states/wait';
-import { Patrol } from '@/components/states/characters/enemy-states/patrol';
-import { Chase } from '@/components/states/characters/enemy-states/chase';
-import { Attack } from '@/components/states/characters/enemy-states/attack';
-import { Death } from '@/components/states/characters/core/death';
-import { ENEMIES } from '@/constants/animation-keys';
+import { Movement } from '@/components/modules/movement';
+import { Wait } from '@/components/states/enemy-states/wait';
+import { Patrol } from '@/components/states/enemy-states/patrol';
+import { Chase } from '@/components/states/enemy-states/chase';
+import { Attack } from '@/components/states/enemy-states/attack';
+import { Death } from '@/components/states/core/death';
+import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 
@@ -17,12 +18,14 @@ export class Zombie extends Character {
     this.patrolLeftX = this.x - this.walkBound;
 
     this.animations = {
-      idle: ENEMIES.ZOMBIE.IDLE,
-      moveLeft: ENEMIES.ZOMBIE.LEFT,
-      moveRight: ENEMIES.ZOMBIE.RIGHT,
-      attack: ENEMIES.ZOMBIE.SIMPLE_ATTACK,
-      death: ENEMIES.ZOMBIE.DEATH,
+      idle: ENEMIES_ANIMATION.ZOMBIE.IDLE,
+      moveLeft: ENEMIES_ANIMATION.ZOMBIE.LEFT,
+      moveRight: ENEMIES_ANIMATION.ZOMBIE.RIGHT,
+      attack: ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK,
+      death: ENEMIES_ANIMATION.ZOMBIE.DEATH,
     };
+
+    this.movement = new Movement(ZOMBIE_STATS.WALK);
 
     this.stateMachine.addState(new Patrol(this));
     this.stateMachine.addState(new Wait(this));

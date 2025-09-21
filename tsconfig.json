@@ -14,6 +14,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src", "tools/memory-monitor.js"],
   "exclude": ["build", "node_modules"]
 }

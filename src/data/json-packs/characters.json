@@ -17,6 +17,18 @@
       "key": "zombie",
       "url": "assets/characters/zombie.png",
       "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "mutated-bat",
+      "url": "assets/characters/mutated-bat.png",
+      "frameConfig": { "frameWidth": 96, "frameHeight": 80 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "evil-wizard",
+      "url": "assets/characters/bosses/evil-wizard.png",
+      "frameConfig": { "frameWidth": 140, "frameHeight": 97 }
     }
   ]
 }

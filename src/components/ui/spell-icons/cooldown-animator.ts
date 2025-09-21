@@ -46,11 +46,16 @@ export class CooldownAnimator {
       ICON_OVERLAYS[SPELLS.BLINK].X,
       ICON_OVERLAYS[SPELLS.BLINK].Y
     );
+    const windOverlay = this.createOverlayMask(
+      ICON_OVERLAYS[SPELLS.WIND].X,
+      ICON_OVERLAYS[SPELLS.WIND].Y
+    );
 
     const cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     const overlays: CooldownOverlay[] = [
       [ICON_OVERLAYS[SPELLS.FIRE_BALL], fireBallOverlay, false],
       [ICON_OVERLAYS[SPELLS.BLINK], blinkOverlay, cooldowns.isOnCooldown(SPELLS.BLINK)],
+      [ICON_OVERLAYS[SPELLS.WIND], windOverlay, cooldowns.isOnCooldown(SPELLS.WIND)],
     ];
 
     this.scene.tweens.addCounter({
