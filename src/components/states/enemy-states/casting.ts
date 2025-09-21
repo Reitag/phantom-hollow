@@ -3,6 +3,7 @@ import { Character } from '@/objects/core/character';
 
 export class Casting extends CharacterState {
   private castSpell!: () => void | undefined;
+  private frameOnCast: number | undefined;
 
   constructor(character: Character) {
     super('Casting', character);
@@ -11,6 +12,10 @@ export class Casting extends CharacterState {
   public onEnter(...args: unknown[]): void {
     const castSpell = args.find((elem): elem is () => void => typeof elem === 'function');
     if (castSpell) this.castSpell = castSpell;
+
+    const frameonCast = args.find((elem): elem is number => typeof elem === 'number');
+    if (!frameonCast) throw new Error('Frame on cast must be a number');
+    this.frameOnCast = frameonCast;
 
     this.playAnimation(this.animations.attack, true);
 
@@ -37,7 +42,7 @@ export class Casting extends CharacterState {
   ): void {
     if (anim.key !== this.animations.attack) return;
 
-    if (frame.index === 10 && this.castSpell) {
+    if (frame.index === this.frameOnCast && this.castSpell) {
       this.castSpell();
     }
   }

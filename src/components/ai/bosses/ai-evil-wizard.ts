@@ -36,7 +36,7 @@ export class AiEvilWizard extends Boss {
   }
 
   public update(delta: number): void {
-    this.aiMutatedBat.update();
+    this.aiMutatedBat.update(delta);
 
     if (this.boss.getDead()) {
       return;
@@ -56,7 +56,7 @@ export class AiEvilWizard extends Boss {
     if (!this.spellCooldown.isOnCooldown(SHADOW_BOLT.NAME)) {
       this.spellCooldown.startCooldown(SHADOW_BOLT.NAME, SHADOW_BOLT.DURATION);
       if (currentState !== 'Casting') {
-        fms.changeState('Casting', this.castShadowBoltBind);
+        fms.changeState('Casting', this.castShadowBoltBind, EVIL_WIZARD_STATS.CAST);
       }
     }
 

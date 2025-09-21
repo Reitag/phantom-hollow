@@ -4,7 +4,7 @@ export interface State {
   stateMachine: StateMachine;
   name: string;
   onEnter?: (...args: unknown[]) => void;
-  onUpdate?: () => void;
+  onUpdate?: (delta: number) => void;
   onExit?: () => void;
 }
 
@@ -20,9 +20,9 @@ export class StateMachine {
     return this.currentState?.name;
   }
 
-  public update(): void {
+  public update(delta: number): void {
     this.processQueuedState();
-    this.currentState?.onUpdate?.();
+    this.currentState?.onUpdate?.(delta);
   }
 
   public addState(state: State): void {

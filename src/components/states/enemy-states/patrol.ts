@@ -7,15 +7,9 @@ export class Patrol extends CharacterState {
     super('Patrol', character);
   }
 
-  public onEnter(...args: unknown[]): void {
-    if (this.character.getFacingRight()) {
-      this.moveRight(this.characterMovement.getCurrentSpeed());
-    } else {
-      this.moveLeft(this.characterMovement.getCurrentSpeed());
-    }
-  }
+  public onEnter(...args: unknown[]): void {}
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (this.isWaiting) return;
 
     const posX = this.character.x;
@@ -24,10 +18,10 @@ export class Patrol extends CharacterState {
     const isFacingRight = this.character.getFacingRight();
 
     if (isFacingRight) {
-      this.moveRight(this.characterMovement.getCurrentSpeed());
+      this.moveRight(this.characterMovement.getCurrentSpeed(delta));
       if (posX >= rightX) this.pausePatrol();
     } else {
-      this.moveLeft(this.characterMovement.getCurrentSpeed());
+      this.moveLeft(this.characterMovement.getCurrentSpeed(delta));
       if (posX <= leftX) this.pausePatrol();
     }
   }

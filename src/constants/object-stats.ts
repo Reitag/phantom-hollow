@@ -74,5 +74,6 @@ export const MUTATED_BAT_STATS = {
 
 export const EVIL_WIZARD_STATS = {
   HEALTH: 1000,
-  ENGAGE_DISTANCE: 400,
+  ENGAGE_DISTANCE: 450,
+  CAST: 10,
 } as const;

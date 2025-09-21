@@ -88,6 +88,6 @@ export abstract class CharacterState implements State {
   }
 
   public onEnter?(): void {}
-  public onUpdate?(): void {}
+  public onUpdate?(delta: number): void {}
   public onExit?(): void {}
 }

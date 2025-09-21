@@ -4,7 +4,7 @@ export class Movement {
   private externalForce: number = 0;
   private speedModifiers: Map<string, number> = new Map();
 
-  private static readonly FORCE_DECAY = 0.97;
+  private static readonly FORCE_DECAY = 0.17;
   private static readonly MIN_FORCE_THRESHOLD = 20;
 
   constructor(baseSpeed: number | undefined) {
@@ -42,19 +42,22 @@ export class Movement {
     }
   }
 
-  public getCurrentSpeed(): number {
+  public getCurrentSpeed(delta = 1): number {
     if (!this.baseSpeed) return 0;
     const totalMultiplier = this.speedModifiers.values().reduce((acc, m) => acc + m, 1);
     const finalSpeed = (this.baseSpeed - this.externalForce) * totalMultiplier;
 
     if (this.externalForce != 0) {
-      this.reduceExternalForce();
+      this.reduceExternalForce(delta);
     }
     return finalSpeed;
   }
 
-  private reduceExternalForce(): void {
-    this.externalForce *= Movement.FORCE_DECAY;
+  private reduceExternalForce(delta: number): void {
+    const deltaSeconds = delta / 1000;
+
+    this.externalForce *= Math.pow(Movement.FORCE_DECAY, deltaSeconds);
+    console.log(this.externalForce);
 
     if (Math.abs(this.externalForce) < Movement.MIN_FORCE_THRESHOLD) {
       this.externalForce = 0;

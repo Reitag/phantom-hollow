@@ -75,8 +75,8 @@ export class Player extends Character {
     this.stateMachine.changeState('Idle');
   }
 
-  public update(): void {
-    this.stateMachine.update();
+  public update(delta: number): void {
+    this.stateMachine.update(delta);
     this.controls.update();
   }
 

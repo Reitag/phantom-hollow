@@ -36,7 +36,7 @@ export class SkeletonWarrior extends Character {
     this.arcadeBody.setSize(25, 48);
   }
 
-  update(): void {
-    this.stateMachine.update();
+  update(delta: number): void {
+    this.stateMachine.update(delta);
   }
 }

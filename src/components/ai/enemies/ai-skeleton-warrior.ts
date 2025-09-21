@@ -4,8 +4,8 @@ import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Ai } from '../core/ai';
 
 export class AiSkeletonWarrior extends Ai {
-  protected updateEnemyState(skeleton: SkeletonWarrior): void {
-    skeleton.update();
+  protected updateEnemyState(skeleton: SkeletonWarrior, delta: number): void {
+    skeleton.update(delta);
 
     const { x, y } = this.distanceToPlayer(skeleton);
     const fsm = skeleton.getStateMachine();

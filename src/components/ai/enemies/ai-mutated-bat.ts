@@ -5,16 +5,16 @@ import { Ai } from '../core/ai';
 export class AiMutatedBat extends Ai {
   private orbitAngle = 0; // current angle of the bat around the player
   private orbitRadius = 100; // distance from player
-  private orbitSpeed = 0.05; // how fast the bat circles
+  private orbitSpeed = 0.005; // how fast the bat circles
   private verticalOffset = 100; // how high above the player's head
 
-  protected updateEnemyState(bat: MutatedBat): void {
+  protected updateEnemyState(bat: MutatedBat, delta: number): void {
     if (!bat.active) {
       this.removeEnemy(bat);
       return;
     }
 
-    bat.update();
+    bat.update(delta);
 
     if (!this.player || this.player.getDead()) {
       bat.setVelocity(0, 0);

@@ -23,7 +23,7 @@ export class MutatedBat extends Character {
     this.arcadeBody.setAllowGravity(false);
   }
 
-  public update(): void {
-    this.stateMachine.update();
+  public update(delta: number): void {
+    this.stateMachine.update(delta);
   }
 }

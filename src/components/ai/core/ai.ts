@@ -12,13 +12,13 @@ export abstract class Ai {
     this.collisionLayer = collisionLayer;
   }
 
-  public update(): void {
+  public update(delta: number): void {
     this.enemies.forEach((enemy) => {
       if (enemy.getDead()) {
         this.removeEnemy(enemy);
         return;
       }
-      this.updateEnemyState(enemy);
+      this.updateEnemyState(enemy, delta);
     });
   }
 
@@ -48,7 +48,7 @@ export abstract class Ai {
     }
   }
 
-  protected abstract updateEnemyState(enemy: Character): void;
+  protected abstract updateEnemyState(enemy: Character, delta: number): void;
   protected abstract get engageDistance(): number;
   protected abstract get sameYThreshold(): number;
 

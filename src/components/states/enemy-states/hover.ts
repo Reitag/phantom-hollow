@@ -35,13 +35,13 @@ export class Hover extends CharacterState {
     this.playAnimation(this.animations.idle);
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (!this.player || this.player.getDead()) return;
 
     const playerX = this.player.x;
     const playerY = this.player.y - this.verticalOffset;
 
-    this.orbitAngle += this.orbitSpeed;
+    this.orbitAngle += this.orbitSpeed * delta;
     if (this.orbitAngle >= Math.PI * 2) {
       this.orbitAngle -= Math.PI * 2;
     }
@@ -52,7 +52,7 @@ export class Hover extends CharacterState {
     const dx = targetX - this.character.x;
     const dy = targetY - this.character.y;
 
-    const speed = this.characterMovement.getCurrentSpeed();
+    const speed = this.characterMovement.getCurrentSpeed(delta);
 
     this.character.setVelocityX(Phaser.Math.Clamp(dx, -speed, speed));
     this.character.setVelocityY(Phaser.Math.Clamp(dy, -speed, speed));

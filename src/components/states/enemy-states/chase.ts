@@ -22,14 +22,14 @@ export class Chase extends CharacterState {
     this.characterMovement.addModifier('Chase-player', this.chase);
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (!this.player) return;
 
     const direction = this.character.x > this.player.x ? -1 : 1;
     const animKey = direction === 1 ? this.animations.moveRight : this.animations.moveLeft;
 
     this.character.setFlipX(direction < 0);
-    this.character.setVelocityX(direction * this.characterMovement.getCurrentSpeed());
+    this.character.setVelocityX(direction * this.characterMovement.getCurrentSpeed(delta));
     this.playAnimation(animKey);
   }
 

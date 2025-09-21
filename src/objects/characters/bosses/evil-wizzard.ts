@@ -1,8 +1,8 @@
 import { Movement } from '@/components/modules/movement';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { BOSSES_ANIMATION } from '@/constants/animation-keys';
-import { Idle } from '@/components/states/boss-states/idle';
-import { Casting } from '@/components/states/boss-states/casting';
+import { Idle } from '@/components/states/core/idle';
+import { Casting } from '@/components/states/enemy-states/casting';
 import { Death } from '@/components/states/core/death';
 import { CHARACTERS } from '@/constants/asset-keys';
 
@@ -28,7 +28,7 @@ export class EvilWizzard extends Character {
     this.arcadeBody.setOffset((this.width - 30) / 2, this.height - 53);
   }
 
-  update(): void {
-    this.stateMachine.update();
+  update(delta: number): void {
+    this.stateMachine.update(delta);
   }
 }
