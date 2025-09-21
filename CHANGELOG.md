@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2025-09-21
+
+### Added
+
+- Wind spell with unique movement-based mechanics.
+- Movement component system for characters.
+- First boss, Evil Wizzard, with abilities and mechanics.
+- `DamageMultiplier` component for flexible damage scaling.
+
+### Changed
+
+- Rebalanced character speed for smoother gameplay.
+- Redesigned Level 1 layout for improved flow and pacing.
+- Improved constant notation for cleaner, more maintainable code.
+- Restructured project directories for better organization.
+
+### Fixed
+
+- Logic issues with the Wind spell.
+- Boss mechanic bugs affecting abilities and behavior.
+- Issues with movement and modifier components.
+
+### Removed
+
+- Obsolete animation check from the base `CharacterState` class.
+
+
 ## [0.9.0] - 2025-08-23
 
 ### Added

@@ -10,7 +10,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#eeeeee',
   title: 'Phantom hollow',
-  version: '0.9.0',
+  version: '0.10.0',
   scale: {
     parent: 'app',
     width: SCENE_SIZE.WIDTH,
