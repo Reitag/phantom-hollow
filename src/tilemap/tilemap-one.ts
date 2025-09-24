@@ -10,11 +10,16 @@ export const TILESET_NAMES = {
   CLIFF: 'cliff-tile',
   GRASS: 'grass-tile',
   COLLIDE: 'collide-tile',
+  CAVE_BG: 'cave-bg-tile',
 } as const;
 
 export const TILELAYER_NAMES = {
   SPEAR: 'spear-layer',
   BUSH: 'bush-layer',
+  CAVE_ROOF: 'cave-roof-layer',
+  CAVE: 'cave-layer',
+  CAVE_BACKGROUND: 'cave-background-layer',
+  PLATFORM_BG: 'platform-bg-layer',
   GROUND: 'ground-layer',
   SPIKE: 'spike-layer',
   PLATFORM: 'platform-layer',
@@ -35,6 +40,7 @@ export function createTilemapOne(scene: Phaser.Scene) {
     { name: TILESET_NAMES.CLIFF, key: TILESETS.CLIFF },
     { name: TILESET_NAMES.GRASS, key: TILESETS.GRASS_2 },
     { name: TILESET_NAMES.COLLIDE, key: TILESETS.COLLIDE },
+    { name: TILESET_NAMES.CAVE_BG, key: TILESETS.CAVE_BG },
   ];
   const tileLayersConfig = [
     {
@@ -54,6 +60,34 @@ export function createTilemapOne(scene: Phaser.Scene) {
     {
       name: TILELAYER_NAMES.BUSH,
       tilesets: [TILESET_NAMES.GRASS],
+      x: 0,
+      y: 0,
+      collide: false,
+    },
+    {
+      name: TILELAYER_NAMES.PLATFORM_BG,
+      tilesets: [TILESET_NAMES.ANCIENT],
+      x: 0,
+      y: 0,
+      collide: false,
+    },
+    {
+      name: TILELAYER_NAMES.CAVE_ROOF,
+      tilesets: [TILESET_NAMES.GROUND],
+      x: 0,
+      y: 0,
+      collide: false,
+    },
+    {
+      name: TILELAYER_NAMES.CAVE,
+      tilesets: [TILESET_NAMES.GROUND],
+      x: 0,
+      y: 0,
+      collide: true,
+    },
+    {
+      name: TILELAYER_NAMES.CAVE_BACKGROUND,
+      tilesets: [TILESET_NAMES.CAVE_BG],
       x: 0,
       y: 0,
       collide: false,
@@ -117,6 +151,10 @@ export function createTilemapOne(scene: Phaser.Scene) {
     [TILELAYER_NAMES.BUSH]: Z_POSITION.BUSH,
     [TILELAYER_NAMES.SPEAR]: Z_POSITION.SPEAR,
     [TILELAYER_NAMES.COLLIDE]: Z_POSITION.COLLIDE,
+    [TILELAYER_NAMES.PLATFORM_BG]: Z_POSITION.PLATFORM_BG,
+    [TILELAYER_NAMES.CAVE_BACKGROUND]: Z_POSITION.CAVE_BACKGROUND,
+    [TILELAYER_NAMES.CAVE]: Z_POSITION.CAVE,
+    [TILELAYER_NAMES.CAVE_ROOF]: Z_POSITION.CAVE_ROOF,
   };
 
   return new Tilemap(

@@ -19,7 +19,7 @@ import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
 import { Zombie } from '@/objects/characters/enemies/zombie';
 import { EvilWizzard } from '@/objects/characters/bosses/evil-wizzard';
 import { Tilemap } from '@/components/map/tilemap';
-import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
+import { OBJECTLAYER_NAMES, TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
@@ -34,10 +34,10 @@ import { MemoryMonitor } from '../../tools/memory-monitor.js';
 
 export class LevelOneScene extends Phaser.Scene {
   //private readonly playerSpawnPosition = 50;
-  //private readonly playerSpawnPosition = 6200;
-  private readonly playerSpawnPosition = 11200;
-  private readonly skeletonSpawnPositions = [700, 1600, 2500, 4100, 4600, 6500, 8600, 10800];
-  private readonly zombieSpawnPositions = [4700, 5000, 5500, 6400, 7700, 8700, 8800, 10900];
+  private readonly playerSpawnPosition = 1800;
+  //private readonly playerSpawnPosition = 11200;
+  private readonly skeletonSpawnPositions = [/*700, 1600, 2500, 4100, 4600, 6500, 8600,*/ 10800];
+  private readonly zombieSpawnPositions = [/*4700, 5000, 5500, 6400, 7700, 8700, 8800,*/ 10900];
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
 
   private player!: Player;
@@ -98,6 +98,7 @@ export class LevelOneScene extends Phaser.Scene {
   private createGameWorld(): void {
     this.createParallaxBackground();
     this.createTilemap();
+
     this.createWorldBounds();
 
     this.createSpellSystems();
@@ -215,6 +216,10 @@ export class LevelOneScene extends Phaser.Scene {
     const spearLayer = this.map.getTileLayer(TILELAYER_NAMES.SPEAR);
     const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
 
+    // Cave mechanics
+    const caveLayer = this.map.getTileLayer(TILELAYER_NAMES.CAVE);
+    this.createCaveEntranceTrigger();
+
     const skeletons = this.aiSkeletonWarrior.getEnemies();
     const zombies = this.aiZombie.getEnemies();
     const boss = this.aiEvilWizard.getBoss();
@@ -233,6 +238,10 @@ export class LevelOneScene extends Phaser.Scene {
         undefined,
         this
       ); // Spells
+    }
+
+    if (caveLayer) {
+      this.physics.add.collider(this.player, caveLayer); // Player
     }
 
     // Spike
@@ -383,6 +392,29 @@ export class LevelOneScene extends Phaser.Scene {
       this.time.delayedCall(500, () => {
         this.canPlayerGetDamage = true;
       });
+    }
+  }
+
+  // Cave mechanics
+  private createCaveEntranceTrigger(): void {
+    const caveEntrance = this.add.zone(2114, 456, 100, 200); // x, y, width, height
+    this.physics.world.enable(caveEntrance);
+    (caveEntrance.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
+    (caveEntrance.body as Phaser.Physics.Arcade.Body).setImmovable(true);
+
+    this.physics.add.overlap(this.player, caveEntrance, () => {
+      this.enterCave();
+    });
+  }
+
+  private enterCave(): void {
+    this.toggleCaveRoof(false);
+  }
+
+  private toggleCaveRoof(show: boolean): void {
+    const caveRoofLayer = this.map.getTileLayer(TILELAYER_NAMES.CAVE_ROOF);
+    if (caveRoofLayer && caveRoofLayer.visible !== show) {
+      caveRoofLayer.setVisible(show); // true = visible, false = hidden
     }
   }
 }

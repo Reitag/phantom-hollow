@@ -57,7 +57,6 @@ export class Movement {
     const deltaSeconds = delta / 1000;
 
     this.externalForce *= Math.pow(Movement.FORCE_DECAY, deltaSeconds);
-    console.log(this.externalForce);
 
     if (Math.abs(this.externalForce) < Movement.MIN_FORCE_THRESHOLD) {
       this.externalForce = 0;

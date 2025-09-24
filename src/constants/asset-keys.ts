@@ -41,6 +41,7 @@ export const TILESETS = {
   MOUNT: 'mount',
   SKY: 'sky',
   COLLIDE: 'collide',
+  CAVE_BG: 'cave-bg',
 } as const;
 
 export const UI = {
