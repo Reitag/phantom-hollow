@@ -9,13 +9,12 @@ export const Z_POSITION = {
   TREES_NORMAL: 40,
   /// -backgrounds
   PLATFORM_BG: 50,
+  CAVE_BACKGROUND: 60,
   /// -spear and bush
-  SPEAR: 60,
-  BUSH: 70,
+  SPEAR: 70,
+  BUSH: 80,
   /// -cave
-  CAVE_BACKGROUND: 80,
   CAVE: 90,
-  CAVE_ROOF: 100,
   /// -tilesets
   GROUND: 110,
   SPIKE: 120,

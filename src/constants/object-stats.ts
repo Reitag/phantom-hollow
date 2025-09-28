@@ -37,7 +37,7 @@ export const SHADOW_BOLT_STATS = {
 export const PLAYER_STATS = {
   HEALTH: 100,
   MOVE: 190,
-  JUMP: 510,
+  JUMP: 550,
 } as const;
 
 export const SKELETON_WARRIOR_STATS = {

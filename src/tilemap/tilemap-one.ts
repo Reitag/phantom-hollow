@@ -16,7 +16,6 @@ export const TILESET_NAMES = {
 export const TILELAYER_NAMES = {
   SPEAR: 'spear-layer',
   BUSH: 'bush-layer',
-  CAVE_ROOF: 'cave-roof-layer',
   CAVE: 'cave-layer',
   CAVE_BACKGROUND: 'cave-background-layer',
   PLATFORM_BG: 'platform-bg-layer',
@@ -67,13 +66,6 @@ export function createTilemapOne(scene: Phaser.Scene) {
     {
       name: TILELAYER_NAMES.PLATFORM_BG,
       tilesets: [TILESET_NAMES.ANCIENT],
-      x: 0,
-      y: 0,
-      collide: false,
-    },
-    {
-      name: TILELAYER_NAMES.CAVE_ROOF,
-      tilesets: [TILESET_NAMES.GROUND],
       x: 0,
       y: 0,
       collide: false,
@@ -154,7 +146,6 @@ export function createTilemapOne(scene: Phaser.Scene) {
     [TILELAYER_NAMES.PLATFORM_BG]: Z_POSITION.PLATFORM_BG,
     [TILELAYER_NAMES.CAVE_BACKGROUND]: Z_POSITION.CAVE_BACKGROUND,
     [TILELAYER_NAMES.CAVE]: Z_POSITION.CAVE,
-    [TILELAYER_NAMES.CAVE_ROOF]: Z_POSITION.CAVE_ROOF,
   };
 
   return new Tilemap(
