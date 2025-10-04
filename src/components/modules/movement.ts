@@ -33,6 +33,7 @@ export class Movement {
 
   public setMovementLock(isLocked: boolean): void {
     if (this.baseSpeed === undefined) return;
+
     if (isLocked && this.savedBaseSpeed === null) {
       this.savedBaseSpeed = this.baseSpeed;
       this.baseSpeed = 0;
@@ -42,8 +43,9 @@ export class Movement {
     }
   }
 
-  public getCurrentSpeed(delta = 1): number {
+  public getCurrentSpeed(delta: number = 1): number {
     if (!this.baseSpeed) return 0;
+
     const totalMultiplier = this.speedModifiers.values().reduce((acc, m) => acc + m, 1);
     const finalSpeed = (this.baseSpeed - this.externalForce) * totalMultiplier;
 

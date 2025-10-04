@@ -7,14 +7,26 @@ export class KeyboardController extends InputController {
   private primaryKey: Phaser.Input.Keyboard.Key;
   private secondaryKey: Phaser.Input.Keyboard.Key;
   private tertiaryKey: Phaser.Input.Keyboard.Key;
+
+  private firstItemKey: Phaser.Input.Keyboard.Key;
+  private secondItemKey: Phaser.Input.Keyboard.Key;
+  private thirdItemKey: Phaser.Input.Keyboard.Key;
+  private fourthItemKey: Phaser.Input.Keyboard.Key;
+
   private disabled = false;
 
   constructor(input: Phaser.Input.Keyboard.KeyboardPlugin) {
     super();
     this.cursors = input.createCursorKeys();
+
     this.primaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.secondaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.X);
     this.tertiaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+
+    this.firstItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.secondItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.thirdItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    this.fourthItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.F);
   }
 
   override update(): void {
@@ -39,6 +51,12 @@ export class KeyboardController extends InputController {
     // Tertiary action
     this.tertiaryActionDown = this.tertiaryKey.isDown;
     this.tertiaryActionReleased = Phaser.Input.Keyboard.JustUp(this.tertiaryKey);
+
+    // Items
+    this.firstItemUse = Phaser.Input.Keyboard.JustDown(this.firstItemKey);
+    this.secondItemUse = Phaser.Input.Keyboard.JustDown(this.secondItemKey);
+    this.thirdItemUse = Phaser.Input.Keyboard.JustDown(this.thirdItemKey);
+    this.fourthItemUse = Phaser.Input.Keyboard.JustDown(this.fourthItemKey);
   }
 
   disable(): void {

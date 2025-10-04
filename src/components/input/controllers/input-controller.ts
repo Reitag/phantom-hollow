@@ -15,6 +15,11 @@ export abstract class InputController {
   protected tertiaryActionDown = false;
   protected tertiaryActionReleased = false;
 
+  protected firstItemUse = false;
+  protected secondItemUse = false;
+  protected thirdItemUse = false;
+  protected fourthItemUse = false;
+
   get isLeftDown(): boolean {
     return this.left;
   }
@@ -59,6 +64,22 @@ export abstract class InputController {
     return this.tertiaryActionReleased;
   }
 
+  get isFirstItemDown(): boolean {
+    return this.firstItemUse;
+  }
+
+  get isSecondItemDown(): boolean {
+    return this.secondItemUse;
+  }
+
+  get isThirdItemDown(): boolean {
+    return this.thirdItemUse;
+  }
+
+  get isFourthItemDown(): boolean {
+    return this.fourthItemUse;
+  }
+
   abstract update(): void;
 
   reset(): void {
@@ -73,5 +94,9 @@ export abstract class InputController {
     this.secondaryActionReleased = false;
     this.tertiaryActionDown = false;
     this.tertiaryActionReleased = false;
+    this.firstItemUse = false;
+    this.secondItemUse = false;
+    this.thirdItemUse = false;
+    this.fourthItemUse = false;
   }
 }

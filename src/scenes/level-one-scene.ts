@@ -21,6 +21,7 @@ import { EvilWizzard } from '@/objects/characters/bosses/evil-wizzard';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
+import { InventoryManager } from '@/managers/inventory-manager';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
 import { Sandbox } from '@/components/sandbox/sandbox';
@@ -28,6 +29,11 @@ import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/objects/core/character';
 import { Spell } from '@/objects/core/spell';
 import { isValidTeleportPosition } from '@/utils/helpers';
+import {
+  createHealthPotion,
+  createProtectPotion,
+  createUndyingPotion,
+} from '@/items/potions/potions';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
@@ -101,7 +107,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.createWorldBounds();
 
-    this.createSpellSystems();
+    this.registerVitalSystems();
     this.createPlayer();
 
     this.createSkeletonWarriors();
@@ -110,6 +116,14 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.registerCollisions();
     this.setupCamera();
+
+    const inventory = ServiceLocator.resolve(ServiceKeys.inventoryManager);
+    const health = createHealthPotion();
+    const protect = createProtectPotion();
+    const undye = createUndyingPotion();
+    inventory.addItem(health, 5);
+    inventory.addItem(protect, 5);
+    inventory.addItem(undye, 5);
   }
 
   private createParallaxBackground(): void {
@@ -134,11 +148,12 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 
-  private createSpellSystems(): void {
+  private registerVitalSystems(): void {
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
     ServiceLocator.register(ServiceKeys.spellManager, new SpellManager());
+    ServiceLocator.register(ServiceKeys.inventoryManager, new InventoryManager());
   }
 
   private createPlayer(): void {

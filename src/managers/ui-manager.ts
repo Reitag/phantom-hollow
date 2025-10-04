@@ -1,3 +1,4 @@
+import { InventoryIconContainer } from '@/components/ui/inventory-icons/inventory-icon-container';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
 import { CooldownAnimator } from '@/components/ui/spell-icons/cooldown-animator';
 import { HealthBar } from '@/components/ui/healthbar/health-bar';
@@ -6,6 +7,7 @@ import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
+import { InventorySlot } from '@/items/core/item';
 import { Position } from '@/utils/types';
 
 export class UiManager {
@@ -18,6 +20,7 @@ export class UiManager {
   cooldownAnimator: CooldownAnimator;
   spellIconHighlighter: SpellIconHighlighter;
 
+  inventoryIconContainer: InventoryIconContainer;
   modifierIconContainer: ModifierIconContainer;
 
   constructor(uiScene: Phaser.Scene) {
@@ -30,6 +33,7 @@ export class UiManager {
     this.cooldownAnimator = new CooldownAnimator(uiScene);
     this.spellIconHighlighter = new SpellIconHighlighter(uiScene);
 
+    this.inventoryIconContainer = new InventoryIconContainer(uiScene);
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
   }
 
@@ -76,5 +80,17 @@ export class UiManager {
 
   public removeAllModfierIcons(): void {
     this.modifierIconContainer.removeAllModifierIcons();
+  }
+
+  public updateInventory(items: (InventorySlot | null)[]): void {
+    items.forEach((slot, index) => {
+      if (slot) {
+        // If icon already exists → just update quantity
+        this.inventoryIconContainer.setIcon(index, slot.item.iconKey, slot.quantity);
+      } else {
+        // Empty slot → remove icon if it exists
+        this.inventoryIconContainer.removeIcon(index);
+      }
+    });
   }
 }

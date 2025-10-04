@@ -8,6 +8,14 @@ export const SPELL_UI = {
   HEIGHT: 32,
 } as const;
 
+// Inventory
+export const INVENTORY_UI = {
+  X: 10,
+  Y: 615,
+  WIDTH: 126,
+  HEIGHT: 30,
+} as const;
+
 // Health
 export const HEALTH_UI = {
   X: 10,

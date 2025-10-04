@@ -1,6 +1,7 @@
 {
   "files": [
     { "type": "image", "key": "spell-ui", "url": "assets/ui/spell-ui.png" },
+    { "type": "image", "key": "inventory-ui", "url": "assets/ui/inventory-ui.png" },
     {
       "type": "image",
       "key": "fire-ball-icon",
@@ -25,6 +26,21 @@
       "url": "assets/ui/cast-bar-green.png"
     },
     { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" },
+    {
+      "type": "image",
+      "key": "health-potion-icon",
+      "url": "assets/icons/potions/health-potion.png"
+    },
+    {
+      "type": "image",
+      "key": "protection-potion-icon",
+      "url": "assets/icons/potions/protection-potion.png"
+    },
+    {
+      "type": "image",
+      "key": "undying-potion-icon",
+      "url": "assets/icons/potions/undying-potion.png"
+    },
     {
       "type": "image",
       "key": "disease-debuff",

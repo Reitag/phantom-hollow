@@ -4,6 +4,7 @@ import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellManager } from '@/managers/spell-manager';
 import { Sandbox } from '@/components/sandbox/sandbox';
+import { InventoryManager } from '@/managers/inventory-manager';
 
 interface ServiceMap {
   player: Player;
@@ -12,6 +13,7 @@ interface ServiceMap {
   spellFactory: SpellFactory;
   spellManager: SpellManager;
   sandbox: Sandbox;
+  inventoryManager: InventoryManager;
 }
 
 export const ServiceKeys = {
@@ -21,6 +23,7 @@ export const ServiceKeys = {
   spellFactory: 'spellFactory',
   spellManager: 'spellManager',
   sandbox: 'sandbox',
+  inventoryManager: 'inventoryManager',
 } as const;
 
 export class ServiceLocator {

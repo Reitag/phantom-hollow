@@ -46,6 +46,7 @@ export const TILESETS = {
 
 export const UI = {
   SPELL_UI: 'spell-ui',
+  INVENTORY_UI: 'inventory-ui',
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
   WIND_ICON: 'wind-icon',
@@ -54,6 +55,9 @@ export const UI = {
   CAST_BAR: 'cast-bar',
   CAST_BAR_GREEN: 'cast-bar-green',
   CAST_ENV: 'cast-env',
+  HEALTH_POTION_ICON: 'health-potion-icon',
+  PROTECTION_POTION_ICON: 'protection-potion-icon',
+  UNDYING_POTION_ICON: 'undying-potion-icon',
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
