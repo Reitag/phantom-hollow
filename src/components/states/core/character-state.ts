@@ -1,5 +1,4 @@
-import { isAnimationKeyExist } from '@/utils/helpers';
-import { Movement } from '@/components/modules/movement';
+import { Speed } from '@/components/stats/speed';
 import { Character } from '@/objects/core/character';
 import { State, StateMachine } from '@/managers/state-machine';
 import { SpellManager } from '@/managers/spell-manager';
@@ -8,13 +7,14 @@ import { KeyboardController } from '@/components/input/controllers/keyboard-cont
 import { AnimationConfig } from '@/utils/types';
 import { PLAYER_STATS } from '@/constants/object-stats';
 import { SPELLS } from '@/constants/asset-keys';
+import { require } from '@/utils/helpers';
 
 export abstract class CharacterState implements State {
   readonly name: string;
 
   protected character: Character;
   protected characterBody: Phaser.Physics.Arcade.Body;
-  protected characterMovement: Movement;
+  protected characterSpeed: Speed | null = null;
   protected input: KeyboardController | null = null;
   protected spellManager: SpellManager | null = null;
   protected ui: UiManager | null = null;
@@ -35,7 +35,7 @@ export abstract class CharacterState implements State {
     this.spellManager = spellManager || null;
     this.ui = ui || null;
 
-    this.characterMovement = character.getMovement();
+    this.characterSpeed = character.getStats().speed;
     this.characterBody = this.character.getArcadeBody();
     this.animations = this.character.getAnimations();
   }
@@ -46,13 +46,17 @@ export abstract class CharacterState implements State {
     }
   }
 
-  protected moveLeft(speed: number): void {
+  protected moveLeft(speed: number | undefined): void {
+    if (!speed) return;
+
     this.character.setVelocityX(-speed);
     this.character.flipCharacterToRight(false);
     this.playAnimation(this.animations.moveLeft);
   }
 
-  protected moveRight(speed: number): void {
+  protected moveRight(speed: number | undefined): void {
+    if (!speed) return;
+
     this.character.setVelocityX(speed);
     this.character.flipCharacterToRight(true);
     this.playAnimation(this.animations.moveRight);

@@ -1,3 +1,8 @@
+import { Defense } from '@/components/stats/defense';
+import { Health } from '@/components/stats/health';
+import { MeleeAttack } from '@/components/stats/melee-attack';
+import { Speed } from '@/components/stats/speed';
+
 export type Position = {
   x: number;
   y: number;
@@ -29,4 +34,11 @@ export interface PhysicsSpriteConfig {
   position: Position;
   keyName: string;
   frame?: number;
+}
+
+export interface Stats {
+  health: Health | null;
+  speed: Speed | null;
+  meleeAttack: MeleeAttack | null;
+  defense: Defense | null;
 }

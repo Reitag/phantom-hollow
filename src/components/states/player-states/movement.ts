@@ -15,7 +15,8 @@ export class Movement extends CharacterState {
     }
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
+    this.characterSpeed?.update(delta);
     this.movement();
 
     if (!this.input?.isLeftDown && !this.input?.isRightDown) {
@@ -47,9 +48,9 @@ export class Movement extends CharacterState {
 
   private movement(): void {
     if (this.input?.isLeftDown) {
-      this.moveLeft(this.characterMovement.getCurrentSpeed());
+      this.moveLeft(this.characterSpeed?.velocity);
     } else if (this.input?.isRightDown) {
-      this.moveRight(this.characterMovement.getCurrentSpeed());
+      this.moveRight(this.characterSpeed?.velocity);
     } else {
       this.character.setVelocityX(0);
     }

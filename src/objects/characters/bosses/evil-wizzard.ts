@@ -1,4 +1,3 @@
-import { Movement } from '@/components/modules/movement';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { BOSSES_ANIMATION } from '@/constants/animation-keys';
 import { Idle } from '@/components/states/core/idle';
@@ -7,16 +6,14 @@ import { Death } from '@/components/states/core/death';
 import { CHARACTERS } from '@/constants/asset-keys';
 
 export class EvilWizzard extends Character {
-  constructor({ scene, position, keyName, health, frame, facingRight }: CharacterConfig) {
-    super({ scene, position, keyName, health, frame, facingRight });
+  constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
+    super({ scene, position, keyName, frame, facingRight, stats });
 
     this.animations = {
       idle: BOSSES_ANIMATION.EVIL_WIZARD.IDLE,
       attack: BOSSES_ANIMATION.EVIL_WIZARD.SIMPLE_ATTACK,
       death: BOSSES_ANIMATION.EVIL_WIZARD.DEATH,
     };
-
-    this.movement = new Movement(undefined);
 
     this.stateMachine.addState(new Idle(this));
     this.stateMachine.addState(new Casting(this));

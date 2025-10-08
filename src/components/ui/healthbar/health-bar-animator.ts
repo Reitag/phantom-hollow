@@ -9,6 +9,8 @@ export class HealthBarAnimator {
   }
 
   reducePlayerHealth(currentHealth: number, maxHealth: number): void {
+    console.log('Health updated:', currentHealth, '/', maxHealth);
+
     const percentage = this.clamp(currentHealth / maxHealth, 0, 1);
     const { X, Y, WIDTH, HEIGHT } = HEALTH_BAR;
 

@@ -23,7 +23,7 @@ export class Dive extends CharacterState {
 
     this.player = player;
     this.damage = damage;
-    this.characterMovement.addModifier('Dive-speed', diveSpeed);
+    this.characterSpeed?.addModifier('Dive-speed', diveSpeed);
     this.playAnimation(this.animations.idle);
 
     this.character.scene.time.delayedCall(lifeTime, () => {
@@ -32,13 +32,15 @@ export class Dive extends CharacterState {
     });
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (!this.player || this.player.getDead()) return;
+
+    this.characterSpeed?.update(delta);
 
     const dx = this.player.x - this.character.x;
     const dy = this.player.y - this.character.y;
 
-    const speed = this.characterMovement.getCurrentSpeed();
+    const speed = this.characterSpeed?.velocity ?? 0;
 
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance > 0) {
@@ -65,7 +67,7 @@ export class Dive extends CharacterState {
   }
 
   private explode(): void {
-    this.characterMovement.setMovementLock(true);
+    this.characterSpeed?.setMovementLock(true);
     this.playAnimation(this.animations.death);
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.character.destroy();

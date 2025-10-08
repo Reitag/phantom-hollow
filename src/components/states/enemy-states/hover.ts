@@ -38,6 +38,8 @@ export class Hover extends CharacterState {
   public onUpdate(delta: number): void {
     if (!this.player || this.player.getDead()) return;
 
+    this.characterSpeed?.update(delta);
+
     const playerX = this.player.x;
     const playerY = this.player.y - this.verticalOffset;
 
@@ -52,7 +54,7 @@ export class Hover extends CharacterState {
     const dx = targetX - this.character.x;
     const dy = targetY - this.character.y;
 
-    const speed = this.characterMovement.getCurrentSpeed(delta);
+    const speed = this.characterSpeed?.velocity ?? 0;
 
     this.character.setVelocityX(Phaser.Math.Clamp(dx, -speed, speed));
     this.character.setVelocityY(Phaser.Math.Clamp(dy, -speed, speed));

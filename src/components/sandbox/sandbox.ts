@@ -39,6 +39,12 @@ export class Sandbox {
     this.player.show();
   }
 
+  public healPlayer(amount: number): void {
+    const stats = this.player.getStats();
+    stats.health?.heal(amount);
+    this.ui.reducePlayerHealth(stats.health!.current, stats.health!.max);
+  }
+
   public startCooldown(spellKey: string, delay: number): void {
     this.cooldowns.startCooldown(spellKey, delay);
     this.startGlobalCooldown();

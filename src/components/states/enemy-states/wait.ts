@@ -7,13 +7,13 @@ export class Wait extends CharacterState {
   }
 
   public onEnter(...args: unknown[]): void {
-    this.characterMovement.setMovementLock(true);
+    this.characterSpeed?.setMovementLock(true);
     this.playAnimation(this.animations.idle, true);
   }
 
-  public onUpdate(): void {}
+  public onUpdate(delta: number): void {}
 
   public onExit(): void {
-    this.characterMovement.setMovementLock(false);
+    this.characterSpeed?.setMovementLock(false);
   }
 }

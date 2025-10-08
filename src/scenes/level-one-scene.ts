@@ -39,11 +39,11 @@ import { UiScene } from './ui-scene';
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
 
 export class LevelOneScene extends Phaser.Scene {
-  private readonly playerSpawnPosition = 50;
+  //private readonly playerSpawnPosition = 50;
   //private readonly playerSpawnPosition = 1800;
-  //private readonly playerSpawnPosition = 11200;
-  private readonly skeletonSpawnPositions = [/*700, 1600, 2500, 4100, 4600, 6500, 8600,*/ 10800];
-  private readonly zombieSpawnPositions = [/*4700, 5000, 5500, 6400, 7700, 8700, 8800,*/ 10900];
+  private readonly playerSpawnPosition = 11200;
+  private readonly skeletonSpawnPositions = [/*700, 1600, 2500, 4100, 4600, 6500, 8600,*/ 11500];
+  private readonly zombieSpawnPositions = [/*4700, 5000, 5500, 6400, 7700, 8700, 8800,*/ 11600];
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
 
   private player!: Player;
@@ -161,8 +161,13 @@ export class LevelOneScene extends Phaser.Scene {
       scene: this,
       position: { x: this.playerSpawnPosition, y: 450 },
       keyName: CHARACTERS.PLAYER,
-      health: PLAYER_STATS.HEALTH,
       frame: 0,
+      stats: {
+        health: PLAYER_STATS.HEALTH,
+        speed: PLAYER_STATS.MOVE,
+        meleeAttack: undefined,
+        defense: 1,
+      },
       facingRight: true,
       isValidTeleportPositionCallback: isValidTeleportPosition([
         this.map.getTileLayer(TILELAYER_NAMES.PLATFORM)!,
@@ -183,9 +188,14 @@ export class LevelOneScene extends Phaser.Scene {
         scene: this,
         position: { x: xPos, y: 500 },
         keyName: CHARACTERS.SKELETON_WARRIOR,
-        health: SKELETON_WARRIOR_STATS.HEALTH,
         frame: 0,
         facingRight: false,
+        stats: {
+          health: SKELETON_WARRIOR_STATS.HEALTH,
+          speed: SKELETON_WARRIOR_STATS.WALK,
+          meleeAttack: SKELETON_WARRIOR_STATS.HIT,
+          defense: undefined,
+        },
       });
 
       skeleton.setDepth(Z_POSITION.ENEMY);
@@ -201,9 +211,14 @@ export class LevelOneScene extends Phaser.Scene {
         scene: this,
         position: { x: xPos, y: 500 },
         keyName: CHARACTERS.ZOMBIE,
-        health: ZOMBIE_STATS.HEALTH,
         frame: 0,
         facingRight: false,
+        stats: {
+          health: ZOMBIE_STATS.HEALTH,
+          speed: ZOMBIE_STATS.WALK,
+          meleeAttack: ZOMBIE_STATS.HIT,
+          defense: undefined,
+        },
       });
 
       zombie.setDepth(Z_POSITION.ENEMY);
@@ -216,9 +231,14 @@ export class LevelOneScene extends Phaser.Scene {
       scene: this,
       position: this.evilWizardSpawn,
       keyName: CHARACTERS.EVIL_WIZARD,
-      health: EVIL_WIZARD_STATS.HEALTH,
       frame: 0,
       facingRight: false,
+      stats: {
+        health: EVIL_WIZARD_STATS.HEALTH,
+        speed: undefined,
+        meleeAttack: undefined,
+        defense: undefined,
+      },
     }).setDepth(120);
 
     this.aiEvilWizard = new AiEvilWizard(boss, this.player);

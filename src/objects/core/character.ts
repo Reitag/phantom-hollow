@@ -1,39 +1,46 @@
-import { DamageMultiplier } from '@/components/modules/damage-multiplier';
-import { Movement } from '@/components/modules/movement';
+import { Health } from '@/components/stats/health';
+import { Speed } from '@/components/stats/speed';
+import { MeleeAttack } from '@/components/stats/melee-attack';
+import { Defense } from '@/components/stats/defense';
 import { ModifierManager } from '@/managers/modifier-manager';
 import { StateMachine } from '@/managers/state-machine';
 import { PhysicsSprite } from '@/objects/core/physics-sprite';
-import { AnimationConfig, PhysicsSpriteConfig } from '@/utils/types';
+import { AnimationConfig, PhysicsSpriteConfig, Stats } from '@/utils/types';
 
 export interface CharacterConfig extends PhysicsSpriteConfig {
-  health: number;
   facingRight: boolean;
+  stats: {
+    health: number | undefined;
+    speed: number | undefined;
+    meleeAttack: number | undefined;
+    defense: number | undefined;
+  };
 }
 
 export class Character extends PhysicsSprite {
-  protected currentHealth: number;
-  protected maxHealth: number;
   protected facingRight!: boolean;
   protected isDead = false;
   protected stateMachine: StateMachine;
   protected animations!: AnimationConfig;
   protected modifier: ModifierManager;
-  protected movement!: Movement;
-  protected damageMultiplier: DamageMultiplier;
   protected walkBound!: number;
   protected patrolRightX!: number;
   protected patrolLeftX!: number;
 
-  constructor({ scene, position, keyName, frame, health, facingRight }: CharacterConfig) {
+  protected stats: Stats;
+
+  constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame });
 
-    this.currentHealth = health;
-    this.maxHealth = health;
     this.facingRight = facingRight;
-
     this.stateMachine = new StateMachine();
     this.modifier = new ModifierManager(this.scene);
-    this.damageMultiplier = new DamageMultiplier();
+    this.stats = {
+      health: stats.health !== undefined ? new Health(stats.health) : null,
+      speed: stats.speed !== undefined ? new Speed(stats.speed) : null,
+      meleeAttack: stats.meleeAttack !== undefined ? new MeleeAttack(stats.meleeAttack) : null,
+      defense: stats.defense !== undefined ? new Defense(stats.defense) : null,
+    };
 
     if (!this.facingRight) {
       this.setFlipX(true);
@@ -42,12 +49,12 @@ export class Character extends PhysicsSprite {
     this.setCollideWorldBounds(true);
   }
 
-  public getModifier(): ModifierManager {
-    return this.modifier;
+  public getStats(): Stats {
+    return this.stats;
   }
 
-  public getDamageMultiplier(): DamageMultiplier {
-    return this.damageMultiplier;
+  public getModifier(): ModifierManager {
+    return this.modifier;
   }
 
   public getPatrolLeftX(): number {
@@ -87,10 +94,6 @@ export class Character extends PhysicsSprite {
     return this.arcadeBody.velocity.lengthSq() > 0;
   }
 
-  public getMovement(): Movement {
-    return this.movement;
-  }
-
   public switchToState(state: string): void {
     this.stateMachine.changeState(state);
   }
@@ -98,13 +101,13 @@ export class Character extends PhysicsSprite {
   public takeDamage(amount: number): void {
     if (this.isDead) return;
 
-    const finalDamage = this.damageMultiplier.calculateTotal(amount);
-    this.currentHealth -= finalDamage;
+    const finalDamage = amount * (this.stats.defense?.multiplier ?? 1);
+    this.stats.health?.applyDamage(finalDamage);
 
-    this.playHitEffect();
     this.onDamaged?.();
+    this.playHitEffect();
 
-    if (this.currentHealth <= 0) {
+    if (this.stats.health?.zero) {
       this.die();
     }
   }
@@ -112,10 +115,11 @@ export class Character extends PhysicsSprite {
   public takeAuraDamage(amount: number): void {
     if (this.isDead) return;
 
-    this.currentHealth -= amount;
+    const finalDamage = this.stats.defense?.multiplier ?? 1 * amount;
+    this.stats.health?.applyDamage(finalDamage);
+
     this.setTint(0x8844cc);
     this.setAlpha(0.8);
-
     this.scene.time.delayedCall(150, () => {
       this.clearTint();
       this.setAlpha(1);
@@ -123,7 +127,7 @@ export class Character extends PhysicsSprite {
 
     this.onDamaged?.();
 
-    if (this.currentHealth <= 0) {
+    if (this.stats.health?.zero) {
       this.die();
     }
   }

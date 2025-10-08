@@ -33,15 +33,17 @@ export class Attack extends CharacterState {
 
     this.character.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
 
-    this.characterMovement.setMovementLock(true);
+    this.characterSpeed?.setMovementLock(true);
     this.playAnimation(this.animations.attack, true);
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (!this.player) return;
 
+    this.characterSpeed?.update(delta);
+
     const direction = this.character.x > this.player.x ? -1 : 1;
-    this.character.setVelocityX(direction * this.characterMovement.getCurrentSpeed());
+    this.character.setVelocityX(direction * (this.characterSpeed?.velocity ?? 0));
 
     const isOverlapping = this.isWithinAttackReach();
 
@@ -62,7 +64,7 @@ export class Attack extends CharacterState {
   }
 
   public onExit(): void {
-    this.characterMovement.setMovementLock(false);
+    this.characterSpeed?.setMovementLock(false);
     this.character.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
   }
 

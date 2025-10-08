@@ -1,4 +1,4 @@
-import { ServiceLocator } from '@/components/core/service-locator';
+import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { UI } from '@/constants/asset-keys';
 import { InventoryItem } from '../core/item';
 
@@ -9,8 +9,8 @@ export const createHealthPotion = (): InventoryItem => ({
   iconKey: UI.HEALTH_POTION_ICON,
   maxStack: 5,
   use: () => {
-    console.log('Used health potion');
-    //player.heal(50);
+    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+    sandbox.healPlayer(50);
   },
 });
 

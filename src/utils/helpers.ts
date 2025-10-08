@@ -41,3 +41,9 @@ export function playAnimation(
   if (!force && object.anims.currentAnim?.key === key) return;
   object.anims.play(key, true);
 }
+
+export function require<T>(value: T | null | undefined, msg: string): NonNullable<T> {
+  if (value == null) throw new Error(msg);
+
+  return value;
+}

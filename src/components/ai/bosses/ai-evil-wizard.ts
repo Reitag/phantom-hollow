@@ -77,9 +77,14 @@ export class AiEvilWizard extends Boss {
       scene: this.boss.scene,
       position: { x: xCoor, y: yRand },
       keyName: CHARACTERS.MUTATED_BAT,
-      health: MUTATED_BAT_STATS.HEALTH,
       frame: 0,
       facingRight: direction,
+      stats: {
+        health: MUTATED_BAT_STATS.HEALTH,
+        speed: MUTATED_BAT_STATS.FLY,
+        meleeAttack: undefined,
+        defense: undefined,
+      },
     });
 
     bat.setDepth(Z_POSITION.ENEMY);

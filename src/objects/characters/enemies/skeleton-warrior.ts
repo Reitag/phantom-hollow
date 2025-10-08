@@ -1,5 +1,4 @@
 import { Character, CharacterConfig } from '@/objects/core/character';
-import { Movement } from '@/components/modules/movement';
 import { Wait } from '@/components/states/enemy-states/wait';
 import { Patrol } from '@/components/states/enemy-states/patrol';
 import { Chase } from '@/components/states/enemy-states/chase';
@@ -10,8 +9,8 @@ import { CHARACTERS } from '@/constants/asset-keys';
 import { SKELETON_WARRIOR_STATS } from '@/constants/object-stats';
 
 export class SkeletonWarrior extends Character {
-  constructor({ scene, position, keyName, health, frame, facingRight }: CharacterConfig) {
-    super({ scene, position, keyName, health, frame, facingRight });
+  constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
+    super({ scene, position, keyName, frame, facingRight, stats });
 
     this.walkBound = SKELETON_WARRIOR_STATS.WALK_BOUND;
     this.patrolRightX = this.x + this.walkBound;
@@ -24,8 +23,6 @@ export class SkeletonWarrior extends Character {
       attack: ENEMIES_ANIMATION.SKELETON_WARRIOR.SIMPLE_ATTACK,
       death: ENEMIES_ANIMATION.SKELETON_WARRIOR.DEATH,
     };
-
-    this.movement = new Movement(SKELETON_WARRIOR_STATS.WALK);
 
     this.stateMachine.addState(new Patrol(this));
     this.stateMachine.addState(new Wait(this));

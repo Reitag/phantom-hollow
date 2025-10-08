@@ -12,16 +12,18 @@ export class Patrol extends CharacterState {
   public onUpdate(delta: number): void {
     if (this.isWaiting) return;
 
+    this.characterSpeed?.update(delta);
+
     const posX = this.character.x;
     const leftX = this.character.getPatrolLeftX();
     const rightX = this.character.getPatrolRightX();
     const isFacingRight = this.character.getFacingRight();
 
     if (isFacingRight) {
-      this.moveRight(this.characterMovement.getCurrentSpeed(delta));
+      this.moveRight(this.characterSpeed?.velocity);
       if (posX >= rightX) this.pausePatrol();
     } else {
-      this.moveLeft(this.characterMovement.getCurrentSpeed(delta));
+      this.moveLeft(this.characterSpeed?.velocity);
       if (posX <= leftX) this.pausePatrol();
     }
   }

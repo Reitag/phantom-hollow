@@ -5,7 +5,6 @@ import { Movement } from '@/components/states/player-states/movement';
 import { Casting } from '@/components/states/player-states/casting';
 import { Ready } from '@/components/states/player-states/ready';
 import { Death } from '@/components/states/core/death';
-import { Movement as CharacterMovement } from '@/components/modules/movement';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_ANIMATION } from '@/constants/animation-keys';
 import { PLAYER_STATS } from '@/constants/object-stats';
@@ -29,11 +28,11 @@ export class Player extends Character {
     position,
     keyName,
     frame,
-    health,
     facingRight,
+    stats,
     isValidTeleportPositionCallback,
   }: PlayerConfig) {
-    super({ scene, position, keyName, health, frame, facingRight });
+    super({ scene, position, keyName, frame, facingRight, stats });
 
     this.scene = scene;
     this.spellManager = ServiceLocator.resolve(ServiceKeys.spellManager);
@@ -48,8 +47,6 @@ export class Player extends Character {
       instantCast: PLAYER_ANIMATION.INSTANT_CAST,
       death: PLAYER_ANIMATION.DEATH,
     };
-
-    this.movement = new CharacterMovement(PLAYER_STATS.MOVE);
 
     this.initKeyboard();
     this.initStateMachine();
@@ -107,7 +104,7 @@ export class Player extends Character {
   }
 
   protected override onDamaged(): void {
-    this.ui.reducePlayerHealth(this.currentHealth, this.maxHealth);
+    this.ui.reducePlayerHealth(this.stats.health!.current, this.stats.health!.max);
   }
 
   protected override onDeathStart(): void {
