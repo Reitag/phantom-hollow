@@ -1,13 +1,13 @@
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
-import { Character } from '@/objects/core/character';
-import { Modifier } from '@/modifiers/core/modifier';
+import { PROTECTION } from '@/constants/modifier-stats';
 import { UiManager } from '@/managers/ui-manager';
-import { SHADOW_VULNERABILITY } from '@/constants/modifier-stats';
+import { Character } from '@/objects/core/character';
+import { Modifier } from '../core/modifier';
 
-export class ShadowVulnerability implements Modifier {
-  public id = SHADOW_VULNERABILITY.id;
-  public duration = SHADOW_VULNERABILITY.duration;
-  public type = SHADOW_VULNERABILITY.type;
+export class Protection implements Modifier {
+  public id = PROTECTION.id;
+  public duration = PROTECTION.duration;
+  public type = PROTECTION.type;
 
   private ui: UiManager;
 
@@ -16,8 +16,8 @@ export class ShadowVulnerability implements Modifier {
   }
 
   public apply(target: Character): void {
-    const defense = target.getStats().defense;
-    defense?.addModifier(this.id, SHADOW_VULNERABILITY.effect);
+    const stats = target.getStats();
+    stats.defense?.addModifier(this.id, PROTECTION.effect);
   }
 
   public start(target: Character, onExpire: () => void): void {

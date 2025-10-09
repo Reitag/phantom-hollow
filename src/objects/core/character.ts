@@ -115,7 +115,7 @@ export class Character extends PhysicsSprite {
   public takeAuraDamage(amount: number): void {
     if (this.isDead) return;
 
-    const finalDamage = this.stats.defense?.multiplier ?? 1 * amount;
+    const finalDamage = amount * (this.stats.defense?.multiplier ?? 1);
     this.stats.health?.applyDamage(finalDamage);
 
     this.setTint(0x8844cc);

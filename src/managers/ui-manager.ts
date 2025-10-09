@@ -8,7 +8,7 @@ import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { InventorySlot } from '@/items/core/item';
-import { Position } from '@/utils/types';
+import { ModifierType, Position } from '@/utils/types';
 
 export class UiManager {
   healthBar: HealthBar;
@@ -66,29 +66,27 @@ export class UiManager {
     this.spellIconHighlighter.removeHighlight();
   }
 
-  public setDebuffIcon(key: string, duration: number | undefined): void {
-    this.modifierIconContainer.addModifierIcon(key, duration);
+  public removeAllModfierIcons(): void {
+    this.modifierIconContainer.removeAllModifierIcons();
+  }
+
+  public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
+    this.modifierIconContainer.addModifierIcon(key, duration, type);
 
     if (duration) {
       this.modifierIconContainer.startCountdown(key, duration);
     }
   }
 
-  public removeDebuffIcon(key: string): void {
+  public removeModifierIcon(key: string): void {
     this.modifierIconContainer.removeModifierIcon(key);
-  }
-
-  public removeAllModfierIcons(): void {
-    this.modifierIconContainer.removeAllModifierIcons();
   }
 
   public updateInventory(items: (InventorySlot | null)[]): void {
     items.forEach((slot, index) => {
       if (slot) {
-        // If icon already exists → just update quantity
         this.inventoryIconContainer.setIcon(index, slot.item.iconKey, slot.quantity);
       } else {
-        // Empty slot → remove icon if it exists
         this.inventoryIconContainer.removeIcon(index);
       }
     });

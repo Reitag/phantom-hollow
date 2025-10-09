@@ -2,6 +2,7 @@ import { Defense } from '@/components/stats/defense';
 import { Health } from '@/components/stats/health';
 import { MeleeAttack } from '@/components/stats/melee-attack';
 import { Speed } from '@/components/stats/speed';
+import { TYPE } from '@/constants/modifier-stats';
 
 export type Position = {
   x: number;
@@ -42,3 +43,5 @@ export interface Stats {
   meleeAttack: MeleeAttack | null;
   defense: Defense | null;
 }
+
+export type ModifierType = (typeof TYPE)[keyof typeof TYPE];

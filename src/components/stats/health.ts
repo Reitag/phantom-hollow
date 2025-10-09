@@ -21,7 +21,6 @@ export class Health {
 
   public heal(amount: number): void {
     this.base = Math.min(this.current + amount, this.max);
-    console.log(`base: ${this.base} current: ${this.current} amount ${amount}`);
   }
 
   public applyDamage(amount: number): void {

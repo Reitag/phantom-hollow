@@ -58,6 +58,8 @@ export const UI = {
   HEALTH_POTION_ICON: 'health-potion-icon',
   PROTECTION_POTION_ICON: 'protection-potion-icon',
   UNDYING_POTION_ICON: 'undying-potion-icon',
+  PROTECTION_BUFF: 'protection-buff',
+  UNDYING_BUFF: 'undying-buff',
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',

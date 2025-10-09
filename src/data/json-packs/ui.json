@@ -43,6 +43,16 @@
     },
     {
       "type": "image",
+      "key": "protection-buff",
+      "url": "assets/icons/buffs/protection.png"
+    },
+    {
+      "type": "image",
+      "key": "undying-buff",
+      "url": "assets/icons/buffs/undying.png"
+    },
+    {
+      "type": "image",
       "key": "disease-debuff",
       "url": "assets/icons/debuffs/disease.png"
     },

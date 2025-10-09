@@ -1,5 +1,6 @@
 import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
 import { UI } from '@/constants/asset-keys';
+import { PROTECTION, UNDYING } from '@/constants/modifier-stats';
 import { InventoryItem } from '../core/item';
 
 export const createHealthPotion = (): InventoryItem => ({
@@ -21,9 +22,13 @@ export const createProtectPotion = (): InventoryItem => ({
   iconKey: UI.PROTECTION_POTION_ICON,
   maxStack: 5,
   use: () => {
-    //const player = ServiceLocator.resolve('player');
-    console.log('Used protection potion');
-    //player.activateShield(10);
+    const player = ServiceLocator.resolve(ServiceKeys.player);
+    const modifier = player.getModifier();
+
+    if (!modifier.isModifierExist(PROTECTION.id)) {
+      modifier.addModifier(PROTECTION.id);
+      modifier.startModifier(PROTECTION.id, player);
+    }
   },
 });
 
@@ -32,11 +37,15 @@ export const createUndyingPotion = (): InventoryItem => ({
   name: 'Undying Potion',
   description: 'You cannot die for 5 seconds',
   iconKey: UI.UNDYING_POTION_ICON,
-  maxStack: 3, // maybe more rare
+  maxStack: 3,
   use: () => {
-    //const player = ServiceLocator.resolve('player');
-    console.log('Used undying potion');
-    //player.activateUndying(5);
+    const player = ServiceLocator.resolve(ServiceKeys.player);
+    const modifier = player.getModifier();
+
+    if (!modifier.isModifierExist(UNDYING.id)) {
+      modifier.addModifier(UNDYING.id);
+      modifier.startModifier(UNDYING.id, player);
+    }
   },
 });
 

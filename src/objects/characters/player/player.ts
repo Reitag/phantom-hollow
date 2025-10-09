@@ -50,6 +50,13 @@ export class Player extends Character {
 
     this.initKeyboard();
     this.initStateMachine();
+
+    /*const spriteHeight = this.height;
+    const bodyHeight = 30;
+    const bodyWidth = 20;
+
+    this.arcadeBody.setSize(bodyWidth, bodyHeight);
+    this.arcadeBody.setOffset((spriteHeight - bodyWidth) / 2, spriteHeight - bodyHeight);*/
     this.arcadeBody.setSize(20, 48);
   }
 

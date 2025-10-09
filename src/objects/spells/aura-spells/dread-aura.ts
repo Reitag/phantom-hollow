@@ -42,13 +42,13 @@ export class DreadAura extends Spell {
 
   private setDebuffIcon(target: Character): void {
     if (target instanceof Player) {
-      this.ui.setDebuffIcon(UI.DREAD_AURA_DEBUFF, undefined);
+      this.ui.addModifierIcon(UI.DREAD_AURA_DEBUFF, undefined, 'debuff');
     }
   }
 
   private removeDebuffIcon(target: Character): void {
     if (target instanceof Player) {
-      this.ui.removeDebuffIcon(UI.DREAD_AURA_DEBUFF);
+      this.ui.removeModifierIcon(UI.DREAD_AURA_DEBUFF);
     }
   }
 }

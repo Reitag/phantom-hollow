@@ -5,8 +5,9 @@ import { Character } from '@/objects/core/character';
 import { Modifier } from '../core/modifier';
 
 export class Disease implements Modifier {
-  id = DISEASE.id;
-  duration = DISEASE.duration;
+  public id = DISEASE.id;
+  public duration = DISEASE.duration;
+  public type = DISEASE.type;
 
   private ui: UiManager;
   private tick!: Phaser.Time.TimerEvent;
@@ -26,7 +27,7 @@ export class Disease implements Modifier {
   }
 
   public start(target: Character, onExpire: () => void): void {
-    this.ui.setDebuffIcon(this.id, this.duration);
+    this.ui.addModifierIcon(this.id, this.duration, this.type);
 
     this.tick = this.scene.time.addEvent({
       delay: 1000,
@@ -36,7 +37,7 @@ export class Disease implements Modifier {
     });
 
     this.scene.time.delayedCall(this.duration, () => {
-      this.ui.removeDebuffIcon(this.id);
+      this.ui.removeModifierIcon(this.id);
       onExpire();
     });
   }

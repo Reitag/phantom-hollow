@@ -4,6 +4,7 @@ import {
   ENEMIES_ANIMATION,
   BOSSES_ANIMATION,
   PORTAL_ANIMATION,
+  EFFECTS_ANIMATION,
 } from '@/constants/animation-keys';
 import { CHARACTERS, MISC, SPELLS } from '@/constants/asset-keys';
 
