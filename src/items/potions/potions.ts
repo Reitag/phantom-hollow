@@ -12,6 +12,8 @@ export const createHealthPotion = (): InventoryItem => ({
   use: () => {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
     sandbox.healPlayer(50);
+
+    return true;
   },
 });
 
@@ -28,6 +30,12 @@ export const createProtectPotion = (): InventoryItem => ({
     if (!modifier.isModifierExist(PROTECTION.id)) {
       modifier.addModifier(PROTECTION.id);
       modifier.startModifier(PROTECTION.id, player);
+
+      return true;
+    } else {
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+      sandbox.setText('Protection buff is already active');
+      return false;
     }
   },
 });
@@ -35,7 +43,7 @@ export const createProtectPotion = (): InventoryItem => ({
 export const createUndyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
-  description: 'You cannot die for 5 seconds',
+  description: 'Makes you immune to death for 5 seconds',
   iconKey: UI.UNDYING_POTION_ICON,
   maxStack: 3,
   use: () => {
@@ -45,6 +53,12 @@ export const createUndyingPotion = (): InventoryItem => ({
     if (!modifier.isModifierExist(UNDYING.id)) {
       modifier.addModifier(UNDYING.id);
       modifier.startModifier(UNDYING.id, player);
+
+      return true;
+    } else {
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+      sandbox.setText('Undying buff is already active');
+      return false;
     }
   },
 });
@@ -56,8 +70,7 @@ export const createQuestItem = (): InventoryItem => ({
   iconKey: 'quest_item_icon',
   maxStack: 1,
   use: () => {
-    //const sandbox = ServiceLocator.resolve('sandbox');
     console.log('Used quest item');
-    //sandbox.triggerEvent('boss_weakness');
+    return true;
   },
 });

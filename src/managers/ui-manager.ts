@@ -5,10 +5,12 @@ import { HealthBar } from '@/components/ui/healthbar/health-bar';
 import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator';
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
-import { SpellIconHighlighter } from '@/components/ui/spell-icons/spell-icon-highlighter';
+import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
+import { Text } from '@/components/ui/text/text';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { InventorySlot } from '@/items/core/item';
 import { ModifierType, Position } from '@/utils/types';
+import { UiScene } from '@/scenes/ui-scene';
 
 export class UiManager {
   healthBar: HealthBar;
@@ -18,10 +20,12 @@ export class UiManager {
   castBarAnimator: CastBarAnimator;
 
   cooldownAnimator: CooldownAnimator;
-  spellIconHighlighter: SpellIconHighlighter;
+  iconHighlighter: IconHighlighter;
 
   inventoryIconContainer: InventoryIconContainer;
   modifierIconContainer: ModifierIconContainer;
+
+  text: Text;
 
   constructor(uiScene: Phaser.Scene) {
     this.healthBar = new HealthBar(uiScene);
@@ -31,10 +35,12 @@ export class UiManager {
     this.castBarAnimator = new CastBarAnimator(uiScene, this.castBar);
 
     this.cooldownAnimator = new CooldownAnimator(uiScene);
-    this.spellIconHighlighter = new SpellIconHighlighter(uiScene);
+    this.iconHighlighter = new IconHighlighter(uiScene);
 
     this.inventoryIconContainer = new InventoryIconContainer(uiScene);
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
+
+    this.text = new Text(uiScene);
   }
 
   public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
@@ -59,15 +65,11 @@ export class UiManager {
 
   public highlightSpell(spellKey: string): void {
     const key = spellKey as keyof typeof ICON_OVERLAYS;
-    this.spellIconHighlighter.addHighlight(key);
+    this.iconHighlighter.addSpellHighlight(key);
   }
 
   public removeHighlight(): void {
-    this.spellIconHighlighter.removeHighlight();
-  }
-
-  public removeAllModfierIcons(): void {
-    this.modifierIconContainer.removeAllModifierIcons();
+    this.iconHighlighter.removeSpellHighlight();
   }
 
   public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
@@ -82,6 +84,14 @@ export class UiManager {
     this.modifierIconContainer.removeModifierIcon(key);
   }
 
+  public removeAllModfierIcons(): void {
+    this.modifierIconContainer.removeAllModifierIcons();
+  }
+
+  public highlightSpot(index: number): void {
+    this.iconHighlighter.addSlotHighlight(index);
+  }
+
   public updateInventory(items: (InventorySlot | null)[]): void {
     items.forEach((slot, index) => {
       if (slot) {
@@ -90,5 +100,9 @@ export class UiManager {
         this.inventoryIconContainer.removeIcon(index);
       }
     });
+  }
+
+  public addWarningtext(text: string): void {
+    this.text.addWarningTextOnScreen(text);
   }
 }

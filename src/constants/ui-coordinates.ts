@@ -46,7 +46,7 @@ export const CAST_BAR = {
   HEIGHT: 8,
 } as const;
 
-// Icons
+// Spell Icons
 const ICON_X_FIRST = 427;
 const X_STEP = 50;
 const ICON_Y = 615;
@@ -70,4 +70,19 @@ export const ICON_OVERLAYS = {
   [SPELLS.FIRE_BALL]: FIREBALL_ICON,
   [SPELLS.BLINK]: BLINK_ICON,
   [SPELLS.WIND]: WIND_ICON,
+} as const;
+
+// Inventory Slots
+export const INVENTORY_SLOTS = {
+  WIDTH: 16,
+  HEIGHT: 24,
+  PADDING: 16,
+  START_X: 17,
+  Y: 615,
+} as const;
+
+// Warning Text
+export const WARNING_TEXT = {
+  START_Y: 100,
+  PADDING: 30,
 } as const;

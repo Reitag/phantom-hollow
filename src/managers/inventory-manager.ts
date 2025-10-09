@@ -1,9 +1,15 @@
 import { ServiceLocator, ServiceKeys } from '@/components/core/service-locator';
 import { InputController } from '@/components/input/controllers/input-controller';
 import { InventorySlot, InventoryItem } from '@/items/core/item';
+import { UiManager } from './ui-manager';
 
 export class InventoryManager {
   private slots: (InventorySlot | null)[] = [null, null, null, null];
+  private ui: UiManager;
+
+  constructor() {
+    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+  }
 
   public getItems(): (InventorySlot | null)[] {
     return [...this.slots];
@@ -40,7 +46,6 @@ export class InventoryManager {
       }
     }
 
-    //this.updateUI();
     return false;
   }
 
@@ -57,10 +62,10 @@ export class InventoryManager {
 
   public useItem(index: number): void {
     const slot = this.slots[index];
-
+    this.ui.highlightSpot(index);
     if (!slot) return;
 
-    slot.item.use();
+    if (!slot.item.use()) return;
     slot.quantity -= 1;
 
     if (slot.quantity <= 0) {
@@ -87,7 +92,6 @@ export class InventoryManager {
   }
 
   private updateUI(): void {
-    const ui = ServiceLocator.resolve(ServiceKeys.ui);
-    ui.updateInventory(this.getItems());
+    this.ui.updateInventory(this.getItems());
   }
 }

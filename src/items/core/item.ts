@@ -4,7 +4,7 @@ export interface InventoryItem {
   description: string;
   iconKey: string;
   maxStack: number;
-  use: () => void;
+  use: () => boolean;
 }
 
 export interface InventorySlot {

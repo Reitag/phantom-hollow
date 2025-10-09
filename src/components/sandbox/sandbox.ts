@@ -62,6 +62,11 @@ export class Sandbox {
     this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
   }
 
+  public setText(text: string): void {
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    ui.addWarningtext(text);
+  }
+
   private get player(): Player {
     return ServiceLocator.resolve(ServiceKeys.player);
   }

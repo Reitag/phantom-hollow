@@ -1,12 +1,18 @@
 import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
 import { CharacterState } from '@/components/states/core/character-state';
+import { InventoryManager } from '@/managers/inventory-manager';
 import { SpellManager } from '@/managers/spell-manager';
 import { Player } from '@/objects/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
 
 export class Movement extends CharacterState {
-  constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
-    super('Movement', character, input, spellManager);
+  constructor(
+    character: Player,
+    input?: KeyboardController,
+    spellManager?: SpellManager,
+    inventory?: InventoryManager
+  ) {
+    super('Movement', character, input, spellManager, undefined, inventory);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -17,6 +23,7 @@ export class Movement extends CharacterState {
 
   public onUpdate(delta: number): void {
     this.characterSpeed?.update(delta);
+    this.inventory?.handleInput(this.input);
     this.movement();
 
     if (!this.input?.isLeftDown && !this.input?.isRightDown) {

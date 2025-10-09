@@ -7,10 +7,10 @@ import { Ready } from '@/components/states/player-states/ready';
 import { Death } from '@/components/states/core/death';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_ANIMATION } from '@/constants/animation-keys';
-import { PLAYER_STATS } from '@/constants/object-stats';
 import { Character, CharacterConfig } from '@/objects/core/character';
 import { SpellManager } from '@/managers/spell-manager';
 import { UiManager } from '@/managers/ui-manager';
+import { InventoryManager } from '@/managers/inventory-manager';
 
 interface PlayerConfig extends CharacterConfig {
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
@@ -21,6 +21,7 @@ export class Player extends Character {
   private controls!: KeyboardController;
   private spellManager: SpellManager;
   private ui: UiManager;
+  private inventory: InventoryManager;
   private isValidTeleportPositionCallback: (x: number, y: number) => boolean;
 
   constructor({
@@ -37,6 +38,7 @@ export class Player extends Character {
     this.scene = scene;
     this.spellManager = ServiceLocator.resolve(ServiceKeys.spellManager);
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+    this.inventory = ServiceLocator.resolve(ServiceKeys.inventoryManager);
     this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
 
     this.animations = {
@@ -70,8 +72,10 @@ export class Player extends Character {
   }
 
   private initStateMachine(): void {
-    this.stateMachine.addState(new Idle(this, this.controls, this.spellManager));
-    this.stateMachine.addState(new Movement(this, this.controls, this.spellManager));
+    this.stateMachine.addState(new Idle(this, this.controls, this.spellManager, this.inventory));
+    this.stateMachine.addState(
+      new Movement(this, this.controls, this.spellManager, this.inventory)
+    );
     this.stateMachine.addState(new Casting(this, this.controls, this.spellManager, this.ui));
     this.stateMachine.addState(new Ready(this, this.controls, this.ui));
     this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 101, this.ui));
