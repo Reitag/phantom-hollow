@@ -7,24 +7,28 @@ export const Z_POSITION = {
   /// -objects
   TREES_SHADOW: 30,
   TREES_NORMAL: 40,
+  ROCK: 50,
   /// -backgrounds
-  PLATFORM_BG: 50,
-  CAVE_BACKGROUND: 60,
+  PLATFORM_BG: 60,
+  CAVE_BACKGROUND: 70,
   /// -spear and bush
-  SPEAR: 70,
-  BUSH: 80,
+  SPEAR: 80,
+  BUSH: 90,
+  /// -store and decor
+  DECOR: 100,
+  STORE: 110,
   /// -cave
-  CAVE: 90,
+  CAVE: 120,
   /// -tilesets
-  GROUND: 110,
-  SPIKE: 120,
-  PLATFORMS: 130,
+  GROUND: 130,
+  SPIKE: 140,
+  PLATFORMS: 150,
 
   // Sprite objects
-  PORTAL: 140,
-  PLAYER: 150,
-  ENEMY: 160,
-  SPELL: 170,
+  PORTAL: 160,
+  PLAYER: 170,
+  ENEMY: 180,
+  SPELL: 190,
 
   // Collide layer
   COLLIDE: 900,

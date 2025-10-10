@@ -20,6 +20,19 @@ export const MISC = {
 export const OBJECTS = {
   TREE_NORMAL: 'tree-normal',
   TREE_SHADOW: 'tree-shadow',
+  WAGON: 'wagon',
+  BOTTLES: 'bottles',
+  BOWLER: 'bowler',
+  STATUE_LEFT: 'statue-left',
+  STATUE_RIGHT: 'statue-right',
+  WOOD: 'wood',
+  ROCK_1: 'rock-1',
+  ROCK_2: 'rock-2',
+  ROCK_3: 'rock-3',
+  ROCK_4: 'rock-4',
+  ROCK_5: 'rock-5',
+  ROCK_6: 'rock-6',
+  ROCK_7: 'rock-7',
   BUSH_1: 'bush-1',
   BUSH_2: 'bush-2',
   BUSH_3: 'bush-3',
@@ -36,12 +49,12 @@ export const TILESETS = {
   ANCIENT_TILES: 'ancient-tiles',
   GROUND: 'ground',
   CLIFF: 'cliff',
+  DIRT: 'dirt',
   GRASS_2: 'grass-2',
   GRASS: 'grass',
   MOUNT: 'mount',
   SKY: 'sky',
   COLLIDE: 'collide',
-  CAVE_BG: 'cave-bg',
 } as const;
 
 export const UI = {

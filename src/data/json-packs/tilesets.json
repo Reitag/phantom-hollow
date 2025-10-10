@@ -17,6 +17,11 @@
     },
     {
       "type": "image",
+      "key": "dirt",
+      "url": "assets/tilesets/level-1/dirt.png"
+    },
+    {
+      "type": "image",
       "key": "grass-2",
       "url": "assets/tilesets/grass.png"
     },
@@ -31,7 +36,6 @@
       "url": "assets/tilesets/level-1/mount.png"
     },
     { "type": "image", "key": "sky", "url": "assets/tilesets/level-1/sky.png" },
-    { "type": "image", "key": "collide", "url": "assets/tilesets/utils/collide-tile.png" },
-    { "type": "image", "key": "cave-bg", "url": "assets/tilesets/utils/cave-bg-tile.png" }
+    { "type": "image", "key": "collide", "url": "assets/tilesets/utils/collide-tile.png" }
   ]
 }
