@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "type": "spritesheet",
+      "key": "coin",
+      "url": "assets/items/coin.png",
+      "frameConfig": { "frameWidth": 16, "frameHeight": 16 }
+    }
+  ]
+}

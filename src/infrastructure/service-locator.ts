@@ -3,6 +3,7 @@ import { UiSystem } from '@/systems/ui-system';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellSystem } from '@/systems/spell-system';
+import { PickupSystem } from '@/systems/pickup-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
 
@@ -14,6 +15,7 @@ interface ServiceMap {
   spellSystem: SpellSystem;
   sandbox: Sandbox;
   inventorySystem: InventorySystem;
+  pickupSystem: PickupSystem;
 }
 
 export const ServiceKeys = {
@@ -24,6 +26,7 @@ export const ServiceKeys = {
   spellSystem: 'spellSystem',
   sandbox: 'sandbox',
   inventorySystem: 'inventorySystem',
+  pickupSystem: 'pickupSystem',
 } as const;
 
 export class ServiceLocator {

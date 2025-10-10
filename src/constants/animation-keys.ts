@@ -56,9 +56,9 @@ export const BOSSES_ANIMATION = {
   },
 } as const;
 
-export const EFFECTS_ANIMATION = {
-  PROTECTION_SHIELD: {
-    IDLE: 'protection-shield-idle',
+export const ITEMS_ANIMATION = {
+  COIN: {
+    IDLE: 'coin-idle',
   },
 };
 

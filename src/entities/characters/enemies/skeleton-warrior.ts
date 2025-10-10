@@ -1,4 +1,4 @@
-import { Character, CharacterConfig } from '@/base/entites/character';
+import { Character, CharacterConfig } from '@/base/objects/character';
 import { Wait } from '@/components/states/enemy-states/wait';
 import { Patrol } from '@/components/states/enemy-states/patrol';
 import { Chase } from '@/components/states/enemy-states/chase';

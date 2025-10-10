@@ -1,6 +1,6 @@
-import { Spell, SpellConfig } from '@/base/entites/spell';
+import { Spell, SpellConfig } from '@/base/objects/spell';
 import { WIND_STATS } from '@/constants/object-stats';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 
 export class Wind extends Spell {
   constructor({

@@ -1,4 +1,4 @@
-import { Character, CharacterConfig } from '@/base/entites/character';
+import { Character, CharacterConfig } from '@/base/objects/character';
 import { BOSSES_ANIMATION } from '@/constants/animation-keys';
 import { Idle } from '@/components/states/share/idle';
 import { Casting } from '@/components/states/enemy-states/casting';

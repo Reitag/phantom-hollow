@@ -1,6 +1,6 @@
 import { CharacterState } from '@/base/states/character-state';
 import { UiManager } from '@/systems/ui-system';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 
 export class Death extends CharacterState {
   private characterKey: string;

@@ -1,4 +1,4 @@
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
 
 export abstract class Boss {

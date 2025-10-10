@@ -1,7 +1,7 @@
 import { SHADOW_VULNERABILITY } from '@/constants/modifier-stats';
-import { Spell, SpellConfig } from '@/base/entites/spell';
+import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SHADOW_BOLT_STATS } from '@/constants/object-stats';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 
 export class ShadowBolt extends Spell {
   constructor({

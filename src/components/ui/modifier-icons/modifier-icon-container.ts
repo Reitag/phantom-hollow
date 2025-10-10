@@ -1,4 +1,5 @@
 import { TYPE } from '@/constants/modifier-stats';
+import { MODIFIER_ICONS } from '@/constants/ui-coordinates';
 import { ModifierType } from '@/utils/types';
 
 type ModifierContainerConfig = {
@@ -8,12 +9,6 @@ type ModifierContainerConfig = {
 };
 
 export class ModifierIconContainer {
-  private readonly ICON_SIZE = 32;
-  private readonly PADDING = 8;
-  private readonly startX = 50;
-  private readonly BUFF_Y = 60;
-  private readonly DEBUFF_Y = 120;
-
   private modifierIcons: ModifierContainerConfig[] = [];
 
   constructor(private scene: Phaser.Scene) {}
@@ -23,22 +18,28 @@ export class ModifierIconContainer {
 
     const sameTypeIcons = this.modifierIcons.filter((m) => m.type === type);
     const index = sameTypeIcons.length;
-    const posX = this.startX + index * (this.ICON_SIZE + this.PADDING);
-    const posY = type === TYPE.buff ? this.BUFF_Y : this.DEBUFF_Y;
+    const posX =
+      MODIFIER_ICONS.START_X + index * (MODIFIER_ICONS.ICON_SIZE + MODIFIER_ICONS.PADDING);
+    const posY = type === TYPE.buff ? MODIFIER_ICONS.BUFF_Y : MODIFIER_ICONS.DEBUFF_Y;
 
     const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0.5);
-    icon.setDisplaySize(this.ICON_SIZE, this.ICON_SIZE);
+    icon.setDisplaySize(MODIFIER_ICONS.ICON_SIZE, MODIFIER_ICONS.ICON_SIZE);
     icon.name = key;
 
     let timerText: Phaser.GameObjects.Text | undefined;
     if (duration) {
       timerText = this.scene.add
-        .text(posX + this.ICON_SIZE / 2, posY + this.ICON_SIZE / 2 + 4, `${duration / 1000}`, {
-          font: '14px Arial',
-          color: '#ffffff',
-          stroke: '#000000',
-          strokeThickness: 2,
-        })
+        .text(
+          posX + MODIFIER_ICONS.ICON_SIZE / 2,
+          posY + MODIFIER_ICONS.ICON_SIZE / 2 + 4,
+          `${duration / 1000}`,
+          {
+            font: '14px Arial',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 2,
+          }
+        )
         .setOrigin(0.5, 0);
     }
 

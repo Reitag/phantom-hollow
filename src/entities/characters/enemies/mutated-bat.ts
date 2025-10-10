@@ -1,7 +1,7 @@
 import { Hover } from '@/components/states/enemy-states/hover';
 import { Dive } from '@/components/states/enemy-states/dive';
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
-import { Character, CharacterConfig } from '@/base/entites/character';
+import { Character, CharacterConfig } from '@/base/objects/character';
 
 export class MutatedBat extends Character {
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {

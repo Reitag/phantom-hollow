@@ -3,7 +3,7 @@ import { Health } from '@/components/stats/health';
 import { MeleeAttack } from '@/components/stats/melee-attack';
 import { Speed } from '@/components/stats/speed';
 import { TYPE } from '@/constants/modifier-stats';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 
 export type Position = {
   x: number;
@@ -38,6 +38,10 @@ export type AnimationConfig = {
 export type SpellAnimationConfig = {
   main?: string;
   destroy?: string;
+};
+
+export type ItemAnimationConfig = {
+  idle?: string;
 };
 
 // Stats

@@ -4,9 +4,9 @@ import {
   ENEMIES_ANIMATION,
   BOSSES_ANIMATION,
   PORTAL_ANIMATION,
-  EFFECTS_ANIMATION,
+  ITEMS_ANIMATION,
 } from '@/constants/animation-keys';
-import { CHARACTERS, MISC, SPELLS } from '@/constants/asset-keys';
+import { CHARACTERS, ITEMS, MISC, SPELLS } from '@/constants/asset-keys';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // player
@@ -288,6 +288,16 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
       frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 36, end: 53 }),
       frameRate: 10,
       repeat: 0,
+    });
+  }
+
+  // items
+  if (!anims.get(ITEMS_ANIMATION.COIN.IDLE)) {
+    anims.create({
+      key: ITEMS_ANIMATION.COIN.IDLE,
+      frames: anims.generateFrameNumbers(ITEMS.COIN, { start: 0, end: 4 }),
+      frameRate: 10,
+      repeat: -1,
     });
   }
 

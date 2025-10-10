@@ -4,7 +4,7 @@ import { ArcadeSpriteConfig } from '@/utils/types';
 import { isArcadePhysicsBody } from '@/utils/helpers';
 
 export class ArcadeSprite extends Phaser.Physics.Arcade.Sprite {
-  protected arcadeBody!: Phaser.Physics.Arcade.Body;
+  protected arcadeBody: Phaser.Physics.Arcade.Body;
   protected keyName: string;
 
   constructor({ scene, position, keyName, frame }: ArcadeSpriteConfig) {

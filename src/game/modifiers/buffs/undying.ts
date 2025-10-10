@@ -1,7 +1,7 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Health } from '@/components/stats/health';
 import { UNDYING } from '@/constants/modifier-stats';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { UiSystem } from '@/systems/ui-system';
 import { Modifier } from '@/utils/types';
 

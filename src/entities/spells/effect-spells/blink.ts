@@ -1,5 +1,5 @@
 import { BLINK_STATS } from '@/constants/object-stats';
-import { Spell, SpellConfig } from '@/base/entites/spell';
+import { Spell, SpellConfig } from '@/base/objects/spell';
 import { playAnimation } from '@/utils/helpers';
 
 export class Blink extends Spell {

@@ -6,6 +6,7 @@ import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
+import { Coins } from '@/components/ui/coins/coins';
 import { Text } from '@/components/ui/text/text';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { ModifierType, Position, InventorySlot } from '@/utils/types';
@@ -23,6 +24,8 @@ export class UiSystem {
   inventoryIconContainer: InventoryIconContainer;
   modifierIconContainer: ModifierIconContainer;
 
+  coins: Coins;
+
   text: Text;
 
   constructor(uiScene: Phaser.Scene) {
@@ -37,6 +40,8 @@ export class UiSystem {
 
     this.inventoryIconContainer = new InventoryIconContainer(uiScene);
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
+
+    this.coins = new Coins(uiScene);
 
     this.text = new Text(uiScene);
   }
@@ -98,6 +103,14 @@ export class UiSystem {
         this.inventoryIconContainer.removeIcon(index);
       }
     });
+  }
+
+  public increaseCoinCounter(amount: number): void {
+    this.coins.increaseCoins(amount);
+  }
+
+  public decreaseCoinCounter(amount: number): void {
+    this.coins.decreaseCoins(amount);
   }
 
   public addWarningtext(text: string): void {

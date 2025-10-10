@@ -32,7 +32,6 @@ export class Text {
       duration: 500,
       ease: 'Sine.easeIn',
       onComplete: () => {
-        //this.textContainer.shift();
         const index = this.textContainer.indexOf(text);
         if (index !== -1) this.textContainer.splice(index, 1);
         text.destroy();

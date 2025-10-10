@@ -1,7 +1,7 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { PROTECTION } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { Modifier } from '@/utils/types';
 
 export class Protection implements Modifier {

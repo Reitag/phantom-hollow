@@ -9,6 +9,7 @@ import {
   BLINK_ICON,
   WIND_ICON,
   INVENTORY_SLOTS,
+  COIN_UI,
 } from '@/constants/ui-coordinates';
 
 export class UiScene extends Phaser.Scene {
@@ -22,6 +23,9 @@ export class UiScene extends Phaser.Scene {
     // UI panels
     this.add.image(SPELL_UI.X, SPELL_UI.Y, UI.SPELL_UI).setOrigin(0, 0.5);
     this.add.image(INVENTORY_UI.X, INVENTORY_UI.Y, UI.INVENTORY_UI).setOrigin(0, 0.5);
+
+    // Coin icon
+    this.add.image(COIN_UI.X, COIN_UI.Y, UI.COIN_UI).setOrigin(0, 0.5);
 
     // Spell icons
     const fireball = this.add.image(FIREBALL_ICON.X, FIREBALL_ICON.Y, UI.FIRE_BALL_ICON);

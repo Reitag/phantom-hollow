@@ -1,4 +1,4 @@
-import { Spell, SpellConfig } from '@/base/entites/spell';
+import { Spell, SpellConfig } from '@/base/objects/spell';
 import { FIRE_BALL_STATS } from '@/constants/object-stats';
 
 export class FireBall extends Spell {

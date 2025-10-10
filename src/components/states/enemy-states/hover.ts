@@ -1,5 +1,5 @@
 import { CharacterState } from '@/base/states/character-state';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
 
 export class Hover extends CharacterState {

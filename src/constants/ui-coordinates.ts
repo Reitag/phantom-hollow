@@ -31,6 +31,23 @@ export const HEALTH_BAR = {
   HEIGHT: 6,
 } as const;
 
+// Coin Icon
+export const COIN_UI = {
+  X: 10,
+  Y: 60,
+  COUNT_X: 42,
+  COUNT_Y: 60,
+} as const;
+
+// Modifier Icons
+export const MODIFIER_ICONS = {
+  ICON_SIZE: 32,
+  PADDING: 8,
+  START_X: 50,
+  BUFF_Y: 120,
+  DEBUFF_Y: 180,
+} as const;
+
 // Cast
 export const CAST_UI = {
   X: 410,

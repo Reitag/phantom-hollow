@@ -10,12 +10,13 @@ import {
   EVIL_WIZARD_STATS,
 } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
-import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
+import { CHARACTERS, ITEMS, TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
 import { AiZombie } from '@/ai/enemies/ai-zombie';
 import { AiEvilWizard } from '@/ai/bosses/ai-evil-wizard';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
+import { Coin } from '@/entities/items/coin';
 import { Zombie } from '@/entities/characters/enemies/zombie';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { Tilemap } from '@/components/map/tilemap';
@@ -23,11 +24,12 @@ import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { InventorySystem } from '@/systems/inventory-system';
 import { SpellFactory } from '@/factories/spell-factory';
+import { PickupSystem } from '@/systems/pickup-system';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
-import { Character } from '@/base/entites/character';
-import { Spell } from '@/base/entites/spell';
+import { Character } from '@/base/objects/character';
+import { Spell } from '@/base/objects/spell';
 import { isValidTeleportPosition } from '@/utils/helpers';
 import { createHealthPotion, createProtectPotion, createUndyingPotion } from '@/game/items/potions';
 import { UiScene } from './ui-scene';
@@ -41,6 +43,15 @@ export class LevelOneScene extends Phaser.Scene {
   private readonly skeletonSpawnPositions = [/*700, 1600, 2500, 4100, 4600, 6500, 8600,*/ 11500];
   private readonly zombieSpawnPositions = [/*4700, 5000, 5500, 6400, 7700, 8700, 8800,*/ 11600];
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
+
+  private readonly coinSpawnPositions = [
+    { x: 9000, y: 350 },
+    { x: 9300, y: 350 },
+    { x: 9500, y: 350 },
+    { x: 10000, y: 350 },
+    { x: 11000, y: 350 },
+    { x: 11200, y: 450 },
+  ];
 
   private player!: Player;
   private aiSkeletonWarrior!: AiSkeletonWarrior;
@@ -103,16 +114,19 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.createWorldBounds();
 
-    this.registerVitalSystems();
-    this.createPlayer();
+    this.registerSystems();
 
+    this.createPlayer();
     this.createSkeletonWarriors();
     this.createZombies();
     this.createBoss();
 
+    this.createItems();
+
     this.registerCollisions();
     this.setupCamera();
 
+    // Temporary here!
     const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
     const health = createHealthPotion();
     const protect = createProtectPotion();
@@ -144,12 +158,13 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 
-  private registerVitalSystems(): void {
+  private registerSystems(): void {
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
     ServiceLocator.register(ServiceKeys.spellSystem, new SpellSystem());
     ServiceLocator.register(ServiceKeys.inventorySystem, new InventorySystem());
+    ServiceLocator.register(ServiceKeys.pickupSystem, new PickupSystem(this));
   }
 
   private createPlayer(): void {
@@ -240,6 +255,11 @@ export class LevelOneScene extends Phaser.Scene {
     this.aiEvilWizard = new AiEvilWizard(boss, this.player);
   }
 
+  private createItems(): void {
+    const pickup = ServiceLocator.resolve(ServiceKeys.pickupSystem);
+    pickup.spawnCoins(ITEMS.COIN, this.coinSpawnPositions);
+  }
+
   private registerCollisions(): void {
     const platformLayer = this.map.getTileLayer(TILELAYER_NAMES.PLATFORM);
     const spikeLayer = this.map.getTileLayer(TILELAYER_NAMES.SPIKE);
@@ -252,6 +272,11 @@ export class LevelOneScene extends Phaser.Scene {
     const zombies = this.aiZombie.getEnemies();
     const boss = this.aiEvilWizard.getBoss();
     const spells = ServiceLocator.resolve(ServiceKeys.spellFactory).getSpells();
+    const coins = ServiceLocator.resolve(ServiceKeys.pickupSystem).getGroup(ITEMS.COIN);
+
+    if (!coins) {
+      throw new Error('Items must be resolved');
+    }
 
     // Ground
     if (groundLayer) {
@@ -259,6 +284,7 @@ export class LevelOneScene extends Phaser.Scene {
       this.physics.add.collider(skeletons, groundLayer); // Skeleton warrior
       this.physics.add.collider(zombies, groundLayer); // Zombie
       this.physics.add.collider(boss, groundLayer); // Boss
+      this.physics.add.collider(coins, groundLayer); // Items
       this.physics.add.collider(
         spells,
         groundLayer,
@@ -271,6 +297,7 @@ export class LevelOneScene extends Phaser.Scene {
     // Cave
     if (caveLayer) {
       this.physics.add.collider(this.player, caveLayer); // Player
+      this.physics.add.collider(coins, caveLayer); // Items
     }
 
     // Spike
@@ -294,6 +321,7 @@ export class LevelOneScene extends Phaser.Scene {
     // Platform
     if (platformLayer) {
       this.physics.add.collider(this.player, platformLayer); // Player
+      this.physics.add.collider(coins, platformLayer); // Items
       this.physics.add.collider(
         spells,
         platformLayer,

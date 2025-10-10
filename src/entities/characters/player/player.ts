@@ -7,10 +7,11 @@ import { Ready } from '@/components/states/player-states/ready';
 import { Death } from '@/components/states/share/death';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_ANIMATION } from '@/constants/animation-keys';
-import { Character, CharacterConfig } from '@/base/entites/character';
+import { Character, CharacterConfig } from '@/base/objects/character';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
+import { CoinKeeper } from '@/game/economy/coin-keeper';
 
 interface PlayerConfig extends CharacterConfig {
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
@@ -23,6 +24,8 @@ export class Player extends Character {
   private ui: UiSystem;
   private inventory: InventorySystem;
   private isValidTeleportPositionCallback: (x: number, y: number) => boolean;
+
+  private coinKeeper: CoinKeeper;
 
   constructor({
     scene,
@@ -40,6 +43,8 @@ export class Player extends Character {
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
     this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
+
+    this.coinKeeper = new CoinKeeper();
 
     this.animations = {
       idle: PLAYER_ANIMATION.IDLE,
@@ -110,6 +115,10 @@ export class Player extends Character {
       backoff += step;
       targetX = this.x + (distance - backoff) * direction;
     }
+  }
+
+  public getCoinKeeper(): CoinKeeper {
+    return this.coinKeeper;
   }
 
   protected override onDamaged(): void {

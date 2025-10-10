@@ -1,5 +1,5 @@
 import { CharacterState } from '@/base/states/character-state';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 
 export class Wait extends CharacterState {
   constructor(character: Character) {

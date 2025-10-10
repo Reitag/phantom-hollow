@@ -1,6 +1,6 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Player } from '@/entities/characters/player/player';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 
 export class Attack extends CharacterState {
   private player: Player | null = null;

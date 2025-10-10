@@ -26,9 +26,10 @@ export const Z_POSITION = {
 
   // Sprite objects
   PORTAL: 160,
-  PLAYER: 170,
-  ENEMY: 180,
-  SPELL: 190,
+  ITEM: 170,
+  PLAYER: 180,
+  ENEMY: 190,
+  SPELL: 200,
 
   // Collide layer
   COLLIDE: 900,

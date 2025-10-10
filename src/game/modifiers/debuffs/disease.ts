@@ -1,6 +1,6 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { DISEASE } from '@/constants/modifier-stats';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { UiSystem } from '@/systems/ui-system';
 import { Modifier } from '@/utils/types';
 

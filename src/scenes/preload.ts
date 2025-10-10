@@ -9,6 +9,7 @@ const packs = [
   { key: 'objects-pack', url: `${packURL}objects.json` },
   { key: 'maps-pack', url: `${packURL}maps.json` },
   { key: 'ui-pack', url: `${packURL}ui.json` },
+  { key: 'items-pack', url: `${packURL}items.json` },
   { key: 'characters-pack', url: `${packURL}characters.json` },
   { key: 'spells-pack', url: `${packURL}spells.json` },
   { key: 'misc-pack', url: `${packURL}misc.json` },

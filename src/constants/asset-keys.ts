@@ -9,6 +9,10 @@ export const CHARACTERS = {
   EVIL_WIZARD: 'evil-wizard',
 } as const;
 
+export const ITEMS = {
+  COIN: 'coin',
+} as const;
+
 export const MAPS = {
   LEVEL_1: 'level-1',
 } as const;
@@ -63,6 +67,7 @@ export const UI = {
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
   WIND_ICON: 'wind-icon',
+  COIN_UI: 'coin-ui',
   HEALTH_BAR: 'health-bar',
   HEALTH_ENV: 'health-env',
   CAST_BAR: 'cast-bar',

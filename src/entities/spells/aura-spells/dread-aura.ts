@@ -1,9 +1,9 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { UI } from '@/constants/asset-keys';
 import { UiSystem } from '@/systems/ui-system';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
-import { Spell, SpellConfig } from '@/base/entites/spell';
+import { Spell, SpellConfig } from '@/base/objects/spell';
 
 export class DreadAura extends Spell {
   private range: number;

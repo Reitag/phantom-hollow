@@ -1,5 +1,5 @@
 import { Speed } from '@/components/stats/speed';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { InventorySystem } from '@/systems/inventory-system';
 import { State, StateMachine } from '@/systems/state-machine';
 import { SpellSystem } from '@/systems/spell-system';

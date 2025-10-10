@@ -2,7 +2,7 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { DREAD_AURA_STATS, EVIL_WIZARD_STATS, MUTATED_BAT_STATS } from '@/constants/object-stats';
 import { SHADOW_BOLT, SUMMON_BAT } from '@/constants/spell-cooldowns';
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { BOSSES_ANIMATION } from '@/constants/animation-keys';

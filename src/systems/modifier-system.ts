@@ -1,4 +1,4 @@
-import { Character } from '@/base/entites/character';
+import { Character } from '@/base/objects/character';
 import { ModifierFactory } from '@/factories/modifier-factory';
 import { Modifier } from '@/utils/types';
 
