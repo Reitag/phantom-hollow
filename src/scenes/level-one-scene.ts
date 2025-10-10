@@ -11,29 +11,25 @@ import {
 } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
 import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
-import { Player } from '@/objects/characters/player/player';
-import { AiSkeletonWarrior } from '@/components/ai/enemies/ai-skeleton-warrior';
-import { AiZombie } from '@/components/ai/enemies/ai-zombie';
-import { AiEvilWizard } from '@/components/ai/bosses/ai-evil-wizard';
-import { SkeletonWarrior } from '@/objects/characters/enemies/skeleton-warrior';
-import { Zombie } from '@/objects/characters/enemies/zombie';
-import { EvilWizzard } from '@/objects/characters/bosses/evil-wizzard';
+import { Player } from '@/entities/characters/player/player';
+import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
+import { AiZombie } from '@/ai/enemies/ai-zombie';
+import { AiEvilWizard } from '@/ai/bosses/ai-evil-wizard';
+import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
+import { Zombie } from '@/entities/characters/enemies/zombie';
+import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
-import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
-import { InventoryManager } from '@/managers/inventory-manager';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { InventorySystem } from '@/systems/inventory-system';
 import { SpellFactory } from '@/factories/spell-factory';
-import { SpellManager } from '@/managers/spell-manager';
-import { Sandbox } from '@/components/sandbox/sandbox';
+import { SpellSystem } from '@/systems/spell-system';
+import { Sandbox } from '@/infrastructure/sandbox';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
-import { Character } from '@/objects/core/character';
-import { Spell } from '@/objects/core/spell';
+import { Character } from '@/base/entites/character';
+import { Spell } from '@/base/entites/spell';
 import { isValidTeleportPosition } from '@/utils/helpers';
-import {
-  createHealthPotion,
-  createProtectPotion,
-  createUndyingPotion,
-} from '@/items/potions/potions';
+import { createHealthPotion, createProtectPotion, createUndyingPotion } from '@/game/items/potions';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
@@ -117,7 +113,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.registerCollisions();
     this.setupCamera();
 
-    const inventory = ServiceLocator.resolve(ServiceKeys.inventoryManager);
+    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
     const health = createHealthPotion();
     const protect = createProtectPotion();
     const undye = createUndyingPotion();
@@ -152,8 +148,8 @@ export class LevelOneScene extends Phaser.Scene {
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
-    ServiceLocator.register(ServiceKeys.spellManager, new SpellManager());
-    ServiceLocator.register(ServiceKeys.inventoryManager, new InventoryManager());
+    ServiceLocator.register(ServiceKeys.spellSystem, new SpellSystem());
+    ServiceLocator.register(ServiceKeys.inventorySystem, new InventorySystem());
   }
 
   private createPlayer(): void {

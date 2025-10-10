@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { GraphicsMask } from '@/components/rendering/graphic-mask';
-import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { SPELLS } from '@/constants/asset-keys';

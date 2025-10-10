@@ -1,10 +1,10 @@
-import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
-import { CharacterState } from '@/components/states/core/character-state';
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { CharacterState } from '@/base/states/character-state';
 import { SPELLS } from '@/constants/asset-keys';
 import { FIRE_BALL_STATS } from '@/constants/object-stats';
-import { SpellManager } from '@/managers/spell-manager';
-import { UiManager } from '@/managers/ui-manager';
-import { Player } from '@/objects/characters/player/player';
+import { SpellSystem } from '@/systems/spell-system';
+import { UiSystem } from '@/systems/ui-system';
+import { Player } from '@/entities/characters/player/player';
 
 export class Casting extends CharacterState {
   private isCasting = false;
@@ -13,10 +13,10 @@ export class Casting extends CharacterState {
   constructor(
     character: Player,
     input?: KeyboardController,
-    spellManager?: SpellManager,
-    ui?: UiManager
+    spellSystem?: SpellSystem,
+    ui?: UiSystem
   ) {
-    super('Casting', character, input, spellManager, ui);
+    super('Casting', character, input, spellSystem, ui);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -27,19 +27,19 @@ export class Casting extends CharacterState {
       case SPELLS.FIRE_BALL:
         this.startCast(FIRE_BALL_STATS.CAST_TIME, this.animations.attack, () => {
           if (!this.character.getDead()) {
-            this.spellManager?.castFireball();
+            this.spellSystem?.castFireball();
           }
         });
         break;
 
       case SPELLS.BLINK:
-        this.spellManager?.castBlink();
+        this.spellSystem?.castBlink();
         break;
 
       case SPELLS.WIND:
         this.startInstantCast(this.animations.instantCast, () => {
           if (!this.character.getDead()) {
-            this.spellManager?.castWind();
+            this.spellSystem?.castWind();
           }
         });
         break;

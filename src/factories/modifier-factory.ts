@@ -1,9 +1,9 @@
 import { DISEASE, PROTECTION, SHADOW_VULNERABILITY, UNDYING } from '@/constants/modifier-stats';
-import { Protection } from '@/modifiers/buffs/protection';
-import { Undying } from '@/modifiers/buffs/undying';
-import { Modifier } from '@/modifiers/core/modifier';
-import { Disease } from '@/modifiers/debuffs/disease';
-import { ShadowVulnerability } from '@/modifiers/debuffs/shadow-vulnerability';
+import { Protection } from '@/game/modifiers/buffs/protection';
+import { Undying } from '@/game/modifiers/buffs/undying';
+import { Disease } from '@/game/modifiers/debuffs/disease';
+import { ShadowVulnerability } from '@/game/modifiers/debuffs/shadow-vulnerability';
+import { Modifier } from '@/utils/types';
 
 export class ModifierFactory {
   static create(scene: Phaser.Scene, type: string): Modifier {

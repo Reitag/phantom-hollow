@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { UiManager } from '@/managers/ui-manager';
+import { UiSystem } from '@/systems/ui-system';
 import { UI } from '@/constants/asset-keys';
 import {
   SPELL_UI,
@@ -12,7 +12,7 @@ import {
 } from '@/constants/ui-coordinates';
 
 export class UiScene extends Phaser.Scene {
-  private uiManager!: UiManager;
+  private ui!: UiSystem;
 
   constructor() {
     super('UiScene');
@@ -36,11 +36,11 @@ export class UiScene extends Phaser.Scene {
     // Inventory labels
     this.addInventoryKeyLabels();
 
-    this.uiManager = new UiManager(this);
+    this.ui = new UiSystem(this);
   }
 
-  getUI(): UiManager {
-    return this.uiManager;
+  getUI(): UiSystem {
+    return this.ui;
   }
 
   private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {

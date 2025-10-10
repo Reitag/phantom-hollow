@@ -1,5 +1,5 @@
-import { CharacterState } from '@/components/states/core/character-state';
-import { Character } from '@/objects/core/character';
+import { CharacterState } from '@/base/states/character-state';
+import { Character } from '@/base/entites/character';
 
 export class Patrol extends CharacterState {
   private isWaiting = false;

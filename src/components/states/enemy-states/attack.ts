@@ -1,6 +1,6 @@
-import { CharacterState } from '@/components/states/core/character-state';
-import { Player } from '@/objects/characters/player/player';
-import { Character } from '@/objects/core/character';
+import { CharacterState } from '@/base/states/character-state';
+import { Player } from '@/entities/characters/player/player';
+import { Character } from '@/base/entites/character';
 
 export class Attack extends CharacterState {
   private player: Player | null = null;

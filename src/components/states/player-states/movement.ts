@@ -1,18 +1,18 @@
-import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
-import { CharacterState } from '@/components/states/core/character-state';
-import { InventoryManager } from '@/managers/inventory-manager';
-import { SpellManager } from '@/managers/spell-manager';
-import { Player } from '@/objects/characters/player/player';
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { CharacterState } from '@/base/states/character-state';
+import { InventorySystem } from '@/systems/inventory-system';
+import { SpellSystem } from '@/systems/spell-system';
+import { Player } from '@/entities/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
 
 export class Movement extends CharacterState {
   constructor(
     character: Player,
     input?: KeyboardController,
-    spellManager?: SpellManager,
-    inventory?: InventoryManager
+    spellSystem?: SpellSystem,
+    inventory?: InventorySystem
   ) {
-    super('Movement', character, input, spellManager, undefined, inventory);
+    super('Movement', character, input, spellSystem, undefined, inventory);
   }
 
   public onEnter(...args: unknown[]): void {

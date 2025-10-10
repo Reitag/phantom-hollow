@@ -1,8 +1,8 @@
-import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
-import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
-import { Blink } from '@/objects/spells/effect-spells/blink';
-import { Wind } from '@/objects/spells/direct-spells/wind';
-import { ShadowBolt } from '@/objects/spells/direct-spells/shadow-bolt';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
+import { Blink } from '@/entities/spells/effect-spells/blink';
+import { Wind } from '@/entities/spells/direct-spells/wind';
+import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { SPELLS } from '@/constants/asset-keys';
 import { SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { FIRE_BALL_STATS, WIND_STATS, SHADOW_BOLT_STATS } from '@/constants/object-stats';

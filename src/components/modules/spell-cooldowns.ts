@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { GLOBAL } from '@/constants/spell-cooldowns';
 
 export class SpellCooldowns {
