@@ -11,15 +11,17 @@ import {
   INVENTORY_SLOTS,
   COIN_UI,
 } from '@/constants/ui-coordinates';
+import { Store } from '@/components/ui/store/store';
 
 export class UiScene extends Phaser.Scene {
   private ui!: UiSystem;
+  private store!: Store;
 
   constructor() {
     super('UiScene');
   }
 
-  create(): void {
+  public create(): void {
     // UI panels
     this.add.image(SPELL_UI.X, SPELL_UI.Y, UI.SPELL_UI).setOrigin(0, 0.5);
     this.add.image(INVENTORY_UI.X, INVENTORY_UI.Y, UI.INVENTORY_UI).setOrigin(0, 0.5);
@@ -41,10 +43,15 @@ export class UiScene extends Phaser.Scene {
     this.addInventoryKeyLabels();
 
     this.ui = new UiSystem(this);
+    this.store = new Store(this);
   }
 
-  getUI(): UiSystem {
+  public getUI(): UiSystem {
     return this.ui;
+  }
+
+  public getStore(): Store {
+    return this.store;
   }
 
   private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {

@@ -73,6 +73,8 @@ export const UI = {
   CAST_BAR: 'cast-bar',
   CAST_BAR_GREEN: 'cast-bar-green',
   CAST_ENV: 'cast-env',
+  STORE_UI: 'store-ui',
+  STORE_UI_CLOSE_BUTTON: 'store-ui-close-button',
   HEALTH_POTION_ICON: 'health-potion-icon',
   PROTECTION_POTION_ICON: 'protection-potion-icon',
   UNDYING_POTION_ICON: 'undying-potion-icon',

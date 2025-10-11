@@ -1,4 +1,5 @@
 import { SPELLS } from './asset-keys';
+import { SCENE_SIZE } from './scene-size';
 
 // Spell
 export const SPELL_UI = {
@@ -14,6 +15,29 @@ export const INVENTORY_UI = {
   Y: 615,
   WIDTH: 126,
   HEIGHT: 30,
+} as const;
+
+// Store
+export const STORE_UI = {
+  BG: {
+    X: SCENE_SIZE.WIDTH / 2,
+    Y: SCENE_SIZE.HEIGHT / 2,
+    WIDTH: 550,
+    HEIGHT: 260,
+  },
+  EXIT_BUTTON: {
+    X: 249.5,
+    Y: -105.5,
+    WIDTH: 33,
+    HEIGHT: 33,
+  },
+  MASK: {
+    X: 252,
+    Y: 337,
+    WIDTH: 496,
+    HEIGHT: 180,
+    RADIUS: 10,
+  },
 } as const;
 
 // Health

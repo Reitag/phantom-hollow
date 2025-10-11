@@ -20,6 +20,8 @@ export abstract class InputController {
   protected thirdItemUse = false;
   protected fourthItemUse = false;
 
+  protected storeTrigger = false;
+
   get isLeftDown(): boolean {
     return this.left;
   }
@@ -80,6 +82,10 @@ export abstract class InputController {
     return this.fourthItemUse;
   }
 
+  get isStoreTrigger(): boolean {
+    return this.storeTrigger;
+  }
+
   abstract update(): void;
 
   reset(): void {
@@ -98,5 +104,6 @@ export abstract class InputController {
     this.secondItemUse = false;
     this.thirdItemUse = false;
     this.fourthItemUse = false;
+    this.storeTrigger = false;
   }
 }

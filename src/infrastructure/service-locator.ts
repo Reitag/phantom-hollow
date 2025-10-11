@@ -6,6 +6,7 @@ import { SpellSystem } from '@/systems/spell-system';
 import { PickupSystem } from '@/systems/pickup-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
 
 interface ServiceMap {
   player: Player;
@@ -16,6 +17,7 @@ interface ServiceMap {
   sandbox: Sandbox;
   inventorySystem: InventorySystem;
   pickupSystem: PickupSystem;
+  input: KeyboardController;
 }
 
 export const ServiceKeys = {
@@ -27,6 +29,7 @@ export const ServiceKeys = {
   sandbox: 'sandbox',
   inventorySystem: 'inventorySystem',
   pickupSystem: 'pickupSystem',
+  input: 'input',
 } as const;
 
 export class ServiceLocator {

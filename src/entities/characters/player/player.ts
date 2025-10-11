@@ -11,7 +11,7 @@ import { Character, CharacterConfig } from '@/base/objects/character';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
-import { CoinKeeper } from '@/game/economy/coin-keeper';
+import { CoinKeeper } from '@/game/economy/coin-keeper/coin-keeper';
 
 interface PlayerConfig extends CharacterConfig {
   isValidTeleportPositionCallback: (x: number, y: number) => boolean;
@@ -74,6 +74,7 @@ export class Player extends Character {
     }
 
     this.controls = new KeyboardController(keyboard);
+    ServiceLocator.register(ServiceKeys.input, this.controls);
   }
 
   private initStateMachine(): void {

@@ -22,6 +22,7 @@ import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { Stall } from '@/game/economy/store/stall';
 import { InventorySystem } from '@/systems/inventory-system';
 import { SpellFactory } from '@/factories/spell-factory';
 import { PickupSystem } from '@/systems/pickup-system';
@@ -31,7 +32,7 @@ import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
 import { isValidTeleportPosition } from '@/utils/helpers';
-import { createHealthPotion, createProtectPotion, createUndyingPotion } from '@/game/items/potions';
+import { healthPotion, protectPotion, undyingPotion } from '@/game/items/potions';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
@@ -39,24 +40,26 @@ import { MemoryMonitor } from '../../tools/memory-monitor.js';
 export class LevelOneScene extends Phaser.Scene {
   //private readonly playerSpawnPosition = 50;
   //private readonly playerSpawnPosition = 1800;
-  private readonly playerSpawnPosition = 11200;
+  //private readonly playerSpawnPosition = 11200;
+  private readonly playerSpawnPosition = 6800;
   private readonly skeletonSpawnPositions = [/*700, 1600, 2500, 4100, 4600, 6500, 8600,*/ 11500];
   private readonly zombieSpawnPositions = [/*4700, 5000, 5500, 6400, 7700, 8700, 8800,*/ 11600];
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
 
   private readonly coinSpawnPositions = [
-    { x: 9000, y: 350 },
-    { x: 9300, y: 350 },
-    { x: 9500, y: 350 },
-    { x: 10000, y: 350 },
-    { x: 11000, y: 350 },
-    { x: 11200, y: 450 },
+    { x: 7000, y: 350 },
+    { x: 7100, y: 350 },
+    { x: 7500, y: 350 },
+    { x: 7800, y: 350 },
+    { x: 7900, y: 350 },
+    { x: 7950, y: 450 },
   ];
 
   private player!: Player;
   private aiSkeletonWarrior!: AiSkeletonWarrior;
   private aiZombie!: AiZombie;
   private aiEvilWizard!: AiEvilWizard;
+  private stall!: Stall;
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
@@ -81,6 +84,8 @@ export class LevelOneScene extends Phaser.Scene {
     this.aiSkeletonWarrior.update(delta);
     this.aiZombie.update(delta);
     this.aiEvilWizard.update(delta);
+
+    this.stall.update();
 
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
     this.grass.tilePositionX = this.camera.scrollX * 0.5;
@@ -122,18 +127,10 @@ export class LevelOneScene extends Phaser.Scene {
     this.createBoss();
 
     this.createItems();
+    this.createStall();
 
     this.registerCollisions();
     this.setupCamera();
-
-    // Temporary here!
-    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-    const health = createHealthPotion();
-    const protect = createProtectPotion();
-    const undye = createUndyingPotion();
-    inventory.addItem(health, 5);
-    inventory.addItem(protect, 5);
-    inventory.addItem(undye, 5);
   }
 
   private createParallaxBackground(): void {
@@ -258,6 +255,10 @@ export class LevelOneScene extends Phaser.Scene {
   private createItems(): void {
     const pickup = ServiceLocator.resolve(ServiceKeys.pickupSystem);
     pickup.spawnCoins(ITEMS.COIN, this.coinSpawnPositions);
+  }
+
+  private createStall(): void {
+    this.stall = new Stall(this);
   }
 
   private registerCollisions(): void {

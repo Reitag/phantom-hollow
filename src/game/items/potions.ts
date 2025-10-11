@@ -3,7 +3,7 @@ import { UI } from '@/constants/asset-keys';
 import { PROTECTION, UNDYING } from '@/constants/modifier-stats';
 import { InventoryItem } from '@/utils/types';
 
-export const createHealthPotion = (): InventoryItem => ({
+export const healthPotion = (): InventoryItem => ({
   id: 'health-potion',
   name: 'Health Potion',
   description: 'Restores 50 HP',
@@ -17,7 +17,7 @@ export const createHealthPotion = (): InventoryItem => ({
   },
 });
 
-export const createProtectPotion = (): InventoryItem => ({
+export const protectPotion = (): InventoryItem => ({
   id: 'protect-potion',
   name: 'Protect Potion',
   description: 'Reduces damage taken for 10 seconds',
@@ -40,7 +40,7 @@ export const createProtectPotion = (): InventoryItem => ({
   },
 });
 
-export const createUndyingPotion = (): InventoryItem => ({
+export const undyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
   description: 'Makes you immune to death for 5 seconds',
@@ -63,7 +63,7 @@ export const createUndyingPotion = (): InventoryItem => ({
   },
 });
 
-export const createQuestItem = (): InventoryItem => ({
+export const questItem = (): InventoryItem => ({
   id: 'quest_item',
   name: 'Boss Relic',
   description: 'Helps defeat the boss quickly',

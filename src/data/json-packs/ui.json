@@ -29,6 +29,16 @@
     { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" },
     {
       "type": "image",
+      "key": "store-ui",
+      "url": "assets/ui/store/store-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "store-ui-close-button",
+      "url": "assets/ui/store/store-ui-close-button.png"
+    },
+    {
+      "type": "image",
       "key": "health-potion-icon",
       "url": "assets/icons/potions/health-potion.png"
     },
