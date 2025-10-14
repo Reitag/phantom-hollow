@@ -27,6 +27,7 @@ import { SpellFactory } from '@/factories/spell-factory';
 import { LootSystem } from '@/systems/loot-system';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
+import { CollisionService } from '@/infrastructure/collision-service';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
@@ -52,6 +53,8 @@ export class LevelOneScene extends Phaser.Scene {
     { x: 7900, y: 350 },
     { x: 7950, y: 450 },
   ];
+
+  private memoryMonitor: MemoryMonitor | null = null;
 
   private player!: Player;
   private aiSkeletonWarrior!: AiSkeletonWarrior;
@@ -85,8 +88,15 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.stall.update();
 
-    this.mount.tilePositionX = this.camera.scrollX * 0.2;
-    this.grass.tilePositionX = this.camera.scrollX * 0.5;
+    this.updateParallaxBackground();
+
+    // Debug
+    if (process.env.NODE_ENV === 'development') {
+      if (this.memoryMonitor instanceof MemoryMonitor) {
+        this.memoryMonitor?.setPlayersCoords(this.player.x, this.player.y);
+      }
+    }
+    // Debug
   }
 
   private initUiScene(initWorld: () => void): void {
@@ -103,6 +113,7 @@ export class LevelOneScene extends Phaser.Scene {
         // Debug
         if (process.env.NODE_ENV === 'development') {
           this.scene.add('MemoryMonitor', MemoryMonitor, true);
+          this.memoryMonitor = this.scene.get('MemoryMonitor');
         }
         // Debug
       } else {
@@ -145,6 +156,11 @@ export class LevelOneScene extends Phaser.Scene {
       .setScrollFactor(0);
   }
 
+  private updateParallaxBackground(): void {
+    this.mount.tilePositionX = this.camera.scrollX * 0.2;
+    this.grass.tilePositionX = this.camera.scrollX * 0.5;
+  }
+
   private createTilemap(): void {
     this.map = createTilemapOne(this);
   }
@@ -160,6 +176,7 @@ export class LevelOneScene extends Phaser.Scene {
     ServiceLocator.register(ServiceKeys.spellSystem, new SpellSystem());
     ServiceLocator.register(ServiceKeys.inventorySystem, new InventorySystem());
     ServiceLocator.register(ServiceKeys.lootSystem, new LootSystem(this));
+    ServiceLocator.register(ServiceKeys.collision, new CollisionService(this));
   }
 
   private createPlayer(): void {
@@ -171,15 +188,13 @@ export class LevelOneScene extends Phaser.Scene {
       stats: {
         health: PLAYER_STATS.HEALTH,
         speed: PLAYER_STATS.MOVE,
-        meleeAttack: undefined,
+        damage: {
+          meleeAttack: undefined,
+          spellPower: PLAYER_STATS.SPELL_POWER,
+        },
         defense: 1,
       },
       facingRight: true,
-      isValidTeleportPositionCallback: isValidTeleportPosition([
-        this.map.getTileLayer(TILELAYER_NAMES.PLATFORM)!,
-        this.map.getTileLayer(TILELAYER_NAMES.SPIKE)!,
-        this.map.getTileLayer(TILELAYER_NAMES.GROUND)!,
-      ]),
     }).setDepth(Z_POSITION.PLAYER);
 
     ServiceLocator.register(ServiceKeys.player, this.player);
@@ -199,7 +214,10 @@ export class LevelOneScene extends Phaser.Scene {
         stats: {
           health: SKELETON_WARRIOR_STATS.HEALTH,
           speed: SKELETON_WARRIOR_STATS.WALK,
-          meleeAttack: SKELETON_WARRIOR_STATS.HIT,
+          damage: {
+            meleeAttack: SKELETON_WARRIOR_STATS.HIT,
+            spellPower: undefined,
+          },
           defense: undefined,
         },
       });
@@ -222,7 +240,10 @@ export class LevelOneScene extends Phaser.Scene {
         stats: {
           health: ZOMBIE_STATS.HEALTH,
           speed: ZOMBIE_STATS.WALK,
-          meleeAttack: ZOMBIE_STATS.HIT,
+          damage: {
+            meleeAttack: ZOMBIE_STATS.HIT,
+            spellPower: undefined,
+          },
           defense: undefined,
         },
       });
@@ -242,7 +263,10 @@ export class LevelOneScene extends Phaser.Scene {
       stats: {
         health: EVIL_WIZARD_STATS.HEALTH,
         speed: undefined,
-        meleeAttack: undefined,
+        damage: {
+          meleeAttack: undefined,
+          spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
+        },
         defense: undefined,
       },
     }).setDepth(120);
@@ -268,7 +292,7 @@ export class LevelOneScene extends Phaser.Scene {
     const zombies = this.aiZombie.getEnemies();
     const boss = this.aiEvilWizard.getBoss();
     const spells = ServiceLocator.resolve(ServiceKeys.spellFactory).getSpells();
-    const loot = ServiceLocator.resolve(ServiceKeys.lootSystem);
+    const collision = ServiceLocator.resolve(ServiceKeys.collision);
 
     // Ground
     if (groundLayer) {
@@ -292,10 +316,19 @@ export class LevelOneScene extends Phaser.Scene {
       collideLayers.push(caveLayer);
 
       this.physics.add.collider(this.player, caveLayer); // Player
+      this.physics.add.collider(
+        spells,
+        caveLayer,
+        this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      ); // Spells
     }
 
     // Spike
     if (spikeLayer) {
+      collideLayers.push(spikeLayer);
+
       this.physics.add.collider(this.player, spikeLayer, this.handleSpikeHit, undefined, this);
       this.physics.add.collider(skeletons, spikeLayer); // Skeleton warrior
       this.physics.add.collider(zombies, spikeLayer); // Zombie
@@ -374,7 +407,7 @@ export class LevelOneScene extends Phaser.Scene {
       this
     ); // Boss
 
-    loot.setCollideLayersAndItemsOverlap(collideLayers);
+    collision.registerCollideLayers(collideLayers);
 
     // For better collisions
     this.physics.world.setFPS(120);
@@ -382,6 +415,8 @@ export class LevelOneScene extends Phaser.Scene {
 
   private createItems(): void {
     const loot = ServiceLocator.resolve(ServiceKeys.lootSystem);
+    loot.setCollideLayersAndItemsOverlap();
+
     loot.spawnCoins(this.coinSpawnPositions);
   }
 
@@ -401,9 +436,14 @@ export class LevelOneScene extends Phaser.Scene {
     }
   }
 
-  private handleSpellCollision(spell: Phaser.GameObjects.GameObject): void {
+  private handleSpellCollision(
+    spell: Phaser.GameObjects.GameObject,
+    tile: Phaser.Tilemaps.Tile
+  ): void {
     if (spell instanceof Spell) {
-      spell.destroySpell();
+      if (tile.properties.collides) {
+        spell.destroySpell();
+      }
     }
   }
 
@@ -413,12 +453,6 @@ export class LevelOneScene extends Phaser.Scene {
   ): void {
     if (!(victim instanceof Character) || victim.getDead()) return;
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
-
-    const victimCenterY = (victim.body as Phaser.Physics.Arcade.Body).center.y;
-    const spellCenterY = (spell.body as Phaser.Physics.Arcade.Body).center.y;
-
-    const tolerance = 10;
-    if (Math.abs(victimCenterY - spellCenterY) > tolerance) return;
 
     spell.registerHit(victim);
 

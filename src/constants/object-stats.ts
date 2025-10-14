@@ -38,6 +38,7 @@ export const PLAYER_STATS = {
   HEALTH: 100,
   MOVE: 190,
   JUMP: 550,
+  SPELL_POWER: 1,
 } as const;
 
 export const SKELETON_WARRIOR_STATS = {
@@ -76,4 +77,5 @@ export const EVIL_WIZARD_STATS = {
   HEALTH: 1000,
   ENGAGE_DISTANCE: 450,
   CAST: 10,
+  SPELL_POWER: 1,
 } as const;

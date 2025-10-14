@@ -13,6 +13,13 @@ export const PROTECTION = {
   type: TYPE.buff,
 };
 
+export const SPELL_POWER = {
+  id: UI.SPELL_POWER_BUFF,
+  duration: 15000,
+  effect: 2,
+  type: TYPE.buff,
+};
+
 export const UNDYING = {
   id: UI.UNDYING_BUFF,
   duration: 5000,

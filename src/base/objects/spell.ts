@@ -1,12 +1,12 @@
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
-import { Sandbox } from '@/infrastructure/sandbox';
+import { SpellPower } from '@/components/stats/damage';
 import { ArcadeSpriteConfig, SpellAnimationConfig } from '@/utils/types';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
 
 export interface SpellConfig extends ArcadeSpriteConfig {
-  sandbox?: Sandbox;
+  spellPower?: SpellPower;
   animation?: SpellAnimationConfig;
   damage?: number;
   speed?: number;
@@ -14,7 +14,7 @@ export interface SpellConfig extends ArcadeSpriteConfig {
 }
 
 export abstract class Spell extends ArcadeSprite {
-  protected sandbox: Sandbox | null = null;
+  protected spellPower: SpellPower | null = null;
   protected animation: SpellAnimationConfig | null = null;
   protected damage: number | null = null;
   protected speed: number | null = null;
@@ -27,7 +27,7 @@ export abstract class Spell extends ArcadeSprite {
     position,
     keyName,
     frame,
-    sandbox,
+    spellPower,
     animation,
     damage,
     speed,
@@ -35,11 +35,11 @@ export abstract class Spell extends ArcadeSprite {
   }: SpellConfig) {
     super({ scene, position, keyName, frame });
 
+    this.spellPower = spellPower || null;
     this.damage = damage || null;
     this.speed = speed || null;
     this.direction = direction || null;
     this.animation = animation || null;
-    this.sandbox = sandbox || null;
 
     this.setDepth(Z_POSITION.SPELL);
   }
@@ -69,10 +69,9 @@ export abstract class Spell extends ArcadeSprite {
   }
 
   public causeDamage(): number {
-    if (!this.damage) {
-      return 0;
-    }
-    return this.damage;
+    if (!this.damage) return 0;
+    if (!this.spellPower) return this.damage;
+    return this.damage * this.spellPower.multiplier;
   }
 
   protected playMainAnimation(): void {

@@ -13,36 +13,22 @@ import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
 import { CoinKeeper } from '@/game/economy/coin-keeper/coin-keeper';
 
-interface PlayerConfig extends CharacterConfig {
-  isValidTeleportPositionCallback: (x: number, y: number) => boolean;
-}
-
 export class Player extends Character {
   scene: Phaser.Scene;
   private controls!: KeyboardController;
   private spellSystem: SpellSystem;
   private ui: UiSystem;
   private inventory: InventorySystem;
-  private isValidTeleportPositionCallback: (x: number, y: number) => boolean;
 
   private coinKeeper: CoinKeeper;
 
-  constructor({
-    scene,
-    position,
-    keyName,
-    frame,
-    facingRight,
-    stats,
-    isValidTeleportPositionCallback,
-  }: PlayerConfig) {
+  constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
 
     this.scene = scene;
     this.spellSystem = ServiceLocator.resolve(ServiceKeys.spellSystem);
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-    this.isValidTeleportPositionCallback = isValidTeleportPositionCallback;
 
     this.coinKeeper = new CoinKeeper();
 
@@ -58,13 +44,12 @@ export class Player extends Character {
     this.initKeyboard();
     this.initStateMachine();
 
-    /*const spriteHeight = this.height;
+    const spriteHeight = this.height;
     const bodyHeight = 30;
     const bodyWidth = 20;
 
     this.arcadeBody.setSize(bodyWidth, bodyHeight);
-    this.arcadeBody.setOffset((spriteHeight - bodyWidth) / 2, spriteHeight - bodyHeight);*/
-    this.arcadeBody.setSize(20, 48);
+    this.arcadeBody.setOffset((spriteHeight - bodyWidth) / 2, spriteHeight - bodyHeight);
   }
 
   private initKeyboard(): void {
@@ -90,32 +75,6 @@ export class Player extends Character {
   public update(delta: number): void {
     this.stateMachine.update(delta);
     this.controls.update();
-  }
-
-  public hide(): void {
-    this.arcadeBody.enable = false;
-    this.setVisible(false);
-  }
-
-  public show(): void {
-    this.arcadeBody.enable = true;
-    this.setVisible(true);
-  }
-
-  public teleportTo(distance: number, direction: number): void {
-    const step = 5;
-
-    let targetX = this.x + distance * direction;
-    let backoff = 0;
-
-    while (targetX !== this.x) {
-      if (this.isValidTeleportPositionCallback(targetX, this.y)) {
-        this.x = targetX;
-        return;
-      }
-      backoff += step;
-      targetX = this.x + (distance - backoff) * direction;
-    }
   }
 
   public getCoinKeeper(): CoinKeeper {

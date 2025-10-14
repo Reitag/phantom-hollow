@@ -27,18 +27,6 @@ export class Sandbox {
     spell.destroy();
   }
 
-  public teleportPlayer(distance: number, direction: number): void {
-    this.player.teleportTo(distance, direction);
-  }
-
-  public hidePlayer(): void {
-    this.player.hide();
-  }
-
-  public showPlayer(): void {
-    this.player.show();
-  }
-
   public healPlayer(amount: number): void {
     const stats = this.player.getStats();
     stats.health?.heal(amount);

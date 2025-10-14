@@ -1,18 +1,21 @@
 import { Health } from '@/components/stats/health';
 import { Speed } from '@/components/stats/speed';
-import { MeleeAttack } from '@/components/stats/melee-attack';
+import { MeleeAttack, SpellPower } from '@/components/stats/damage';
 import { Defense } from '@/components/stats/defense';
 import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
-import { AnimationConfig, ArcadeSpriteConfig, Stats } from '@/utils/types';
+import { AnimationConfig, ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
 
 export interface CharacterConfig extends ArcadeSpriteConfig {
   facingRight: boolean;
   stats: {
     health: number | undefined;
     speed: number | undefined;
-    meleeAttack: number | undefined;
+    damage: {
+      meleeAttack: number | undefined;
+      spellPower: number | undefined;
+    };
     defense: number | undefined;
   };
 }
@@ -38,7 +41,12 @@ export class Character extends ArcadeSprite {
     this.stats = {
       health: stats.health !== undefined ? new Health(stats.health) : null,
       speed: stats.speed !== undefined ? new Speed(stats.speed) : null,
-      meleeAttack: stats.meleeAttack !== undefined ? new MeleeAttack(stats.meleeAttack) : null,
+      damage: {
+        meleeAttack:
+          stats.damage.meleeAttack !== undefined ? new MeleeAttack(stats.damage.meleeAttack) : null,
+        spellPower:
+          stats.damage.spellPower !== undefined ? new SpellPower(stats.damage.spellPower) : null,
+      },
       defense: stats.defense !== undefined ? new Defense(stats.defense) : null,
     };
 
@@ -75,6 +83,10 @@ export class Character extends ArcadeSprite {
 
   public getAnimations(): AnimationConfig {
     return this.animations;
+  }
+
+  public getPosition(): Position {
+    return { x: this.x, y: this.y };
   }
 
   public getDead(): boolean {

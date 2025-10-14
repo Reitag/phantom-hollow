@@ -1,4 +1,4 @@
-import { healthPotion, protectPotion, undyingPotion } from '@/game/items/potions';
+import { healthPotion, protectPotion, spellPotion, undyingPotion } from '@/game/items/potions';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export interface StoreItem {
@@ -15,12 +15,17 @@ export const STORE_ITEMS: StoreItem[] = [
     ...healthPotion(),
     price: 1,
     onBuy: () => {
-      const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+      const health = healthPotion();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
-      if (coinKeeper.removeCoins(1)) {
-        const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-        const health = healthPotion();
-        inventory.addItem(health, 1);
+      if (!inventory.canAdd(health, 1)) {
+        ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+
+        if (coinKeeper.removeCoins(1)) {
+          inventory.addItem(health, 1);
+        }
       }
     },
   },
@@ -28,25 +33,53 @@ export const STORE_ITEMS: StoreItem[] = [
     ...protectPotion(),
     price: 2,
     onBuy: () => {
-      const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+      const protect = protectPotion();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
-      if (coinKeeper.removeCoins(2)) {
-        const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-        const protect = protectPotion();
-        inventory.addItem(protect, 1);
+      if (!inventory.canAdd(protect, 1)) {
+        ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+
+        if (coinKeeper.removeCoins(2)) {
+          inventory.addItem(protect, 1);
+        }
+      }
+    },
+  },
+  {
+    ...spellPotion(),
+    price: 3,
+    onBuy: () => {
+      const spell = spellPotion();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+
+      if (!inventory.canAdd(spell, 1)) {
+        ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+
+        if (coinKeeper.removeCoins(3)) {
+          inventory.addItem(spell, 1);
+        }
       }
     },
   },
   {
     ...undyingPotion(),
-    price: 3,
+    price: 4,
     onBuy: () => {
-      const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+      const undying = undyingPotion();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
-      if (coinKeeper.removeCoins(3)) {
-        const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-        const undie = undyingPotion();
-        inventory.addItem(undie, 1);
+      if (!inventory.canAdd(undying, 1)) {
+        ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+
+        if (coinKeeper.removeCoins(4)) {
+          inventory.addItem(undying, 1);
+        }
       }
     },
   },

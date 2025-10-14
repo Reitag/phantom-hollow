@@ -1,5 +1,12 @@
-import { DISEASE, PROTECTION, SHADOW_VULNERABILITY, UNDYING } from '@/constants/modifier-stats';
+import {
+  DISEASE,
+  PROTECTION,
+  SHADOW_VULNERABILITY,
+  SPELL_POWER,
+  UNDYING,
+} from '@/constants/modifier-stats';
 import { Protection } from '@/game/modifiers/buffs/protection';
+import { SpellIncrease } from '@/game/modifiers/buffs/spell-increase';
 import { Undying } from '@/game/modifiers/buffs/undying';
 import { Disease } from '@/game/modifiers/debuffs/disease';
 import { ShadowVulnerability } from '@/game/modifiers/debuffs/shadow-vulnerability';
@@ -10,6 +17,8 @@ export class ModifierFactory {
     switch (type) {
       case PROTECTION.id:
         return new Protection(scene);
+      case SPELL_POWER.id:
+        return new SpellIncrease(scene);
       case UNDYING.id:
         return new Undying(scene);
       case DISEASE.id:

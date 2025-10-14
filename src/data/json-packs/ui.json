@@ -49,6 +49,11 @@
     },
     {
       "type": "image",
+      "key": "spell-potion-icon",
+      "url": "assets/icons/potions/spell-potion.png"
+    },
+    {
+      "type": "image",
       "key": "undying-potion-icon",
       "url": "assets/icons/potions/undying-potion.png"
     },
@@ -56,6 +61,11 @@
       "type": "image",
       "key": "protection-buff",
       "url": "assets/icons/buffs/protection.png"
+    },
+    {
+      "type": "image",
+      "key": "spell-power-buff",
+      "url": "assets/icons/buffs/spell-power.png"
     },
     {
       "type": "image",

@@ -15,6 +15,19 @@ export class MemoryMonitor extends Phaser.Scene {
     this.totalObjects = 0;
     this.totalBodies = 0;
     this.totalSpells = 0; // increment when creating/destroying spells
+
+    // Player's coordinates
+    this.coords = {
+      x: null,
+      y: null,
+    };
+  }
+
+  setPlayersCoords(x, y) {
+    this.coords = {
+      x: Math.round(x),
+      y: Math.round(y),
+    };
   }
 
   create() {
@@ -93,6 +106,7 @@ export class MemoryMonitor extends Phaser.Scene {
       `FPS: ${this.fps}`,
       `RAM: ${this.jsHeap}`,
       `Textures: ${this.texMB} (${this.textureCount})`,
+      `Player's coords: x: ${this.coords.x}, y: ${this.coords.y}`,
       `Draw calls: ${this.drawCalls}`,
       `Objects (all scenes): ${this.totalObjects}`,
       `Physics bodies (all scenes): ${this.totalBodies}`,

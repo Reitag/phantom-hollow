@@ -27,19 +27,19 @@ export class Casting extends CharacterState {
       case SPELLS.FIRE_BALL:
         this.startCast(FIRE_BALL_STATS.CAST_TIME, this.animations.attack, () => {
           if (!this.character.getDead()) {
-            this.spellSystem?.castFireball();
+            this.spellSystem?.castFireball(this.character);
           }
         });
         break;
 
       case SPELLS.BLINK:
-        this.spellSystem?.castBlink();
+        this.spellSystem?.castBlink(this.character);
         break;
 
       case SPELLS.WIND:
         this.startInstantCast(this.animations.instantCast, () => {
           if (!this.character.getDead()) {
-            this.spellSystem?.castWind();
+            this.spellSystem?.castWind(this.character);
           }
         });
         break;

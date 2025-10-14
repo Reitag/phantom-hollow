@@ -7,6 +7,7 @@ import { LootSystem } from '@/systems/loot-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { CollisionService } from './collision-service';
 
 interface ServiceMap {
   player: Player;
@@ -18,6 +19,7 @@ interface ServiceMap {
   inventorySystem: InventorySystem;
   lootSystem: LootSystem;
   input: KeyboardController;
+  collision: CollisionService;
 }
 
 export const ServiceKeys = {
@@ -30,6 +32,7 @@ export const ServiceKeys = {
   inventorySystem: 'inventorySystem',
   lootSystem: 'lootSystem',
   input: 'input',
+  collision: 'collision',
 } as const;
 
 export class ServiceLocator {

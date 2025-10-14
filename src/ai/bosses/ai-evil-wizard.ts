@@ -82,7 +82,10 @@ export class AiEvilWizard extends Boss {
       stats: {
         health: MUTATED_BAT_STATS.HEALTH,
         speed: MUTATED_BAT_STATS.FLY,
-        meleeAttack: undefined,
+        damage: {
+          meleeAttack: undefined,
+          spellPower: undefined,
+        },
         defense: undefined,
       },
     });
@@ -92,13 +95,14 @@ export class AiEvilWizard extends Boss {
   }
 
   private castShadowBolt(): void {
-    const direction = this.boss.getFacingRight() ? 1 : -1;
-    const x = this.boss.x;
-    const y = this.boss.y;
-    const yCoor = y + 15;
-    const xCoor = x + 50 * direction;
+    //const direction = this.boss.getFacingRight() ? 1 : -1;
+    //const x = this.boss.x;
+    //const y = this.boss.y;
+    //const yCoor = y + 15;
+    //const xCoor = x + 50 * direction;
     this.boss.anims.play(BOSSES_ANIMATION.EVIL_WIZARD.SIMPLE_ATTACK, true);
-    const shadowBolt = this.spellFactory.createShadowBolt(xCoor, yCoor, direction);
+    //const shadowBolt = this.spellFactory.createShadowBolt(xCoor, yCoor, direction);
+    const shadowBolt = this.spellFactory.createShadowBolt(this.boss);
     shadowBolt.cast();
   }
 }

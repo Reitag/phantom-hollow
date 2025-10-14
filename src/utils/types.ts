@@ -1,6 +1,6 @@
 import { Defense } from '@/components/stats/defense';
 import { Health } from '@/components/stats/health';
-import { MeleeAttack } from '@/components/stats/melee-attack';
+import { Damage } from '@/components/stats/damage';
 import { Speed } from '@/components/stats/speed';
 import { TYPE } from '@/constants/modifier-stats';
 import { Character } from '@/base/objects/character';
@@ -48,7 +48,7 @@ export type ItemAnimationConfig = {
 export interface Stats {
   health: Health | null;
   speed: Speed | null;
-  meleeAttack: MeleeAttack | null;
+  damage: Record<string, Damage | null>;
   defense: Defense | null;
 }
 

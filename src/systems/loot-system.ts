@@ -15,14 +15,25 @@ export class LootSystem {
     this.itemGroups.set(ITEMS.COIN, this.scene.physics.add.group({ allowGravity: true }));
   }
 
-  public setCollideLayersAndItemsOverlap(collideLayers: Phaser.Tilemaps.TilemapLayer[]): void {
+  public setCollideLayersAndItemsOverlap(): void {
+    const collideLayers = ServiceLocator.resolve(ServiceKeys.collision).getCollideLayers();
+    const player = ServiceLocator.resolve(ServiceKeys.player);
+
     this.itemGroups.forEach((group) => {
       collideLayers.forEach((collideLayer) => {
         this.scene.physics.add.collider(group, collideLayer);
       });
-    });
 
-    this.setItemsOverlap();
+      this.itemGroups.forEach((group) => {
+        this.scene.physics.add.overlap(
+          player,
+          group,
+          this.handlePickup as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          undefined,
+          this
+        );
+      });
+    });
   }
 
   public spawnCoins(positions: Position[]): void {
@@ -39,20 +50,6 @@ export class LootSystem {
 
   public getGroupByKey(key: string): Phaser.Physics.Arcade.Group | undefined {
     return this.itemGroups.get(key);
-  }
-
-  private setItemsOverlap(): void {
-    const player = ServiceLocator.resolve(ServiceKeys.player);
-
-    this.itemGroups.forEach((group) => {
-      this.scene.physics.add.overlap(
-        player,
-        group,
-        this.handlePickup as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      );
-    });
   }
 
   private handlePickup(player: Phaser.GameObjects.GameObject, item: Item): void {

@@ -1,4 +1,5 @@
-import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { Character } from '@/base/objects/character';
+import { SpellPower } from '@/components/stats/damage';
 import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { Blink } from '@/entities/spells/effect-spells/blink';
 import { Wind } from '@/entities/spells/direct-spells/wind';
@@ -17,16 +18,17 @@ export class SpellFactory {
     });
   }
 
-  public createFireball(x: number, y: number, direction: number): FireBall {
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 31;
+  public createFireball(character: Character): FireBall {
+    const position = this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
 
     const fireBall = new FireBall({
       scene: this.scene,
-      position: { x: x + offsetX, y: y },
+      position: position,
       keyName: SPELLS.FIRE_BALL,
       frame: 0,
-      sandbox,
+      spellPower: spellPower,
       animation: {
         main: SPELLS_ANIMATION.FIRE_BALL.MAIN,
         destroy: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
@@ -41,15 +43,16 @@ export class SpellFactory {
     return fireBall;
   }
 
-  public createBlink(x: number, y: number, direction: number): Blink {
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+  public createBlink(character: Character): Blink {
+    const position = character.getPosition();
+    const direction = character.getFacingRight() ? 1 : -1;
 
     const blink = new Blink({
       scene: this.scene,
-      position: { x: x - 4 * direction, y: y + 5 },
+      position: position,
       keyName: SPELLS.BLINK,
       frame: 0,
-      sandbox,
+      character,
       animation: {
         main: SPELLS_ANIMATION.BLINK.MAIN,
       },
@@ -61,16 +64,15 @@ export class SpellFactory {
     return blink;
   }
 
-  public createWind(x: number, y: number, direction: number): Wind {
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 31;
+  public createWind(character: Character): Wind {
+    const position = this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
 
     const wind = new Wind({
       scene: this.scene,
-      position: { x: x + offsetX, y: y },
+      position: position,
       keyName: SPELLS.WIND,
       frame: 0,
-      sandbox,
       animation: {
         main: SPELLS_ANIMATION.WIND.MAIN,
         destroy: SPELLS_ANIMATION.WIND.DESTROY,
@@ -84,12 +86,17 @@ export class SpellFactory {
     return wind;
   }
 
-  public createShadowBolt(x: number, y: number, direction: number): ShadowBolt {
+  public createShadowBolt(character: Character): ShadowBolt {
+    const position = this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
+
     const shadowBolt = new ShadowBolt({
       scene: this.scene,
-      position: { x: x, y: y },
+      position: position,
       keyName: SPELLS.SHADOW_BOLT,
       frame: 0,
+      spellPower: spellPower,
       animation: {
         main: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,
         destroy: SPELLS_ANIMATION.SHADOW_BOLT.DESTROY,
@@ -106,5 +113,15 @@ export class SpellFactory {
 
   public getSpells(): Phaser.Physics.Arcade.Group {
     return this.spellGroup;
+  }
+
+  private getSpellSpawnPosition(character: Character): { x: number; y: number } {
+    const { x, y } = character.getPosition();
+    const flip = character.getFacingRight() ? 1 : -1;
+
+    const handOffsetX = 40 * flip;
+    const handOffsetY = character.height / 8;
+
+    return { x: x + handOffsetX, y: y + handOffsetY };
   }
 }

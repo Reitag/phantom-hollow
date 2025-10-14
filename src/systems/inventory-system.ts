@@ -4,18 +4,45 @@ import { InventorySlot, InventoryItem } from '@/utils/types';
 import { UiSystem } from './ui-system';
 
 export class InventorySystem {
-  private slots: (InventorySlot | null)[] = [null, null, null, null];
+  private readonly max = 4;
+
+  private slots: (InventorySlot | null)[] = [];
   private ui: UiSystem;
 
   constructor() {
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+
+    this.slots = Array(this.max).fill(null);
+  }
+
+  public canAdd(item: InventoryItem, quantity: number = 1): boolean {
+    let remaining = quantity;
+
+    for (const slot of this.slots) {
+      if (!slot) continue;
+      if (slot.item.id !== item.id) continue;
+
+      const freeInStack = slot.item.maxStack - slot.quantity;
+      if (freeInStack > 0) {
+        remaining -= Math.min(freeInStack, remaining);
+        if (remaining <= 0) return true;
+      }
+    }
+
+    if (remaining > 0) {
+      const emptySlots = this.slots.filter((s) => s === null).length;
+      const capacityFromEmpty = emptySlots * item.maxStack;
+      return remaining <= capacityFromEmpty;
+    }
+
+    return true;
   }
 
   public getItems(): (InventorySlot | null)[] {
     return [...this.slots];
   }
 
-  public addItem(item: InventoryItem, quantity: number = 1): boolean {
+  public addItem(item: InventoryItem, quantity: number = 1): void {
     for (const slot of this.slots) {
       if (slot && slot.item.id === item.id) {
         const availableSpace = item.maxStack - slot.quantity;
@@ -27,7 +54,7 @@ export class InventorySystem {
 
           if (quantity <= 0) {
             this.updateUI();
-            return true;
+            return;
           }
         }
       }
@@ -41,12 +68,10 @@ export class InventorySystem {
 
         if (quantity <= 0) {
           this.updateUI();
-          return true;
+          return;
         }
       }
     }
-
-    return false;
   }
 
   public removeItem(index: number, quantity: number = 1): void {

@@ -30,7 +30,12 @@ export class Zombie extends Character {
     this.stateMachine.addState(new Attack(this));
     this.stateMachine.addState(new Death(this, CHARACTERS.ZOMBIE, 25));
 
-    this.arcadeBody.setSize(25, 48);
+    const spriteHeight = this.height;
+    const bodyHeight = 30;
+    const bodyWidth = 25;
+
+    this.arcadeBody.setSize(bodyWidth, bodyHeight);
+    this.arcadeBody.setOffset((spriteHeight - bodyWidth) / 2, spriteHeight - bodyHeight);
   }
 
   update(delta: number): void {

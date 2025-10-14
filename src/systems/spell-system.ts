@@ -1,3 +1,4 @@
+import { Character } from '@/base/objects/character';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { SpellFactory } from '@/factories/spell-factory';
@@ -19,28 +20,22 @@ export class SpellSystem {
     return !this.cooldowns.isOnCooldown(spellKey) && !this.cooldowns.isOnCooldown(GLOBAL.NAME);
   }
 
-  public castFireball(): void {
-    const { x, y, direction } = this.sandbox.getPlayerPosition();
-
-    const fireball = this.spellFactory.createFireball(x, y, direction);
+  public castFireball(character: Character): void {
+    const fireball = this.spellFactory.createFireball(character);
 
     fireball.cast();
     this.sandbox.startGlobalCooldown();
   }
 
-  public castBlink(): void {
-    const { x, y, direction } = this.sandbox.getPlayerPosition();
-
-    const blink = this.spellFactory.createBlink(x, y, direction);
+  public castBlink(character: Character): void {
+    const blink = this.spellFactory.createBlink(character);
 
     blink.cast();
     this.sandbox.startCooldown(BLINK.NAME, BLINK.DURATION);
   }
 
-  public castWind(): void {
-    const { x, y, direction } = this.sandbox.getPlayerPosition();
-
-    const wind = this.spellFactory.createWind(x, y, direction);
+  public castWind(character: Character): void {
+    const wind = this.spellFactory.createWind(character);
 
     wind.cast();
     this.sandbox.startCooldown(WIND.NAME, WIND.DURATION);

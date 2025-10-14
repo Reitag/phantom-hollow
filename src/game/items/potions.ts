@@ -1,6 +1,6 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { UI } from '@/constants/asset-keys';
-import { PROTECTION, UNDYING } from '@/constants/modifier-stats';
+import { PROTECTION, SPELL_POWER, UNDYING } from '@/constants/modifier-stats';
 import { InventoryItem } from '@/utils/types';
 
 export const healthPotion = (): InventoryItem => ({
@@ -35,6 +35,29 @@ export const protectPotion = (): InventoryItem => ({
     } else {
       const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
       sandbox.setText('Protection buff is already active');
+      return false;
+    }
+  },
+});
+
+export const spellPotion = (): InventoryItem => ({
+  id: 'spell-potion',
+  name: 'Spell Potion',
+  description: 'Increase spell power for 15 seconds',
+  iconKey: UI.SPELL_POTION_ICON,
+  maxStack: 5,
+  use: () => {
+    const player = ServiceLocator.resolve(ServiceKeys.player);
+    const modifier = player.getModifier();
+
+    if (!modifier.isModifierExist(SPELL_POWER.id)) {
+      modifier.addModifier(SPELL_POWER.id);
+      modifier.startModifier(SPELL_POWER.id, player);
+
+      return true;
+    } else {
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+      sandbox.setText('Spell power buff is already active');
       return false;
     }
   },
