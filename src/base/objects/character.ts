@@ -121,7 +121,7 @@ export class Character extends ArcadeSprite {
     this.stats.health?.applyDamage(finalDamage);
 
     if (attacker && attacker instanceof Player) {
-      this.stats?.aggro?.increase(70);
+      this.stats?.aggro?.increase(80);
     }
 
     this.onDamaged?.();

@@ -1,6 +1,7 @@
 import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { StateMachine } from '@/systems/state-machine';
 import { Position } from '@/utils/types';
 
 export abstract class Enemy {
@@ -17,6 +18,8 @@ export abstract class Enemy {
         this.removeEnemy(enemy);
         return;
       }
+
+      this.updateAggro(enemy, delta);
       this.updateEnemyState(enemy, delta);
     });
   }
@@ -40,16 +43,36 @@ export abstract class Enemy {
       enemy.flipCharacterToRight(!enemy.getFacingRight());
       return;
     }
-
-    /*const fsm = enemy.getStateMachine();
-    if (y < this.sameYThreshold && fsm.currentStateName !== 'Wait') {
-      fsm.changeState('Wait');
-    }*/
   }
 
   protected abstract updateEnemyState(enemy: Character, delta: number): void;
+  protected abstract chillBehaviour(enemy: Character, fsm: StateMachine): void;
+  protected abstract aggroedBehaviour(enemy: Character, fsm: StateMachine): void;
   protected abstract get engageDistance(): number;
   protected abstract get sameYThreshold(): number;
+
+  protected updateAggro(enemy: Character, delta: number): void {
+    const aggro = enemy.getStats().aggro;
+    if (!aggro) return;
+
+    if (this.player.getDead()) aggro.reset();
+
+    if (aggro.meter > 0) {
+      aggro.decrease(delta);
+    }
+
+    const { x, y } = this.distanceToPlayer(enemy);
+    const inRange = this.canEngage(enemy, x, y);
+    const fsm = enemy.getStateMachine();
+
+    if (!inRange && !aggro.isAggroed) {
+      this.chillBehaviour(enemy, fsm);
+      return;
+    }
+
+    if (inRange) aggro.increase(10);
+    if (aggro.isAggroed) this.aggroedBehaviour(enemy, fsm);
+  }
 
   protected distanceToPlayer(enemy: Character): Position {
     return {

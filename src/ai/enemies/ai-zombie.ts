@@ -2,48 +2,20 @@ import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { DISEASE } from '@/constants/modifier-stats';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 import { Zombie } from '@/entities/characters/enemies/zombie';
+import { StateMachine } from '@/systems/state-machine';
+import { Character } from '@/base/objects/character';
 import { Enemy } from '../../base/ai/enemy';
 
 export class AiZombie extends Enemy {
   protected updateEnemyState(zombie: Zombie, delta: number): void {
     zombie.update(delta);
+    if (this.player.getDead()) return;
 
-    const { x, y } = this.distanceToPlayer(zombie);
     const fsm = zombie.getStateMachine();
     const currentState = fsm.currentStateName;
+    const { x, y } = this.distanceToPlayer(zombie);
 
-    const canEngage = this.canEngage(zombie, x, y);
-
-    if (!canEngage) {
-      if (currentState !== 'Patrol') {
-        fsm.changeState('Patrol');
-      }
-      return;
-    }
-
-    /*if (currentState === 'Wait') {
-      if (x < ZOMBIE_STATS.ATTACK_RANGE) {
-        fsm.changeState(
-          'Attack',
-          this.player,
-          [ZOMBIE_STATS.HIT, ZOMBIE_STATS.FRAME_ON_HIT],
-          this.diseaseTarget
-        );
-        return;
-      }
-      if (y === 0 && x > ZOMBIE_STATS.ATTACK_RANGE) {
-        fsm.changeState('Chase', this.player, ZOMBIE_STATS.CHASE);
-        return;
-      }
-      return;
-    }*/
-
-    if (
-      zombie.anims.isPlaying &&
-      zombie.anims.currentAnim?.key === ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK
-    ) {
-      return;
-    } else if (x < ZOMBIE_STATS.ATTACK_RANGE) {
+    if (x < ZOMBIE_STATS.ATTACK_RANGE && y < this.sameYThreshold) {
       if (currentState !== 'Attack') {
         fsm.changeState(
           'Attack',
@@ -52,11 +24,26 @@ export class AiZombie extends Enemy {
           this.diseaseTarget
         );
       }
-    } else {
-      if (currentState !== 'Chase') {
-        fsm.changeState('Chase', this.player, ZOMBIE_STATS.CHASE);
-      }
     }
+  }
+
+  protected chillBehaviour(enemy: Character, fsm: StateMachine): void {
+    const currentState = fsm.currentStateName;
+    if (currentState !== 'Patrol') fsm.changeState('Patrol');
+  }
+
+  protected aggroedBehaviour(enemy: Character, fsm: StateMachine): void {
+    const currentState = fsm.currentStateName;
+
+    if (
+      enemy.anims.isPlaying &&
+      enemy.anims.currentAnim?.key === ENEMIES_ANIMATION.ZOMBIE.SIMPLE_ATTACK
+    ) {
+      return;
+    }
+    if (currentState === 'Chase') return;
+
+    fsm.changeState('Chase', this.player, ZOMBIE_STATS.CHASE);
   }
 
   protected get engageDistance(): number {

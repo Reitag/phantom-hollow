@@ -4,7 +4,7 @@ export class Aggro {
   private readonly triggerThreshold: number;
   private readonly decayRate: number;
 
-  constructor(max = 100, triggerThreshold = 50, decayRate = 20) {
+  constructor(max = 100, triggerThreshold = 50, decayRate = 15) {
     this.value = 0;
     this.max = max;
     this.triggerThreshold = triggerThreshold;

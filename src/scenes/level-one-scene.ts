@@ -10,7 +10,7 @@ import {
   EVIL_WIZARD_STATS,
 } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
-import { CHARACTERS, ITEMS, TILESETS } from '@/constants/asset-keys';
+import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
 import { AiZombie } from '@/ai/enemies/ai-zombie';
@@ -31,7 +31,6 @@ import { CollisionService } from '@/infrastructure/collision-service';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
-import { isValidTeleportPosition } from '@/utils/helpers';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
@@ -373,6 +372,16 @@ export class LevelOneScene extends Phaser.Scene {
           callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
           type: 'overlap',
         },
+        {
+          entity: skeletons,
+          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          type: 'overlap',
+        },
+        {
+          entity: zombies,
+          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          type: 'overlap',
+        },
       ]);
     }
 
@@ -480,16 +489,13 @@ export class LevelOneScene extends Phaser.Scene {
     });
   }
 
-  private handleSpearHit(_: Phaser.GameObjects.GameObject, tile: Phaser.Tilemaps.Tile): void {
-    if (!this.canPlayerGetDamage && !tile) return;
+  private handleSpearHit(target: Phaser.GameObjects.GameObject, tile: Phaser.Tilemaps.Tile): void {
+    if (!tile) return;
 
-    if (tile.properties.collides) {
-      this.player.takeDamage(SPEAR_HIT);
-      this.canPlayerGetDamage = false;
-
-      this.time.delayedCall(500, () => {
-        this.canPlayerGetDamage = true;
-      });
+    if (target instanceof Character) {
+      if (tile.properties.collides) {
+        target.takeDamage(SPEAR_HIT);
+      }
     }
   }
 }
