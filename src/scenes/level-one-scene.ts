@@ -37,12 +37,31 @@ import { UiScene } from './ui-scene';
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
 
 export class LevelOneScene extends Phaser.Scene {
-  //private readonly playerSpawnPosition = 50;
+  private readonly playerSpawnPosition = 50;
   //private readonly playerSpawnPosition = 1800;
   //private readonly playerSpawnPosition = 11200;
-  private readonly playerSpawnPosition = 6800;
-  private readonly skeletonSpawnPositions = [/*700, 1600, 2500, 4100, 4600, 6500,*/ 8900, 11500];
-  private readonly zombieSpawnPositions = [/*4700, 5000, 5500, 6400, 7700, 8700,*/ 9000, 11600];
+  //private readonly playerSpawnPosition = 6800;
+  private readonly skeletonSpawnPositions = [
+    { x: 540, y: 520 },
+    { x: 1290, y: 520 },
+    { x: 2360, y: 520 },
+    { x: 3380, y: 328 },
+    { x: 3530, y: 456 },
+    { x: 2250, y: 328 },
+    { x: 2590, y: 328 },
+    { x: 6210, y: 488 },
+    { x: 7050, y: 520 },
+  ];
+  private readonly zombieSpawnPositions = [
+    { x: 1650, y: 520 },
+    { x: 2670, y: 488 },
+    { x: 3080, y: 392 },
+    { x: 3060, y: 520 },
+    { x: 3335, y: 520 },
+    { x: 3420, y: 200 },
+    { x: 5760, y: 520 },
+    { x: 7290, y: 520 },
+  ];
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
 
   private readonly coinSpawnPositions = [
@@ -193,6 +212,7 @@ export class LevelOneScene extends Phaser.Scene {
           spellPower: PLAYER_STATS.SPELL_POWER,
         },
         defense: 1,
+        aggro: false,
       },
       facingRight: true,
     }).setDepth(Z_POSITION.PLAYER);
@@ -201,55 +221,67 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private createSkeletonWarriors(): void {
-    const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
-    this.aiSkeletonWarrior = new AiSkeletonWarrior(this.player, collideLayer);
+    this.aiSkeletonWarrior = new AiSkeletonWarrior(this.player);
+
+    let time;
 
     this.skeletonSpawnPositions.forEach((xPos) => {
-      const skeleton = new SkeletonWarrior({
-        scene: this,
-        position: { x: xPos, y: 500 },
-        keyName: CHARACTERS.SKELETON_WARRIOR,
-        frame: 0,
-        facingRight: false,
-        stats: {
-          health: SKELETON_WARRIOR_STATS.HEALTH,
-          speed: SKELETON_WARRIOR_STATS.WALK,
-          damage: {
-            meleeAttack: SKELETON_WARRIOR_STATS.HIT,
-            spellPower: undefined,
-          },
-          defense: undefined,
-        },
-      });
+      time = Phaser.Math.Between(500, 4500);
 
-      skeleton.setDepth(Z_POSITION.ENEMY);
-      this.aiSkeletonWarrior.addEnemy(skeleton);
+      this.time.delayedCall(time, () => {
+        const skeleton = new SkeletonWarrior({
+          scene: this,
+          position: { x: xPos.x, y: xPos.y },
+          keyName: CHARACTERS.SKELETON_WARRIOR,
+          frame: 0,
+          facingRight: false,
+          stats: {
+            health: SKELETON_WARRIOR_STATS.HEALTH,
+            speed: SKELETON_WARRIOR_STATS.WALK,
+            damage: {
+              meleeAttack: SKELETON_WARRIOR_STATS.HIT,
+              spellPower: undefined,
+            },
+            defense: undefined,
+            aggro: true,
+          },
+        });
+
+        skeleton.setDepth(Z_POSITION.ENEMY);
+        this.aiSkeletonWarrior.addEnemy(skeleton);
+      });
     });
   }
   private createZombies(): void {
-    const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
-    this.aiZombie = new AiZombie(this.player, collideLayer);
+    this.aiZombie = new AiZombie(this.player);
+
+    let time;
 
     this.zombieSpawnPositions.forEach((xPos) => {
-      const zombie = new Zombie({
-        scene: this,
-        position: { x: xPos, y: 500 },
-        keyName: CHARACTERS.ZOMBIE,
-        frame: 0,
-        facingRight: false,
-        stats: {
-          health: ZOMBIE_STATS.HEALTH,
-          speed: ZOMBIE_STATS.WALK,
-          damage: {
-            meleeAttack: ZOMBIE_STATS.HIT,
-            spellPower: undefined,
-          },
-          defense: undefined,
-        },
-      });
+      time = Phaser.Math.Between(500, 4500);
 
-      zombie.setDepth(Z_POSITION.ENEMY);
-      this.aiZombie.addEnemy(zombie);
+      this.time.delayedCall(time, () => {
+        const zombie = new Zombie({
+          scene: this,
+          position: { x: xPos.x, y: xPos.y },
+          keyName: CHARACTERS.ZOMBIE,
+          frame: 0,
+          facingRight: false,
+          stats: {
+            health: ZOMBIE_STATS.HEALTH,
+            speed: ZOMBIE_STATS.WALK,
+            damage: {
+              meleeAttack: ZOMBIE_STATS.HIT,
+              spellPower: undefined,
+            },
+            defense: undefined,
+            aggro: true,
+          },
+        });
+
+        zombie.setDepth(Z_POSITION.ENEMY);
+        this.aiZombie.addEnemy(zombie);
+      });
     });
   }
 
@@ -268,6 +300,7 @@ export class LevelOneScene extends Phaser.Scene {
           spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
         },
         defense: undefined,
+        aggro: true,
       },
     }).setDepth(120);
 
@@ -279,8 +312,6 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private registerCollisions(): void {
-    const collideLayers = [];
-
     const platformLayer = this.map.getTileLayer(TILELAYER_NAMES.PLATFORM);
     const spikeLayer = this.map.getTileLayer(TILELAYER_NAMES.SPIKE);
     const groundLayer = this.map.getTileLayer(TILELAYER_NAMES.GROUND);
@@ -296,118 +327,92 @@ export class LevelOneScene extends Phaser.Scene {
 
     // Ground
     if (groundLayer) {
-      collideLayers.push(groundLayer);
-
-      this.physics.add.collider(this.player, groundLayer); // Player
-      this.physics.add.collider(skeletons, groundLayer); // Skeleton warrior
-      this.physics.add.collider(zombies, groundLayer); // Zombie
-      this.physics.add.collider(boss, groundLayer); // Boss
-      this.physics.add.collider(
-        spells,
-        groundLayer,
-        this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Spells
+      collision.registerLayerCollisions(groundLayer, [
+        { entity: this.player },
+        { entity: skeletons },
+        { entity: zombies },
+        { entity: boss },
+        {
+          entity: spells,
+          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+      ]);
     }
 
     // Cave
     if (caveLayer) {
-      collideLayers.push(caveLayer);
-
-      this.physics.add.collider(this.player, caveLayer); // Player
-      this.physics.add.collider(
-        spells,
-        caveLayer,
-        this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Spells
+      collision.registerLayerCollisions(caveLayer, [
+        { entity: this.player },
+        { entity: skeletons },
+        { entity: zombies },
+        {
+          entity: spells,
+          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+      ]);
     }
 
     // Spike
     if (spikeLayer) {
-      collideLayers.push(spikeLayer);
-
-      this.physics.add.collider(this.player, spikeLayer, this.handleSpikeHit, undefined, this);
-      this.physics.add.collider(skeletons, spikeLayer); // Skeleton warrior
-      this.physics.add.collider(zombies, spikeLayer); // Zombie
+      collision.registerLayerCollisions(spikeLayer, [
+        { entity: this.player, callback: this.handleSpikeHit },
+        { entity: skeletons },
+        { entity: zombies },
+        {
+          entity: spells,
+          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+      ]);
     }
 
     // Spear
     if (spearLayer) {
-      this.physics.add.overlap(
-        this.player,
-        spearLayer,
-        this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Player
+      collision.registerLayerCollisions(spearLayer, [
+        {
+          entity: this.player,
+          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          type: 'overlap',
+        },
+      ]);
     }
 
     // Platform
     if (platformLayer) {
-      collideLayers.push(platformLayer);
-
-      this.physics.add.collider(this.player, platformLayer); // Player
-      this.physics.add.collider(
-        spells,
-        platformLayer,
-        this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Spells
+      collision.registerLayerCollisions(platformLayer, [
+        { entity: this.player },
+        { entity: skeletons },
+        { entity: zombies },
+        { entity: boss },
+        {
+          entity: spells,
+          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+      ]);
     }
 
     // Collide
     if (collideLayer) {
-      this.physics.add.collider(
-        skeletons,
-        collideLayer,
-        this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Skeleton warrior
-      this.physics.add.collider(
-        zombies,
-        collideLayer,
-        this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      ); // Zombies
+      [skeletons, zombies].forEach((entity) => {
+        this.physics.add.collider(
+          entity,
+          collideLayer,
+          this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          undefined,
+          this
+        );
+      });
     }
 
     // Spells
-    this.physics.add.overlap(
-      spells,
-      this.player,
-      this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-      undefined,
-      this
-    ); // Player
-    this.physics.add.overlap(
-      spells,
-      skeletons,
-      this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-      undefined,
-      this
-    ); // Skeleton warrior
-    this.physics.add.overlap(
-      spells,
-      zombies,
-      this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-      undefined,
-      this
-    ); // Zombies
-    this.physics.add.overlap(
-      spells,
-      boss,
-      this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-      undefined,
-      this
-    ); // Boss
-
-    collision.registerCollideLayers(collideLayers);
+    [this.player, skeletons, zombies, boss].forEach((entity) => {
+      this.physics.add.overlap(
+        spells,
+        entity,
+        this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      );
+    });
 
     // For better collisions
     this.physics.world.setFPS(120);
@@ -459,7 +464,7 @@ export class LevelOneScene extends Phaser.Scene {
     spell.applyEffect(victim);
 
     if (spell.causeDamage() > 0) {
-      victim.takeDamage(spell.causeDamage());
+      victim.takeDamage(spell.causeDamage(), spell.getCaster());
       spell.destroySpell();
     }
   }

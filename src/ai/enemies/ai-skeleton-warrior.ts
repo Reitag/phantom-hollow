@@ -7,20 +7,41 @@ export class AiSkeletonWarrior extends Enemy {
   protected updateEnemyState(skeleton: SkeletonWarrior, delta: number): void {
     skeleton.update(delta);
 
+    const aggro = skeleton.getStats().aggro;
+    if (aggro?.meter && aggro.meter > 0) {
+      aggro.decrease(delta);
+    }
+    //console.log(`Aggro: ${aggro?.meter.toFixed(1)}`);
+
     const { x, y } = this.distanceToPlayer(skeleton);
     const fsm = skeleton.getStateMachine();
     const currentState = fsm.currentStateName;
 
-    const canEngage = this.canEngage(skeleton, x, y);
+    /*const canEngage = this.canEngage(skeleton, x, y);
 
-    if (!canEngage) {
+    if (!canEngage && !aggro?.isAggroed) {
       if (currentState !== 'Patrol') {
         fsm.changeState('Patrol');
       }
       return;
-    }
+    } else if (canEngage) {
+      aggro?.increase(100);
+    } else if (aggro?.isAggroed) {
+      if (currentState !== 'Chase') {
+        fsm.changeState('Chase', this.player, SKELETON_WARRIOR_STATS.CHASE);
+      }
+    }*/
 
-    if (currentState === 'Wait') {
+    const inRange = this.canEngage(skeleton, x, y);
+    const aggroed = aggro?.isAggroed ?? false;
+
+    if (!inRange && !aggroed) return fsm.changeState('Patrol');
+
+    if (inRange) aggro?.increase(1);
+    if (aggroed && currentState !== 'Chase')
+      fsm.changeState('Chase', this.player, SKELETON_WARRIOR_STATS.CHASE);
+
+    /*if (currentState === 'Wait') {
       if (x < SKELETON_WARRIOR_STATS.ATTACK_RANGE) {
         fsm.changeState('Attack', this.player, [
           SKELETON_WARRIOR_STATS.HIT,
@@ -33,7 +54,7 @@ export class AiSkeletonWarrior extends Enemy {
         return;
       }
       return;
-    }
+    }*/
 
     if (
       skeleton.anims.isPlaying &&
@@ -52,6 +73,7 @@ export class AiSkeletonWarrior extends Enemy {
         fsm.changeState('Chase', this.player, SKELETON_WARRIOR_STATS.CHASE);
       }
     }
+    console.log(`Aggro: ${aggro?.meter.toFixed(1)}`);
   }
 
   protected get engageDistance(): number {

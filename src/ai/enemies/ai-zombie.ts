@@ -21,7 +21,7 @@ export class AiZombie extends Enemy {
       return;
     }
 
-    if (currentState === 'Wait') {
+    /*if (currentState === 'Wait') {
       if (x < ZOMBIE_STATS.ATTACK_RANGE) {
         fsm.changeState(
           'Attack',
@@ -36,7 +36,7 @@ export class AiZombie extends Enemy {
         return;
       }
       return;
-    }
+    }*/
 
     if (
       zombie.anims.isPlaying &&

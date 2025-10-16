@@ -1,4 +1,3 @@
-import { Character } from '@/base/objects/character';
 import { Spell, SpellConfig } from '@/base/objects/spell';
 import { BLINK_STATS } from '@/constants/object-stats';
 import { CollisionService } from '@/infrastructure/collision-service';
@@ -6,20 +5,10 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { playAnimation } from '@/utils/helpers';
 
 export class Blink extends Spell {
-  private character: Character;
   private collisions: CollisionService;
 
-  constructor({
-    scene,
-    position,
-    keyName,
-    frame,
-    character,
-    animation,
-    direction,
-  }: SpellConfig & { character: Character }) {
-    super({ scene, position, keyName, frame, animation, direction });
-    this.character = character;
+  constructor({ scene, position, keyName, frame, caster, animation, direction }: SpellConfig) {
+    super({ scene, position, keyName, frame, caster, animation, direction });
     this.collisions = ServiceLocator.resolve(ServiceKeys.collision);
   }
 
@@ -40,29 +29,29 @@ export class Blink extends Spell {
   }
 
   private hideCaster(): void {
-    const arcadeBody = this.character.getArcadeBody();
+    const arcadeBody = this.caster.getArcadeBody();
     arcadeBody.enable = false;
-    this.character.setVisible(false);
+    this.caster.setVisible(false);
   }
 
   private showCaster(): void {
-    const arcadeBody = this.character.getArcadeBody();
+    const arcadeBody = this.caster.getArcadeBody();
     arcadeBody.enable = true;
-    this.character.setVisible(true);
+    this.caster.setVisible(true);
   }
 
   private teleportTo(distance: number, direction: number): void {
     const step = 5;
 
-    let targetX = this.character.x + distance * direction;
+    let targetX = this.caster.x + distance * direction;
     let backoff = 0;
 
-    while (targetX !== this.character.x) {
-      if (this.collisions.isCollidingWithTile(targetX, this.character.y)) {
+    while (targetX !== this.caster.x) {
+      if (this.collisions.isCollidingWithTile(targetX, this.caster.y)) {
         backoff += step;
-        targetX = this.character.x + (distance - backoff) * direction;
+        targetX = this.caster.x + (distance - backoff) * direction;
       } else {
-        this.character.x = targetX;
+        this.caster.x = targetX;
         return;
       }
     }

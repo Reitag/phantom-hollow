@@ -1,15 +1,14 @@
 import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
 
 export abstract class Enemy {
   protected enemies: Character[] = [];
   protected player: Player;
-  protected collisionLayer: Phaser.Tilemaps.TilemapLayer | null;
 
-  constructor(player: Player, collisionLayer: Phaser.Tilemaps.TilemapLayer | null) {
+  constructor(player: Player) {
     this.player = player;
-    this.collisionLayer = collisionLayer;
   }
 
   public update(delta: number): void {
@@ -42,10 +41,10 @@ export abstract class Enemy {
       return;
     }
 
-    const fsm = enemy.getStateMachine();
+    /*const fsm = enemy.getStateMachine();
     if (y < this.sameYThreshold && fsm.currentStateName !== 'Wait') {
       fsm.changeState('Wait');
-    }
+    }*/
   }
 
   protected abstract updateEnemyState(enemy: Character, delta: number): void;
@@ -62,13 +61,13 @@ export abstract class Enemy {
   protected canEngage(enemy: Character, dx: number, dy: number): boolean {
     if (this.player.getDead()) return false;
     if (dx > this.engageDistance) return false;
-    if (dy > this.sameYThreshold) return false;
+    if (dy > 0) return false;
     if (!this.hasLineOfSight(enemy, this.player)) return false;
     return true;
   }
 
   private hasLineOfSight(from: Phaser.GameObjects.Sprite, to: Phaser.GameObjects.Sprite): boolean {
-    if (!this.collisionLayer) return true;
+    const collision = ServiceLocator.resolve(ServiceKeys.collision);
 
     const fromY = from.getCenter().y;
     const toY = to.getCenter().y;
@@ -77,8 +76,7 @@ export abstract class Enemy {
     const points = ray.getPoints(10);
 
     for (const point of points) {
-      const tile = this.collisionLayer.getTileAtWorldXY(point.x, point.y);
-      if (tile && tile.collides) {
+      if (collision?.isCollidingWithTile(point.x, point.y)) {
         return false;
       }
     }

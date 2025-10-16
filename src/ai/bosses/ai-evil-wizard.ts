@@ -26,11 +26,12 @@ export class AiEvilWizard extends Boss {
         scene: boss.scene,
         position: { x: boss.x, y: boss.y },
         keyName: DREAD_AURA_STATS.KEY_NAME,
+        caster: boss,
         damage: DREAD_AURA_STATS.DAMAGE,
       },
       DREAD_AURA_STATS.RANGE
     );
-    this.aiMutatedBat = new AiMutatedBat(this.player, null);
+    this.aiMutatedBat = new AiMutatedBat(this.player);
     this.spellCooldown = new SpellCooldowns(this.boss.scene);
     this.castShadowBoltBind = this.castShadowBolt.bind(this);
   }
@@ -87,6 +88,7 @@ export class AiEvilWizard extends Boss {
           spellPower: undefined,
         },
         defense: undefined,
+        aggro: false,
       },
     });
 

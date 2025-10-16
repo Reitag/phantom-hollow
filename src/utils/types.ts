@@ -4,6 +4,7 @@ import { Damage } from '@/components/stats/damage';
 import { Speed } from '@/components/stats/speed';
 import { TYPE } from '@/constants/modifier-stats';
 import { Character } from '@/base/objects/character';
+import { Aggro } from '@/components/stats/aggro';
 
 export type Position = {
   x: number;
@@ -50,6 +51,7 @@ export interface Stats {
   speed: Speed | null;
   damage: Record<string, Damage | null>;
   defense: Defense | null;
+  aggro: Aggro | null;
 }
 
 // Inventory Slots

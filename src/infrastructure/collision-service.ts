@@ -6,8 +6,30 @@ export class CollisionService {
     this.scene = scene;
   }
 
-  public registerCollideLayers(layers: Phaser.Tilemaps.TilemapLayer[]): void {
-    this.collideLayers = layers;
+  public registerLayerCollisions(
+    layer: Phaser.Tilemaps.TilemapLayer,
+    collisions: {
+      entity: Phaser.Types.Physics.Arcade.ArcadeColliderType;
+      callback?: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback;
+      type?: 'collide' | 'overlap';
+    }[]
+  ): void {
+    if (!this.collideLayers.includes(layer)) {
+      this.collideLayers.push(layer);
+    }
+
+    collisions.forEach(({ entity, callback, type = 'collide' }) => {
+      const physicsFn =
+        type === 'overlap'
+          ? this.scene.physics.add.overlap.bind(this.scene.physics.add)
+          : this.scene.physics.add.collider.bind(this.scene.physics.add);
+
+      if (callback) {
+        physicsFn(entity, layer, callback, undefined, this.scene);
+      } else {
+        physicsFn(entity, layer);
+      }
+    });
   }
 
   public getCollideLayers(): Phaser.Tilemaps.TilemapLayer[] {

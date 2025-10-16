@@ -6,6 +6,7 @@ import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
 
 export interface SpellConfig extends ArcadeSpriteConfig {
+  caster: Character;
   spellPower?: SpellPower;
   animation?: SpellAnimationConfig;
   damage?: number;
@@ -14,6 +15,7 @@ export interface SpellConfig extends ArcadeSpriteConfig {
 }
 
 export abstract class Spell extends ArcadeSprite {
+  protected caster: Character;
   protected spellPower: SpellPower | null = null;
   protected animation: SpellAnimationConfig | null = null;
   protected damage: number | null = null;
@@ -27,6 +29,7 @@ export abstract class Spell extends ArcadeSprite {
     position,
     keyName,
     frame,
+    caster,
     spellPower,
     animation,
     damage,
@@ -34,6 +37,8 @@ export abstract class Spell extends ArcadeSprite {
     direction,
   }: SpellConfig) {
     super({ scene, position, keyName, frame });
+
+    this.caster = caster;
 
     this.spellPower = spellPower || null;
     this.damage = damage || null;
@@ -72,6 +77,10 @@ export abstract class Spell extends ArcadeSprite {
     if (!this.damage) return 0;
     if (!this.spellPower) return this.damage;
     return this.damage * this.spellPower.multiplier;
+  }
+
+  public getCaster(): Character {
+    return this.caster;
   }
 
   protected playMainAnimation(): void {

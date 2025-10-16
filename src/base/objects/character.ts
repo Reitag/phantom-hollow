@@ -6,6 +6,8 @@ import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { AnimationConfig, ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
+import { Player } from '@/entities/characters/player/player';
+import { Aggro } from '@/components/stats/aggro';
 
 export interface CharacterConfig extends ArcadeSpriteConfig {
   facingRight: boolean;
@@ -17,6 +19,7 @@ export interface CharacterConfig extends ArcadeSpriteConfig {
       spellPower: number | undefined;
     };
     defense: number | undefined;
+    aggro: boolean;
   };
 }
 
@@ -48,6 +51,7 @@ export class Character extends ArcadeSprite {
           stats.damage.spellPower !== undefined ? new SpellPower(stats.damage.spellPower) : null,
       },
       defense: stats.defense !== undefined ? new Defense(stats.defense) : null,
+      aggro: stats.aggro !== false ? new Aggro() : null,
     };
 
     if (!this.facingRight) {
@@ -110,11 +114,15 @@ export class Character extends ArcadeSprite {
     this.stateMachine.changeState(state);
   }
 
-  public takeDamage(amount: number): void {
+  public takeDamage(amount: number, attacker?: Character): void {
     if (this.isDead) return;
 
     const finalDamage = amount * (this.stats.defense?.multiplier ?? 1);
     this.stats.health?.applyDamage(finalDamage);
+
+    if (attacker && attacker instanceof Player) {
+      this.stats?.aggro?.increase(70);
+    }
 
     this.onDamaged?.();
     this.playHitEffect();

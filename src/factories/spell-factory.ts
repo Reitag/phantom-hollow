@@ -28,6 +28,7 @@ export class SpellFactory {
       position: position,
       keyName: SPELLS.FIRE_BALL,
       frame: 0,
+      caster: character,
       spellPower: spellPower,
       animation: {
         main: SPELLS_ANIMATION.FIRE_BALL.MAIN,
@@ -52,7 +53,7 @@ export class SpellFactory {
       position: position,
       keyName: SPELLS.BLINK,
       frame: 0,
-      character,
+      caster: character,
       animation: {
         main: SPELLS_ANIMATION.BLINK.MAIN,
       },
@@ -73,6 +74,7 @@ export class SpellFactory {
       position: position,
       keyName: SPELLS.WIND,
       frame: 0,
+      caster: character,
       animation: {
         main: SPELLS_ANIMATION.WIND.MAIN,
         destroy: SPELLS_ANIMATION.WIND.DESTROY,
@@ -96,6 +98,7 @@ export class SpellFactory {
       position: position,
       keyName: SPELLS.SHADOW_BOLT,
       frame: 0,
+      caster: character,
       spellPower: spellPower,
       animation: {
         main: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,

@@ -3,11 +3,21 @@ import { Character } from '@/base/objects/character';
 
 export class Patrol extends CharacterState {
   private isWaiting = false;
+  private posX!: number;
+  private leftX!: number;
+  private rightX!: number;
+
   constructor(character: Character) {
     super('Patrol', character);
   }
 
-  public onEnter(...args: unknown[]): void {}
+  public onEnter(...args: unknown[]): void {
+    /*const walkBound = args.find((elem): elem is number => typeof elem === 'number');
+    if (!walkBound) throw new Error('Walk bound value must be a number');
+
+    this.posX = this.character.x;
+    this.leftX = this.character.x - walkBound;*/
+  }
 
   public onUpdate(delta: number): void {
     if (this.isWaiting) return;

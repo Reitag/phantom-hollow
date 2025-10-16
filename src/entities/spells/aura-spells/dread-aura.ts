@@ -9,11 +9,12 @@ export class DreadAura extends Spell {
   private range: number;
   private ui: UiSystem;
 
-  constructor({ scene, position, keyName, damage }: SpellConfig, range: number) {
+  constructor({ scene, position, keyName, caster, damage }: SpellConfig, range: number) {
     super({
       scene,
       position,
       keyName,
+      caster,
       damage,
     });
     const { x, y } = position;
