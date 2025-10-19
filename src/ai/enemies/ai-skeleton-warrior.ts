@@ -26,7 +26,7 @@ export class AiSkeletonWarrior extends Enemy {
 
   protected chillBehaviour(enemy: Character, fsm: StateMachine): void {
     const currentState = fsm.currentStateName;
-    if (currentState !== 'Patrol') fsm.changeState('Patrol');
+    if (currentState !== 'Patrol') fsm.changeState('Patrol', SKELETON_WARRIOR_STATS.WALK_BOUND);
   }
 
   protected aggroedBehaviour(enemy: Character, fsm: StateMachine): void {

@@ -36,6 +36,22 @@ export class CollisionService {
     return this.collideLayers;
   }
 
+  public isEntityColliding(entity: Phaser.GameObjects.Sprite): boolean {
+    const bounds = entity.getBounds();
+    const samplePoints = [
+      { x: bounds.left, y: bounds.bottom - 1 },
+      { x: bounds.right, y: bounds.bottom - 1 },
+      { x: bounds.centerX, y: bounds.bottom - 1 },
+    ];
+
+    for (const point of samplePoints) {
+      if (this.isCollidingWithTile(point.x, point.y)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public isCollidingWithTile(x: number, y: number): boolean {
     for (const layer of this.collideLayers) {
       const tile = layer.getTileAtWorldXY(x, y);

@@ -1,5 +1,7 @@
-import { MUTATED_BAT_STATS, SKELETON_WARRIOR_STATS } from '@/constants/object-stats';
+import { MUTATED_BAT_STATS } from '@/constants/object-stats';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
+import { Character } from '@/base/objects/character';
+import { StateMachine } from '@/systems/state-machine';
 import { Enemy } from '../../base/ai/enemy';
 
 export class AiMutatedBat extends Enemy {
@@ -49,11 +51,15 @@ export class AiMutatedBat extends Enemy {
     }
   }
 
+  // Unused abstract functions
+  protected chillBehaviour(enemy: Character, fsm: StateMachine): void {}
+  protected aggroedBehaviour(enemy: Character, fsm: StateMachine): void {}
+
   protected get engageDistance(): number {
-    return SKELETON_WARRIOR_STATS.ENGAGE_DISTANCE;
+    return 0;
   }
 
   protected get sameYThreshold(): number {
-    return SKELETON_WARRIOR_STATS.SAME_Y_THRESHOLD;
+    return 0;
   }
 }

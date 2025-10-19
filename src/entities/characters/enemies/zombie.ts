@@ -6,15 +6,10 @@ import { Attack } from '@/components/states/enemy-states/attack';
 import { Death } from '@/components/states/share/death';
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { CHARACTERS } from '@/constants/asset-keys';
-import { ZOMBIE_STATS } from '@/constants/object-stats';
 
 export class Zombie extends Character {
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
-
-    this.walkBound = ZOMBIE_STATS.WALK_BOUND;
-    this.patrolRightX = this.x + this.walkBound;
-    this.patrolLeftX = this.x - this.walkBound;
 
     this.animations = {
       idle: ENEMIES_ANIMATION.ZOMBIE.IDLE,
@@ -32,7 +27,7 @@ export class Zombie extends Character {
 
     const spriteHeight = this.height;
     const bodyHeight = 30;
-    const bodyWidth = 25;
+    const bodyWidth = 15;
 
     this.arcadeBody.setSize(bodyWidth, bodyHeight);
     this.arcadeBody.setOffset((spriteHeight - bodyWidth) / 2, spriteHeight - bodyHeight);

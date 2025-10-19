@@ -29,9 +29,6 @@ export class Character extends ArcadeSprite {
   protected stateMachine: StateMachine;
   protected animations!: AnimationConfig;
   protected modifier: ModifierSystem;
-  protected walkBound!: number;
-  protected patrolRightX!: number;
-  protected patrolLeftX!: number;
 
   protected stats: Stats;
 
@@ -67,14 +64,6 @@ export class Character extends ArcadeSprite {
 
   public getModifier(): ModifierSystem {
     return this.modifier;
-  }
-
-  public getPatrolLeftX(): number {
-    return this.patrolLeftX;
-  }
-
-  public getPatrolRightX(): number {
-    return this.patrolRightX;
   }
 
   public getStateMachine(): StateMachine {

@@ -45,11 +45,12 @@ export class Player extends Character {
     this.initStateMachine();
 
     const spriteHeight = this.height;
+    const spriteWidth = this.width;
     const bodyHeight = 30;
-    const bodyWidth = 20;
+    const bodyWidth = 15;
 
     this.arcadeBody.setSize(bodyWidth, bodyHeight);
-    this.arcadeBody.setOffset((spriteHeight - bodyWidth) / 2, spriteHeight - bodyHeight);
+    this.arcadeBody.setOffset((spriteWidth - bodyWidth) / 2, spriteHeight - bodyHeight);
   }
 
   private initKeyboard(): void {

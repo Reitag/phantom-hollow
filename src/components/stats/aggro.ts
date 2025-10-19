@@ -19,15 +19,15 @@ export class Aggro {
     return this.value >= this.triggerThreshold;
   }
 
-  increase(amount: number): void {
+  public increase(amount: number): void {
     this.value = Math.min(this.value + amount, this.max);
   }
 
-  decrease(delta: number): void {
+  public decrease(delta: number): void {
     this.value = Math.max(this.value - this.decayRate * (delta / 1000), 0);
   }
 
-  reset(): void {
+  public reset(): void {
     this.value = 0;
   }
 }

@@ -18,6 +18,13 @@ export type Size = {
 
 export type Rectangle = Position & Size;
 
+// Border
+export type Border = {
+  left: number;
+  center: number;
+  right: number;
+};
+
 // Physics Arcade Sprite
 export interface ArcadeSpriteConfig {
   scene: Phaser.Scene;

@@ -36,7 +36,7 @@ import { UiScene } from './ui-scene';
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
 
 export class LevelOneScene extends Phaser.Scene {
-  private readonly playerSpawnPosition = 50;
+  private readonly playerSpawnPosition = { x: 50, y: 450 };
   //private readonly playerSpawnPosition = 1800;
   //private readonly playerSpawnPosition = 11200;
   //private readonly playerSpawnPosition = 6800;
@@ -200,7 +200,7 @@ export class LevelOneScene extends Phaser.Scene {
   private createPlayer(): void {
     this.player = new Player({
       scene: this,
-      position: { x: this.playerSpawnPosition, y: 450 },
+      position: this.playerSpawnPosition,
       keyName: CHARACTERS.PLAYER,
       frame: 0,
       stats: {
@@ -328,8 +328,14 @@ export class LevelOneScene extends Phaser.Scene {
     if (groundLayer) {
       collision.registerLayerCollisions(groundLayer, [
         { entity: this.player },
-        { entity: skeletons },
-        { entity: zombies },
+        {
+          entity: skeletons,
+          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+        {
+          entity: zombies,
+          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
         { entity: boss },
         {
           entity: spells,
@@ -342,8 +348,14 @@ export class LevelOneScene extends Phaser.Scene {
     if (caveLayer) {
       collision.registerLayerCollisions(caveLayer, [
         { entity: this.player },
-        { entity: skeletons },
-        { entity: zombies },
+        {
+          entity: skeletons,
+          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+        {
+          entity: zombies,
+          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
         {
           entity: spells,
           callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
@@ -389,27 +401,20 @@ export class LevelOneScene extends Phaser.Scene {
     if (platformLayer) {
       collision.registerLayerCollisions(platformLayer, [
         { entity: this.player },
-        { entity: skeletons },
-        { entity: zombies },
+        {
+          entity: skeletons,
+          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
+        {
+          entity: zombies,
+          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        },
         { entity: boss },
         {
           entity: spells,
           callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         },
       ]);
-    }
-
-    // Collide
-    if (collideLayer) {
-      [skeletons, zombies].forEach((entity) => {
-        this.physics.add.collider(
-          entity,
-          collideLayer,
-          this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-          undefined,
-          this
-        );
-      });
     }
 
     // Spells
@@ -441,12 +446,11 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private handleEnemyCollision(enemy: Phaser.GameObjects.GameObject): void {
-    if (enemy instanceof Character) {
-      if (this.aiSkeletonWarrior.getEnemies().includes(enemy)) {
-        this.aiSkeletonWarrior.handleCollision(enemy);
-      } else if (this.aiZombie.getEnemies().includes(enemy)) {
-        this.aiZombie.handleCollision(enemy);
-      }
+    if (!(enemy instanceof Character)) return;
+
+    const collision = ServiceLocator.resolve(ServiceKeys.collision);
+    if (collision.isEntityColliding(enemy)) {
+      enemy.flipCharacterToRight(!enemy.getFacingRight());
     }
   }
 

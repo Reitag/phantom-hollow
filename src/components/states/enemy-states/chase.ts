@@ -1,13 +1,18 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
 import { Player } from '@/entities/characters/player/player';
+import { CollisionService } from '@/infrastructure/collision-service';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Chase extends CharacterState {
   private player: Player | null = null;
+  private collision: CollisionService;
   private chase: number = 0;
 
   constructor(character: Character) {
     super('Chase', character);
+
+    this.collision = ServiceLocator.resolve(ServiceKeys.collision);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -27,6 +32,9 @@ export class Chase extends CharacterState {
 
     this.characterSpeed?.update(delta);
 
+    if (this.ifCollision()) return;
+    if (this.sameY()) return;
+
     const direction = this.character.x > this.player.x ? -1 : 1;
     const animKey = direction === 1 ? this.animations.moveRight : this.animations.moveLeft;
 
@@ -37,5 +45,33 @@ export class Chase extends CharacterState {
 
   public onExit(): void {
     this.characterSpeed?.removeModifier('Chase-player');
+  }
+
+  private ifCollision(): boolean {
+    if (!this.player) return false;
+    const direction = this.character.x > this.player.x ? -1 : 1;
+
+    if (
+      this.collision.isEntityColliding(this.character) &&
+      Math.abs(this.player.y - this.character.y) > 2
+    ) {
+      this.character.setFlipX(direction < 0);
+      this.playAnimation(this.animations.idle, true);
+      return true;
+    }
+    return false;
+  }
+
+  private sameY(): boolean {
+    if (!this.player) return false;
+    const direction = this.character.x > this.player.x ? -1 : 1;
+
+    if (this.character.y !== this.player.y && Math.abs(this.character.x - this.player.x) < 5) {
+      this.character.setFlipX(direction < 0);
+      this.setToZeroVelocityX();
+      this.playAnimation(this.animations.idle, true);
+      return true;
+    }
+    return false;
   }
 }
