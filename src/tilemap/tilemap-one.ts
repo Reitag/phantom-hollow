@@ -9,7 +9,6 @@ export const TILESET_NAMES = {
   GROUND: 'ground-tile',
   CLIFF: 'cliff-tile',
   GRASS: 'grass-tile',
-  COLLIDE: 'collide-tile',
   DIRT: 'dirt-tile',
 } as const;
 
@@ -22,7 +21,6 @@ export const TILELAYER_NAMES = {
   GROUND: 'ground-layer',
   SPIKE: 'spike-layer',
   PLATFORM: 'platform-layer',
-  COLLIDE: 'collide-layer',
 } as const;
 
 export const OBJECTLAYER_NAMES = {
@@ -41,17 +39,9 @@ export function createTilemapOne(scene: Phaser.Scene) {
     { name: TILESET_NAMES.GROUND, key: TILESETS.GROUND },
     { name: TILESET_NAMES.CLIFF, key: TILESETS.CLIFF },
     { name: TILESET_NAMES.GRASS, key: TILESETS.GRASS_2 },
-    { name: TILESET_NAMES.COLLIDE, key: TILESETS.COLLIDE },
     { name: TILESET_NAMES.DIRT, key: TILESETS.DIRT },
   ];
   const tileLayersConfig = [
-    {
-      name: TILELAYER_NAMES.COLLIDE,
-      tilesets: [TILESET_NAMES.COLLIDE],
-      x: 0,
-      y: 0,
-      collide: true,
-    },
     {
       name: TILELAYER_NAMES.SPEAR,
       tilesets: [TILESET_NAMES.ANCIENT],
@@ -187,7 +177,6 @@ export function createTilemapOne(scene: Phaser.Scene) {
     [OBJECTLAYER_NAMES.ROCK]: Z_POSITION.ROCK,
     [TILELAYER_NAMES.BUSH]: Z_POSITION.BUSH,
     [TILELAYER_NAMES.SPEAR]: Z_POSITION.SPEAR,
-    [TILELAYER_NAMES.COLLIDE]: Z_POSITION.COLLIDE,
     [TILELAYER_NAMES.PLATFORM_BG]: Z_POSITION.PLATFORM_BG,
     [TILELAYER_NAMES.CAVE_BACKGROUND]: Z_POSITION.CAVE_BACKGROUND,
     [TILELAYER_NAMES.CAVE]: Z_POSITION.CAVE,

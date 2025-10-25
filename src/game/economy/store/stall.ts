@@ -7,16 +7,19 @@ import { UiScene } from '@/scenes/ui-scene';
 export class Stall {
   private uiScene: Phaser.Scene;
   private store: Store;
-  private storeZone: Phaser.GameObjects.Zone;
+  private sroteGroup: Phaser.Physics.Arcade.StaticGroup;
   private player: Player;
   private input: KeyboardController;
   private wasInZone = false;
 
   constructor(private scene: Phaser.Scene) {
-    this.storeZone = this.scene.add.zone(7977, 500, 76, 100);
-    this.scene.physics.world.enable(this.storeZone);
-    (this.storeZone.body as Phaser.Physics.Arcade.Body).setAllowGravity(false);
-    (this.storeZone.body as Phaser.Physics.Arcade.Body).setImmovable(true);
+    this.sroteGroup = this.scene.physics.add.staticGroup();
+
+    const storeZoneOne = this.scene.add.zone(7977, 500, 76, 100);
+    const storeZoneTwo = this.scene.add.zone(4202, 500, 76, 100);
+
+    this.sroteGroup.add(storeZoneOne, true);
+    this.sroteGroup.add(storeZoneTwo, true);
 
     this.player = ServiceLocator.resolve(ServiceKeys.player);
     this.input = ServiceLocator.resolve(ServiceKeys.input);
@@ -30,7 +33,7 @@ export class Stall {
   }
 
   public update() {
-    const inZone = this.scene.physics.overlap(this.player, this.storeZone);
+    const inZone = this.scene.physics.overlap(this.player, /*this.storeZone*/ this.sroteGroup);
 
     // Player entered the zone
     if (inZone && !this.wasInZone) {

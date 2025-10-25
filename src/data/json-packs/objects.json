@@ -42,6 +42,11 @@
     },
     {
       "type": "image",
+      "key": "boxes",
+      "url": "assets/objects/decor/boxes.png"
+    },
+    {
+      "type": "image",
       "key": "rock-1",
       "url": "assets/objects/rocks/rock-1.png"
     },

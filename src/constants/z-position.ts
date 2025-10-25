@@ -31,9 +31,6 @@ export const Z_POSITION = {
   ENEMY: 190,
   SPELL: 200,
 
-  // Collide layer
-  COLLIDE: 900,
-
   // UI
   UI: 1000,
 } as const;

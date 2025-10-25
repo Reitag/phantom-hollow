@@ -31,6 +31,7 @@ export const OBJECTS = {
   STATUE_LEFT: 'statue-left',
   STATUE_RIGHT: 'statue-right',
   WOOD: 'wood',
+  BOXES: 'boxes',
   ROCK_1: 'rock-1',
   ROCK_2: 'rock-2',
   ROCK_3: 'rock-3',
@@ -59,7 +60,6 @@ export const TILESETS = {
   GRASS: 'grass',
   MOUNT: 'mount',
   SKY: 'sky',
-  COLLIDE: 'collide',
 } as const;
 
 export const UI = {
