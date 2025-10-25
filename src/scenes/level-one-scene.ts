@@ -8,13 +8,16 @@ import {
   SKELETON_WARRIOR_STATS,
   ZOMBIE_STATS,
   EVIL_WIZARD_STATS,
+  ARCHER_STATS,
 } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
 import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
 import { AiZombie } from '@/ai/enemies/ai-zombie';
+import { AiArcher } from '@/ai/enemies/ai-archer';
 import { AiEvilWizard } from '@/ai/bosses/ai-evil-wizard';
+import { Archer } from '@/entities/characters/enemies/archer';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { Zombie } from '@/entities/characters/enemies/zombie';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
@@ -23,6 +26,7 @@ import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/economy/store/stall';
 import { InventorySystem } from '@/systems/inventory-system';
+import { Arrow } from '@/entities/weapons/arrow';
 import { SpellFactory } from '@/factories/spell-factory';
 import { LootSystem } from '@/systems/loot-system';
 import { SpellSystem } from '@/systems/spell-system';
@@ -36,31 +40,35 @@ import { UiScene } from './ui-scene';
 import { MemoryMonitor } from '../../tools/memory-monitor.js';
 
 export class LevelOneScene extends Phaser.Scene {
-  private readonly playerSpawnPosition = { x: 50, y: 450 };
+  //private readonly playerSpawnPosition = { x: 50, y: 450 };
+  private readonly playerSpawnPosition = { x: 1813, y: 520 };
   //private readonly playerSpawnPosition = 1800;
   //private readonly playerSpawnPosition = 11200;
   //private readonly playerSpawnPosition = 6800;
   private readonly skeletonSpawnPositions = [
-    { x: 540, y: 520 },
-    { x: 1290, y: 520 },
-    { x: 2360, y: 520 },
-    { x: 3380, y: 328 },
-    { x: 3530, y: 456 },
-    { x: 2250, y: 328 },
-    { x: 2590, y: 328 },
-    { x: 6210, y: 488 },
+    //{ x: 540, y: 520 },
+    //{ x: 1290, y: 520 },
+    //{ x: 2360, y: 520 },
+    //{ x: 3380, y: 328 },
+    //{ x: 3530, y: 456 },
+    //{ x: 2250, y: 328 },
+    //{ x: 2590, y: 328 },
+    //{ x: 6210, y: 488 },
     { x: 7050, y: 520 },
   ];
   private readonly zombieSpawnPositions = [
-    { x: 1650, y: 520 },
-    { x: 2670, y: 488 },
-    { x: 3080, y: 392 },
-    { x: 3060, y: 520 },
-    { x: 3335, y: 520 },
-    { x: 3420, y: 200 },
-    { x: 5760, y: 520 },
+    //{ x: 1650, y: 520 },
+    //{ x: 2670, y: 488 },
+    //{ x: 3080, y: 392 },
+    //{ x: 3060, y: 520 },
+    //{ x: 3335, y: 520 },
+    //{ x: 3420, y: 200 },
+    //{ x: 5760, y: 520 },
     { x: 7290, y: 520 },
   ];
+
+  private readonly archerSpawnPositions = [{ x: 7050, y: 520 }];
+
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
 
   private readonly coinSpawnPositions = [
@@ -77,6 +85,7 @@ export class LevelOneScene extends Phaser.Scene {
   private player!: Player;
   private aiSkeletonWarrior!: AiSkeletonWarrior;
   private aiZombie!: AiZombie;
+  private aiArcher!: AiArcher;
   private aiEvilWizard!: AiEvilWizard;
   private stall!: Stall;
   private mount!: Phaser.GameObjects.TileSprite;
@@ -85,6 +94,8 @@ export class LevelOneScene extends Phaser.Scene {
   private map!: Tilemap;
   private canPlayerGetDamage = true;
   private isGameInitialized = false;
+
+  public weaponGroup!: Phaser.Physics.Arcade.Group;
 
   constructor() {
     super('LevelOneScene');
@@ -102,6 +113,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.player.update(delta);
     this.aiSkeletonWarrior.update(delta);
     this.aiZombie.update(delta);
+    this.aiArcher.update(delta);
     this.aiEvilWizard.update(delta);
 
     this.stall.update();
@@ -151,6 +163,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.createPlayer();
     this.createSkeletonWarriors();
     this.createZombies();
+    this.createArchers();
     this.createBoss();
 
     this.createStall();
@@ -284,6 +297,33 @@ export class LevelOneScene extends Phaser.Scene {
     });
   }
 
+  private createArchers(): void {
+    this.aiArcher = new AiArcher(this.player);
+
+    this.archerSpawnPositions.forEach((xPos) => {
+      const archer = new Archer({
+        scene: this,
+        position: { x: 2064, y: 328 },
+        keyName: CHARACTERS.ARCHER,
+        frame: 0,
+        facingRight: false,
+        stats: {
+          health: ARCHER_STATS.HEALTH,
+          speed: 0,
+          damage: {
+            meleeAttack: undefined,
+            spellPower: undefined,
+          },
+          defense: undefined,
+          aggro: true,
+        },
+      });
+
+      archer.setDepth(Z_POSITION.ENEMY);
+      this.aiArcher.addEnemy(archer);
+    });
+  }
+
   private createBoss(): void {
     const boss = new EvilWizzard({
       scene: this,
@@ -320,6 +360,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     const skeletons = this.aiSkeletonWarrior.getEnemies();
     const zombies = this.aiZombie.getEnemies();
+    const archers = this.aiArcher.getEnemies();
     const boss = this.aiEvilWizard.getBoss();
     const spells = ServiceLocator.resolve(ServiceKeys.spellFactory).getSpells();
     const collision = ServiceLocator.resolve(ServiceKeys.collision);
@@ -336,6 +377,7 @@ export class LevelOneScene extends Phaser.Scene {
           entity: zombies,
           callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         },
+        { entity: archers },
         { entity: boss },
         {
           entity: spells,
@@ -360,6 +402,7 @@ export class LevelOneScene extends Phaser.Scene {
           entity: spells,
           callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         },
+        { entity: archers },
       ]);
     }
 
@@ -369,6 +412,7 @@ export class LevelOneScene extends Phaser.Scene {
         { entity: this.player, callback: this.handleSpikeHit },
         { entity: skeletons },
         { entity: zombies },
+        { entity: archers },
         {
           entity: spells,
           callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
@@ -394,6 +438,11 @@ export class LevelOneScene extends Phaser.Scene {
           callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
           type: 'overlap',
         },
+        {
+          entity: archers,
+          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          type: 'overlap',
+        },
       ]);
     }
 
@@ -409,6 +458,7 @@ export class LevelOneScene extends Phaser.Scene {
           entity: zombies,
           callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         },
+        { entity: archers },
         { entity: boss },
         {
           entity: spells,
@@ -418,7 +468,7 @@ export class LevelOneScene extends Phaser.Scene {
     }
 
     // Spells
-    [this.player, skeletons, zombies, boss].forEach((entity) => {
+    [this.player, skeletons, zombies, archers, boss].forEach((entity) => {
       this.physics.add.overlap(
         spells,
         entity,
@@ -427,6 +477,30 @@ export class LevelOneScene extends Phaser.Scene {
         this
       );
     });
+
+    // Weapons - arrow
+    this.weaponGroup = this.physics.add.group({
+      runChildUpdate: true,
+      allowGravity: false,
+    });
+
+    [platformLayer!, spikeLayer!, groundLayer!, caveLayer!].forEach((entity) => {
+      this.physics.add.overlap(
+        this.weaponGroup,
+        entity,
+        this.handleWeaponCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        undefined,
+        this
+      );
+    });
+
+    this.physics.add.overlap(
+      this.weaponGroup,
+      this.player,
+      this.handleWeaponHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
+      this
+    );
 
     // For better collisions
     this.physics.world.setFPS(120);
@@ -479,6 +553,27 @@ export class LevelOneScene extends Phaser.Scene {
     if (spell.causeDamage() > 0) {
       victim.takeDamage(spell.causeDamage(), spell.getCaster());
       spell.destroySpell();
+    }
+  }
+
+  private handleWeaponCollision(
+    weapon: Phaser.GameObjects.GameObject,
+    target: Phaser.Tilemaps.Tile
+  ): void {
+    if (target instanceof Phaser.Tilemaps.Tile) {
+      if (target.properties.collides && weapon.active) {
+        weapon.destroy();
+      }
+    }
+  }
+
+  private handleWeaponHit(
+    target: Phaser.GameObjects.GameObject,
+    weapon: Phaser.GameObjects.GameObject
+  ): void {
+    if (target instanceof Player && weapon instanceof Arrow) {
+      target.takeDamage(10);
+      weapon.destroy();
     }
   }
 

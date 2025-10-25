@@ -1,6 +1,6 @@
 import { Hover } from '@/components/states/enemy-states/hover';
 import { Dive } from '@/components/states/enemy-states/dive';
-import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
+import { CHARACTER_ANIMATION_KEYS, ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { Character, CharacterConfig } from '@/base/objects/character';
 
 export class MutatedBat extends Character {
@@ -8,8 +8,8 @@ export class MutatedBat extends Character {
     super({ scene, position, keyName, frame, facingRight, stats });
 
     this.animations = {
-      idle: ENEMIES_ANIMATION.MUTADED_BAT.IDLE,
-      death: ENEMIES_ANIMATION.MUTADED_BAT.DEATH,
+      [CHARACTER_ANIMATION_KEYS.IDLE]: ENEMIES_ANIMATION.MUTADED_BAT.IDLE,
+      [CHARACTER_ANIMATION_KEYS.DEATH]: ENEMIES_ANIMATION.MUTADED_BAT.DEATH,
     };
 
     this.stateMachine.addState(new Hover(this));

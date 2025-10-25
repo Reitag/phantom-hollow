@@ -1,8 +1,10 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { CollisionService } from '@/infrastructure/collision-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Chase extends CharacterState {
   private player: Player | null = null;
@@ -10,7 +12,7 @@ export class Chase extends CharacterState {
   private chase: number = 0;
 
   constructor(character: Character) {
-    super('Chase', character);
+    super(ENEMY_STATES.CHASE, character);
 
     this.collision = ServiceLocator.resolve(ServiceKeys.collision);
   }
@@ -36,7 +38,7 @@ export class Chase extends CharacterState {
     if (this.sameY()) return;
 
     const direction = this.character.x > this.player.x ? -1 : 1;
-    const animKey = direction === 1 ? this.animations.moveRight : this.animations.moveLeft;
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
 
     this.character.setFlipX(direction < 0);
     this.character.setVelocityX(direction * (this.characterSpeed?.velocity ?? 0));
@@ -56,7 +58,8 @@ export class Chase extends CharacterState {
       Math.abs(this.player.y - this.character.y) > 2
     ) {
       this.character.setFlipX(direction < 0);
-      this.playAnimation(this.animations.idle, true);
+      const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+      this.playAnimation(animKey, true);
       return true;
     }
     return false;
@@ -69,7 +72,8 @@ export class Chase extends CharacterState {
     if (this.character.y !== this.player.y && Math.abs(this.character.x - this.player.x) < 5) {
       this.character.setFlipX(direction < 0);
       this.setToZeroVelocityX();
-      this.playAnimation(this.animations.idle, true);
+      const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+      this.playAnimation(animKey, true);
       return true;
     }
     return false;

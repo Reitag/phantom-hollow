@@ -1,4 +1,5 @@
 import { MUTATED_BAT_STATS } from '@/constants/object-stats';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
 import { Character } from '@/base/objects/character';
 import { StateMachine } from '@/systems/state-machine';
@@ -31,10 +32,10 @@ export class AiMutatedBat extends Enemy {
     const fsm = bat.getStateMachine();
     const currentState = fsm.currentStateName;
 
-    if (currentState === 'Dive') return;
+    if (currentState === ENEMY_STATES.DIVE) return;
 
-    if (currentState !== 'Hover') {
-      fsm.changeState('Hover', this.player, [
+    if (currentState !== ENEMY_STATES.HOVER) {
+      fsm.changeState(ENEMY_STATES.HOVER, this.player, [
         this.orbitAngle,
         this.orbitRadius,
         this.orbitSpeed,
@@ -42,7 +43,7 @@ export class AiMutatedBat extends Enemy {
       ]);
 
       bat.scene.time.delayedCall(8000, () => {
-        fsm.changeState('Dive', this.player, [
+        fsm.changeState(ENEMY_STATES.DIVE, this.player, [
           MUTATED_BAT_STATS.CHASE,
           MUTATED_BAT_STATS.HIT,
           MUTATED_BAT_STATS.LIFE_TIME,

@@ -1,13 +1,14 @@
 import { Speed } from '@/components/stats/speed';
 import { Character } from '@/base/objects/character';
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { SPELLS } from '@/constants/asset-keys';
+import { PLAYER_STATES } from '@/constants/state-keys';
+import { PLAYER_STATS } from '@/constants/object-stats';
 import { InventorySystem } from '@/systems/inventory-system';
 import { State, StateMachine } from '@/systems/state-machine';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
-import { KeyboardController } from '@/components/controllers/keyboard-controller';
-import { AnimationConfig } from '@/utils/types';
-import { PLAYER_STATS } from '@/constants/object-stats';
-import { SPELLS } from '@/constants/asset-keys';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export abstract class CharacterState implements State {
   readonly name: string;
@@ -19,7 +20,6 @@ export abstract class CharacterState implements State {
   protected spellSystem: SpellSystem | null;
   protected ui: UiSystem | null;
   protected inventory: InventorySystem | null;
-  protected animations: AnimationConfig;
 
   public stateMachine!: StateMachine;
 
@@ -40,7 +40,6 @@ export abstract class CharacterState implements State {
 
     this.characterSpeed = character.getStats().speed || null;
     this.characterBody = this.character.getArcadeBody();
-    this.animations = this.character.getAnimations();
   }
 
   protected setToZeroVelocityX(): void {
@@ -54,7 +53,9 @@ export abstract class CharacterState implements State {
 
     this.character.setVelocityX(-speed);
     this.character.flipCharacterToRight(false);
-    this.playAnimation(this.animations.moveLeft);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
+    this.playAnimation(animKey);
   }
 
   protected moveRight(speed: number | undefined): void {
@@ -62,7 +63,9 @@ export abstract class CharacterState implements State {
 
     this.character.setVelocityX(speed);
     this.character.flipCharacterToRight(true);
-    this.playAnimation(this.animations.moveRight);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
+    this.playAnimation(animKey);
   }
 
   protected jump(): void {
@@ -73,17 +76,22 @@ export abstract class CharacterState implements State {
 
   protected playAnimation(key: string | undefined, force = false): void {
     if (!key) return;
+    const exists = this.character.scene.anims.exists(key);
+    if (!exists) {
+      console.warn(`[Animation missing] ${key}`);
+      return;
+    }
     if (!force && this.character.anims.currentAnim?.key === key) return;
     this.character.anims.play(key, true);
   }
 
   protected initToCastSpell(spell: string): void {
     if (!this.canTransitionToCast(spell)) return;
-    this.stateMachine.changeState('Ready');
+    this.stateMachine.changeState(PLAYER_STATES.READY);
   }
 
   private canTransitionToCast(spell: string): boolean {
-    if (this.name === 'Movement' && spell === SPELLS.FIRE_BALL) {
+    if (this.name === PLAYER_STATES.MOVEMENT && spell === SPELLS.FIRE_BALL) {
       return false;
     }
 

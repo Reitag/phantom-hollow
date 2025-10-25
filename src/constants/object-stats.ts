@@ -43,32 +43,33 @@ export const PLAYER_STATS = {
 
 export const SKELETON_WARRIOR_STATS = {
   HEALTH: 200,
-  //WALK_BOUND: 470,
   WALK_BOUND: 50,
-  //ENGAGE_DISTANCE: 400,
   ENGAGE_DISTANCE: 200,
   ATTACK_RANGE: 20,
   FRAME_ON_HIT: 4,
   HIT: 25,
   SAME_Y_THRESHOLD: 40,
   WALK: 60,
-  //CHASE: 1.7,
   CHASE: 1.3,
 } as const;
 
 export const ZOMBIE_STATS = {
   HEALTH: 300,
-  //WALK_BOUND: 500,
   WALK_BOUND: 70,
-  //ENGAGE_DISTANCE: 500,
   ENGAGE_DISTANCE: 200,
   ATTACK_RANGE: 20,
   FRAME_ON_HIT: 3,
   HIT: 15,
   SAME_Y_THRESHOLD: 40,
   WALK: 50,
-  //CHASE: 1.7,
   CHASE: 1.3,
+} as const;
+
+export const ARCHER_STATS = {
+  HEALTH: 250,
+  ENGAGE_DISTANCE: 415,
+  FRAME_ON_HIT: 1,
+  SAME_Y_THRESHOLD: 40,
 } as const;
 
 export const MUTATED_BAT_STATS = {

@@ -1,6 +1,8 @@
 import { CharacterState } from '@/base/states/character-state';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { Character } from '@/base/objects/character';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Attack extends CharacterState {
   private player: Player | null = null;
@@ -10,7 +12,7 @@ export class Attack extends CharacterState {
   private canHit = false;
 
   constructor(character: Character) {
-    super('Attack', character);
+    super(ENEMY_STATES.ATTACK, character);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -34,7 +36,9 @@ export class Attack extends CharacterState {
     this.character.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
 
     this.characterSpeed?.setMovementLock(true);
-    this.playAnimation(this.animations.attack, true);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.ATTACK);
+    this.playAnimation(animKey, true);
   }
 
   public onUpdate(delta: number): void {
@@ -84,7 +88,8 @@ export class Attack extends CharacterState {
     anim: Phaser.Animations.Animation,
     frame: Phaser.Animations.AnimationFrame
   ): void {
-    if (anim.key === this.animations.attack && frame.index === this.frameOnHit) {
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.ATTACK);
+    if (anim.key === animKey && frame.index === this.frameOnHit) {
       this.canHit = true;
     }
   }

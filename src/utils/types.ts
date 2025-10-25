@@ -34,14 +34,7 @@ export interface ArcadeSpriteConfig {
 }
 
 // Animation
-export type AnimationConfig = {
-  idle?: string;
-  moveLeft?: string;
-  moveRight?: string;
-  attack?: string;
-  instantCast?: string;
-  death?: string;
-};
+export type AnimationMap = Record<string, string>;
 
 export type SpellAnimationConfig = {
   main?: string;

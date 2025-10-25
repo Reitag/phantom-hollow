@@ -1,12 +1,14 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { CharacterState } from '@/base/states/character-state';
+import { PLAYER_STATES } from '@/constants/state-keys';
 import { UiSystem } from '@/systems/ui-system';
 import { Player } from '@/entities/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Ready extends CharacterState {
   constructor(player: Player, input?: KeyboardController, ui?: UiSystem) {
-    super('Ready', player, input, undefined, ui);
+    super(PLAYER_STATES.READY, player, input, undefined, ui);
   }
 
   public onEnter(...args: unknown[]): void {}
@@ -21,7 +23,9 @@ export class Ready extends CharacterState {
 
     if (!this.input?.isLeftDown && !this.input?.isRightDown) {
       this.setToZeroVelocityX();
-      this.playAnimation(this.animations.idle);
+
+      const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+      this.playAnimation(animKey);
     }
 
     if (
@@ -31,30 +35,30 @@ export class Ready extends CharacterState {
     ) {
       this.ui?.removeHighlight();
       if (this.input?.isLeftDown || this.input?.isRightDown) {
-        this.stateMachine.changeState('Movement');
+        this.stateMachine.changeState(PLAYER_STATES.MOVEMENT);
       } else {
-        this.stateMachine.changeState('Idle');
+        this.stateMachine.changeState(PLAYER_STATES.IDLE);
       }
     }
 
     if (this.input?.isPrimaryActionDown) {
       this.ui?.highlightSpell(SPELLS.FIRE_BALL);
     } else if (this.input?.isPrimaryActionReleased) {
-      this.stateMachine.changeState('Casting', SPELLS.FIRE_BALL);
+      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FIRE_BALL);
       return;
     }
 
     if (this.input?.isSecondaryActionDown) {
       this.ui?.highlightSpell(SPELLS.BLINK);
     } else if (this.input?.isSecondaryActionReleased) {
-      this.stateMachine.changeState('Casting', SPELLS.BLINK);
+      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.BLINK);
       return;
     }
 
     if (this.input?.isTertiaryActionDown) {
       this.ui?.highlightSpell(SPELLS.WIND);
     } else if (this.input?.isTertiaryActionReleased) {
-      this.stateMachine.changeState('Casting', SPELLS.WIND);
+      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.WIND);
       return;
     }
   }

@@ -3,6 +3,7 @@ import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { DREAD_AURA_STATS, EVIL_WIZARD_STATS, MUTATED_BAT_STATS } from '@/constants/object-stats';
 import { SHADOW_BOLT, SUMMON_BAT } from '@/constants/spell-cooldowns';
 import { Character } from '@/base/objects/character';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { BOSSES_ANIMATION } from '@/constants/animation-keys';
@@ -56,8 +57,8 @@ export class AiEvilWizard extends Boss {
 
     if (!this.spellCooldown.isOnCooldown(SHADOW_BOLT.NAME)) {
       this.spellCooldown.startCooldown(SHADOW_BOLT.NAME, SHADOW_BOLT.DURATION);
-      if (currentState !== 'Casting') {
-        fms.changeState('Casting', this.castShadowBoltBind, EVIL_WIZARD_STATS.CAST);
+      if (currentState !== ENEMY_STATES.CASTING) {
+        fms.changeState(ENEMY_STATES.CASTING, this.castShadowBoltBind, EVIL_WIZARD_STATS.CAST);
       }
     }
 
@@ -97,13 +98,7 @@ export class AiEvilWizard extends Boss {
   }
 
   private castShadowBolt(): void {
-    //const direction = this.boss.getFacingRight() ? 1 : -1;
-    //const x = this.boss.x;
-    //const y = this.boss.y;
-    //const yCoor = y + 15;
-    //const xCoor = x + 50 * direction;
-    this.boss.anims.play(BOSSES_ANIMATION.EVIL_WIZARD.SIMPLE_ATTACK, true);
-    //const shadowBolt = this.spellFactory.createShadowBolt(xCoor, yCoor, direction);
+    this.boss.anims.play(BOSSES_ANIMATION.EVIL_WIZARD.CAST, true);
     const shadowBolt = this.spellFactory.createShadowBolt(this.boss);
     shadowBolt.cast();
   }

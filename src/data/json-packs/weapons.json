@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "type": "image",
+      "key": "arrow",
+      "url": "assets/weapons/arrow.png",
+      "frameConfig": { "frameWidth": 16, "frameHeight": 3 }
+    }
+  ]
+}

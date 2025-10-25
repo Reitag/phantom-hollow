@@ -1,0 +1,38 @@
+import { playerAnim } from '../characters/player/player-anim';
+import { fireballAnim } from '../spells/fire-ball-anim';
+import { blinkAnim } from '../spells/blink-anim';
+import { windAnim } from '../spells/wind-anim';
+import { shadowboltAnim } from '../spells/shadowbolt-anim';
+import { skeletonwarriorAnim } from '../characters/enemies/skeleton-warrior-anim';
+import { zombieAnim } from '../characters/enemies/zombie-anim';
+import { mutadedbatAnim } from '../characters/enemies/mutaded-bat-anim';
+import { evilwizardAnim } from '../characters/bosses/evil-wizard-anim';
+import { itemsAnim } from '../items/items-anim';
+import { portalAnim } from '../misc/portal';
+import { archerAnim } from '../characters/enemies/archer-anim';
+
+export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
+  // Player
+  playerAnim(anims);
+
+  // Spells
+  fireballAnim(anims);
+  blinkAnim(anims);
+  windAnim(anims);
+  shadowboltAnim(anims);
+
+  // Enemies
+  skeletonwarriorAnim(anims);
+  zombieAnim(anims);
+  mutadedbatAnim(anims);
+  archerAnim(anims);
+
+  // Bosses
+  evilwizardAnim(anims);
+
+  // Items
+  itemsAnim(anims);
+
+  // Misc
+  portalAnim(anims);
+}

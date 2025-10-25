@@ -1,13 +1,15 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Dive extends CharacterState {
   private player: Player | null = null;
   private damage!: number;
 
   constructor(character: Character) {
-    super('Dive', character);
+    super(ENEMY_STATES.DIVE, character);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -24,7 +26,9 @@ export class Dive extends CharacterState {
     this.player = player;
     this.damage = damage;
     this.characterSpeed?.addModifier('Dive-speed', diveSpeed);
-    this.playAnimation(this.animations.idle);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+    this.playAnimation(animKey);
 
     this.character.scene.time.delayedCall(lifeTime, () => {
       if (!this.character.active) return;
@@ -68,7 +72,9 @@ export class Dive extends CharacterState {
 
   private explode(): void {
     this.characterSpeed?.setMovementLock(true);
-    this.playAnimation(this.animations.death);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.DEATH);
+    this.playAnimation(animKey);
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.character.destroy();
     });

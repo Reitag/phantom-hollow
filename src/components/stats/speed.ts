@@ -12,7 +12,7 @@ export class Speed {
   }
 
   public get velocity(): number {
-    if (!this.speed) return 0;
+    if (this.speed === undefined) return 0;
 
     const totalMultiplier = this.multipliers.values().reduce((acc, m) => acc + m, 1);
     const finalSpeed = (this.speed - this.force) * totalMultiplier;

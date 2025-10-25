@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { registerGlobalAnimation } from '@/data/animation/animation-loader';
+import { registerGlobalAnimation } from '@/data/animation/loader/animation-loader';
 
 const packURL = 'src/data/json-packs/';
 
@@ -13,6 +13,7 @@ const packs = [
   { key: 'characters-pack', url: `${packURL}characters.json` },
   { key: 'spells-pack', url: `${packURL}spells.json` },
   { key: 'misc-pack', url: `${packURL}misc.json` },
+  { key: 'weapon-pack', url: `${packURL}weapons.json` },
 ];
 
 export class PreloadScene extends Phaser.Scene {

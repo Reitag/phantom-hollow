@@ -1,9 +1,11 @@
 import { CharacterState } from '@/base/states/character-state';
 import { UiSystem } from '@/systems/ui-system';
 import { Character } from '@/base/objects/character';
+import { SHARED_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Death extends CharacterState {
   private characterKey: string;
@@ -14,7 +16,7 @@ export class Death extends CharacterState {
     lastFrame: string | number,
     ui?: UiSystem
   ) {
-    super('Death', character, undefined, undefined, ui);
+    super(SHARED_STATES.DEATH, character, undefined, undefined, ui);
     this.character = character;
     this.characterKey = characterKey;
     this.lastFrame = lastFrame;
@@ -42,7 +44,10 @@ export class Death extends CharacterState {
     this.setToZeroVelocityX();
 
     this.character.removeAllListeners();
-    this.playAnimation(this.animations.death);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.DEATH);
+    this.playAnimation(animKey);
+
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.character.setTexture(this.characterKey, this.lastFrame);
     });

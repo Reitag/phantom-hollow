@@ -6,7 +6,8 @@ import { Casting } from '@/components/states/player-states/casting';
 import { Ready } from '@/components/states/player-states/ready';
 import { Death } from '@/components/states/share/death';
 import { CHARACTERS } from '@/constants/asset-keys';
-import { PLAYER_ANIMATION } from '@/constants/animation-keys';
+import { PLAYER_STATES } from '@/constants/state-keys';
+import { CHARACTER_ANIMATION_KEYS, PLAYER_ANIMATION } from '@/constants/animation-keys';
 import { Character, CharacterConfig } from '@/base/objects/character';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
@@ -33,12 +34,11 @@ export class Player extends Character {
     this.coinKeeper = new CoinKeeper();
 
     this.animations = {
-      idle: PLAYER_ANIMATION.IDLE,
-      moveLeft: PLAYER_ANIMATION.LEFT,
-      moveRight: PLAYER_ANIMATION.RIGHT,
-      attack: PLAYER_ANIMATION.SIMPLE_ATTACK,
-      instantCast: PLAYER_ANIMATION.INSTANT_CAST,
-      death: PLAYER_ANIMATION.DEATH,
+      [CHARACTER_ANIMATION_KEYS.IDLE]: PLAYER_ANIMATION.IDLE,
+      [CHARACTER_ANIMATION_KEYS.MOVE]: PLAYER_ANIMATION.MOVE,
+      [CHARACTER_ANIMATION_KEYS.CAST]: PLAYER_ANIMATION.CAST,
+      [CHARACTER_ANIMATION_KEYS.INSTANT_CAST]: PLAYER_ANIMATION.INSTANT_CAST,
+      [CHARACTER_ANIMATION_KEYS.DEATH]: PLAYER_ANIMATION.DEATH,
     };
 
     this.initKeyboard();
@@ -70,7 +70,7 @@ export class Player extends Character {
     this.stateMachine.addState(new Ready(this, this.controls, this.ui));
     this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 101, this.ui));
 
-    this.stateMachine.changeState('Idle');
+    this.stateMachine.changeState(PLAYER_STATES.IDLE);
   }
 
   public update(delta: number): void {

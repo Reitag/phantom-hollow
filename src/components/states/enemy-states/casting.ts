@@ -1,12 +1,14 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
+import { ENEMY_STATES, SHARED_STATES } from '@/constants/state-keys';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Casting extends CharacterState {
   private castSpell!: () => void | undefined;
   private frameOnCast: number | undefined;
 
   constructor(character: Character) {
-    super('Casting', character);
+    super(ENEMY_STATES.CASTING, character);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -17,14 +19,15 @@ export class Casting extends CharacterState {
     if (!frameonCast) throw new Error('Frame on cast must be a number');
     this.frameOnCast = frameonCast;
 
-    this.playAnimation(this.animations.attack, true);
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST);
+    this.playAnimation(animKey, true);
 
     this.character.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableCast, this);
 
     this.character.once(
       Phaser.Animations.Events.ANIMATION_COMPLETE,
       () => {
-        this.character.getStateMachine().changeState('Idle');
+        this.character.getStateMachine().changeState(SHARED_STATES.IDLE);
       },
       this
     );
@@ -40,7 +43,8 @@ export class Casting extends CharacterState {
     anim: Phaser.Animations.Animation,
     frame: Phaser.Animations.AnimationFrame
   ): void {
-    if (anim.key !== this.animations.attack) return;
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST);
+    if (anim.key !== animKey) return;
 
     if (frame.index === this.frameOnCast && this.castSpell) {
       this.castSpell();

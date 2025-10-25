@@ -1,7 +1,9 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Border } from '@/utils/types';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 const ENABLE_DEBUGGING = false;
 
@@ -19,7 +21,7 @@ export class Patrol extends CharacterState {
   private rightX!: number;
 
   constructor(character: Character) {
-    super('Patrol', character);
+    super(ENEMY_STATES.PATROL, character);
 
     this.initX = character.x;
     this.initY = character.y;
@@ -74,7 +76,9 @@ export class Patrol extends CharacterState {
   }
 
   private pausePatrol(): void {
-    this.playAnimation(this.animations.idle);
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+    this.playAnimation(animKey);
+
     this.setToZeroVelocityX();
     this.isWaiting = true;
 

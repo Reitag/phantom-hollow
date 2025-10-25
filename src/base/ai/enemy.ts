@@ -7,6 +7,7 @@ import { Position } from '@/utils/types';
 export abstract class Enemy {
   protected enemies: Character[] = [];
   protected player: Player;
+  protected isRanged!: boolean;
 
   constructor(player: Player) {
     this.player = player;
@@ -84,7 +85,9 @@ export abstract class Enemy {
   protected canEngage(enemy: Character, dx: number, dy: number): boolean {
     if (this.player.getDead()) return false;
     if (dx > this.engageDistance) return false;
-    if (dy > 0) return false;
+    if (!this.isRanged) {
+      if (dy > 0) return false;
+    }
     if (!this.hasLineOfSight(enemy, this.player)) return false;
     return true;
   }

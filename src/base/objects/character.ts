@@ -1,13 +1,14 @@
 import { Health } from '@/components/stats/health';
 import { Speed } from '@/components/stats/speed';
 import { MeleeAttack, SpellPower } from '@/components/stats/damage';
+import { Aggro } from '@/components/stats/aggro';
 import { Defense } from '@/components/stats/defense';
+import { SHARED_STATES } from '@/constants/state-keys';
 import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
-import { AnimationConfig, ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
+import { AnimationMap, ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
-import { Aggro } from '@/components/stats/aggro';
 
 export interface CharacterConfig extends ArcadeSpriteConfig {
   facingRight: boolean;
@@ -27,7 +28,7 @@ export class Character extends ArcadeSprite {
   protected facingRight!: boolean;
   protected isDead = false;
   protected stateMachine: StateMachine;
-  protected animations!: AnimationConfig;
+  protected animations: AnimationMap = {};
   protected modifier: ModifierSystem;
 
   protected stats: Stats;
@@ -74,7 +75,7 @@ export class Character extends ArcadeSprite {
     return this.facingRight;
   }
 
-  public getAnimations(): AnimationConfig {
+  public getAnimations(): AnimationMap {
     return this.animations;
   }
 
@@ -101,6 +102,10 @@ export class Character extends ArcadeSprite {
 
   public switchToState(state: string): void {
     this.stateMachine.changeState(state);
+  }
+
+  public resolveAnimation(key: string): string | undefined {
+    return this.animations[key];
   }
 
   public takeDamage(amount: number, attacker?: Character): void {
@@ -154,6 +159,6 @@ export class Character extends ArcadeSprite {
 
     this.isDead = true;
     this.onDeathStart?.();
-    this.stateMachine.changeState('Death');
+    this.stateMachine.changeState(SHARED_STATES.DEATH);
   }
 }

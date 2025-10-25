@@ -5,6 +5,7 @@ export const CHARACTERS = {
   PLAYER: 'player',
   SKELETON_WARRIOR: 'skeleton-warrior',
   ZOMBIE: 'zombie',
+  ARCHER: 'archer',
   MUTATED_BAT: 'mutated-bat',
   EVIL_WIZARD: 'evil-wizard',
 } as const;
@@ -85,4 +86,8 @@ export const UI = {
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
+} as const;
+
+export const WEAPONS = {
+  ARROW: 'arrow',
 } as const;

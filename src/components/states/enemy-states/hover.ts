@@ -1,6 +1,8 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Hover extends CharacterState {
   private player: Player | null = null;
@@ -10,7 +12,7 @@ export class Hover extends CharacterState {
   private verticalOffset!: number;
 
   constructor(character: Character) {
-    super('Hover', character);
+    super(ENEMY_STATES.HOVER, character);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -32,7 +34,9 @@ export class Hover extends CharacterState {
     this.orbitRadius = orbitRadius;
     this.orbitSpeed = orbitSpeed;
     this.verticalOffset = verticalOffset;
-    this.playAnimation(this.animations.idle);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+    this.playAnimation(animKey);
   }
 
   public onUpdate(delta: number): void {
