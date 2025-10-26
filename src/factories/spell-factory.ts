@@ -7,15 +7,16 @@ import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { SPELLS } from '@/constants/asset-keys';
 import { SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { FIRE_BALL_STATS, WIND_STATS, SHADOW_BOLT_STATS } from '@/constants/object-stats';
+import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 
 export class SpellFactory {
-  private spellGroup: Phaser.Physics.Arcade.Group;
+  private spellGroup!: Phaser.Physics.Arcade.Group;
 
   constructor(private scene: Phaser.Scene) {
-    this.spellGroup = this.scene.physics.add.group({
-      runChildUpdate: true,
-      allowGravity: false,
-    });
+    const spellGroup = CollisionService.resolveGroup(GroupKeys.spell);
+    if (spellGroup) {
+      this.spellGroup = spellGroup;
+    }
   }
 
   public createFireball(character: Character): FireBall {

@@ -1,39 +1,77 @@
-export class CollisionService {
-  private scene: Phaser.Scene;
-  private collideLayers: Phaser.Tilemaps.TilemapLayer[] = [];
+type LayerConfig = {
+  name: string;
+  layer: Phaser.Tilemaps.TilemapLayer;
+};
 
-  constructor(scene: Phaser.Scene) {
-    this.scene = scene;
+export const GroupKeys = {
+  enemy: 'enemy',
+  spell: 'spell',
+  weapon: 'weapon',
+  item: 'item',
+} as const;
+
+export class CollisionService {
+  private static layers = new Set<LayerConfig>();
+  private static groups = new Map<string, Phaser.Physics.Arcade.Group>();
+
+  public static registerLayer(layer: LayerConfig): void {
+    if (![...this.layers].some((l) => l.name === layer.name)) {
+      this.layers.add(layer);
+    }
   }
 
-  public registerLayerCollisions(
-    layer: Phaser.Tilemaps.TilemapLayer,
+  public static registerGroup(name: string, group: Phaser.Physics.Arcade.Group): void {
+    if (!this.groups.has(name)) {
+      this.groups.set(name, group);
+    }
+  }
+
+  public static resolveLayer(name: string): Phaser.Tilemaps.TilemapLayer | undefined {
+    for (const layer of this.layers) {
+      if (layer.name === name) {
+        return layer.layer;
+      }
+    }
+    return undefined;
+  }
+
+  public static resolveGroup(name: string): Phaser.Physics.Arcade.Group | undefined {
+    return this.groups.get(name);
+  }
+
+  public static registerCollisions(
+    scene: Phaser.Scene,
+    target:
+      | Phaser.Tilemaps.TilemapLayer
+      | Phaser.Physics.Arcade.Group
+      | Phaser.GameObjects.GameObject
+      | undefined,
     collisions: {
-      entity: Phaser.Types.Physics.Arcade.ArcadeColliderType;
+      entity: Phaser.Types.Physics.Arcade.ArcadeColliderType | undefined;
       callback?: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback;
       type?: 'collide' | 'overlap';
     }[]
   ): void {
-    if (!this.collideLayers.includes(layer)) {
-      this.collideLayers.push(layer);
+    const physics = scene.physics;
+
+    const isTilemapLayer = target instanceof Phaser.Tilemaps.TilemapLayer;
+    const isGroup = target instanceof Phaser.Physics.Arcade.Group;
+    const isGameObject = target instanceof Phaser.GameObjects.GameObject;
+
+    if (!isTilemapLayer && !isGroup && !isGameObject) {
+      throw new Error('[CollisionService] Unsupported collision target type:', target);
     }
 
     collisions.forEach(({ entity, callback, type = 'collide' }) => {
-      const physicsFn =
+      if (!entity) throw new Error('[CollisionService] Unsupported entity type:', entity);
+      const fn =
         type === 'overlap'
-          ? this.scene.physics.add.overlap.bind(this.scene.physics.add)
-          : this.scene.physics.add.collider.bind(this.scene.physics.add);
+          ? physics.add.overlap.bind(physics.add)
+          : physics.add.collider.bind(physics.add);
 
-      if (callback) {
-        physicsFn(entity, layer, callback, undefined, this.scene);
-      } else {
-        physicsFn(entity, layer);
-      }
+      if (callback) fn(entity, target, callback, undefined, scene);
+      else fn(entity, target);
     });
-  }
-
-  public getCollideLayers(): Phaser.Tilemaps.TilemapLayer[] {
-    return this.collideLayers;
   }
 
   public isEntityColliding(entity: Phaser.GameObjects.Sprite): boolean {
@@ -53,8 +91,8 @@ export class CollisionService {
   }
 
   public isCollidingWithTile(x: number, y: number): boolean {
-    for (const layer of this.collideLayers) {
-      const tile = layer.getTileAtWorldXY(x, y);
+    for (const layer of CollisionService.layers) {
+      const tile = layer.layer.getTileAtWorldXY(x, y);
       if (tile && tile.collides) return true;
     }
     return false;

@@ -11,6 +11,7 @@ import {
   ARCHER_STATS,
 } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
+import { Item } from '@/base/objects/item';
 import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
@@ -22,16 +23,17 @@ import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior'
 import { Zombie } from '@/entities/characters/enemies/zombie';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { Tilemap } from '@/components/map/tilemap';
-import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
+import { TILELAYER_NAMES, TILESET_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/economy/store/stall';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { SpellFactory } from '@/factories/spell-factory';
 import { LootSystem } from '@/systems/loot-system';
+import { Coin } from '@/entities/items/coin';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
-import { CollisionService } from '@/infrastructure/collision-service';
+import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
@@ -71,15 +73,6 @@ export class LevelOneScene extends Phaser.Scene {
 
   private readonly evilWizardSpawn = { x: 12200, y: 450 };
 
-  private readonly coinSpawnPositions = [
-    { x: 7000, y: 350 },
-    { x: 7100, y: 350 },
-    { x: 7500, y: 350 },
-    { x: 7800, y: 350 },
-    { x: 7900, y: 350 },
-    { x: 7950, y: 450 },
-  ];
-
   private memoryMonitor: MemoryMonitor | null = null;
 
   private player!: Player;
@@ -94,8 +87,6 @@ export class LevelOneScene extends Phaser.Scene {
   private map!: Tilemap;
   private canPlayerGetDamage = true;
   private isGameInitialized = false;
-
-  public weaponGroup!: Phaser.Physics.Arcade.Group;
 
   constructor() {
     super('LevelOneScene');
@@ -156,6 +147,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.createParallaxBackground();
     this.createTilemap();
 
+    this.registerEntityGroups();
     this.createWorldBounds();
 
     this.registerSystems();
@@ -167,9 +159,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.createBoss();
 
     this.createStall();
+
     this.registerCollisions();
 
-    this.createItems();
     this.setupCamera();
   }
 
@@ -194,6 +186,50 @@ export class LevelOneScene extends Phaser.Scene {
 
   private createTilemap(): void {
     this.map = createTilemapOne(this);
+
+    [
+      TILELAYER_NAMES.PLATFORM,
+      TILELAYER_NAMES.SPIKE,
+      TILELAYER_NAMES.GROUND,
+      TILELAYER_NAMES.SPEAR,
+      TILELAYER_NAMES.CAVE,
+    ].forEach((layerName) => {
+      const layer = this.map.getTileLayer(layerName);
+      if (layer === null) throw new Error('Layer is null');
+      CollisionService.registerLayer({ name: layerName, layer: layer });
+    });
+  }
+
+  private registerEntityGroups(): void {
+    CollisionService.registerGroup(
+      GroupKeys.spell,
+      this.physics.add.group({
+        runChildUpdate: true,
+        allowGravity: false,
+      })
+    );
+
+    CollisionService.registerGroup(
+      GroupKeys.weapon,
+      this.physics.add.group({
+        runChildUpdate: true,
+        allowGravity: false,
+      })
+    );
+
+    CollisionService.registerGroup(
+      GroupKeys.enemy,
+      this.physics.add.group({
+        allowGravity: false,
+      })
+    );
+
+    CollisionService.registerGroup(
+      GroupKeys.item,
+      this.physics.add.group({
+        allowGravity: true,
+      })
+    );
   }
 
   private createWorldBounds(): void {
@@ -207,7 +243,7 @@ export class LevelOneScene extends Phaser.Scene {
     ServiceLocator.register(ServiceKeys.spellSystem, new SpellSystem());
     ServiceLocator.register(ServiceKeys.inventorySystem, new InventorySystem());
     ServiceLocator.register(ServiceKeys.lootSystem, new LootSystem(this));
-    ServiceLocator.register(ServiceKeys.collision, new CollisionService(this));
+    ServiceLocator.register(ServiceKeys.collision, new CollisionService());
   }
 
   private createPlayer(): void {
@@ -351,166 +387,90 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private registerCollisions(): void {
-    const platformLayer = this.map.getTileLayer(TILELAYER_NAMES.PLATFORM);
-    const spikeLayer = this.map.getTileLayer(TILELAYER_NAMES.SPIKE);
-    const groundLayer = this.map.getTileLayer(TILELAYER_NAMES.GROUND);
-    const spearLayer = this.map.getTileLayer(TILELAYER_NAMES.SPEAR);
-    const collideLayer = this.map.getTileLayer(TILELAYER_NAMES.COLLIDE);
-    const caveLayer = this.map.getTileLayer(TILELAYER_NAMES.CAVE);
+    const enemies = CollisionService.resolveGroup(GroupKeys.enemy);
+    const spells = CollisionService.resolveGroup(GroupKeys.spell);
+    const weapons = CollisionService.resolveGroup(GroupKeys.weapon);
+    const items = CollisionService.resolveGroup(GroupKeys.item);
 
-    const skeletons = this.aiSkeletonWarrior.getEnemies();
-    const zombies = this.aiZombie.getEnemies();
-    const archers = this.aiArcher.getEnemies();
-    const boss = this.aiEvilWizard.getBoss();
-    const spells = ServiceLocator.resolve(ServiceKeys.spellFactory).getSpells();
-    const collision = ServiceLocator.resolve(ServiceKeys.collision);
+    const ground = CollisionService.resolveLayer(TILELAYER_NAMES.GROUND);
+    const platform = CollisionService.resolveLayer(TILELAYER_NAMES.PLATFORM);
+    const cave = CollisionService.resolveLayer(TILELAYER_NAMES.CAVE);
+    const spikes = CollisionService.resolveLayer(TILELAYER_NAMES.SPIKE);
+    const spear = CollisionService.resolveLayer(TILELAYER_NAMES.SPEAR);
 
-    // Ground
-    if (groundLayer) {
-      collision.registerLayerCollisions(groundLayer, [
+    // Common collision
+    [ground, platform, cave].forEach((layer) => {
+      CollisionService.registerCollisions(this, layer, [
         { entity: this.player },
         {
-          entity: skeletons,
-          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-        {
-          entity: zombies,
-          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-        { entity: archers },
-        { entity: boss },
-        {
-          entity: spells,
-          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-      ]);
-    }
-
-    // Cave
-    if (caveLayer) {
-      collision.registerLayerCollisions(caveLayer, [
-        { entity: this.player },
-        {
-          entity: skeletons,
-          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-        {
-          entity: zombies,
+          entity: enemies,
           callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         },
         {
           entity: spells,
           callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
         },
-        { entity: archers },
+        { entity: items },
       ]);
-    }
+    });
 
-    // Spike
-    if (spikeLayer) {
-      collision.registerLayerCollisions(spikeLayer, [
-        { entity: this.player, callback: this.handleSpikeHit },
-        { entity: skeletons },
-        { entity: zombies },
-        { entity: archers },
-        {
-          entity: spells,
-          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-      ]);
-    }
+    // Spikes
+    CollisionService.registerCollisions(this, spikes, [
+      {
+        entity: this.player,
+        callback: this.handleSpikeHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      },
+      { entity: enemies },
+    ]);
 
-    // Spear
-    if (spearLayer) {
-      collision.registerLayerCollisions(spearLayer, [
+    // Spears
+    [this.player, enemies].forEach((entity) => {
+      CollisionService.registerCollisions(this, spear, [
         {
-          entity: this.player,
-          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-          type: 'overlap',
-        },
-        {
-          entity: skeletons,
-          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-          type: 'overlap',
-        },
-        {
-          entity: zombies,
-          callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-          type: 'overlap',
-        },
-        {
-          entity: archers,
+          entity,
           callback: this.handleSpearHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
           type: 'overlap',
         },
       ]);
-    }
-
-    // Platform
-    if (platformLayer) {
-      collision.registerLayerCollisions(platformLayer, [
-        { entity: this.player },
-        {
-          entity: skeletons,
-          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-        {
-          entity: zombies,
-          callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-        { entity: archers },
-        { entity: boss },
-        {
-          entity: spells,
-          callback: this.handleSpellCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        },
-      ]);
-    }
+    });
 
     // Spells
-    [this.player, skeletons, zombies, archers, boss].forEach((entity) => {
-      this.physics.add.overlap(
-        spells,
-        entity,
-        this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      );
+    const projectileCollisions = [this.player, enemies].map((e) => ({
+      entity: e,
+      callback: this.handleSpellHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+    }));
+    CollisionService.registerCollisions(this, spells, projectileCollisions);
+
+    // Weapons
+    [platform!, spikes!, ground!, cave!].forEach((layer) => {
+      CollisionService.registerCollisions(this, weapons, [
+        {
+          entity: layer,
+          callback: this.handleWeaponCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+          type: 'overlap',
+        },
+      ]);
     });
 
-    // Weapons - arrow
-    this.weaponGroup = this.physics.add.group({
-      runChildUpdate: true,
-      allowGravity: false,
-    });
+    CollisionService.registerCollisions(this, weapons, [
+      {
+        entity: this.player,
+        callback: this.handleWeaponHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        type: 'overlap',
+      },
+    ]);
 
-    [platformLayer!, spikeLayer!, groundLayer!, caveLayer!].forEach((entity) => {
-      this.physics.add.overlap(
-        this.weaponGroup,
-        entity,
-        this.handleWeaponCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-        undefined,
-        this
-      );
-    });
-
-    this.physics.add.overlap(
-      this.weaponGroup,
-      this.player,
-      this.handleWeaponHit as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
-      undefined,
-      this
-    );
+    // Items
+    CollisionService.registerCollisions(this, items, [
+      {
+        entity: this.player,
+        callback: this.handlePickup as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+        type: 'overlap',
+      },
+    ]);
 
     // For better collisions
     this.physics.world.setFPS(120);
-  }
-
-  private createItems(): void {
-    const loot = ServiceLocator.resolve(ServiceKeys.lootSystem);
-    loot.setCollideLayersAndItemsOverlap();
-
-    loot.spawnCoins(this.coinSpawnPositions);
   }
 
   private setupCamera(): void {
@@ -596,5 +556,13 @@ export class LevelOneScene extends Phaser.Scene {
         target.takeDamage(SPEAR_HIT);
       }
     }
+  }
+
+  private handlePickup(character: Phaser.GameObjects.GameObject, item: Item): void {
+    if (character instanceof Player && item instanceof Coin) {
+      character.getCoinKeeper().addCoins(1);
+    }
+
+    item.destroy();
   }
 }
