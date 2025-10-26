@@ -7,7 +7,8 @@ import { StateMachine } from '@/systems/state-machine';
 import { Arrow } from '@/entities/weapons/arrow';
 import { WEAPONS } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
-import { LevelOneScene } from '@/scenes/level-one-scene';
+import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { SpawnPoint } from '@/utils/types';
 import { Enemy } from '../../base/ai/enemy';
 
 export class AiArcher extends Enemy {
@@ -18,6 +19,14 @@ export class AiArcher extends Enemy {
     this.isRanged = true;
     this.launchArrowBind = this.launchArrow.bind(this);
   }
+
+  public addEnemy(enemy: Archer, spawnPoint?: SpawnPoint): void {
+    super.addEnemy(enemy);
+    if (spawnPoint) {
+      this.spawnMap.set(enemy, spawnPoint);
+    }
+  }
+
   protected updateEnemyState(archer: Archer, delta: number): void {
     archer.update(delta);
     if (this.player.getDead()) return;
@@ -58,8 +67,7 @@ export class AiArcher extends Enemy {
       frame: 0,
     });
     arrow.setDepth(Z_POSITION.ITEM);
-    const scene = character.scene as LevelOneScene;
-    scene.weaponGroup.add(arrow);
+    CollisionService.resolveGroup(GroupKeys.weapon)?.add(arrow, true);
 
     arrow.launch(this.player);
   }

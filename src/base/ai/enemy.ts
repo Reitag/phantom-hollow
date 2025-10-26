@@ -1,11 +1,13 @@
 import { Character } from '@/base/objects/character';
+import { DESTROY_TIME, RESPAWN_TIME } from '@/constants/spawn-positions';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { StateMachine } from '@/systems/state-machine';
-import { Position } from '@/utils/types';
+import { Position, SpawnPoint } from '@/utils/types';
 
 export abstract class Enemy {
   protected enemies: Character[] = [];
+  protected spawnMap = new Map<Character, SpawnPoint>();
   protected player: Player;
   protected isRanged!: boolean;
 
@@ -31,10 +33,33 @@ export abstract class Enemy {
 
   public removeEnemy(enemy: Character): void {
     this.enemies = this.enemies.filter((e) => e !== enemy);
+    if (enemy.active) {
+      enemy.scene.time.delayedCall(DESTROY_TIME, () => {
+        const spawn = this.spawnMap.get(enemy);
+        if (spawn) {
+          this.spawnMap.delete(enemy);
+
+          enemy.scene.time.delayedCall(RESPAWN_TIME, () => {
+            spawn.isSpawned = false;
+          });
+        }
+        enemy.destroy();
+      });
+    }
+  }
+
+  public despawnEnemy(enemy: Character): void {
+    this.enemies = this.enemies.filter((e) => e !== enemy);
+    this.spawnMap.delete(enemy);
+    enemy.destroy();
   }
 
   public getEnemies(): Character[] {
     return this.enemies;
+  }
+
+  public getEnemyMap(): Map<Character, SpawnPoint> {
+    return this.spawnMap;
   }
 
   public handleCollision(enemy: Character): void {

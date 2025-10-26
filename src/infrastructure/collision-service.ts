@@ -14,6 +14,8 @@ export class CollisionService {
   private static layers = new Set<LayerConfig>();
   private static groups = new Map<string, Phaser.Physics.Arcade.Group>();
 
+  private static colliders = new Set<Phaser.Physics.Arcade.Collider>();
+
   public static registerLayer(layer: LayerConfig): void {
     if (![...this.layers].some((l) => l.name === layer.name)) {
       this.layers.add(layer);
@@ -69,9 +71,30 @@ export class CollisionService {
           ? physics.add.overlap.bind(physics.add)
           : physics.add.collider.bind(physics.add);
 
-      if (callback) fn(entity, target, callback, undefined, scene);
-      else fn(entity, target);
+      let collider: Phaser.Physics.Arcade.Collider;
+      if (callback) {
+        collider = fn(entity, target, callback, undefined, scene);
+      } else {
+        collider = fn(entity, target);
+      }
+
+      if (collider) {
+        this.colliders.add(collider);
+      }
     });
+  }
+
+  public static destroyAllCollidersForScene(scene?: Phaser.Scene): void {
+    for (const c of Array.from(this.colliders)) {
+      c.destroy();
+      this.colliders.delete(c);
+    }
+  }
+
+  public static clearAll(): void {
+    this.destroyAllCollidersForScene();
+    this.groups.clear();
+    this.layers.clear();
   }
 
   public isEntityColliding(entity: Phaser.GameObjects.Sprite): boolean {

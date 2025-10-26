@@ -5,6 +5,7 @@ import { Player } from '@/entities/characters/player/player';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { StateMachine } from '@/systems/state-machine';
 import { Character } from '@/base/objects/character';
+import { SpawnPoint } from '@/utils/types';
 import { Enemy } from '../../base/ai/enemy';
 
 export class AiSkeletonWarrior extends Enemy {
@@ -12,6 +13,14 @@ export class AiSkeletonWarrior extends Enemy {
     super(player);
     this.isRanged = false;
   }
+
+  public addEnemy(enemy: SkeletonWarrior, spawnPoint?: SpawnPoint): void {
+    super.addEnemy(enemy);
+    if (spawnPoint) {
+      this.spawnMap.set(enemy, spawnPoint);
+    }
+  }
+
   protected updateEnemyState(skeleton: SkeletonWarrior, delta: number): void {
     skeleton.update(delta);
     if (this.player.getDead()) return;

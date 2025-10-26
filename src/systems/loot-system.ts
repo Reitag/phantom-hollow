@@ -16,6 +16,22 @@ export class LootSystem {
     const coinGroup = this.itemFactory.createCoinGroup(positions);
     coinGroup.forEach((coin) => {
       group.add(coin, true);
+
+      coin.scene.time.delayedCall(15000, () => {
+        if (coin.active) {
+          coin.scene.tweens.add({
+            targets: coin,
+            alpha: 0.2,
+            duration: 200,
+            ease: 'Linear',
+            yoyo: true,
+            repeat: 6,
+            onComplete: () => {
+              coin.destroy(true);
+            },
+          });
+        }
+      });
     });
   }
 }
