@@ -35,8 +35,7 @@ export const SHADOW_BOLT_STATS = {
 } as const;
 
 export const PLAYER_STATS = {
-  //HEALTH: 100,
-  HEALTH: 10000000,
+  HEALTH: 150,
   MOVE: 190,
   JUMP: 550,
   SPELL_POWER: 1,
@@ -67,7 +66,7 @@ export const ZOMBIE_STATS = {
 } as const;
 
 export const ARCHER_STATS = {
-  HEALTH: 250,
+  HEALTH: 100,
   ENGAGE_DISTANCE: 415,
   FRAME_ON_HIT: 1,
   SAME_Y_THRESHOLD: 40,
