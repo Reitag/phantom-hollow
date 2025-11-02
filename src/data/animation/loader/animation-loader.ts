@@ -8,8 +8,9 @@ import { zombieAnim } from '../characters/enemies/zombie-anim';
 import { mutadedbatAnim } from '../characters/enemies/mutaded-bat-anim';
 import { evilwizardAnim } from '../characters/bosses/evil-wizard-anim';
 import { itemsAnim } from '../items/items-anim';
-import { portalAnim } from '../misc/portal';
+import { portalAnim } from '../misc/portal-anim';
 import { archerAnim } from '../characters/enemies/archer-anim';
+import { darkEnergyAnim } from '../misc/dark-energy-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -35,4 +36,5 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
 
   // Misc
   portalAnim(anims);
+  darkEnergyAnim(anims);
 }

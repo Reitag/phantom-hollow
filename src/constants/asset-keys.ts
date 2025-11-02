@@ -20,6 +20,7 @@ export const MAPS = {
 
 export const MISC = {
   PORTAL: 'portal',
+  DARK_ENERGY: 'dark-energy',
 } as const;
 
 export const OBJECTS = {

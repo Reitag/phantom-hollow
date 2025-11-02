@@ -28,6 +28,7 @@ export class ShadowBolt extends Spell {
       speed,
       direction,
     });
+    this.arcadeBody.setSize(22, 13);
   }
 
   public cast(): void {

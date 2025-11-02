@@ -80,3 +80,7 @@ export const ITEMS_ANIMATION = {
 export const PORTAL_ANIMATION = {
   SPIN: 'portal-spin',
 } as const;
+
+export const DARK_ENERGY_ANIMATION = {
+  IDLE: 'dark-energy-idle',
+} as const;

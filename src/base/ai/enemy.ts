@@ -32,8 +32,13 @@ export abstract class Enemy {
   }
 
   public removeEnemy(enemy: Character): void {
+    if (!this.enemies.includes(enemy)) return;
     this.enemies = this.enemies.filter((e) => e !== enemy);
-    if (enemy.active) {
+
+    if (!enemy.active) return;
+
+    enemy.once(Phaser.Animations.Events.ANIMATION_COMPLETE, (anim: Phaser.Animations.Animation) => {
+      enemy.active = false;
       enemy.scene.time.delayedCall(DESTROY_TIME, () => {
         const spawn = this.spawnMap.get(enemy);
         if (spawn) {
@@ -45,7 +50,7 @@ export abstract class Enemy {
         }
         enemy.destroy();
       });
-    }
+    });
   }
 
   public despawnEnemy(enemy: Character): void {

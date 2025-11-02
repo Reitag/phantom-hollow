@@ -21,6 +21,8 @@ export class DreadAura extends Spell {
     this.range = range;
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.setPosition(x, y);
+    this.arcadeBody.setAllowGravity(false);
+    this.setVisible(false);
   }
 
   public cast(): void {}

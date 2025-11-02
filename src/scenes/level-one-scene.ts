@@ -4,7 +4,7 @@ import { WORLD_PARAMS } from '@/constants/world-params';
 import { SPEAR_HIT, SPIKE_HIT, PLAYER_STATS } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
 import { Item } from '@/base/objects/item';
-import { CHARACTERS, TILESETS } from '@/constants/asset-keys';
+import { CHARACTERS, MISC, TILESETS } from '@/constants/asset-keys';
 import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-positions';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
@@ -23,6 +23,7 @@ import { CollisionService, GroupKeys } from '@/infrastructure/collision-service'
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
+import { DARK_ENERGY_ANIMATION } from '@/constants/animation-keys';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { MemoryMonitor } from '../../tools/memory-monitor.js';

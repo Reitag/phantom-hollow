@@ -19,9 +19,10 @@ export abstract class Boss {
   protected canEngage(range: number): boolean {
     if (!this.player || this.player.getDead()) return false;
 
-    const distance = this.boss.x - this.player.x;
+    const inRange =
+      Math.abs(this.boss.x - this.player.x) < range && Math.abs(this.boss.y - this.player.y) < 30;
 
-    if (distance <= range) {
+    if (inRange) {
       return true;
     }
     return false;

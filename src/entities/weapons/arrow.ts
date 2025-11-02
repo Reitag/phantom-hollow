@@ -6,6 +6,8 @@ export class Arrow extends ArcadeSprite {
   constructor({ scene, position, keyName, frame }: ArcadeSpriteConfig) {
     super({ scene, position, keyName, frame });
 
+    this.setSize(10, 10);
+
     scene.time.delayedCall(3000, () => {
       if (this.active) this.destroy();
     });

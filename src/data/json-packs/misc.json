@@ -5,6 +5,12 @@
       "key": "portal",
       "url": "assets/portal.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "dark-energy",
+      "url": "assets/dark-energy.png",
+      "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
     }
   ]
 }

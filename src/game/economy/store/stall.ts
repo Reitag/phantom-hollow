@@ -15,11 +15,13 @@ export class Stall {
   constructor(private scene: Phaser.Scene) {
     this.sroteGroup = this.scene.physics.add.staticGroup();
 
-    const storeZoneOne = this.scene.add.zone(7977, 500, 76, 100);
-    const storeZoneTwo = this.scene.add.zone(4202, 500, 76, 100);
+    const storeZoneOne = this.scene.add.zone(4202, 500, 76, 100);
+    const storeZoneTwo = this.scene.add.zone(7977, 500, 76, 100);
+    const storeZoneThree = this.scene.add.zone(12328, 500, 76, 100);
 
     this.sroteGroup.add(storeZoneOne, true);
     this.sroteGroup.add(storeZoneTwo, true);
+    this.sroteGroup.add(storeZoneThree, true);
 
     this.player = ServiceLocator.resolve(ServiceKeys.player);
     this.input = ServiceLocator.resolve(ServiceKeys.input);
