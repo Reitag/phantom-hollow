@@ -7,6 +7,7 @@ export const CHARACTERS = {
   ZOMBIE: 'zombie',
   ARCHER: 'archer',
   MUTATED_BAT: 'mutated-bat',
+  FIRE_WORM: 'fire-worm',
   EVIL_WIZARD: 'evil-wizard',
 } as const;
 

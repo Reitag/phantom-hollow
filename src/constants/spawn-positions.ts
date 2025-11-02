@@ -1,6 +1,7 @@
-//export const PLAYER_SPAWN_POSITION = { x: 50, y: 450 };
-export const PLAYER_SPAWN_POSITION = { x: 12100, y: 520 };
-//export const PLAYER_SPAWN_POSITION = { x: 15600, y: 400 };
+//export const PLAYER_SPAWN_POSITION = { x: 50, y: 450 }; // start
+//export const PLAYER_SPAWN_POSITION = { x: 4845, y: 520 }; // fire-worm
+export const PLAYER_SPAWN_POSITION = { x: 12100, y: 520 }; // lair
+//export const PLAYER_SPAWN_POSITION = { x: 15226, y: 136 }; // boss
 
 export const DESTROY_TIME = 20_000;
 export const RESPAWN_TIME = 250_000;
@@ -14,7 +15,6 @@ export const SKELETONS_SPAWN_POSITION = [
   { x: 2250, y: 328 },
   { x: 2590, y: 328 },
   { x: 5050, y: 520 },
-  { x: 5472, y: 520 },
   { x: 6210, y: 488 },
   { x: 7050, y: 520 },
   { x: 8766, y: 520 },
@@ -40,7 +40,6 @@ export const ZOMBIES_SPAWN_POSITION = [
   { x: 3060, y: 520 },
   { x: 3335, y: 520 },
   { x: 3420, y: 200 },
-  { x: 5266, y: 520 },
   { x: 5370, y: 328 },
   { x: 5757, y: 520 },
   { x: 7290, y: 520 },
@@ -75,4 +74,5 @@ export const ARCHERS_SPAWN_POSITION = [
   isSpawned: false,
 }));
 
-export const EVIL_WIZZARD_SPAWN_POSITION = { x: 15650, y: 400 };
+export const FIRE_WORM_SPAWN_POSITION = { x: 5370, y: 499 };
+export const EVIL_WIZZARD_SPAWN_POSITION = { x: 15650, y: 415 };

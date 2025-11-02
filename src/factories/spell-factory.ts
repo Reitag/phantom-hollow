@@ -19,14 +19,14 @@ export class SpellFactory {
     }
   }
 
-  public createFireball(character: Character): FireBall {
-    const position = this.getSpellSpawnPosition(character);
+  public createFireball(character: Character, position?: { x: number; y: number }): FireBall {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
     const direction = character.getFacingRight() ? 1 : -1;
     const spellPower = character.getStats().damage.spellPower as SpellPower;
 
     const fireBall = new FireBall({
       scene: this.scene,
-      position: position,
+      position: spawnPosition,
       keyName: SPELLS.FIRE_BALL,
       frame: 0,
       caster: character,
@@ -89,14 +89,14 @@ export class SpellFactory {
     return wind;
   }
 
-  public createShadowBolt(character: Character): ShadowBolt {
-    const position = this.getSpellSpawnPosition(character);
+  public createShadowBolt(character: Character, position?: { x: number; y: number }): ShadowBolt {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
     const direction = character.getFacingRight() ? 1 : -1;
     const spellPower = character.getStats().damage.spellPower as SpellPower;
 
     const shadowBolt = new ShadowBolt({
       scene: this.scene,
-      position: position,
+      position: spawnPosition,
       keyName: SPELLS.SHADOW_BOLT,
       frame: 0,
       caster: character,

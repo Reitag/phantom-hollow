@@ -14,14 +14,19 @@ import { Boss } from '../../base/ai/boss';
 import { AiMutatedBat } from '../enemies/ai-mutated-bat';
 
 export class AiEvilWizard extends Boss {
-  private dreadAura: DreadAura;
-  private spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
-  private spellCooldown: SpellCooldowns;
-  private aiMutatedBat: AiMutatedBat;
-  private castShadowBoltBind: () => void;
+  private readonly spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
+  private readonly spellCooldowns: SpellCooldowns;
+  private readonly castShadowBoltHandler: () => void;
+
+  private readonly dreadAura: DreadAura;
+  private readonly aiMutatedBat: AiMutatedBat;
 
   constructor(boss: Character, player: Player) {
     super(boss, player);
+
+    this.spellCooldowns = new SpellCooldowns(this.boss.scene);
+    this.castShadowBoltHandler = this.castShadowBolt.bind(this);
+
     this.dreadAura = new DreadAura(
       {
         scene: boss.scene,
@@ -32,74 +37,101 @@ export class AiEvilWizard extends Boss {
       },
       DREAD_AURA_STATS.RANGE
     );
+
     this.aiMutatedBat = new AiMutatedBat(this.player);
-    this.spellCooldown = new SpellCooldowns(this.boss.scene);
-    this.castShadowBoltBind = this.castShadowBolt.bind(this);
   }
 
-  public update(delta: number): void {
+  protected updateBossState(delta: number): void {
+    this.boss.update(delta);
     this.aiMutatedBat.update(delta);
 
-    if (this.boss.getDead()) {
-      return;
-    }
-
-    if (!this.canEngage(EVIL_WIZARD_STATS.ENGAGE_DISTANCE)) return;
-    if (this.player.x > this.boss.x) {
-      this.boss.flipCharacterToRight(true);
-    } else {
-      this.boss.flipCharacterToRight(false);
-    }
-
     this.dreadAura.update(this.player, delta);
-    const fms = this.boss.getStateMachine();
-    const currentState = fms.currentStateName;
 
-    if (!this.spellCooldown.isOnCooldown(SHADOW_BOLT.NAME)) {
-      this.spellCooldown.startCooldown(SHADOW_BOLT.NAME, SHADOW_BOLT.DURATION);
+    this.updateAggro(delta, EVIL_WIZARD_STATS.ENGAGE_DISTANCE);
+  }
+
+  protected finalCall(): void {
+    this.aiMutatedBat.getEnemies().forEach((bat) => {
+      if (bat.active && bat.hasVelocity()) {
+        bat.setVelocity(0, 0);
+      }
+    });
+  }
+
+  protected chillBehaviour(): void {
+    const fsm = this.boss.getStateMachine();
+    const currentState = fsm.currentStateName;
+
+    if (currentState !== ENEMY_STATES.PATROL) {
+      fsm.changeState(ENEMY_STATES.PATROL, EVIL_WIZARD_STATS.WALK_BOUND);
+    }
+  }
+
+  protected aggroedBehaviour(): void {
+    this.updateFacingDirection();
+
+    const fsm = this.boss.getStateMachine();
+    const currentState = fsm.currentStateName;
+
+    if (!this.spellCooldowns.isOnCooldown(SHADOW_BOLT.NAME)) {
+      this.spellCooldowns.startCooldown(SHADOW_BOLT.NAME, SHADOW_BOLT.DURATION);
       if (currentState !== ENEMY_STATES.CASTING) {
-        fms.changeState(ENEMY_STATES.CASTING, this.castShadowBoltBind, EVIL_WIZARD_STATS.CAST);
+        fsm.changeState(ENEMY_STATES.CASTING, this.castShadowBoltHandler, EVIL_WIZARD_STATS.CAST);
       }
     }
 
-    if (!this.spellCooldown.isOnCooldown(SUMMON_BAT.NAME)) {
-      this.spellCooldown.startCooldown(SUMMON_BAT.NAME, SUMMON_BAT.DURATION);
+    if (!this.spellCooldowns.isOnCooldown(SUMMON_BAT.NAME)) {
+      this.spellCooldowns.startCooldown(SUMMON_BAT.NAME, SUMMON_BAT.DURATION);
       this.summonBat();
     }
   }
 
+  private updateFacingDirection(): void {
+    this.boss.flipCharacterToRight(this.player.x > this.boss.x);
+  }
+
   private summonBat(): void {
     const direction = this.boss.getFacingRight();
-    const x = this.boss.x;
-    const y = this.boss.y;
-    const yRand = Math.floor(Math.random() * (20 + 1)) + y;
-    const xCoor = x + 20 * (direction ? 1 : -1);
+    const xOffset = 20 * (direction ? 1 : -1);
+    const yOffset = Phaser.Math.Between(-10, 10);
+
+    const spawnPos = {
+      x: this.boss.x + xOffset,
+      y: this.boss.y + yOffset,
+    };
 
     const bat = new MutatedBat({
       scene: this.boss.scene,
-      position: { x: xCoor, y: yRand },
+      position: spawnPos,
       keyName: CHARACTERS.MUTATED_BAT,
       frame: 0,
       facingRight: direction,
       stats: {
         health: MUTATED_BAT_STATS.HEALTH,
         speed: MUTATED_BAT_STATS.FLY,
-        damage: {
-          meleeAttack: undefined,
-          spellPower: undefined,
-        },
+        damage: { meleeAttack: undefined, spellPower: undefined },
         defense: undefined,
         aggro: false,
       },
-    });
+    }).setDepth(Z_POSITION.ENEMY);
 
-    bat.setDepth(Z_POSITION.ENEMY);
     this.aiMutatedBat.addEnemy(bat);
   }
 
   private castShadowBolt(): void {
     this.boss.anims.play(BOSSES_ANIMATION.EVIL_WIZARD.CAST, true);
-    const shadowBolt = this.spellFactory.createShadowBolt(this.boss);
+    const { x, y } = this.boss.getPosition();
+    const flip = this.boss.getFacingRight() ? 1 : -1;
+
+    const handOffsetX = 40 * flip;
+    const handOffsetY = 30;
+
+    const spawnPosition = {
+      x: x + handOffsetX,
+      y: y + handOffsetY,
+    };
+
+    const shadowBolt = this.spellFactory.createShadowBolt(this.boss, spawnPosition);
     shadowBolt.cast();
   }
 }

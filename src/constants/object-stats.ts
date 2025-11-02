@@ -5,7 +5,7 @@ export const SPIKE_HIT = 10;
 export const SPEAR_HIT = 50;
 
 export const FIRE_BALL_STATS = {
-  HIT: 120,
+  HIT: 25,
   SPEED: 300,
   CAST_TIME: 800,
   LIFE_TIME: 1100,
@@ -24,12 +24,12 @@ export const WIND_STATS = {
 
 export const DREAD_AURA_STATS = {
   KEY_NAME: UI.DREAD_AURA_DEBUFF,
-  DAMAGE: 10,
+  DAMAGE: 1,
   RANGE: 250,
 };
 
 export const SHADOW_BOLT_STATS = {
-  HIT: 30,
+  HIT: 15,
   SPEED: 300,
   LIFE_TIME: 2000,
 } as const;
@@ -39,7 +39,7 @@ export const PLAYER_STATS = {
   HEALTH: 100000000000,
   MOVE: 190,
   JUMP: 550,
-  SPELL_POWER: 1,
+  SPELL_POWER: 4,
 } as const;
 
 export const SKELETON_WARRIOR_STATS = {
@@ -81,9 +81,20 @@ export const MUTATED_BAT_STATS = {
   LIFE_TIME: 1500,
 } as const;
 
+export const FIRE_WORM_STATS = {
+  HEALTH: 500,
+  WALK_BOUND: 100,
+  WALK: 7,
+  ENGAGE_DISTANCE: 450,
+  CAST: 13,
+  SPELL_POWER: 5,
+} as const;
+
 export const EVIL_WIZARD_STATS = {
   HEALTH: 1000,
+  WALK_BOUND: 100,
+  WALK: 50,
   ENGAGE_DISTANCE: 450,
   CAST: 10,
-  SPELL_POWER: 1,
+  SPELL_POWER: 6,
 } as const;

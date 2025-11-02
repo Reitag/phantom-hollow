@@ -25,17 +25,24 @@ export class DreadAura extends Spell {
     this.setVisible(false);
   }
 
-  public cast(): void {}
+  public cast(): void {
+    const y = this.caster.getBottomCenter();
+    this.x = this.caster.x;
+    this.y = y.y;
+  }
 
   public update(target: Character, delta: number): void {
+    this.cast();
+
     if (!target || target.getDead()) {
       this.removeDebuffIcon(target);
       return;
     }
 
-    const distance = target.x - this.x;
+    const distanceX = target.x - this.x;
+    const distanceY = target.y - this.y;
 
-    if (Math.abs(distance) <= this.range && this.damage) {
+    if (Math.abs(distanceX) <= this.range && Math.abs(distanceY) <= this.range && this.damage) {
       target.takeAuraDamage(this.causeDamage() * (delta / 1000));
       this.setDebuffIcon(target);
     } else {

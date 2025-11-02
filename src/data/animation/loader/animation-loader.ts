@@ -11,6 +11,7 @@ import { itemsAnim } from '../items/items-anim';
 import { portalAnim } from '../misc/portal-anim';
 import { archerAnim } from '../characters/enemies/archer-anim';
 import { darkEnergyAnim } from '../misc/dark-energy-anim';
+import { fireWormAnim } from '../characters/bosses/fire-worm-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -30,6 +31,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
 
   // Bosses
   evilwizardAnim(anims);
+  fireWormAnim(anims);
 
   // Items
   itemsAnim(anims);

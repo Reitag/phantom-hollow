@@ -31,12 +31,16 @@ export class Casting extends CharacterState {
       },
       this
     );
+
+    this.setToZeroVelocityX();
+    this.characterSpeed?.setMovementLock(true);
   }
 
   public onUpdate(): void {}
 
   public onExit(): void {
     this.character.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableCast, this);
+    this.characterSpeed?.setMovementLock(false);
   }
 
   private enableCast(

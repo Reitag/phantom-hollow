@@ -32,9 +32,15 @@
     },
     {
       "type": "spritesheet",
+      "key": "fire-worm",
+      "url": "assets/characters/bosses/fire-worm.png",
+      "frameConfig": { "frameWidth": 90, "frameHeight": 90 }
+    },
+    {
+      "type": "spritesheet",
       "key": "evil-wizard",
       "url": "assets/characters/bosses/evil-wizard.png",
-      "frameConfig": { "frameWidth": 140, "frameHeight": 97 }
+      "frameConfig": { "frameWidth": 130, "frameHeight": 130 }
     }
   ]
 }

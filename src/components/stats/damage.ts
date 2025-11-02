@@ -41,6 +41,6 @@ export class SpellPower extends Damage {
   }
 
   public get multiplier(): number {
-    return this.total / this.base;
+    return this.total;
   }
 }

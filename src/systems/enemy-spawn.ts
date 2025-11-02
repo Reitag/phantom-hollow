@@ -2,6 +2,7 @@ import { CHARACTERS } from '@/constants/asset-keys';
 import {
   ARCHER_STATS,
   EVIL_WIZARD_STATS,
+  FIRE_WORM_STATS,
   SKELETON_WARRIOR_STATS,
   ZOMBIE_STATS,
 } from '@/constants/object-stats';
@@ -10,17 +11,20 @@ import { Archer } from '@/entities/characters/enemies/archer';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { Zombie } from '@/entities/characters/enemies/zombie';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
+import { FireWorm } from '@/entities/characters/bosses/fire-worm';
 import { SpawnPoint } from '@/utils/types';
 import { Z_POSITION } from '@/constants/z-position';
 import { AiArcher } from '@/ai/enemies/ai-archer';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
 import { AiZombie } from '@/ai/enemies/ai-zombie';
+import { AiFireWorm } from '@/ai/bosses/ai-fire-worm';
 import { AiEvilWizard } from '@/ai/bosses/ai-evil-wizard';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import {
   ARCHERS_SPAWN_POSITION,
   EVIL_WIZZARD_SPAWN_POSITION,
+  FIRE_WORM_SPAWN_POSITION,
   SKELETONS_SPAWN_POSITION,
   ZOMBIES_SPAWN_POSITION,
 } from '@/constants/spawn-positions';
@@ -40,10 +44,11 @@ export class EnemySpawn {
   private aiSkeletonWarrior = new AiSkeletonWarrior(ServiceLocator.resolve(ServiceKeys.player));
   private aiZombie = new AiZombie(ServiceLocator.resolve(ServiceKeys.player));
   private aiArcher = new AiArcher(ServiceLocator.resolve(ServiceKeys.player));
+  private aiFireWorm: AiFireWorm;
   private aiEvilWizard: AiEvilWizard;
 
   constructor(private scene: Phaser.Scene) {
-    const boss = new EvilWizzard({
+    const evelWizzard = new EvilWizzard({
       scene: scene,
       position: EVIL_WIZZARD_SPAWN_POSITION,
       keyName: CHARACTERS.EVIL_WIZARD,
@@ -51,7 +56,7 @@ export class EnemySpawn {
       facingRight: false,
       stats: {
         health: EVIL_WIZARD_STATS.HEALTH,
-        speed: undefined,
+        speed: EVIL_WIZARD_STATS.WALK,
         damage: {
           meleeAttack: undefined,
           spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
@@ -61,14 +66,36 @@ export class EnemySpawn {
       },
     }).setDepth(Z_POSITION.ENEMY);
 
-    CollisionService.resolveGroup(GroupKeys.enemy)?.add(boss, true);
-    this.aiEvilWizard = new AiEvilWizard(boss, ServiceLocator.resolve(ServiceKeys.player));
+    CollisionService.resolveGroup(GroupKeys.enemy)?.add(evelWizzard, true);
+    this.aiEvilWizard = new AiEvilWizard(evelWizzard, ServiceLocator.resolve(ServiceKeys.player));
+
+    const fireWorm = new FireWorm({
+      scene: scene,
+      position: FIRE_WORM_SPAWN_POSITION,
+      keyName: CHARACTERS.FIRE_WORM,
+      frame: 0,
+      facingRight: false,
+      stats: {
+        health: FIRE_WORM_STATS.HEALTH,
+        speed: FIRE_WORM_STATS.WALK,
+        damage: {
+          meleeAttack: undefined,
+          spellPower: FIRE_WORM_STATS.SPELL_POWER,
+        },
+        defense: undefined,
+        aggro: true,
+      },
+    }).setDepth(Z_POSITION.ENEMY);
+
+    CollisionService.resolveGroup(GroupKeys.enemy)?.add(fireWorm, true);
+    this.aiFireWorm = new AiFireWorm(fireWorm, ServiceLocator.resolve(ServiceKeys.player));
   }
 
   public update(player: Player, delta: number): void {
     this.aiSkeletonWarrior.update(delta);
     this.aiZombie.update(delta);
     this.aiArcher.update(delta);
+    this.aiFireWorm.update(delta);
     this.aiEvilWizard.update(delta);
 
     const playerX = Math.round(player.x);

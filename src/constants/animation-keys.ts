@@ -1,6 +1,7 @@
 export const CHARACTER_ANIMATION_KEYS = {
   IDLE: 'IDLE',
   MOVE: 'MOVE',
+  RUN: 'RUN',
   ATTACK: 'ATTACK',
   CAST: 'CAST',
   INSTANT_CAST: 'INSTANT_CAST',
@@ -48,8 +49,16 @@ export const ENEMIES_ANIMATION = {
 export const BOSSES_ANIMATION = {
   EVIL_WIZARD: {
     [CHARACTER_ANIMATION_KEYS.IDLE]: 'evil-wizard-idle',
+    [CHARACTER_ANIMATION_KEYS.MOVE]: 'evil-wizard-move',
+    [CHARACTER_ANIMATION_KEYS.RUN]: 'evil-wizard-run',
     [CHARACTER_ANIMATION_KEYS.CAST]: 'evil-wizard-cast',
     [CHARACTER_ANIMATION_KEYS.DEATH]: 'evil-wizard-death',
+  },
+  FIRE_WORM: {
+    [CHARACTER_ANIMATION_KEYS.IDLE]: 'fire-worm-idle',
+    [CHARACTER_ANIMATION_KEYS.MOVE]: 'fire-worm-move',
+    [CHARACTER_ANIMATION_KEYS.CAST]: 'fire-worm-cast',
+    [CHARACTER_ANIMATION_KEYS.DEATH]: 'fire-worm-death',
   },
 } as const;
 
