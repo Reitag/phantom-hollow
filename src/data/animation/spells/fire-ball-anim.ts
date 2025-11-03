@@ -11,9 +11,9 @@ export function fireballAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
-  if (!anims.get(SPELLS_ANIMATION.FIRE_BALL.DESTROY)) {
+  if (!anims.get(SPELLS_ANIMATION.FIRE_BALL.HIT)) {
     anims.create({
-      key: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
+      key: SPELLS_ANIMATION.FIRE_BALL.HIT,
       frames: anims.generateFrameNumbers(SPELLS.FIRE_BALL, { start: 4, end: 9 }),
       frameRate: 20,
       repeat: 0,

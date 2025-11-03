@@ -28,7 +28,7 @@ export class Character extends ArcadeSprite {
   protected facingRight!: boolean;
   protected isDead = false;
   protected stateMachine: StateMachine;
-  protected animations: AnimationMap = {};
+
   protected modifier: ModifierSystem;
 
   protected stats: Stats;
@@ -75,10 +75,6 @@ export class Character extends ArcadeSprite {
     return this.facingRight;
   }
 
-  public getAnimations(): AnimationMap {
-    return this.animations;
-  }
-
   public getPosition(): Position {
     return { x: this.x, y: this.y };
   }
@@ -102,10 +98,6 @@ export class Character extends ArcadeSprite {
 
   public switchToState(state: string): void {
     this.stateMachine.changeState(state);
-  }
-
-  public resolveAnimation(key: string): string | undefined {
-    return this.animations[key];
   }
 
   public takeDamage(amount: number, attacker?: Character): void {

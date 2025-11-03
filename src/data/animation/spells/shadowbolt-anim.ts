@@ -11,9 +11,9 @@ export function shadowboltAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
-  if (!anims.get(SPELLS_ANIMATION.SHADOW_BOLT.DESTROY)) {
+  if (!anims.get(SPELLS_ANIMATION.SHADOW_BOLT.HIT)) {
     anims.create({
-      key: SPELLS_ANIMATION.SHADOW_BOLT.DESTROY,
+      key: SPELLS_ANIMATION.SHADOW_BOLT.HIT,
       frames: anims.generateFrameNumbers(SPELLS.SHADOW_BOLT, { start: 4, end: 10 }),
       frameRate: 20,
       repeat: 0,

@@ -11,6 +11,12 @@ export const CHARACTER_ANIMATION_KEYS = {
   DEATH: 'DEATH',
 };
 
+export const SPELL_ANIMATION_KEYS = {
+  START: 'START',
+  MAIN: 'MAIN',
+  HIT: 'HIT',
+};
+
 export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.IDLE]: 'player-idle',
   [CHARACTER_ANIMATION_KEYS.MOVE]: 'player-move',
@@ -64,6 +70,24 @@ export const BOSSES_ANIMATION = {
 
 export const SPELLS_ANIMATION = {
   FIRE_BALL: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'fire-ball-main',
+    [SPELL_ANIMATION_KEYS.HIT]: 'fire-ball-hit',
+  },
+  BLINK: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'blink-main',
+  },
+  WIND: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'wind-main',
+    [SPELL_ANIMATION_KEYS.HIT]: 'wind-hit',
+  },
+  SHADOW_BOLT: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'shadow-bolt-main',
+    [SPELL_ANIMATION_KEYS.HIT]: 'shadow-bolt-hit',
+  },
+} as const;
+
+/*export const SPELLS_ANIMATION = {
+  FIRE_BALL: {
     MAIN: 'fire-ball-anim',
     DESTROY: 'fire-ball-anim-destroy',
   },
@@ -78,7 +102,7 @@ export const SPELLS_ANIMATION = {
     MAIN: 'shadow-bolt-anim',
     DESTROY: 'shadow-bolt-anim-destroy',
   },
-} as const;
+} as const;*/
 
 export const ITEMS_ANIMATION = {
   COIN: {

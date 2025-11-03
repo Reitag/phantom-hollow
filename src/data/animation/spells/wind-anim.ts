@@ -11,9 +11,9 @@ export function windAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
-  if (!anims.get(SPELLS_ANIMATION.WIND.DESTROY)) {
+  if (!anims.get(SPELLS_ANIMATION.WIND.HIT)) {
     anims.create({
-      key: SPELLS_ANIMATION.WIND.DESTROY,
+      key: SPELLS_ANIMATION.WIND.HIT,
       frames: anims.generateFrameNumbers(SPELLS.WIND, { start: 4, end: 9 }),
       frameRate: 20,
       repeat: 0,

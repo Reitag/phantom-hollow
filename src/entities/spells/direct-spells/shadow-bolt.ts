@@ -2,6 +2,7 @@ import { SHADOW_VULNERABILITY } from '@/constants/modifier-stats';
 import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SHADOW_BOLT_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
+import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
 
 export class ShadowBolt extends Spell {
   constructor({
@@ -11,7 +12,6 @@ export class ShadowBolt extends Spell {
     frame,
     caster,
     spellPower,
-    animation,
     damage,
     speed,
     direction,
@@ -23,11 +23,16 @@ export class ShadowBolt extends Spell {
       frame,
       caster,
       spellPower,
-      animation,
       damage,
       speed,
       direction,
     });
+
+    this.animations = {
+      [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,
+      [SPELL_ANIMATION_KEYS.HIT]: SPELLS_ANIMATION.SHADOW_BOLT.HIT,
+    };
+
     this.arcadeBody.setSize(22, 13);
   }
 

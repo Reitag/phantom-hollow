@@ -1,6 +1,7 @@
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpellPower } from '@/components/stats/damage';
-import { ArcadeSpriteConfig, SpellAnimationConfig } from '@/utils/types';
+import { ArcadeSpriteConfig } from '@/utils/types';
+import { SPELL_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
@@ -8,7 +9,6 @@ import { Character } from './character';
 export interface SpellConfig extends ArcadeSpriteConfig {
   caster: Character;
   spellPower?: SpellPower;
-  animation?: SpellAnimationConfig;
   damage?: number;
   speed?: number;
   direction?: number;
@@ -17,7 +17,6 @@ export interface SpellConfig extends ArcadeSpriteConfig {
 export abstract class Spell extends ArcadeSprite {
   protected caster: Character;
   protected spellPower: SpellPower | null = null;
-  protected animation: SpellAnimationConfig | null = null;
   protected damage: number | null = null;
   protected speed: number | null = null;
   protected direction: number | null = null;
@@ -31,7 +30,6 @@ export abstract class Spell extends ArcadeSprite {
     frame,
     caster,
     spellPower,
-    animation,
     damage,
     speed,
     direction,
@@ -44,7 +42,6 @@ export abstract class Spell extends ArcadeSprite {
     this.damage = damage || null;
     this.speed = speed || null;
     this.direction = direction || null;
-    this.animation = animation || null;
 
     this.setDepth(Z_POSITION.SPELL);
   }
@@ -54,11 +51,12 @@ export abstract class Spell extends ArcadeSprite {
   public applyEffect(target: Character): void {}
 
   public destroySpell(): void {
-    if (!this.animation) return;
+    if (!this.animations) return;
     if (this.direction) {
       this.setVelocityX(80 * this.direction);
     }
-    playAnimation(this, this.animation.destroy);
+    const animKey = this.resolveAnimation(SPELL_ANIMATION_KEYS.HIT);
+    playAnimation(this, animKey);
 
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.destroy();
@@ -84,11 +82,12 @@ export abstract class Spell extends ArcadeSprite {
   }
 
   protected playMainAnimation(): void {
-    if (!this.animation) return;
+    if (!this.animations) return;
     if (this.direction !== 1) {
       this.setFlipX(true);
     }
-    playAnimation(this, this.animation.main);
+    const animKey = this.resolveAnimation(SPELL_ANIMATION_KEYS.MAIN);
+    playAnimation(this, animKey);
   }
 
   protected setSpellVelocity(): void {

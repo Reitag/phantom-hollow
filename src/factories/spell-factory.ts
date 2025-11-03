@@ -5,7 +5,6 @@ import { Blink } from '@/entities/spells/effect-spells/blink';
 import { Wind } from '@/entities/spells/direct-spells/wind';
 import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { SPELLS } from '@/constants/asset-keys';
-import { SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { FIRE_BALL_STATS, WIND_STATS, SHADOW_BOLT_STATS } from '@/constants/object-stats';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 
@@ -31,10 +30,6 @@ export class SpellFactory {
       frame: 0,
       caster: character,
       spellPower: spellPower,
-      animation: {
-        main: SPELLS_ANIMATION.FIRE_BALL.MAIN,
-        destroy: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
-      },
       damage: FIRE_BALL_STATS.HIT,
       speed: FIRE_BALL_STATS.SPEED,
       direction: direction,
@@ -55,9 +50,6 @@ export class SpellFactory {
       keyName: SPELLS.BLINK,
       frame: 0,
       caster: character,
-      animation: {
-        main: SPELLS_ANIMATION.BLINK.MAIN,
-      },
       direction: direction,
     });
 
@@ -76,10 +68,6 @@ export class SpellFactory {
       keyName: SPELLS.WIND,
       frame: 0,
       caster: character,
-      animation: {
-        main: SPELLS_ANIMATION.WIND.MAIN,
-        destroy: SPELLS_ANIMATION.WIND.DESTROY,
-      },
       speed: WIND_STATS.SPEED,
       direction: direction,
     });
@@ -101,10 +89,6 @@ export class SpellFactory {
       frame: 0,
       caster: character,
       spellPower: spellPower,
-      animation: {
-        main: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,
-        destroy: SPELLS_ANIMATION.SHADOW_BOLT.DESTROY,
-      },
       damage: SHADOW_BOLT_STATS.HIT,
       speed: SHADOW_BOLT_STATS.SPEED,
       direction: direction,

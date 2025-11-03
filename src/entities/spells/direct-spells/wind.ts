@@ -1,30 +1,27 @@
 import { Spell, SpellConfig } from '@/base/objects/spell';
 import { WIND_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
+import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
 
 export class Wind extends Spell {
-  constructor({
-    scene,
-    position,
-    keyName,
-    frame,
-    caster,
-    animation,
-    damage,
-    speed,
-    direction,
-  }: SpellConfig) {
+  constructor({ scene, position, keyName, frame, caster, damage, speed, direction }: SpellConfig) {
     super({
       scene,
       position,
       keyName,
       frame,
       caster,
-      animation,
       damage,
       speed,
       direction,
     });
+
+    this.animations = {
+      [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.WIND.MAIN,
+      [SPELL_ANIMATION_KEYS.HIT]: SPELLS_ANIMATION.WIND.HIT,
+    };
+
+    this.arcadeBody.setSize(22, 13);
   }
 
   public cast(): void {

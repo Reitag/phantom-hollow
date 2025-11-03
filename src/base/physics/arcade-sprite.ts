@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
 
-import { ArcadeSpriteConfig } from '@/utils/types';
+import { AnimationMap, ArcadeSpriteConfig } from '@/utils/types';
 import { isArcadePhysicsBody } from '@/utils/helpers';
 
 export class ArcadeSprite extends Phaser.Physics.Arcade.Sprite {
   protected arcadeBody: Phaser.Physics.Arcade.Body;
   protected keyName: string;
+  protected animations: AnimationMap = {};
 
   constructor({ scene, position, keyName, frame }: ArcadeSpriteConfig) {
     const { x, y } = position;
@@ -25,7 +26,15 @@ export class ArcadeSprite extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  getArcadeBody(): Phaser.Physics.Arcade.Body {
+  public getArcadeBody(): Phaser.Physics.Arcade.Body {
     return this.arcadeBody;
+  }
+
+  public getAnimations(): AnimationMap {
+    return this.animations;
+  }
+
+  public resolveAnimation(key: string): string | undefined {
+    return this.animations[key];
   }
 }
