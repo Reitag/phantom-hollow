@@ -1,6 +1,6 @@
 import { Character, CharacterConfig } from '@/base/objects/character';
 import { RangeAttack } from '@/components/states/enemy-states/range-attack';
-import { Patrol } from '@/components/states/enemy-states/patrol';
+import { Freeze } from '@/components/states/share/freeze';
 import { Death } from '@/components/states/share/death';
 import { CHARACTER_ANIMATION_KEYS, ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { CHARACTERS } from '@/constants/asset-keys';
@@ -22,6 +22,7 @@ export class Archer extends Character {
 
     this.stateMachine.addState(new Idle(this));
     this.stateMachine.addState(new RangeAttack(this));
+    this.stateMachine.addState(new Freeze(this, CHARACTERS.ARCHER));
     this.stateMachine.addState(new Death(this, CHARACTERS.ARCHER, 57));
 
     const spriteHeight = this.height;

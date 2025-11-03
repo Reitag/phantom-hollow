@@ -13,6 +13,7 @@ import { archerAnim } from '../characters/enemies/archer-anim';
 import { darkEnergyAnim } from '../misc/dark-energy-anim';
 import { fireWormAnim } from '../characters/bosses/fire-worm-anim';
 import { frostboltAnim } from '../spells/frost-bolt-anim';
+import { freezeAnim } from '../effects/freeze-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -37,6 +38,9 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
 
   // Items
   itemsAnim(anims);
+
+  // Effects
+  freezeAnim(anims);
 
   // Misc
   portalAnim(anims);

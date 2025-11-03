@@ -2,6 +2,7 @@ import { Spell, SpellConfig } from '@/base/objects/spell';
 import { FROST_BOLT_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
+import { SHARED_STATES } from '@/constants/state-keys';
 
 export class FrostBolt extends Spell {
   constructor({
@@ -46,5 +47,7 @@ export class FrostBolt extends Spell {
     });
   }
 
-  public override applyEffect(target: Character): void {}
+  public applyEffect(target: Character): void {
+    target.getStateMachine().changeState(SHARED_STATES.FREEZE);
+  }
 }

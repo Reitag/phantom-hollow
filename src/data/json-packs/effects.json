@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "type": "spritesheet",
+      "key": "freeze",
+      "url": "assets/effects/freeze.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    }
+  ]
+}

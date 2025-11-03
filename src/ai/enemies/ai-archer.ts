@@ -29,6 +29,13 @@ export class AiArcher extends Enemy {
 
   protected updateEnemyState(archer: Archer, delta: number): void {
     archer.update(delta);
+
+    const fsm = archer.getStateMachine();
+    const currentState = fsm.currentStateName;
+    if (currentState === SHARED_STATES.FREEZE) return;
+
+    this.updateAggro(archer, delta);
+
     if (this.player.getDead()) return;
   }
 

@@ -1,6 +1,6 @@
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { SKELETON_WARRIOR_STATS } from '@/constants/object-stats';
-import { ENEMY_STATES } from '@/constants/state-keys';
+import { ENEMY_STATES, SHARED_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { StateMachine } from '@/systems/state-machine';
@@ -23,10 +23,15 @@ export class AiSkeletonWarrior extends Enemy {
 
   protected updateEnemyState(skeleton: SkeletonWarrior, delta: number): void {
     skeleton.update(delta);
-    if (this.player.getDead()) return;
 
     const fsm = skeleton.getStateMachine();
     const currentState = fsm.currentStateName;
+    if (currentState === SHARED_STATES.FREEZE) return;
+
+    this.updateAggro(skeleton, delta);
+
+    if (this.player.getDead()) return;
+
     const { x, y } = this.distanceToPlayer(skeleton);
 
     if (x < SKELETON_WARRIOR_STATS.ATTACK_RANGE && y < this.sameYThreshold) {
@@ -41,12 +46,15 @@ export class AiSkeletonWarrior extends Enemy {
 
   protected chillBehaviour(enemy: Character, fsm: StateMachine): void {
     const currentState = fsm.currentStateName;
+    if (currentState === SHARED_STATES.FREEZE) return;
+
     if (currentState !== ENEMY_STATES.PATROL)
       fsm.changeState(ENEMY_STATES.PATROL, SKELETON_WARRIOR_STATS.WALK_BOUND);
   }
 
   protected aggroedBehaviour(enemy: Character, fsm: StateMachine): void {
     const currentState = fsm.currentStateName;
+    if (currentState === SHARED_STATES.FREEZE) return;
 
     if (
       enemy.anims.isPlaying &&

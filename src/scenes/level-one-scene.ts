@@ -345,7 +345,6 @@ export class LevelOneScene extends Phaser.Scene {
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
     spell.registerHit(victim);
-
     spell.applyEffect(victim);
 
     if (spell.causeDamage() > 0) {

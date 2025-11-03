@@ -34,7 +34,7 @@ export class Wind extends Spell {
     });
   }
 
-  public override applyEffect(target: Character): void {
+  public applyEffect(target: Character): void {
     if (!target) return;
     target.getStats().speed?.applyForce(WIND_STATS.FORCE);
   }

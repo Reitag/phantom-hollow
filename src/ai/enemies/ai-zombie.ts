@@ -1,6 +1,6 @@
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { DISEASE } from '@/constants/modifier-stats';
-import { ENEMY_STATES } from '@/constants/state-keys';
+import { ENEMY_STATES, SHARED_STATES } from '@/constants/state-keys';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Zombie } from '@/entities/characters/enemies/zombie';
@@ -24,10 +24,15 @@ export class AiZombie extends Enemy {
 
   protected updateEnemyState(zombie: Zombie, delta: number): void {
     zombie.update(delta);
-    if (this.player.getDead()) return;
 
     const fsm = zombie.getStateMachine();
     const currentState = fsm.currentStateName;
+    if (currentState === SHARED_STATES.FREEZE) return;
+
+    this.updateAggro(zombie, delta);
+
+    if (this.player.getDead()) return;
+
     const { x, y } = this.distanceToPlayer(zombie);
 
     if (x < ZOMBIE_STATS.ATTACK_RANGE && y < this.sameYThreshold) {

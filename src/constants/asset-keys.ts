@@ -11,6 +11,10 @@ export const CHARACTERS = {
   EVIL_WIZARD: 'evil-wizard',
 } as const;
 
+export const EFFECTS = {
+  FREEZE: 'freeze',
+} as const;
+
 export const ITEMS = {
   COIN: 'coin',
 } as const;

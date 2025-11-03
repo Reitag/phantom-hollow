@@ -17,6 +17,12 @@ export const SPELL_ANIMATION_KEYS = {
   HIT: 'HIT',
 };
 
+export const EFFECT_ANIMATION_KEYS = {
+  START: 'START',
+  MAIN: 'MAIN',
+  END: 'END',
+};
+
 export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.IDLE]: 'player-idle',
   [CHARACTER_ANIMATION_KEYS.MOVE]: 'player-move',
@@ -91,23 +97,12 @@ export const SPELLS_ANIMATION = {
   },
 } as const;
 
-/*export const SPELLS_ANIMATION = {
-  FIRE_BALL: {
-    MAIN: 'fire-ball-anim',
-    DESTROY: 'fire-ball-anim-destroy',
+export const EFFECTS_ANIMATION = {
+  FREEZE: {
+    [EFFECT_ANIMATION_KEYS.MAIN]: 'freeze-main',
+    [EFFECT_ANIMATION_KEYS.END]: 'freeze-end',
   },
-  BLINK: {
-    MAIN: 'blink-anim',
-  },
-  WIND: {
-    MAIN: 'wind-anim',
-    DESTROY: 'wind-anim-destroy',
-  },
-  SHADOW_BOLT: {
-    MAIN: 'shadow-bolt-anim',
-    DESTROY: 'shadow-bolt-anim-destroy',
-  },
-} as const;*/
+} as const;
 
 export const ITEMS_ANIMATION = {
   COIN: {

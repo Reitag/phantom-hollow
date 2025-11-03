@@ -19,4 +19,5 @@ export const ENEMY_STATES = {
 export const SHARED_STATES = {
   IDLE: 'Idle',
   DEATH: 'Death',
+  FREEZE: 'Freeze',
 } as const;

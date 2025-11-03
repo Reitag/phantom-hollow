@@ -14,19 +14,20 @@ const packs = [
   { key: 'spells-pack', url: `${packURL}spells.json` },
   { key: 'misc-pack', url: `${packURL}misc.json` },
   { key: 'weapon-pack', url: `${packURL}weapons.json` },
+  { key: 'effects-pack', url: `${packURL}effects.json` },
 ];
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
     super('PreloadScene');
   }
-  preload() {
+  public preload() {
     for (const path of packs) {
       const { key, url } = path;
       this.load.pack(key, url);
     }
   }
-  create() {
+  public create() {
     registerGlobalAnimation(this.anims);
     this.scene.start('LevelOneScene');
   }

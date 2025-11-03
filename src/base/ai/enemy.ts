@@ -22,7 +22,6 @@ export abstract class Enemy {
         return;
       }
 
-      this.updateAggro(enemy, delta);
       this.updateEnemyState(enemy, delta);
     });
   }
