@@ -17,7 +17,7 @@ export class CooldownAnimator {
     this.fullCircle = 360;
   }
 
-  startSingleCooldown(coordinates: Position, duration: number): void {
+  public startSingleCooldown(coordinates: Position, duration: number): void {
     const { x, y } = coordinates;
     const overlay = this.createOverlayMask(x, y);
 
@@ -37,7 +37,7 @@ export class CooldownAnimator {
     });
   }
 
-  startGlobalCooldown(duration: number): void {
+  public startGlobalCooldown(duration: number): void {
     const fireBallOverlay = this.createOverlayMask(
       ICON_OVERLAYS[SPELLS.FIRE_BALL].X,
       ICON_OVERLAYS[SPELLS.FIRE_BALL].Y
@@ -50,12 +50,21 @@ export class CooldownAnimator {
       ICON_OVERLAYS[SPELLS.WIND].X,
       ICON_OVERLAYS[SPELLS.WIND].Y
     );
+    const frostBoltOverlay = this.createOverlayMask(
+      ICON_OVERLAYS[SPELLS.FROST_BOLT].X,
+      ICON_OVERLAYS[SPELLS.FROST_BOLT].Y
+    );
 
     const cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     const overlays: CooldownOverlay[] = [
       [ICON_OVERLAYS[SPELLS.FIRE_BALL], fireBallOverlay, false],
       [ICON_OVERLAYS[SPELLS.BLINK], blinkOverlay, cooldowns.isOnCooldown(SPELLS.BLINK)],
       [ICON_OVERLAYS[SPELLS.WIND], windOverlay, cooldowns.isOnCooldown(SPELLS.WIND)],
+      [
+        ICON_OVERLAYS[SPELLS.FROST_BOLT],
+        frostBoltOverlay,
+        cooldowns.isOnCooldown(SPELLS.FROST_BOLT),
+      ],
     ];
 
     this.scene.tweens.addCounter({

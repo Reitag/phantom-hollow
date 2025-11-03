@@ -80,6 +80,11 @@ export const SPELLS_ANIMATION = {
     [SPELL_ANIMATION_KEYS.MAIN]: 'wind-main',
     [SPELL_ANIMATION_KEYS.HIT]: 'wind-hit',
   },
+  FROST_BOLT: {
+    [SPELL_ANIMATION_KEYS.START]: 'frost-bolt-start',
+    [SPELL_ANIMATION_KEYS.MAIN]: 'frost-bolt-main',
+    [SPELL_ANIMATION_KEYS.HIT]: 'frost-bolt-hit',
+  },
   SHADOW_BOLT: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'shadow-bolt-main',
     [SPELL_ANIMATION_KEYS.HIT]: 'shadow-bolt-hit',

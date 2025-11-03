@@ -22,6 +22,13 @@ export const WIND_STATS = {
   LIFE_TIME: 700,
 } as const;
 
+export const FROST_BOLT_STATS = {
+  HIT: 5,
+  SPEED: 300,
+  CAST_TIME: 600,
+  LIFE_TIME: 1100,
+} as const;
+
 export const DREAD_AURA_STATS = {
   KEY_NAME: UI.DREAD_AURA_DEBUFF,
   DAMAGE: 1,

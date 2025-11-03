@@ -74,7 +74,7 @@ export abstract class CharacterState implements State {
     }
   }
 
-  protected playAnimation(key: string | undefined, force = false): void {
+  /*protected playAnimation(key: string | undefined, force = false): void {
     if (!key) return;
     const exists = this.character.scene.anims.exists(key);
     if (!exists) {
@@ -83,6 +83,34 @@ export abstract class CharacterState implements State {
     }
     if (!force && this.character.anims.currentAnim?.key === key) return;
     this.character.anims.play(key, true);
+  }*/
+
+  protected playAnimation(key: string | undefined, force = false, duration?: number): void {
+    if (!key) return;
+
+    const anims = this.character.anims;
+    const scene = this.character.scene;
+    const exists = scene.anims.exists(key);
+    if (!exists) {
+      console.warn(`[Animation missing] ${key}`);
+      return;
+    }
+
+    if (!force && anims.currentAnim?.key === key) return;
+
+    // Get the animation data
+    const anim = scene.anims.get(key)!;
+    const frameCount = anim.frames.length;
+
+    if (duration) {
+      // Clone or modify frameRate temporarily
+      const adjustedFrameRate = frameCount / (duration / 1000);
+
+      // Play using a temporary override
+      anims.play({ key, frameRate: adjustedFrameRate }, true);
+    } else {
+      anims.play(key, true);
+    }
   }
 
   protected initToCastSpell(spell: string): void {
@@ -91,7 +119,10 @@ export abstract class CharacterState implements State {
   }
 
   private canTransitionToCast(spell: string): boolean {
-    if (this.name === PLAYER_STATES.MOVEMENT && spell === SPELLS.FIRE_BALL) {
+    if (
+      this.name === PLAYER_STATES.MOVEMENT &&
+      (spell === SPELLS.FIRE_BALL || spell === SPELLS.FROST_BOLT)
+    ) {
       return false;
     }
 

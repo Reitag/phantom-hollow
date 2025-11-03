@@ -51,6 +51,8 @@ export class AiFireWorm extends Boss {
     }
   }
 
+  protected finalCall(): void {}
+
   private updateFacingDirection(): void {
     this.boss.flipCharacterToRight(this.player.x > this.boss.x);
   }

@@ -46,6 +46,10 @@ export class Movement extends CharacterState {
     if (this.input?.isTertiaryActionDown) {
       this.initToCastSpell(SPELLS.WIND);
     }
+
+    if (this.input?.isQuaternaryActionDown) {
+      this.initToCastSpell(SPELLS.FROST_BOLT);
+    }
   }
 
   private changeToIdleState(): void {

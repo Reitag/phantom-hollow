@@ -2,7 +2,7 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { CharacterState } from '@/base/states/character-state';
 import { SPELLS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';
-import { FIRE_BALL_STATS } from '@/constants/object-stats';
+import { FIRE_BALL_STATS, FROST_BOLT_STATS } from '@/constants/object-stats';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { Player } from '@/entities/characters/player/player';
@@ -27,7 +27,7 @@ export class Casting extends CharacterState {
 
     switch (spell) {
       case SPELLS.FIRE_BALL:
-        this.startCast(() => {
+        this.startCast(FIRE_BALL_STATS.CAST_TIME, () => {
           if (!this.character.getDead()) {
             this.spellSystem?.castFireball(this.character);
           }
@@ -42,6 +42,14 @@ export class Casting extends CharacterState {
         this.startInstantCast(() => {
           if (!this.character.getDead()) {
             this.spellSystem?.castWind(this.character);
+          }
+        });
+        break;
+
+      case SPELLS.FROST_BOLT:
+        this.startCast(FROST_BOLT_STATS.CAST_TIME, () => {
+          if (!this.character.getDead()) {
+            this.spellSystem?.castFrostbolt(this.character);
           }
         });
         break;
@@ -68,12 +76,11 @@ export class Casting extends CharacterState {
     }
   }
 
-  private startCast(onComplete: () => void): void {
+  private startCast(duration: number, onComplete: () => void): void {
     this.isCasting = true;
 
-    const duration = FIRE_BALL_STATS.CAST_TIME;
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST);
-    this.playAnimation(animKey);
+    this.playAnimation(animKey, false, duration);
 
     this.ui?.startCast(duration, () => {
       this.isCasting = false;

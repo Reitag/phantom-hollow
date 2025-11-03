@@ -7,6 +7,7 @@ export class KeyboardController extends InputController {
   private primaryKey: Phaser.Input.Keyboard.Key;
   private secondaryKey: Phaser.Input.Keyboard.Key;
   private tertiaryKey: Phaser.Input.Keyboard.Key;
+  private quaternaryKey: Phaser.Input.Keyboard.Key;
 
   private firstItemKey: Phaser.Input.Keyboard.Key;
   private secondItemKey: Phaser.Input.Keyboard.Key;
@@ -24,6 +25,7 @@ export class KeyboardController extends InputController {
     this.primaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.secondaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.X);
     this.tertiaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+    this.quaternaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.V);
 
     this.firstItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     this.secondItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -55,6 +57,10 @@ export class KeyboardController extends InputController {
     // Tertiary action
     this.tertiaryActionDown = this.tertiaryKey.isDown;
     this.tertiaryActionReleased = Phaser.Input.Keyboard.JustUp(this.tertiaryKey);
+
+    // Quaternary action
+    this.quaternaryActionDown = this.quaternaryKey.isDown;
+    this.quaternaryActionReleased = Phaser.Input.Keyboard.JustUp(this.quaternaryKey);
 
     // Items
     this.firstItemUse = Phaser.Input.Keyboard.JustDown(this.firstItemKey);

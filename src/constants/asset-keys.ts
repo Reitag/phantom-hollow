@@ -50,6 +50,7 @@ export const SPELLS = {
   FIRE_BALL: 'fire-ball',
   BLINK: 'blink',
   WIND: 'wind',
+  FROST_BOLT: 'frost-bolt',
   SHADOW_BOLT: 'shadow-bolt',
 } as const;
 
@@ -70,6 +71,7 @@ export const UI = {
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
   WIND_ICON: 'wind-icon',
+  FROSTBOLT_ICON: 'frostbolt-icon',
   COIN_UI: 'coin-ui',
   HEALTH_BAR: 'health-bar',
   HEALTH_ENV: 'health-env',

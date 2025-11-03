@@ -107,10 +107,16 @@ export const WIND_ICON = {
   Y: ICON_Y,
 } as const;
 
+export const FROST_BOLT_ICON = {
+  X: ICON_X_FIRST + 3 * X_STEP,
+  Y: ICON_Y,
+} as const;
+
 export const ICON_OVERLAYS = {
   [SPELLS.FIRE_BALL]: FIREBALL_ICON,
   [SPELLS.BLINK]: BLINK_ICON,
   [SPELLS.WIND]: WIND_ICON,
+  [SPELLS.FROST_BOLT]: FROST_BOLT_ICON,
 } as const;
 
 // Inventory Slots

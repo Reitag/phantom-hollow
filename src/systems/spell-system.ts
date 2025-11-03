@@ -3,7 +3,7 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
-import { BLINK, GLOBAL, WIND } from '@/constants/spell-cooldowns';
+import { BLINK, FROST_BOLT, GLOBAL, WIND } from '@/constants/spell-cooldowns';
 
 export class SpellSystem {
   private cooldowns: SpellCooldowns;
@@ -39,5 +39,12 @@ export class SpellSystem {
 
     wind.cast();
     this.sandbox.startCooldown(WIND.NAME, WIND.DURATION);
+  }
+
+  public castFrostbolt(character: Character): void {
+    const frostBolt = this.spellFactory.createFrostBolt(character);
+
+    frostBolt.cast();
+    this.sandbox.startCooldown(FROST_BOLT.NAME, FROST_BOLT.DURATION);
   }
 }

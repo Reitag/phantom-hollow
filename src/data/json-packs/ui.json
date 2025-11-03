@@ -5,17 +5,22 @@
     {
       "type": "image",
       "key": "fire-ball-icon",
-      "url": "assets/icons/fire-ball-icon.png"
+      "url": "assets/icons/spells/fire-ball-icon.png"
     },
     {
       "type": "image",
       "key": "blink-icon",
-      "url": "assets/icons/blink-icon.png"
+      "url": "assets/icons/spells/blink-icon.png"
     },
     {
       "type": "image",
       "key": "wind-icon",
-      "url": "assets/icons/wind-icon.png"
+      "url": "assets/icons/spells/wind-icon.png"
+    },
+    {
+      "type": "image",
+      "key": "frostbolt-icon",
+      "url": "assets/icons/spells/frost-bolt-icon.png"
     },
     { "type": "image", "key": "coin-ui", "url": "assets/ui/coin-ui.png" },
     { "type": "image", "key": "health-bar", "url": "assets/ui/health-bar.png" },

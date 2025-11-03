@@ -42,5 +42,9 @@ export class Idle extends CharacterState {
     if (this.input?.isTertiaryActionDown) {
       this.initToCastSpell(SPELLS.WIND);
     }
+
+    if (this.input?.isQuaternaryActionDown) {
+      this.initToCastSpell(SPELLS.FROST_BOLT);
+    }
   }
 }

@@ -20,6 +20,12 @@
     },
     {
       "type": "spritesheet",
+      "key": "frost-bolt",
+      "url": "assets/spells/frost-bolt.png",
+      "frameConfig": { "frameWidth": 48, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
       "key": "shadow-bolt",
       "url": "assets/spells/shadow-bolt.png",
       "frameConfig": { "frameWidth": 50, "frameHeight": 50 }

@@ -3,9 +3,15 @@ import { SpellPower } from '@/components/stats/damage';
 import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { Blink } from '@/entities/spells/effect-spells/blink';
 import { Wind } from '@/entities/spells/direct-spells/wind';
+import { FrostBolt } from '@/entities/spells/direct-spells/frost-bolt';
 import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { SPELLS } from '@/constants/asset-keys';
-import { FIRE_BALL_STATS, WIND_STATS, SHADOW_BOLT_STATS } from '@/constants/object-stats';
+import {
+  FIRE_BALL_STATS,
+  WIND_STATS,
+  SHADOW_BOLT_STATS,
+  FROST_BOLT_STATS,
+} from '@/constants/object-stats';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 
 export class SpellFactory {
@@ -58,13 +64,13 @@ export class SpellFactory {
     return blink;
   }
 
-  public createWind(character: Character): Wind {
-    const position = this.getSpellSpawnPosition(character);
+  public createWind(character: Character, position?: { x: number; y: number }): Wind {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
     const direction = character.getFacingRight() ? 1 : -1;
 
     const wind = new Wind({
       scene: this.scene,
-      position: position,
+      position: spawnPosition,
       keyName: SPELLS.WIND,
       frame: 0,
       caster: character,
@@ -75,6 +81,28 @@ export class SpellFactory {
     this.spellGroup.add(wind, true);
 
     return wind;
+  }
+
+  public createFrostBolt(character: Character, position?: { x: number; y: number }): FrostBolt {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
+
+    const frostBolt = new FrostBolt({
+      scene: this.scene,
+      position: spawnPosition,
+      keyName: SPELLS.FROST_BOLT,
+      frame: 0,
+      caster: character,
+      spellPower: spellPower,
+      damage: FROST_BOLT_STATS.HIT,
+      speed: FROST_BOLT_STATS.SPEED,
+      direction: direction,
+    });
+
+    this.spellGroup.add(frostBolt, true);
+
+    return frostBolt;
   }
 
   public createShadowBolt(character: Character, position?: { x: number; y: number }): ShadowBolt {

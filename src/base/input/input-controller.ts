@@ -15,6 +15,9 @@ export abstract class InputController {
   protected tertiaryActionDown = false;
   protected tertiaryActionReleased = false;
 
+  protected quaternaryActionDown = false;
+  protected quaternaryActionReleased = false;
+
   protected firstItemUse = false;
   protected secondItemUse = false;
   protected thirdItemUse = false;
@@ -66,6 +69,14 @@ export abstract class InputController {
     return this.tertiaryActionReleased;
   }
 
+  get isQuaternaryActionDown(): boolean {
+    return this.quaternaryActionDown;
+  }
+
+  get isQuaternaryActionReleased(): boolean {
+    return this.quaternaryActionReleased;
+  }
+
   get isFirstItemDown(): boolean {
     return this.firstItemUse;
   }
@@ -88,7 +99,7 @@ export abstract class InputController {
 
   abstract update(): void;
 
-  reset(): void {
+  public reset(): void {
     this.left = false;
     this.right = false;
     this.up = false;
@@ -100,6 +111,8 @@ export abstract class InputController {
     this.secondaryActionReleased = false;
     this.tertiaryActionDown = false;
     this.tertiaryActionReleased = false;
+    this.quaternaryActionDown = false;
+    this.quaternaryActionReleased = false;
     this.firstItemUse = false;
     this.secondItemUse = false;
     this.thirdItemUse = false;

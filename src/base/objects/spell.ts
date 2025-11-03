@@ -47,8 +47,7 @@ export abstract class Spell extends ArcadeSprite {
   }
 
   public abstract cast(): void;
-
-  public applyEffect(target: Character): void {}
+  public abstract applyEffect(target: Character): void;
 
   public destroySpell(): void {
     if (!this.animations) return;
@@ -79,6 +78,15 @@ export abstract class Spell extends ArcadeSprite {
 
   public getCaster(): Character {
     return this.caster;
+  }
+
+  protected playStartAnimation(): void {
+    if (!this.animations) return;
+    if (this.direction !== 1) {
+      this.setFlipX(true);
+    }
+    const animKey = this.resolveAnimation(SPELL_ANIMATION_KEYS.START);
+    playAnimation(this, animKey);
   }
 
   protected playMainAnimation(): void {

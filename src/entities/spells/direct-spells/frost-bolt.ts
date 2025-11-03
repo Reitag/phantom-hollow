@@ -1,9 +1,9 @@
-import { Character } from '@/base/objects/character';
 import { Spell, SpellConfig } from '@/base/objects/spell';
+import { FROST_BOLT_STATS } from '@/constants/object-stats';
+import { Character } from '@/base/objects/character';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
-import { FIRE_BALL_STATS } from '@/constants/object-stats';
 
-export class FireBall extends Spell {
+export class FrostBolt extends Spell {
   constructor({
     scene,
     position,
@@ -28,8 +28,9 @@ export class FireBall extends Spell {
     });
 
     this.animations = {
-      [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.FIRE_BALL.MAIN,
-      [SPELL_ANIMATION_KEYS.HIT]: SPELLS_ANIMATION.FIRE_BALL.HIT,
+      [SPELL_ANIMATION_KEYS.START]: SPELLS_ANIMATION.FROST_BOLT.START,
+      [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.FROST_BOLT.MAIN,
+      [SPELL_ANIMATION_KEYS.HIT]: SPELLS_ANIMATION.FROST_BOLT.HIT,
     };
 
     this.arcadeBody.setSize(22, 13);
@@ -39,11 +40,11 @@ export class FireBall extends Spell {
     this.setSpellVelocity();
     this.playMainAnimation();
 
-    this.scene.time.delayedCall(FIRE_BALL_STATS.LIFE_TIME, () => {
+    this.scene.time.delayedCall(FROST_BOLT_STATS.LIFE_TIME, () => {
       if (!this.active) return;
       this.destroySpell();
     });
   }
 
-  public applyEffect(target: Character): void {}
+  public override applyEffect(target: Character): void {}
 }

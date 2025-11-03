@@ -1,3 +1,4 @@
+import { Character } from '@/base/objects/character';
 import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { BLINK_STATS } from '@/constants/object-stats';
@@ -34,6 +35,8 @@ export class Blink extends Spell {
       });
     }
   }
+
+  public applyEffect(target: Character): void {}
 
   private hideCaster(): void {
     const arcadeBody = this.caster.getArcadeBody();

@@ -10,6 +10,7 @@ import {
   WIND_ICON,
   INVENTORY_SLOTS,
   COIN_UI,
+  FROST_BOLT_ICON,
 } from '@/constants/ui-coordinates';
 import { Store } from '@/components/ui/store/store';
 
@@ -33,11 +34,13 @@ export class UiScene extends Phaser.Scene {
     const fireball = this.add.image(FIREBALL_ICON.X, FIREBALL_ICON.Y, UI.FIRE_BALL_ICON);
     const blink = this.add.image(BLINK_ICON.X, BLINK_ICON.Y, UI.BLINK_ICON);
     const wind = this.add.image(WIND_ICON.X, WIND_ICON.Y, UI.WIND_ICON);
+    const frostbolt = this.add.image(FROST_BOLT_ICON.X, FROST_BOLT_ICON.Y, UI.FROSTBOLT_ICON);
 
     // Spell labels
     this.addKeyLabel(fireball, 'Z');
     this.addKeyLabel(blink, 'X');
     this.addKeyLabel(wind, 'C');
+    this.addKeyLabel(frostbolt, 'V');
 
     // Inventory labels
     this.addInventoryKeyLabels();

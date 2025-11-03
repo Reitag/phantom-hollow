@@ -31,7 +31,8 @@ export class Ready extends CharacterState {
     if (
       !this.input?.isPrimaryActionDown &&
       !this.input?.isSecondaryActionDown &&
-      !this.input?.isTertiaryActionDown
+      !this.input?.isTertiaryActionDown &&
+      !this.input?.isQuaternaryActionDown
     ) {
       this.ui?.removeHighlight();
       if (this.input?.isLeftDown || this.input?.isRightDown) {
@@ -59,6 +60,13 @@ export class Ready extends CharacterState {
       this.ui?.highlightSpell(SPELLS.WIND);
     } else if (this.input?.isTertiaryActionReleased) {
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.WIND);
+      return;
+    }
+
+    if (this.input?.isQuaternaryActionDown) {
+      this.ui?.highlightSpell(SPELLS.FROST_BOLT);
+    } else if (this.input?.isQuaternaryActionReleased) {
+      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FROST_BOLT);
       return;
     }
   }

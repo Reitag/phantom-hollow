@@ -15,6 +15,11 @@ export const WIND = {
   DURATION: 3000,
 } as const;
 
+export const FROST_BOLT = {
+  NAME: SPELLS.FROST_BOLT,
+  DURATION: 2000,
+} as const;
+
 export const SUMMON_BAT = {
   NAME: CHARACTERS.MUTATED_BAT,
   DURATION: 2000,

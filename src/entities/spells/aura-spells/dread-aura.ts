@@ -31,6 +31,8 @@ export class DreadAura extends Spell {
     this.y = y.y;
   }
 
+  public applyEffect(target: Character): void {}
+
   public update(target: Character, delta: number): void {
     this.cast();
 
