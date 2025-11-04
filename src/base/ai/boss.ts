@@ -60,7 +60,7 @@ export abstract class Boss {
       return;
     }
 
-    if (inRange) aggro.increase(10);
+    if (inRange) aggro.increase(10 * delta);
     if (aggro.isAggroed) this.aggroedBehaviour();
   }
 

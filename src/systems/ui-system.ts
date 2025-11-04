@@ -50,8 +50,8 @@ export class UiSystem {
     this.healthBarAnimator.reducePlayerHealth(currentHealth, maxHealth);
   }
 
-  public startCast(duration: number, onComplete: () => void): void {
-    this.castBarAnimator.startCast(duration, onComplete);
+  public startCast(duration: number): void {
+    this.castBarAnimator.startCast(duration);
   }
 
   public stopCast(): void {

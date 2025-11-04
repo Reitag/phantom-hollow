@@ -74,7 +74,7 @@ export abstract class CharacterState implements State {
     }
   }
 
-  /*protected playAnimation(key: string | undefined, force = false): void {
+  protected playAnimation(key: string | undefined, force = false): void {
     if (!key) return;
     const exists = this.character.scene.anims.exists(key);
     if (!exists) {
@@ -83,9 +83,9 @@ export abstract class CharacterState implements State {
     }
     if (!force && this.character.anims.currentAnim?.key === key) return;
     this.character.anims.play(key, true);
-  }*/
+  }
 
-  protected playAnimation(key: string | undefined, force = false, duration?: number): void {
+  /*protected playAnimation(key: string | undefined, force = false, duration?: number): void {
     if (!key) return;
 
     const anims = this.character.anims;
@@ -111,7 +111,7 @@ export abstract class CharacterState implements State {
     } else {
       anims.play(key, true);
     }
-  }
+  }*/
 
   protected initToCastSpell(spell: string): void {
     if (!this.canTransitionToCast(spell)) return;

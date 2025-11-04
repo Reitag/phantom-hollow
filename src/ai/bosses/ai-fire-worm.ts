@@ -4,12 +4,12 @@ import { FIRE_WORM_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
-import { BOSSES_ANIMATION } from '@/constants/animation-keys';
 import { Boss } from '../../base/ai/boss';
 
 export class AiFireWorm extends Boss {
   private static readonly FIREBALL = {
     NAME: 'fireball',
+    CAST_TIME: 500,
     COOLDOWN: 5000,
   };
 
@@ -33,6 +33,7 @@ export class AiFireWorm extends Boss {
     const currentState = fsm.currentStateName;
 
     if (currentState !== ENEMY_STATES.PATROL) {
+      console.log('test');
       fsm.changeState(ENEMY_STATES.PATROL, FIRE_WORM_STATS.WALK_BOUND);
     }
   }
@@ -46,7 +47,11 @@ export class AiFireWorm extends Boss {
       this.spellCooldowns.startCooldown(AiFireWorm.FIREBALL.NAME, AiFireWorm.FIREBALL.COOLDOWN);
 
       if (currentState !== ENEMY_STATES.CASTING) {
-        fsm.changeState(ENEMY_STATES.CASTING, this.castFireballHandler, FIRE_WORM_STATS.CAST);
+        fsm.changeState(
+          ENEMY_STATES.CASTING,
+          this.castFireballHandler,
+          AiFireWorm.FIREBALL.CAST_TIME
+        );
       }
     }
   }
@@ -58,7 +63,6 @@ export class AiFireWorm extends Boss {
   }
 
   private castFireball(): void {
-    this.boss.anims.play(BOSSES_ANIMATION.FIRE_WORM.CAST, true);
     const { x, y } = this.boss.getPosition();
     const flip = this.boss.getFacingRight() ? 1 : -1;
 

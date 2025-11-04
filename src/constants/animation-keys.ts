@@ -3,8 +3,12 @@ export const CHARACTER_ANIMATION_KEYS = {
   MOVE: 'MOVE',
   RUN: 'RUN',
   ATTACK: 'ATTACK',
-  CAST: 'CAST',
-  INSTANT_CAST: 'INSTANT_CAST',
+  CAST: {
+    CAST_START: 'CAST_START',
+    CAST_MAIN: 'CAST_MAIN',
+    CAST_END: 'CAST_END',
+    INSTANT_CAST: 'INSTANT_CAST',
+  },
   RANGED_UPPER_ATTACK: 'RANGED_UPPER_ATTACK',
   RANGED_STRAIGHT_ATTACK: 'RANGED_STRAIGHT_ATTACK',
   RANGED_DOWN_ATTACK: 'RANGED_DOWN_ATTACK',
@@ -26,8 +30,10 @@ export const EFFECT_ANIMATION_KEYS = {
 export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.IDLE]: 'player-idle',
   [CHARACTER_ANIMATION_KEYS.MOVE]: 'player-move',
-  [CHARACTER_ANIMATION_KEYS.CAST]: 'player-cast',
-  [CHARACTER_ANIMATION_KEYS.INSTANT_CAST]: 'player-instant-cast',
+  [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: 'player-cast-start',
+  [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: 'player-cast-main',
+  [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: 'player-cast-end',
+  [CHARACTER_ANIMATION_KEYS.CAST.INSTANT_CAST]: 'player-instant-cast',
   [CHARACTER_ANIMATION_KEYS.DEATH]: 'player-death',
 } as const;
 
@@ -59,18 +65,22 @@ export const ENEMIES_ANIMATION = {
 } as const;
 
 export const BOSSES_ANIMATION = {
+  FIRE_WORM: {
+    [CHARACTER_ANIMATION_KEYS.IDLE]: 'fire-worm-idle',
+    [CHARACTER_ANIMATION_KEYS.MOVE]: 'fire-worm-move',
+    [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: 'fire-worm-cast-start',
+    [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: 'fire-worm-cast-main',
+    [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: 'fire-worm-cast-end',
+    [CHARACTER_ANIMATION_KEYS.DEATH]: 'fire-worm-death',
+  },
   EVIL_WIZARD: {
     [CHARACTER_ANIMATION_KEYS.IDLE]: 'evil-wizard-idle',
     [CHARACTER_ANIMATION_KEYS.MOVE]: 'evil-wizard-move',
     [CHARACTER_ANIMATION_KEYS.RUN]: 'evil-wizard-run',
-    [CHARACTER_ANIMATION_KEYS.CAST]: 'evil-wizard-cast',
+    [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: 'evil-wizard-cast-start',
+    [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: 'evil-wizard-cast-main',
+    [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: 'evil-wizard-cast-end',
     [CHARACTER_ANIMATION_KEYS.DEATH]: 'evil-wizard-death',
-  },
-  FIRE_WORM: {
-    [CHARACTER_ANIMATION_KEYS.IDLE]: 'fire-worm-idle',
-    [CHARACTER_ANIMATION_KEYS.MOVE]: 'fire-worm-move',
-    [CHARACTER_ANIMATION_KEYS.CAST]: 'fire-worm-cast',
-    [CHARACTER_ANIMATION_KEYS.DEATH]: 'fire-worm-death',
   },
 } as const;
 

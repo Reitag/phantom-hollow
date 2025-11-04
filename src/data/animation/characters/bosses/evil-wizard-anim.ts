@@ -29,10 +29,28 @@ export function evilwizardAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
-  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.CAST)) {
+  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.CAST_START)) {
     anims.create({
-      key: BOSSES_ANIMATION.EVIL_WIZARD.CAST,
-      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 54, end: 66 }),
+      key: BOSSES_ANIMATION.EVIL_WIZARD.CAST_START,
+      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 54, end: 56 }),
+      frameRate: 15,
+      repeat: 0,
+    });
+  }
+
+  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.CAST_MAIN)) {
+    anims.create({
+      key: BOSSES_ANIMATION.EVIL_WIZARD.CAST_MAIN,
+      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 57, end: 61 }),
+      frameRate: 15,
+      repeat: -1,
+    });
+  }
+
+  if (!anims.get(BOSSES_ANIMATION.EVIL_WIZARD.CAST_END)) {
+    anims.create({
+      key: BOSSES_ANIMATION.EVIL_WIZARD.CAST_END,
+      frames: anims.generateFrameNumbers(CHARACTERS.EVIL_WIZARD, { start: 62, end: 66 }),
       frameRate: 15,
       repeat: 0,
     });

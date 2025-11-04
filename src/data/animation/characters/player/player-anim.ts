@@ -20,10 +20,28 @@ export function playerAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
-  if (!anims.get(PLAYER_ANIMATION.CAST)) {
+  if (!anims.get(PLAYER_ANIMATION.CAST_START)) {
     anims.create({
-      key: PLAYER_ANIMATION.CAST,
-      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 21, end: 41 }),
+      key: PLAYER_ANIMATION.CAST_START,
+      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 21, end: 25 }),
+      frameRate: 14,
+      repeat: 0,
+    });
+  }
+
+  if (!anims.get(PLAYER_ANIMATION.CAST_MAIN)) {
+    anims.create({
+      key: PLAYER_ANIMATION.CAST_MAIN,
+      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 26, end: 28 }),
+      frameRate: 14,
+      repeat: -1,
+    });
+  }
+
+  if (!anims.get(PLAYER_ANIMATION.CAST_END)) {
+    anims.create({
+      key: PLAYER_ANIMATION.CAST_END,
+      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 29, end: 41 }),
       frameRate: 14,
       repeat: 0,
     });

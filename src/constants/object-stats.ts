@@ -25,7 +25,7 @@ export const WIND_STATS = {
 export const FROST_BOLT_STATS = {
   HIT: 5,
   SPEED: 300,
-  CAST_TIME: 600,
+  CAST_TIME: 500,
   LIFE_TIME: 1100,
 } as const;
 
@@ -38,6 +38,7 @@ export const DREAD_AURA_STATS = {
 export const SHADOW_BOLT_STATS = {
   HIT: 15,
   SPEED: 300,
+  CAST_TIME: 500,
   LIFE_TIME: 2000,
 } as const;
 

@@ -77,21 +77,37 @@ export class Casting extends CharacterState {
   }
 
   private startCast(duration: number, onComplete: () => void): void {
+    const animStartCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_START);
+    const animMainCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN);
+    const animEndCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_END);
+
     this.isCasting = true;
 
-    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST);
-    this.playAnimation(animKey, false, duration);
+    this.ui?.startCast(duration);
+    this.playAnimation(animStartCast, true);
 
-    this.ui?.startCast(duration, () => {
-      this.isCasting = false;
-      onComplete();
+    this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animStartCast, () => {
+      if (this.isCasting) {
+        this.playAnimation(animMainCast, true);
+      }
+    });
+
+    this.character.scene.time.delayedCall(duration, () => {
+      if (this.isCasting) {
+        this.playAnimation(animEndCast);
+        onComplete();
+
+        this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animEndCast, () => {
+          this.isCasting = false;
+        });
+      }
     });
   }
 
   private startInstantCast(onComplete: () => void): void {
     this.isInstantCasting = true;
 
-    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.INSTANT_CAST);
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.INSTANT_CAST);
     this.playAnimation(animKey);
 
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {

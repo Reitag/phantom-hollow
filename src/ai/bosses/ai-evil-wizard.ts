@@ -1,6 +1,11 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
-import { DREAD_AURA_STATS, EVIL_WIZARD_STATS, MUTATED_BAT_STATS } from '@/constants/object-stats';
+import {
+  DREAD_AURA_STATS,
+  EVIL_WIZARD_STATS,
+  MUTATED_BAT_STATS,
+  SHADOW_BOLT_STATS,
+} from '@/constants/object-stats';
 import { SHADOW_BOLT, SUMMON_BAT } from '@/constants/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { ENEMY_STATES } from '@/constants/state-keys';
@@ -76,7 +81,11 @@ export class AiEvilWizard extends Boss {
     if (!this.spellCooldowns.isOnCooldown(SHADOW_BOLT.NAME)) {
       this.spellCooldowns.startCooldown(SHADOW_BOLT.NAME, SHADOW_BOLT.DURATION);
       if (currentState !== ENEMY_STATES.CASTING) {
-        fsm.changeState(ENEMY_STATES.CASTING, this.castShadowBoltHandler, EVIL_WIZARD_STATS.CAST);
+        fsm.changeState(
+          ENEMY_STATES.CASTING,
+          this.castShadowBoltHandler,
+          SHADOW_BOLT_STATS.CAST_TIME
+        );
       }
     }
 
@@ -119,7 +128,6 @@ export class AiEvilWizard extends Boss {
   }
 
   private castShadowBolt(): void {
-    this.boss.anims.play(BOSSES_ANIMATION.EVIL_WIZARD.CAST, true);
     const { x, y } = this.boss.getPosition();
     const flip = this.boss.getFacingRight() ? 1 : -1;
 
