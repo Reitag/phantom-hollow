@@ -128,6 +128,29 @@ export const INVENTORY_SLOTS = {
   Y: 615,
 } as const;
 
+// Dialog box
+
+export const WARNING_BOX = {
+  BG: {
+    X: SCENE_SIZE.WIDTH / 2,
+    Y: SCENE_SIZE.HEIGHT / 3,
+    WIDTH: 274,
+    HEIGHT: 70,
+  },
+  YES_BTN: {
+    X: -24,
+    Y: 15,
+    WIDTH: 78,
+    HEIGHT: 14,
+  },
+  NO_BTN: {
+    X: 75,
+    Y: 15,
+    WIDTH: 78,
+    HEIGHT: 14,
+  },
+};
+
 // Warning Text
 export const WARNING_TEXT = {
   START_Y: 100,

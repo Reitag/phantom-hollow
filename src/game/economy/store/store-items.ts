@@ -23,7 +23,8 @@ export const STORE_ITEMS: StoreItem[] = [
       } else {
         const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
 
-        if (coinKeeper.removeCoins(1)) {
+        //if (coinKeeper.removeCoins(1)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(health, 1);
         }
       }
@@ -41,7 +42,8 @@ export const STORE_ITEMS: StoreItem[] = [
       } else {
         const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
 
-        if (coinKeeper.removeCoins(2)) {
+        //if (coinKeeper.removeCoins(2)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(protect, 1);
         }
       }

@@ -38,6 +38,11 @@ export class InventorySystem {
     return true;
   }
 
+  public setItems(items: (InventorySlot | null)[]): void {
+    this.slots = items;
+    this.updateUI();
+  }
+
   public getItems(): (InventorySlot | null)[] {
     return [...this.slots];
   }

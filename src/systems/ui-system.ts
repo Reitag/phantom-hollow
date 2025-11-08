@@ -7,28 +7,29 @@ import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
 import { Coins } from '@/components/ui/coins/coins';
+import { Dialog } from '@/components/ui/dialog/dialog';
 import { Text } from '@/components/ui/text/text';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { ModifierType, Position, InventorySlot } from '@/utils/types';
 
 export class UiSystem {
-  healthBar: HealthBar;
-  healthBarAnimator: HealthBarAnimator;
+  private healthBar: HealthBar;
+  private healthBarAnimator: HealthBarAnimator;
 
-  castBar: CastBar;
-  castBarAnimator: CastBarAnimator;
+  private castBar: CastBar;
+  private castBarAnimator: CastBarAnimator;
 
-  cooldownAnimator: CooldownAnimator;
-  iconHighlighter: IconHighlighter;
+  private cooldownAnimator: CooldownAnimator;
+  private iconHighlighter: IconHighlighter;
 
-  inventoryIconContainer: InventoryIconContainer;
-  modifierIconContainer: ModifierIconContainer;
+  private inventoryIconContainer: InventoryIconContainer;
+  private modifierIconContainer: ModifierIconContainer;
 
-  coins: Coins;
+  private coins: Coins;
 
-  text: Text;
+  private text: Text;
 
-  constructor(uiScene: Phaser.Scene) {
+  constructor(private uiScene: Phaser.Scene) {
     this.healthBar = new HealthBar(uiScene);
     this.healthBarAnimator = new HealthBarAnimator(this.healthBar);
 
@@ -111,6 +112,12 @@ export class UiSystem {
 
   public decreaseCoinCounter(amount: number): void {
     this.coins.decreaseCoins(amount);
+  }
+
+  public addWarningDialog(text: string): Dialog {
+    const dialog = new Dialog(this.uiScene);
+    dialog.setWarningDialog(text);
+    return dialog;
   }
 
   public addWarningtext(text: string): void {

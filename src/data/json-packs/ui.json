@@ -44,6 +44,21 @@
     },
     {
       "type": "image",
+      "key": "dialog-ui",
+      "url": "assets/ui/dialog/dialog-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "dialog-ui-button-yes",
+      "url": "assets/ui/dialog/dialog-ui-button-yes.png"
+    },
+    {
+      "type": "image",
+      "key": "dialog-ui-button-no",
+      "url": "assets/ui/dialog/dialog-ui-button-no.png"
+    },
+    {
+      "type": "image",
       "key": "health-potion-icon",
       "url": "assets/icons/potions/health-potion.png"
     },

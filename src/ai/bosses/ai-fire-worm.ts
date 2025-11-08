@@ -33,7 +33,6 @@ export class AiFireWorm extends Boss {
     const currentState = fsm.currentStateName;
 
     if (currentState !== ENEMY_STATES.PATROL) {
-      console.log('test');
       fsm.changeState(ENEMY_STATES.PATROL, FIRE_WORM_STATS.WALK_BOUND);
     }
   }
