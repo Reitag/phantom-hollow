@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 
-export class MemoryMonitor extends Phaser.Scene {
+export class DebugScreen extends Phaser.Scene {
   constructor() {
-    super('MemoryMonitor');
+    super('DebugScreen');
 
     this.fps = 0;
     this.jsHeap = 'N/A';
@@ -14,7 +14,6 @@ export class MemoryMonitor extends Phaser.Scene {
     // Custom counters
     this.totalObjects = 0;
     this.totalBodies = 0;
-    this.totalSpells = 0; // increment when creating/destroying spells
 
     // Player's coordinates
     this.coords = {
@@ -35,19 +34,22 @@ export class MemoryMonitor extends Phaser.Scene {
 
     ['drawArrays', 'drawElements'].forEach((fn) => this.wrapDrawCall(gl, fn));
 
-    // background rectangle
-    this.bg = this.add.rectangle(5, 35, 550, 220, 0x000000, 0.5).setOrigin(0, 0).setDepth(999);
+    // compact panel size
+    const x = 0;
+    const y = 100;
 
     // debug text
     this.text = this.add
-      .text(10, 45, '', {
-        fontFamily: 'Consolas, Courier, monospace',
-        fontSize: '16px',
-        color: '#00ff00',
+      .text(x + 8, y + 8, '', {
+        fontFamily: 'Consolas, monospace',
+        fontSize: '13px',
+        color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 2,
+        resolution: 1,
         align: 'left',
-        resolution: 2,
+        backgroundColor: '#00000090',
+        lineSpacing: 8,
       })
       .setDepth(1000);
 
@@ -55,7 +57,6 @@ export class MemoryMonitor extends Phaser.Scene {
     this.input.keyboard.on('keydown-M', () => {
       this.visible = !this.visible;
       this.text.setVisible(this.visible);
-      this.bg.setVisible(this.visible);
     });
 
     const renderer = this.sys.game.renderer;
@@ -71,7 +72,7 @@ export class MemoryMonitor extends Phaser.Scene {
       const usedMB = mem.usedJSHeapSize / 1048576;
       const totalMB = mem.totalJSHeapSize / 1048576;
       const limitMB = mem.jsHeapSizeLimit / 1048576;
-      this.jsHeap = `Used: ${usedMB.toFixed(2)} MB / Total: ${totalMB.toFixed(2)} MB / Limit: ${limitMB.toFixed(2)} MB`;
+      this.jsHeap = `\n  Used:${usedMB.toFixed(2)} MB\n  Total: ${totalMB.toFixed(2)} MB\n  Limit: ${limitMB.toFixed(2)} MB`;
     }
 
     // textures
@@ -95,11 +96,14 @@ export class MemoryMonitor extends Phaser.Scene {
 
     // game objects & physics bodies
     const scenes = this.game.scene.getScenes(true);
-    this.totalObjects = scenes.map((s) => s.sys.displayList.length).reduce((sum, n) => sum + n, 0);
+    const sceneStats = scenes.map((s) => {
+      const key = s.sys.settings.key;
+      const objects = s.sys.displayList.length;
+      const bodies = s.physics?.world?.bodies?.entries.length || 0;
+      return { key, objects, bodies };
+    });
 
-    this.totalBodies = scenes
-      .map((s) => s.physics?.world?.bodies?.entries.length || 0)
-      .reduce((sum, n) => sum + n, 0);
+    const sceneLines = sceneStats.map((s) => `  ${s.key}: obj=${s.objects}, bodies=${s.bodies}`);
 
     // display info
     this.text.setText([
@@ -108,10 +112,8 @@ export class MemoryMonitor extends Phaser.Scene {
       `Textures: ${this.texMB} (${this.textureCount})`,
       `Player's coords: x: ${this.coords.x}, y: ${this.coords.y}`,
       `Draw calls: ${this.drawCalls}`,
-      `Objects (all scenes): ${this.totalObjects}`,
-      `Physics bodies (all scenes): ${this.totalBodies}`,
-      `Spells (custom counter): ${this.totalSpells}`,
-      `Scenes: ${scenes.map((s) => s.sys.settings.key).join(', ')}`,
+      `Scenes: `,
+      ...sceneLines,
       'Press [M] to toggle',
     ]);
   }

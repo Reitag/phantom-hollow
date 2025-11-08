@@ -26,10 +26,10 @@ import { Spell } from '@/base/objects/spell';
 import { DARK_ENERGY_ANIMATION } from '@/constants/animation-keys';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
-import { MemoryMonitor } from '../../tools/memory-monitor.js';
+import { DebugScreen } from '../../tools/debug-screen.js';
 
 export class LevelOneScene extends Phaser.Scene {
-  private memoryMonitor: MemoryMonitor | null = null;
+  private debugScreen: DebugScreen | null = null;
 
   private player!: Player;
   private stall!: Stall;
@@ -64,8 +64,8 @@ export class LevelOneScene extends Phaser.Scene {
 
     // Debug
     if (process.env.NODE_ENV === 'development') {
-      if (this.memoryMonitor instanceof MemoryMonitor) {
-        this.memoryMonitor?.setPlayersCoords(this.player.x, this.player.y);
+      if (this.debugScreen instanceof DebugScreen) {
+        this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
       }
     }
     // Debug
@@ -84,8 +84,8 @@ export class LevelOneScene extends Phaser.Scene {
 
         // Debug
         if (process.env.NODE_ENV === 'development') {
-          this.scene.add('MemoryMonitor', MemoryMonitor, true);
-          this.memoryMonitor = this.scene.get('MemoryMonitor');
+          this.scene.add('DebugScreen', DebugScreen, true);
+          this.debugScreen = this.scene.get('DebugScreen');
         }
         // Debug
       } else {
