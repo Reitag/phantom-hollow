@@ -72,7 +72,7 @@ export class DebugScreen extends Phaser.Scene {
       const usedMB = mem.usedJSHeapSize / 1048576;
       const totalMB = mem.totalJSHeapSize / 1048576;
       const limitMB = mem.jsHeapSizeLimit / 1048576;
-      this.jsHeap = `\n  Used:${usedMB.toFixed(2)} MB\n  Total: ${totalMB.toFixed(2)} MB\n  Limit: ${limitMB.toFixed(2)} MB`;
+      this.jsHeap = `\n  Used: ${usedMB.toFixed(2)} MB\n  Total: ${totalMB.toFixed(2)} MB\n  Limit: ${limitMB.toFixed(2)} MB`;
     }
 
     // textures

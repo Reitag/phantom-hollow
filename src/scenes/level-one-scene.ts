@@ -17,13 +17,13 @@ import { SpellFactory } from '@/factories/spell-factory';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
 import { EnemySpawn } from '@/systems/enemy-spawn';
+import { PlayerSpawn } from '@/systems/player-spawn';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
-import { DARK_ENERGY_ANIMATION } from '@/constants/animation-keys';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
@@ -32,6 +32,8 @@ export class LevelOneScene extends Phaser.Scene {
   private debugScreen: DebugScreen | null = null;
 
   private player!: Player;
+  private playerSpawn!: PlayerSpawn;
+  private spawn!: EnemySpawn;
   private stall!: Stall;
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
@@ -39,8 +41,6 @@ export class LevelOneScene extends Phaser.Scene {
   private map!: Tilemap;
   private canPlayerGetDamage = true;
   private isGameInitialized = false;
-
-  private spawn!: EnemySpawn;
 
   constructor() {
     super('LevelOneScene');
@@ -55,7 +55,7 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   update(_: number, delta: number): void {
-    this.player.update(delta);
+    this.playerSpawn.update(delta);
     this.spawn.update(this.player, delta);
 
     this.stall.update();
@@ -194,25 +194,8 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private createPlayer(): void {
-    this.player = new Player({
-      scene: this,
-      position: PLAYER_SPAWN_POSITION,
-      keyName: CHARACTERS.PLAYER,
-      frame: 0,
-      stats: {
-        health: PLAYER_STATS.HEALTH,
-        speed: PLAYER_STATS.MOVE,
-        damage: {
-          meleeAttack: undefined,
-          spellPower: PLAYER_STATS.SPELL_POWER,
-        },
-        defense: 1,
-        aggro: false,
-      },
-      facingRight: true,
-    }).setDepth(Z_POSITION.PLAYER);
-
-    ServiceLocator.register(ServiceKeys.player, this.player);
+    this.playerSpawn = new PlayerSpawn(this);
+    this.player = this.playerSpawn.getPlayer();
   }
 
   private createStall(): void {

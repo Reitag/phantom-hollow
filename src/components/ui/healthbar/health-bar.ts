@@ -7,13 +7,21 @@ import { HEALTH_UI, HEALTH_BAR } from '@/constants/ui-coordinates';
 export class HealthBar {
   public frame: Phaser.GameObjects.Image;
   public bar: Phaser.GameObjects.Image;
-  public mask: Phaser.GameObjects.Graphics;
+  public mask: Phaser.GameObjects.Graphics | null = null;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(private scene: Phaser.Scene) {
     this.bar = scene.add.image(HEALTH_BAR.X, HEALTH_BAR.Y, UI.HEALTH_BAR).setOrigin(0, 0.5);
     this.frame = scene.add.image(HEALTH_UI.X, HEALTH_UI.Y, UI.HEALTH_ENV).setOrigin(0, 0.5);
 
-    this.mask = new GraphicsMask(scene)
+    this.setMask();
+  }
+
+  public setMask(): void {
+    if (this.mask) {
+      this.mask = null;
+    }
+
+    this.mask = new GraphicsMask(this.scene)
       .roundedRect({
         x: HEALTH_BAR.X,
         y: HEALTH_BAR.Y,
@@ -23,21 +31,21 @@ export class HealthBar {
       .applyTo(this.bar);
   }
 
-  getFrame(): Phaser.GameObjects.Image {
+  public getFrame(): Phaser.GameObjects.Image {
     return this.frame;
   }
 
-  getBar(): Phaser.GameObjects.Image {
+  public getBar(): Phaser.GameObjects.Image {
     return this.bar;
   }
 
-  getMask(): Phaser.GameObjects.Graphics {
+  public getMask(): Phaser.GameObjects.Graphics | null {
     return this.mask;
   }
 
-  destroy(): void {
+  public destroy(): void {
     this.frame.destroy();
     this.bar.destroy();
-    this.mask.destroy();
+    this.mask?.destroy();
   }
 }

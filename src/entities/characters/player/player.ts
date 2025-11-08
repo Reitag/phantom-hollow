@@ -13,6 +13,7 @@ import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
 import { CoinKeeper } from '@/game/economy/coin-keeper/coin-keeper';
+import { Health } from '@/components/stats/health';
 
 export class Player extends Character {
   scene: Phaser.Scene;
@@ -91,5 +92,15 @@ export class Player extends Character {
   protected override onDeathStart(): void {
     this.controls.disable();
     this.ui.removeAllModfierIcons();
+  }
+
+  protected override onAliveStart(): void {
+    this.controls.enable();
+    const max = this.stats.health?.max;
+    if (!max) throw new Error("Uknown character's max health");
+
+    this.stats.health = null;
+    this.stats.health = new Health(max);
+    this.ui.restorePlayerHealth();
   }
 }

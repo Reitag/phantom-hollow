@@ -16,8 +16,6 @@ export class KeyboardController extends InputController {
 
   private storeTriggerKey: Phaser.Input.Keyboard.Key;
 
-  private disabled = false;
-
   constructor(input: Phaser.Input.Keyboard.KeyboardPlugin) {
     super();
     this.cursors = input.createCursorKeys();
@@ -35,7 +33,7 @@ export class KeyboardController extends InputController {
     this.storeTriggerKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
   }
 
-  override update(): void {
+  public override update(): void {
     if (this.disabled) return;
 
     // Movement keys
@@ -70,9 +68,5 @@ export class KeyboardController extends InputController {
 
     // Store
     this.storeTrigger = Phaser.Input.Keyboard.JustDown(this.storeTriggerKey);
-  }
-
-  disable(): void {
-    this.disabled = true;
   }
 }

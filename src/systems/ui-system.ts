@@ -51,6 +51,10 @@ export class UiSystem {
     this.healthBarAnimator.reducePlayerHealth(currentHealth, maxHealth);
   }
 
+  public restorePlayerHealth(): void {
+    this.healthBar.setMask();
+  }
+
   public startCast(duration: number): void {
     this.castBarAnimator.startCast(duration);
   }

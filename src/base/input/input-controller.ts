@@ -1,4 +1,6 @@
 export abstract class InputController {
+  protected disabled = false;
+
   protected left = false;
   protected right = false;
   protected up = false;
@@ -98,6 +100,14 @@ export abstract class InputController {
   }
 
   abstract update(): void;
+
+  public disable(): void {
+    this.disabled = true;
+  }
+
+  public enable(): void {
+    this.disabled = false;
+  }
 
   public reset(): void {
     this.left = false;

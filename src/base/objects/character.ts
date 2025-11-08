@@ -7,7 +7,7 @@ import { SHARED_STATES } from '@/constants/state-keys';
 import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
-import { AnimationMap, ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
+import { ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
 
 export interface CharacterConfig extends ArcadeSpriteConfig {
@@ -100,6 +100,11 @@ export class Character extends ArcadeSprite {
     this.stateMachine.changeState(state);
   }
 
+  public makeAlive(): void {
+    this.isDead = false;
+    this.onAliveStart?.();
+  }
+
   public takeDamage(amount: number, attacker?: Character): void {
     if (this.isDead) return;
 
@@ -139,6 +144,7 @@ export class Character extends ArcadeSprite {
   }
 
   protected onDeathStart?(): void {}
+  protected onAliveStart?(): void {}
   protected onDamaged?(): void {}
 
   private playHitEffect(): void {

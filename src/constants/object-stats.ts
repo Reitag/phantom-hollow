@@ -43,8 +43,8 @@ export const SHADOW_BOLT_STATS = {
 } as const;
 
 export const PLAYER_STATS = {
-  //HEALTH: 150,
-  HEALTH: 100000000000,
+  HEALTH: 150,
+  //HEALTH: 100000000000,
   MOVE: 190,
   JUMP: 550,
   SPELL_POWER: 4,
