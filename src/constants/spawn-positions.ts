@@ -1,6 +1,6 @@
 //export const PLAYER_SPAWN_POSITION = { x: 50, y: 450 }; // start
-//export const PLAYER_SPAWN_POSITION = { x: 4845, y: 520 }; // fire-worm
-export const PLAYER_SPAWN_POSITION = { x: 12100, y: 520 }; // lair
+export const PLAYER_SPAWN_POSITION = { x: 4202, y: 520 }; // fire-worm
+//export const PLAYER_SPAWN_POSITION = { x: 12100, y: 520 }; // lair
 //export const PLAYER_SPAWN_POSITION = { x: 15226, y: 136 }; // boss
 
 export const DESTROY_TIME = 20_000;
@@ -11,7 +11,6 @@ export const SKELETONS_SPAWN_POSITION = [
   { x: 1290, y: 520 },
   { x: 2360, y: 520 },
   { x: 3380, y: 328 },
-  { x: 3530, y: 456 },
   { x: 2250, y: 328 },
   { x: 2590, y: 328 },
   { x: 5050, y: 520 },

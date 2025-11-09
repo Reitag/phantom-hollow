@@ -12,7 +12,7 @@ import { Character, CharacterConfig } from '@/base/objects/character';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
-import { CoinKeeper } from '@/game/economy/coin-keeper/coin-keeper';
+import { CoinKeeper } from '@/game/economy/coin-keeper';
 import { Health } from '@/components/stats/health';
 
 export class Player extends Character {

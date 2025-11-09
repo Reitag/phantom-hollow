@@ -14,6 +14,7 @@ import { darkEnergyAnim } from '../misc/dark-energy-anim';
 import { fireWormAnim } from '../characters/bosses/fire-worm-anim';
 import { frostboltAnim } from '../spells/frost-bolt-anim';
 import { freezeAnim } from '../effects/freeze-anim';
+import { soulFireAnim } from '../misc/soul-fire-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -43,6 +44,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   freezeAnim(anims);
 
   // Misc
+  soulFireAnim(anims);
   portalAnim(anims);
   darkEnergyAnim(anims);
 }

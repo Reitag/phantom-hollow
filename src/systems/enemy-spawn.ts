@@ -41,9 +41,11 @@ export class EnemySpawn {
     archer: ARCHERS_SPAWN_POSITION,
   };
 
-  private aiSkeletonWarrior = new AiSkeletonWarrior(ServiceLocator.resolve(ServiceKeys.player));
-  private aiZombie = new AiZombie(ServiceLocator.resolve(ServiceKeys.player));
-  private aiArcher = new AiArcher(ServiceLocator.resolve(ServiceKeys.player));
+  private aiSkeletonWarrior = new AiSkeletonWarrior(
+    ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
+  );
+  private aiZombie = new AiZombie(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
+  private aiArcher = new AiArcher(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
   private aiFireWorm: AiFireWorm;
   private aiEvilWizard: AiEvilWizard;
 
@@ -67,7 +69,10 @@ export class EnemySpawn {
     }).setDepth(Z_POSITION.ENEMY);
 
     CollisionService.resolveGroup(GroupKeys.enemy)?.add(evelWizzard, true);
-    this.aiEvilWizard = new AiEvilWizard(evelWizzard, ServiceLocator.resolve(ServiceKeys.player));
+    this.aiEvilWizard = new AiEvilWizard(
+      evelWizzard,
+      ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
+    );
 
     const fireWorm = new FireWorm({
       scene: scene,
@@ -88,7 +93,10 @@ export class EnemySpawn {
     }).setDepth(Z_POSITION.ENEMY);
 
     CollisionService.resolveGroup(GroupKeys.enemy)?.add(fireWorm, true);
-    this.aiFireWorm = new AiFireWorm(fireWorm, ServiceLocator.resolve(ServiceKeys.player));
+    this.aiFireWorm = new AiFireWorm(
+      fireWorm,
+      ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
+    );
   }
 
   public update(player: Player, delta: number): void {

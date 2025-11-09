@@ -1,6 +1,6 @@
-import { Player } from '@/entities/characters/player/player';
 import { UiSystem } from '@/systems/ui-system';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
+import { PlayerHandler } from '@/systems/player-handler';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellSystem } from '@/systems/spell-system';
 import { LootSystem } from '@/systems/loot-system';
@@ -10,7 +10,7 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { CollisionService } from './collision-service';
 
 interface ServiceMap {
-  player: Player;
+  playerHandler: PlayerHandler;
   ui: UiSystem;
   cooldowns: SpellCooldowns;
   spellFactory: SpellFactory;
@@ -23,7 +23,7 @@ interface ServiceMap {
 }
 
 export const ServiceKeys = {
-  player: 'player',
+  playerHandler: 'playerHandler',
   ui: 'ui',
   cooldowns: 'cooldowns',
   spellFactory: 'spellFactory',

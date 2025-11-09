@@ -14,7 +14,7 @@ export class KeyboardController extends InputController {
   private thirdItemKey: Phaser.Input.Keyboard.Key;
   private fourthItemKey: Phaser.Input.Keyboard.Key;
 
-  private storeTriggerKey: Phaser.Input.Keyboard.Key;
+  private actionKey: Phaser.Input.Keyboard.Key;
 
   constructor(input: Phaser.Input.Keyboard.KeyboardPlugin) {
     super();
@@ -30,7 +30,7 @@ export class KeyboardController extends InputController {
     this.thirdItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     this.fourthItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.F);
 
-    this.storeTriggerKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    this.actionKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
   }
 
   public override update(): void {
@@ -66,7 +66,7 @@ export class KeyboardController extends InputController {
     this.thirdItemUse = Phaser.Input.Keyboard.JustDown(this.thirdItemKey);
     this.fourthItemUse = Phaser.Input.Keyboard.JustDown(this.fourthItemKey);
 
-    // Store
-    this.storeTrigger = Phaser.Input.Keyboard.JustDown(this.storeTriggerKey);
+    // Action
+    this.actionDown = Phaser.Input.Keyboard.JustDown(this.actionKey);
   }
 }

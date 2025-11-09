@@ -24,6 +24,7 @@ export const MAPS = {
 } as const;
 
 export const MISC = {
+  SOUL_FIRE: 'soul-fire',
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
 } as const;
@@ -91,6 +92,7 @@ export const UI = {
   PROTECTION_POTION_ICON: 'protection-potion-icon',
   SPELL_POTION_ICON: 'spell-potion-icon',
   UNDYING_POTION_ICON: 'undying-potion-icon',
+  SOUL_STONE_ICON: 'soul-stone-icon',
   PROTECTION_BUFF: 'protection-buff',
   SPELL_POWER_BUFF: 'spell-power-buff',
   UNDYING_BUFF: 'undying-buff',

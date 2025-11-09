@@ -12,11 +12,9 @@ import {
   COIN_UI,
   FROST_BOLT_ICON,
 } from '@/constants/ui-coordinates';
-import { Store } from '@/components/ui/store/store';
 
 export class UiScene extends Phaser.Scene {
   private ui!: UiSystem;
-  private store!: Store;
 
   constructor() {
     super('UiScene');
@@ -46,15 +44,10 @@ export class UiScene extends Phaser.Scene {
     this.addInventoryKeyLabels();
 
     this.ui = new UiSystem(this);
-    this.store = new Store(this);
   }
 
   public getUI(): UiSystem {
     return this.ui;
-  }
-
-  public getStore(): Store {
-    return this.store;
   }
 
   private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {

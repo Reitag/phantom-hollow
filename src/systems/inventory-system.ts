@@ -121,6 +121,31 @@ export class InventorySystem {
     }
   }
 
+  public isIncludeItem(id: string): boolean {
+    for (const slot of this.slots) {
+      if (!slot) continue;
+      if (slot.item.id !== id) continue;
+      if (slot.item.id === id) return true;
+    }
+    return false;
+  }
+
+  public getItemIndex(id: string): number | undefined {
+    let index = 0;
+    for (const slot of this.slots) {
+      if (!slot) {
+        ++index;
+        continue;
+      }
+      if (slot.item.id !== id) {
+        ++index;
+        continue;
+      }
+      if (slot.item.id === id) return index;
+    }
+    return undefined;
+  }
+
   private updateUI(): void {
     this.ui.updateInventory(this.getItems());
   }

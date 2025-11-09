@@ -2,14 +2,20 @@
   "files": [
     {
       "type": "spritesheet",
+      "key": "soul-fire",
+      "url": "assets/misc/soul-fire.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
       "key": "portal",
-      "url": "assets/portal.png",
+      "url": "assets/misc/portal.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
     },
     {
       "type": "spritesheet",
       "key": "dark-energy",
-      "url": "assets/dark-energy.png",
+      "url": "assets/misc/dark-energy.png",
       "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
     }
   ]

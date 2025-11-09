@@ -85,34 +85,6 @@ export abstract class CharacterState implements State {
     this.character.anims.play(key, true);
   }
 
-  /*protected playAnimation(key: string | undefined, force = false, duration?: number): void {
-    if (!key) return;
-
-    const anims = this.character.anims;
-    const scene = this.character.scene;
-    const exists = scene.anims.exists(key);
-    if (!exists) {
-      console.warn(`[Animation missing] ${key}`);
-      return;
-    }
-
-    if (!force && anims.currentAnim?.key === key) return;
-
-    // Get the animation data
-    const anim = scene.anims.get(key)!;
-    const frameCount = anim.frames.length;
-
-    if (duration) {
-      // Clone or modify frameRate temporarily
-      const adjustedFrameRate = frameCount / (duration / 1000);
-
-      // Play using a temporary override
-      anims.play({ key, frameRate: adjustedFrameRate }, true);
-    } else {
-      anims.play(key, true);
-    }
-  }*/
-
   protected initToCastSpell(spell: string): void {
     if (!this.canTransitionToCast(spell)) return;
     this.stateMachine.changeState(PLAYER_STATES.READY);

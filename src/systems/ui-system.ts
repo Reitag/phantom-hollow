@@ -1,3 +1,4 @@
+import { Dialog } from '@/components/ui/dialog/dialog';
 import { InventoryIconContainer } from '@/components/ui/inventory-icons/inventory-icon-container';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
 import { CooldownAnimator } from '@/components/ui/spell-icons/cooldown-animator';
@@ -7,7 +8,7 @@ import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
 import { Coins } from '@/components/ui/coins/coins';
-import { Dialog } from '@/components/ui/dialog/dialog';
+import { Store } from '@/components/ui/store/store';
 import { Text } from '@/components/ui/text/text';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { ModifierType, Position, InventorySlot } from '@/utils/types';
@@ -25,8 +26,8 @@ export class UiSystem {
   private inventoryIconContainer: InventoryIconContainer;
   private modifierIconContainer: ModifierIconContainer;
 
+  private store!: Store;
   private coins: Coins;
-
   private text: Text;
 
   constructor(private uiScene: Phaser.Scene) {
@@ -42,8 +43,8 @@ export class UiSystem {
     this.inventoryIconContainer = new InventoryIconContainer(uiScene);
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
 
+    this.store = new Store(uiScene);
     this.coins = new Coins(uiScene);
-
     this.text = new Text(uiScene);
   }
 
@@ -98,6 +99,10 @@ export class UiSystem {
 
   public highlightSpot(index: number): void {
     this.iconHighlighter.addSlotHighlight(index);
+  }
+
+  public getStore(): Store {
+    return this.store;
   }
 
   public updateInventory(items: (InventorySlot | null)[]): void {

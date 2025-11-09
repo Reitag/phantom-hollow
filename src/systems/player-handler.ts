@@ -7,7 +7,7 @@ import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
 
-export class PlayerSpawn {
+export class PlayerHandler {
   private deathHandled = false;
 
   private player: Player;
@@ -35,7 +35,7 @@ export class PlayerSpawn {
       },
       facingRight: true,
     }).setDepth(Z_POSITION.PLAYER);
-    ServiceLocator.register(ServiceKeys.player, this.player);
+    ServiceLocator.register(ServiceKeys.playerHandler, this);
   }
 
   public update(delta: number): void {

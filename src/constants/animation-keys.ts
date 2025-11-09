@@ -114,6 +114,13 @@ export const EFFECTS_ANIMATION = {
   },
 } as const;
 
+export const MISC_ANIMATION = {
+  SOUL_FIRE: {
+    [EFFECT_ANIMATION_KEYS.START]: 'soul-fire-start',
+    [EFFECT_ANIMATION_KEYS.MAIN]: 'soul-fire-main',
+  },
+} as const;
+
 export const ITEMS_ANIMATION = {
   COIN: {
     IDLE: 'coin-idle',

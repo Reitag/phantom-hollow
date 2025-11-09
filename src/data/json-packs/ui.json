@@ -79,6 +79,11 @@
     },
     {
       "type": "image",
+      "key": "soul-stone-icon",
+      "url": "assets/icons/stones/soul-stone.png"
+    },
+    {
+      "type": "image",
       "key": "protection-buff",
       "url": "assets/icons/buffs/protection.png"
     },

@@ -1,7 +1,7 @@
 import { GraphicsMask } from '@/components/rendering/graphic-mask';
 import { UI } from '@/constants/asset-keys';
 import { STORE_UI } from '@/constants/ui-coordinates';
-import { STORE_ITEMS, StoreItem } from '@/game/economy/store/store-items';
+import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
 
 type Bundle = {
   item: StoreItem;
@@ -32,7 +32,7 @@ export class Store {
   private bundles: Bundle[] = [];
   private bundleHandlers = new Map<Phaser.GameObjects.Text, Handlers>();
 
-  constructor(private scene: Phaser.Scene) {
+  constructor(public scene: Phaser.Scene) {
     // Container and bg
     this.store = this.scene.add.container(STORE_UI.BG.X, STORE_UI.BG.Y);
     this.store.setVisible(false);

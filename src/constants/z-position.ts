@@ -9,8 +9,8 @@ export const Z_POSITION = {
   TREES_NORMAL: 40,
   ROCK: 50,
   /// -backgrounds
-  PLATFORM_BG: 60,
-  CAVE_BACKGROUND: 70,
+  CAVE_BACKGROUND: 60,
+  PLATFORM_BG: 70,
   /// -spear and bush
   SPEAR: 80,
   BUSH: 90,
@@ -25,7 +25,7 @@ export const Z_POSITION = {
   PLATFORMS: 150,
 
   // Sprite objects
-  PORTAL: 160,
+  MISC: 160,
   ITEM: 170,
   PLAYER: 180,
   ENEMY: 190,

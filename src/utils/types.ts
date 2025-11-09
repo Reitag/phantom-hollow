@@ -61,6 +61,7 @@ export interface InventoryItem {
   description: string;
   iconKey: string;
   maxStack: number;
+  isUnique: boolean;
   use: () => boolean;
 }
 

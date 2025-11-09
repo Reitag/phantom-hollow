@@ -1,23 +1,24 @@
 import Phaser from 'phaser';
 
 import { WORLD_PARAMS } from '@/constants/world-params';
-import { SPEAR_HIT, SPIKE_HIT, PLAYER_STATS } from '@/constants/object-stats';
-import { Z_POSITION } from '@/constants/z-position';
+import { SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { CHARACTERS, MISC, TILESETS } from '@/constants/asset-keys';
-import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-positions';
+import { TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
+import { SOUL_PEDESTAL_POSITIONS, STALL_POSITIONS } from '@/constants/interactables-positions';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { Stall } from '@/game/economy/store/stall';
+import { Stall } from '@/game/interactables/stall';
+import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { SpellFactory } from '@/factories/spell-factory';
+import { InteractablesKeeper } from '@/systems/interactebles-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
 import { EnemySpawn } from '@/systems/enemy-spawn';
-import { PlayerSpawn } from '@/systems/player-spawn';
+import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
@@ -32,9 +33,9 @@ export class LevelOneScene extends Phaser.Scene {
   private debugScreen: DebugScreen | null = null;
 
   private player!: Player;
-  private playerSpawn!: PlayerSpawn;
+  private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
-  private stall!: Stall;
+  private interactables!: InteractablesKeeper;
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
@@ -55,10 +56,9 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   update(_: number, delta: number): void {
-    this.playerSpawn.update(delta);
+    this.playerHandler.update(delta);
     this.spawn.update(this.player, delta);
-
-    this.stall.update();
+    this.interactables.update();
 
     this.updateParallaxBackground();
 
@@ -104,7 +104,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.registerSystems();
 
     this.createPlayer();
-    this.createStall();
+    this.createInteractableObjects();
 
     this.registerCollisions();
     this.createSpawnEnemySystem();
@@ -194,12 +194,26 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private createPlayer(): void {
-    this.playerSpawn = new PlayerSpawn(this);
-    this.player = this.playerSpawn.getPlayer();
+    this.playerHandler = new PlayerHandler(this);
+    this.player = this.playerHandler.getPlayer();
   }
 
-  private createStall(): void {
-    this.stall = new Stall(this);
+  private createInteractableObjects(): void {
+    this.interactables = new InteractablesKeeper();
+
+    // Stall
+    const stall = new Stall(this);
+    stall.addTriggerZone(STALL_POSITIONS.FIRST);
+    stall.addTriggerZone(STALL_POSITIONS.SECOND);
+    stall.addTriggerZone(STALL_POSITIONS.THIRD);
+    this.interactables.add(stall);
+
+    // Soul Pedestal
+    const pedestal = new SoulPedestal(this);
+    pedestal.addTriggerZone(SOUL_PEDESTAL_POSITIONS.FIRST);
+    pedestal.addTriggerZone(SOUL_PEDESTAL_POSITIONS.SECOND);
+    pedestal.addTriggerZone(SOUL_PEDESTAL_POSITIONS.THIRD);
+    this.interactables.add(pedestal);
   }
 
   private registerCollisions(): void {

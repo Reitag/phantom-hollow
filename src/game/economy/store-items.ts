@@ -1,4 +1,5 @@
 import { healthPotion, protectPotion, spellPotion, undyingPotion } from '@/game/items/potions';
+import { soulStone } from '@/game/items/stones';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export interface StoreItem {
@@ -21,7 +22,9 @@ export const STORE_ITEMS: StoreItem[] = [
       if (!inventory.canAdd(health, 1)) {
         ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
       } else {
-        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
 
         //if (coinKeeper.removeCoins(1)) {
         if (coinKeeper.removeCoins(0)) {
@@ -40,7 +43,9 @@ export const STORE_ITEMS: StoreItem[] = [
       if (!inventory.canAdd(protect, 1)) {
         ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
       } else {
-        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
 
         //if (coinKeeper.removeCoins(2)) {
         if (coinKeeper.removeCoins(0)) {
@@ -59,7 +64,9 @@ export const STORE_ITEMS: StoreItem[] = [
       if (!inventory.canAdd(spell, 1)) {
         ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
       } else {
-        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
 
         if (coinKeeper.removeCoins(3)) {
           inventory.addItem(spell, 1);
@@ -77,10 +84,42 @@ export const STORE_ITEMS: StoreItem[] = [
       if (!inventory.canAdd(undying, 1)) {
         ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
       } else {
-        const coinKeeper = ServiceLocator.resolve(ServiceKeys.player).getCoinKeeper();
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
 
         if (coinKeeper.removeCoins(4)) {
           inventory.addItem(undying, 1);
+        }
+      }
+    },
+  },
+  {
+    ...soulStone(),
+    price: 0,
+    onBuy: () => {
+      const stone = soulStone();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+      const ui = ServiceLocator.resolve(ServiceKeys.ui);
+
+      if (stone.isUnique) {
+        const alreadyOwned = inventory.getItems().some((slot) => slot && slot.item.id === stone.id);
+
+        if (alreadyOwned) {
+          ui.addWarningtext('There is only one unique item in inventory');
+          return;
+        }
+      }
+
+      if (!inventory.canAdd(stone, 1)) {
+        ui.addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
+
+        if (coinKeeper.removeCoins(0)) {
+          inventory.addItem(stone, 1);
         }
       }
     },

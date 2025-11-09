@@ -56,6 +56,6 @@ export class Sandbox {
   }
 
   private get player(): Player {
-    return ServiceLocator.resolve(ServiceKeys.player);
+    return ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
   }
 }

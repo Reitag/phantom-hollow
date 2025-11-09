@@ -9,6 +9,7 @@ export const healthPotion = (): InventoryItem => ({
   description: 'Restores 50 HP',
   iconKey: UI.HEALTH_POTION_ICON,
   maxStack: 5,
+  isUnique: false,
   use: () => {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
     sandbox.healPlayer(50);
@@ -23,8 +24,9 @@ export const protectPotion = (): InventoryItem => ({
   description: 'Reduces damage taken for 10 seconds',
   iconKey: UI.PROTECTION_POTION_ICON,
   maxStack: 5,
+  isUnique: false,
   use: () => {
-    const player = ServiceLocator.resolve(ServiceKeys.player);
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
     const modifier = player.getModifier();
 
     if (!modifier.isModifierExist(PROTECTION.id)) {
@@ -46,8 +48,9 @@ export const spellPotion = (): InventoryItem => ({
   description: 'Increase spell power for 15 seconds',
   iconKey: UI.SPELL_POTION_ICON,
   maxStack: 5,
+  isUnique: false,
   use: () => {
-    const player = ServiceLocator.resolve(ServiceKeys.player);
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
     const modifier = player.getModifier();
 
     if (!modifier.isModifierExist(SPELL_POWER.id)) {
@@ -69,8 +72,9 @@ export const undyingPotion = (): InventoryItem => ({
   description: 'Makes you immune to death for 5 seconds',
   iconKey: UI.UNDYING_POTION_ICON,
   maxStack: 3,
+  isUnique: false,
   use: () => {
-    const player = ServiceLocator.resolve(ServiceKeys.player);
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
     const modifier = player.getModifier();
 
     if (!modifier.isModifierExist(UNDYING.id)) {
@@ -92,6 +96,7 @@ export const questItem = (): InventoryItem => ({
   description: 'Helps defeat the boss quickly',
   iconKey: 'quest_item_icon',
   maxStack: 1,
+  isUnique: true,
   use: () => {
     console.log('Used quest item');
     return true;
