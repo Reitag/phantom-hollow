@@ -1,6 +1,6 @@
 import { Interactable } from '@/base/objects/interactable';
 
-export class InteractablesKeeper {
+export class InteractableKeeper {
   private list: Interactable[] = [];
 
   public add(obj: Interactable): void {

@@ -20,6 +20,12 @@ export const SPELL_POWER = {
   type: TYPE.buff,
 };
 
+export const LIGHTNING_SHIELD = {
+  id: UI.LIGHTNING_SHIELD_BUFF,
+  duration: 10000,
+  type: TYPE.buff,
+};
+
 export const UNDYING = {
   id: UI.UNDYING_BUFF,
   duration: 5000,

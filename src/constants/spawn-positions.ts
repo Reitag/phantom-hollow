@@ -1,6 +1,6 @@
 //export const PLAYER_SPAWN_POSITION = { x: 50, y: 450 }; // start
-export const PLAYER_SPAWN_POSITION = { x: 4202, y: 520 }; // fire-worm
-//export const PLAYER_SPAWN_POSITION = { x: 12100, y: 520 }; // lair
+//export const PLAYER_SPAWN_POSITION = { x: 4202, y: 520 }; // fire-worm
+export const PLAYER_SPAWN_POSITION = { x: 12100, y: 520 }; // lair
 //export const PLAYER_SPAWN_POSITION = { x: 15226, y: 136 }; // boss
 
 export const DESTROY_TIME = 20_000;

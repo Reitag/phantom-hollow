@@ -14,6 +14,12 @@
     },
     {
       "type": "spritesheet",
+      "key": "lightning-shield",
+      "url": "assets/spells/lightning-shield.png",
+      "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
       "key": "wind",
       "url": "assets/spells/wind.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }

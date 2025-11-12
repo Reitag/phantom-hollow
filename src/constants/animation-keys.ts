@@ -92,6 +92,9 @@ export const SPELLS_ANIMATION = {
   BLINK: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'blink-main',
   },
+  LIGHTNING_SHIELD: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'lightning-shield-main',
+  },
   WIND: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'wind-main',
     [SPELL_ANIMATION_KEYS.HIT]: 'wind-hit',

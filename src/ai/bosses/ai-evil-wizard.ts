@@ -11,10 +11,10 @@ import { Character } from '@/base/objects/character';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
-import { BOSSES_ANIMATION } from '@/constants/animation-keys';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
+import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import { Boss } from '../../base/ai/boss';
 import { AiMutatedBat } from '../enemies/ai-mutated-bat';
 
@@ -125,6 +125,8 @@ export class AiEvilWizard extends Boss {
     }).setDepth(Z_POSITION.ENEMY);
 
     this.aiMutatedBat.addEnemy(bat);
+
+    CollisionService.resolveGroup(GroupKeys.enemy)?.add(bat, true);
   }
 
   private castShadowBolt(): void {

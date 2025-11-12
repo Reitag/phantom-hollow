@@ -1,5 +1,7 @@
 import { UI } from './asset-keys';
 
+export const SHIFT_SPELL_REGGISTER_HITS = 500;
+
 export const SPIKE_HIT = 10;
 
 export const SPEAR_HIT = 50;
@@ -40,6 +42,10 @@ export const SHADOW_BOLT_STATS = {
   SPEED: 300,
   CAST_TIME: 500,
   LIFE_TIME: 2000,
+} as const;
+
+export const LIGHTNING_SHIELD_STATS = {
+  HIT: 5,
 } as const;
 
 export const PLAYER_STATS = {
@@ -87,6 +93,7 @@ export const MUTATED_BAT_STATS = {
   CHASE: 2,
   HIT: 10,
   LIFE_TIME: 1500,
+  DELAY: 8000,
 } as const;
 
 export const FIRE_WORM_STATS = {

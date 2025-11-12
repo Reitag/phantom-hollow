@@ -1,4 +1,10 @@
-import { healthPotion, protectPotion, spellPotion, undyingPotion } from '@/game/items/potions';
+import {
+  healthPotion,
+  lightningPotion,
+  protectPotion,
+  spellPotion,
+  undyingPotion,
+} from '@/game/items/potions';
 import { soulStone } from '@/game/items/stones';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
@@ -75,8 +81,29 @@ export const STORE_ITEMS: StoreItem[] = [
     },
   },
   {
-    ...undyingPotion(),
+    ...lightningPotion(),
     price: 4,
+    onBuy: () => {
+      const lightning = lightningPotion();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+
+      if (!inventory.canAdd(lightning, 1)) {
+        ServiceLocator.resolve(ServiceKeys.ui).addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
+
+        //if (coinKeeper.removeCoins(4)) {
+        if (coinKeeper.removeCoins(0)) {
+          inventory.addItem(lightning, 1);
+        }
+      }
+    },
+  },
+  {
+    ...undyingPotion(),
+    price: 5,
     onBuy: () => {
       const undying = undyingPotion();
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);

@@ -2,7 +2,10 @@ import { MUTATED_BAT_STATS } from '@/constants/object-stats';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
 import { Character } from '@/base/objects/character';
+import { Player } from '@/entities/characters/player/player';
 import { StateMachine } from '@/systems/state-machine';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { playAnimation } from '@/utils/helpers';
 import { Enemy } from '../../base/ai/enemy';
 
 export class AiMutatedBat extends Enemy {
@@ -16,9 +19,13 @@ export class AiMutatedBat extends Enemy {
       this.removeEnemy(bat);
       return;
     }
+    if (bat.explodeCallback === undefined) {
+      bat.explodeCallback = (self) => this.explode(self);
+    }
 
     bat.update(delta);
 
+    //if (bat.getDead()) return;
     if (!this.player || this.player.getDead()) {
       bat.setVelocity(0, 0);
     }
@@ -42,12 +49,14 @@ export class AiMutatedBat extends Enemy {
         this.verticalOffset,
       ]);
 
-      bat.scene.time.delayedCall(8000, () => {
-        fsm.changeState(ENEMY_STATES.DIVE, this.player, [
-          MUTATED_BAT_STATS.CHASE,
-          MUTATED_BAT_STATS.HIT,
-          MUTATED_BAT_STATS.LIFE_TIME,
-        ]);
+      bat.scene.time.delayedCall(MUTATED_BAT_STATS.DELAY, () => {
+        if (bat.active) {
+          fsm.changeState(ENEMY_STATES.DIVE, this.player, [
+            MUTATED_BAT_STATS.CHASE,
+            MUTATED_BAT_STATS.HIT,
+            MUTATED_BAT_STATS.LIFE_TIME,
+          ]);
+        }
       });
     }
   }
@@ -62,5 +71,15 @@ export class AiMutatedBat extends Enemy {
 
   protected get sameYThreshold(): number {
     return 0;
+  }
+
+  private explode(bat: Character): void {
+    bat.getStats()?.speed?.setMovementLock(true);
+
+    const animKey = bat.resolveAnimation(CHARACTER_ANIMATION_KEYS.DEATH);
+    playAnimation(bat, animKey);
+    bat.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+      bat.destroy();
+    });
   }
 }

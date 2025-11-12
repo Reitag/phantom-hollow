@@ -14,9 +14,10 @@ import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { SpellFactory } from '@/factories/spell-factory';
-import { InteractablesKeeper } from '@/systems/interactebles-keeper';
+import { InteractableKeeper } from '@/systems/interacteble-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
+import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { EnemySpawn } from '@/systems/enemy-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
@@ -35,7 +36,7 @@ export class LevelOneScene extends Phaser.Scene {
   private player!: Player;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
-  private interactables!: InteractablesKeeper;
+  private interactables!: InteractableKeeper;
   private mount!: Phaser.GameObjects.TileSprite;
   private grass!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
@@ -199,7 +200,7 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private createInteractableObjects(): void {
-    this.interactables = new InteractablesKeeper();
+    this.interactables = new InteractableKeeper();
 
     // Stall
     const stall = new Stall(this);
@@ -342,6 +343,11 @@ export class LevelOneScene extends Phaser.Scene {
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
     spell.registerHit(victim);
+    // For nature shield
+    if (spell instanceof LightningShield) {
+      spell.applyEffect(victim);
+      return;
+    }
     spell.applyEffect(victim);
 
     if (spell.causeDamage() > 0) {

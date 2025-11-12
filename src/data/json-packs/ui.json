@@ -1,7 +1,15 @@
 {
   "files": [
-    { "type": "image", "key": "spell-ui", "url": "assets/ui/spell-ui.png" },
-    { "type": "image", "key": "inventory-ui", "url": "assets/ui/inventory-ui.png" },
+    {
+      "type": "image",
+      "key": "spell-ui",
+      "url": "assets/ui/spell-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "inventory-ui",
+      "url": "assets/ui/inventory-ui.png"
+    },
     {
       "type": "image",
       "key": "fire-ball-icon",
@@ -22,16 +30,36 @@
       "key": "frostbolt-icon",
       "url": "assets/icons/spells/frost-bolt-icon.png"
     },
-    { "type": "image", "key": "coin-ui", "url": "assets/ui/coin-ui.png" },
-    { "type": "image", "key": "health-bar", "url": "assets/ui/health-bar.png" },
-    { "type": "image", "key": "health-env", "url": "assets/ui/health-env.png" },
-    { "type": "image", "key": "cast-bar", "url": "assets/ui/cast-bar.png" },
+    {
+      "type": "image",
+      "key": "coin-ui",
+      "url": "assets/ui/coin-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "health-bar",
+      "url": "assets/ui/health-bar.png"
+    },
+    {
+      "type": "image",
+      "key": "health-env",
+      "url": "assets/ui/health-env.png"
+    },
+    {
+      "type": "image",
+      "key": "cast-bar",
+      "url": "assets/ui/cast-bar.png"
+    },
     {
       "type": "image",
       "key": "cast-bar-green",
       "url": "assets/ui/cast-bar-green.png"
     },
-    { "type": "image", "key": "cast-env", "url": "assets/ui/cast-env.png" },
+    {
+      "type": "image",
+      "key": "cast-env",
+      "url": "assets/ui/cast-env.png"
+    },
     {
       "type": "image",
       "key": "store-ui",
@@ -64,6 +92,11 @@
     },
     {
       "type": "image",
+      "key": "nature-potion-icon",
+      "url": "assets/icons/potions/nature-potion.png"
+    },
+    {
+      "type": "image",
       "key": "protection-potion-icon",
       "url": "assets/icons/potions/protection-potion.png"
     },
@@ -71,6 +104,11 @@
       "type": "image",
       "key": "spell-potion-icon",
       "url": "assets/icons/potions/spell-potion.png"
+    },
+    {
+      "type": "image",
+      "key": "lightning-potion-icon",
+      "url": "assets/icons/potions/lightning-potion.png"
     },
     {
       "type": "image",
@@ -91,6 +129,11 @@
       "type": "image",
       "key": "spell-power-buff",
       "url": "assets/icons/buffs/spell-power.png"
+    },
+    {
+      "type": "image",
+      "key": "lightning-shield-buff",
+      "url": "assets/icons/buffs/lightning-shield.png"
     },
     {
       "type": "image",

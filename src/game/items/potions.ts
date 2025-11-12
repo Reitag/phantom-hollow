@@ -1,6 +1,6 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { UI } from '@/constants/asset-keys';
-import { PROTECTION, SPELL_POWER, UNDYING } from '@/constants/modifier-stats';
+import { LIGHTNING_SHIELD, PROTECTION, SPELL_POWER, UNDYING } from '@/constants/modifier-stats';
 import { InventoryItem } from '@/utils/types';
 
 export const healthPotion = (): InventoryItem => ({
@@ -61,6 +61,30 @@ export const spellPotion = (): InventoryItem => ({
     } else {
       const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
       sandbox.setText('Spell power buff is already active');
+      return false;
+    }
+  },
+});
+
+export const lightningPotion = (): InventoryItem => ({
+  id: 'lightning-potion',
+  name: 'Lightning Potion',
+  description: 'Set Lightning Shield, causing damage to enemies',
+  iconKey: UI.LIGHTNING_POTION_ICON,
+  maxStack: 5,
+  isUnique: false,
+  use: () => {
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+    const modifier = player.getModifier();
+
+    if (!modifier.isModifierExist(LIGHTNING_SHIELD.id)) {
+      modifier.addModifier(LIGHTNING_SHIELD.id);
+      modifier.startModifier(LIGHTNING_SHIELD.id, player);
+
+      return true;
+    } else {
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+      sandbox.setText('Lightning Shield spell is already active');
       return false;
     }
   },

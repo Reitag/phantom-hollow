@@ -1,11 +1,13 @@
 import {
   DISEASE,
+  LIGHTNING_SHIELD,
   PROTECTION,
   SHADOW_VULNERABILITY,
   SPELL_POWER,
   UNDYING,
 } from '@/constants/modifier-stats';
 import { Protection } from '@/game/modifiers/buffs/protection';
+import { SetLightning } from '@/game/modifiers/buffs/set-lightning';
 import { SpellIncrease } from '@/game/modifiers/buffs/spell-increase';
 import { Undying } from '@/game/modifiers/buffs/undying';
 import { Disease } from '@/game/modifiers/debuffs/disease';
@@ -19,6 +21,8 @@ export class ModifierFactory {
         return new Protection(scene);
       case SPELL_POWER.id:
         return new SpellIncrease(scene);
+      case LIGHTNING_SHIELD.id:
+        return new SetLightning(scene);
       case UNDYING.id:
         return new Undying(scene);
       case DISEASE.id:

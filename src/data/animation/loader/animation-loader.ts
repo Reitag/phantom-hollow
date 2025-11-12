@@ -15,6 +15,7 @@ import { fireWormAnim } from '../characters/bosses/fire-worm-anim';
 import { frostboltAnim } from '../spells/frost-bolt-anim';
 import { freezeAnim } from '../effects/freeze-anim';
 import { soulFireAnim } from '../misc/soul-fire-anim';
+import { lightningShieldAnim } from '../spells/lightning-shield-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -23,6 +24,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   // Spells
   fireballAnim(anims);
   blinkAnim(anims);
+  lightningShieldAnim(anims);
   windAnim(anims);
   shadowboltAnim(anims);
   frostboltAnim(anims);

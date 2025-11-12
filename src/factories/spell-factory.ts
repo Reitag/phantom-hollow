@@ -2,6 +2,7 @@ import { Character } from '@/base/objects/character';
 import { SpellPower } from '@/components/stats/damage';
 import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { Blink } from '@/entities/spells/effect-spells/blink';
+import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { Wind } from '@/entities/spells/direct-spells/wind';
 import { FrostBolt } from '@/entities/spells/direct-spells/frost-bolt';
 import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
@@ -11,6 +12,7 @@ import {
   WIND_STATS,
   SHADOW_BOLT_STATS,
   FROST_BOLT_STATS,
+  LIGHTNING_SHIELD_STATS,
 } from '@/constants/object-stats';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 
@@ -125,6 +127,28 @@ export class SpellFactory {
     this.spellGroup.add(shadowBolt, true);
 
     return shadowBolt;
+  }
+
+  public createLightningShield(
+    character: Character,
+    position?: { x: number; y: number }
+  ): LightningShield {
+    const spawnPosition = { x: character.x, y: character.y };
+    const spellPower = (character.getStats().damage.spellPower as SpellPower) ?? null;
+
+    const lightningShield = new LightningShield({
+      scene: this.scene,
+      position: spawnPosition,
+      keyName: SPELLS.LIGHTNING_SHIELD,
+      frame: 0,
+      caster: character,
+      spellPower: spellPower,
+      damage: LIGHTNING_SHIELD_STATS.HIT,
+    });
+
+    this.spellGroup.add(lightningShield, true);
+
+    return lightningShield;
   }
 
   public getSpells(): Phaser.Physics.Arcade.Group {

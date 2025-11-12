@@ -4,6 +4,8 @@ import { CHARACTER_ANIMATION_KEYS, ENEMIES_ANIMATION } from '@/constants/animati
 import { Character, CharacterConfig } from '@/base/objects/character';
 
 export class MutatedBat extends Character {
+  public explodeCallback?: (self: Character) => void;
+
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
 
@@ -21,5 +23,9 @@ export class MutatedBat extends Character {
 
   public update(delta: number): void {
     this.stateMachine.update(delta);
+  }
+
+  protected override die(): void {
+    this.explodeCallback?.(this);
   }
 }

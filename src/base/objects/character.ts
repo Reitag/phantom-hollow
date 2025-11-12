@@ -152,7 +152,7 @@ export class Character extends ArcadeSprite {
     this.scene.time.delayedCall(100, () => this.clearTint());
   }
 
-  private die(): void {
+  protected die(): void {
     if (this.isDead) return;
 
     this.isDead = true;

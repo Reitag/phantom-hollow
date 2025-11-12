@@ -2,6 +2,7 @@ import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpellPower } from '@/components/stats/damage';
 import { ArcadeSpriteConfig } from '@/utils/types';
 import { SPELL_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { SHIFT_SPELL_REGGISTER_HITS } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
@@ -21,7 +22,7 @@ export abstract class Spell extends ArcadeSprite {
   protected speed: number | null = null;
   protected direction: number | null = null;
 
-  private hittedEnemies = new Set<Character>();
+  private hittedEnemies = new Array<Character>();
 
   constructor({
     scene,
@@ -63,11 +64,15 @@ export abstract class Spell extends ArcadeSprite {
   }
 
   public hasAlreadyHit(enemy: Character): boolean {
-    return this.hittedEnemies.has(enemy);
+    return this.hittedEnemies.includes(enemy);
   }
 
   public registerHit(enemy: Character): void {
-    this.hittedEnemies.add(enemy);
+    this.hittedEnemies.push(enemy);
+
+    enemy.scene.time.delayedCall(SHIFT_SPELL_REGGISTER_HITS, () => {
+      this.hittedEnemies.shift();
+    });
   }
 
   public causeDamage(): number {
