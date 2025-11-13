@@ -9,6 +9,7 @@ export class Idle extends CharacterState {
   }
 
   public onEnter(...args: unknown[]): void {
+    if (!this.character.active) return;
     this.setToZeroVelocityX();
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
