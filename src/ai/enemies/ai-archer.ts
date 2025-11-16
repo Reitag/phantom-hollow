@@ -9,7 +9,7 @@ import { WEAPONS } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import { SpawnPoint } from '@/utils/types';
-import { Enemy } from '../../base/ai/enemy';
+import { Enemy, EnemyConfig } from '../../base/ai/enemy';
 
 export class AiArcher extends Enemy {
   private launchArrowBind: (character: Character) => void;
@@ -20,11 +20,13 @@ export class AiArcher extends Enemy {
     this.launchArrowBind = this.launchArrow.bind(this);
   }
 
-  public addEnemy(enemy: Archer, spawnPoint?: SpawnPoint): void {
-    super.addEnemy(enemy);
-    if (spawnPoint) {
-      this.spawnMap.set(enemy, spawnPoint);
-    }
+  public addEnemy(archer: Archer, spawnPoint?: SpawnPoint): void {
+    const enemy: EnemyConfig = {
+      unit: archer,
+      spawn: spawnPoint ?? null,
+    };
+
+    this.enemies.push(enemy);
   }
 
   protected updateEnemyState(archer: Archer, delta: number): void {

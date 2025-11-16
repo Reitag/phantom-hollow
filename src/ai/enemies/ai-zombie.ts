@@ -7,7 +7,7 @@ import { Zombie } from '@/entities/characters/enemies/zombie';
 import { StateMachine } from '@/systems/state-machine';
 import { Character } from '@/base/objects/character';
 import { SpawnPoint } from '@/utils/types';
-import { Enemy } from '../../base/ai/enemy';
+import { Enemy, EnemyConfig } from '../../base/ai/enemy';
 
 export class AiZombie extends Enemy {
   constructor(player: Player) {
@@ -15,11 +15,13 @@ export class AiZombie extends Enemy {
     this.isRanged = false;
   }
 
-  public addEnemy(enemy: Zombie, spawnPoint?: SpawnPoint): void {
-    super.addEnemy(enemy);
-    if (spawnPoint) {
-      this.spawnMap.set(enemy, spawnPoint);
-    }
+  public addEnemy(zombie: Zombie, spawnPoint?: SpawnPoint): void {
+    const enemy: EnemyConfig = {
+      unit: zombie,
+      spawn: spawnPoint ?? null,
+    };
+
+    this.enemies.push(enemy);
   }
 
   protected updateEnemyState(zombie: Zombie, delta: number): void {

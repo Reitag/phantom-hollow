@@ -13,6 +13,7 @@ export const CHARACTERS = {
 
 export const EFFECTS = {
   FREEZE: 'freeze',
+  RESPAWN: 'respawn',
 } as const;
 
 export const ITEMS = {

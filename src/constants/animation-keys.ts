@@ -115,6 +115,9 @@ export const EFFECTS_ANIMATION = {
     [EFFECT_ANIMATION_KEYS.MAIN]: 'freeze-main',
     [EFFECT_ANIMATION_KEYS.END]: 'freeze-end',
   },
+  RESPAWN: {
+    [EFFECT_ANIMATION_KEYS.MAIN]: 'respawn-main',
+  },
 } as const;
 
 export const MISC_ANIMATION = {

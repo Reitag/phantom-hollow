@@ -5,9 +5,13 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { StateMachine } from '@/systems/state-machine';
 import { Position, SpawnPoint } from '@/utils/types';
 
+export type EnemyConfig = {
+  unit: Character;
+  spawn: SpawnPoint | null;
+};
+
 export abstract class Enemy {
-  protected enemies: Character[] = [];
-  protected spawnMap = new Map<Character, SpawnPoint>();
+  protected enemies: EnemyConfig[] = [];
   protected player: Player;
   protected isRanged!: boolean;
 
@@ -15,55 +19,50 @@ export abstract class Enemy {
     this.player = player;
   }
 
+  public abstract addEnemy(character: Character, spawnPoint?: SpawnPoint): void;
+
+  public getEnemy(unit: Character): EnemyConfig | undefined {
+    return this.enemies.find((enemy) => enemy.unit === unit);
+  }
+
+  public getEnemies(): EnemyConfig[] {
+    return this.enemies;
+  }
+
   public update(delta: number): void {
     this.enemies.forEach((enemy) => {
-      if (enemy.getDead()) {
-        this.removeEnemy(enemy);
+      if (enemy.unit.getDead()) {
+        this.removeEnemy(enemy.unit);
         return;
       }
 
-      this.updateEnemyState(enemy, delta);
+      this.updateEnemyState(enemy.unit, delta);
     });
   }
 
-  public addEnemy(enemy: Character): void {
-    this.enemies.push(enemy);
-  }
+  public removeEnemy(unit: Character): void {
+    const enemy = this.getEnemy(unit);
+    this.enemies = this.enemies.filter((e) => e.unit !== unit);
+    if (!unit.active) return;
 
-  public removeEnemy(enemy: Character): void {
-    if (!this.enemies.includes(enemy)) return;
-    this.enemies = this.enemies.filter((e) => e !== enemy);
+    unit.once(Phaser.Animations.Events.ANIMATION_COMPLETE, (anim: Phaser.Animations.Animation) => {
+      unit.scene.time.delayedCall(DESTROY_TIME, () => {
+        if (enemy && enemy.spawn) {
+          enemy.spawn.isAlive = false;
+          enemy.spawn.isSpawned = false;
 
-    if (!enemy.active) return;
-
-    enemy.once(Phaser.Animations.Events.ANIMATION_COMPLETE, (anim: Phaser.Animations.Animation) => {
-      enemy.active = false;
-      enemy.scene.time.delayedCall(DESTROY_TIME, () => {
-        const spawn = this.spawnMap.get(enemy);
-        if (spawn) {
-          this.spawnMap.delete(enemy);
-
-          enemy.scene.time.delayedCall(RESPAWN_TIME, () => {
-            spawn.isSpawned = false;
+          unit.scene.time.delayedCall(RESPAWN_TIME, () => {
+            if (enemy.spawn) enemy.spawn.isAlive = true;
           });
         }
-        enemy.destroy();
+        unit.destroy();
       });
     });
   }
 
-  public despawnEnemy(enemy: Character): void {
-    this.enemies = this.enemies.filter((e) => e !== enemy);
-    this.spawnMap.delete(enemy);
-    enemy.destroy();
-  }
-
-  public getEnemies(): Character[] {
-    return this.enemies;
-  }
-
-  public getEnemyMap(): Map<Character, SpawnPoint> {
-    return this.spawnMap;
+  public despawnEnemy(unit: Character): void {
+    this.enemies = this.enemies.filter((e) => e.unit !== unit);
+    unit.destroy();
   }
 
   public handleCollision(enemy: Character): void {

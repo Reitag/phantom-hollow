@@ -30,6 +30,7 @@ export const SKELETONS_SPAWN_POSITION = [
   x: pos.x,
   y: pos.y,
   isSpawned: false,
+  isAlive: true,
 }));
 
 export const ZOMBIES_SPAWN_POSITION = [
@@ -51,6 +52,7 @@ export const ZOMBIES_SPAWN_POSITION = [
   x: pos.x,
   y: pos.y,
   isSpawned: false,
+  isAlive: true,
 }));
 
 export const ARCHERS_SPAWN_POSITION = [
@@ -71,6 +73,7 @@ export const ARCHERS_SPAWN_POSITION = [
   x: pos.x,
   y: pos.y,
   isSpawned: false,
+  isAlive: true,
 }));
 
 export const FIRE_WORM_SPAWN_POSITION = { x: 5370, y: 499 };

@@ -1,4 +1,4 @@
-import { CHARACTERS } from '@/constants/asset-keys';
+import { CHARACTERS, EFFECTS } from '@/constants/asset-keys';
 import {
   ARCHER_STATS,
   EVIL_WIZARD_STATS,
@@ -28,6 +28,7 @@ import {
   SKELETONS_SPAWN_POSITION,
   ZOMBIES_SPAWN_POSITION,
 } from '@/constants/spawn-positions';
+import { EFFECTS_ANIMATION } from '@/constants/animation-keys';
 
 type EnemyType = 'skeleton' | 'zombie' | 'archer';
 
@@ -119,9 +120,21 @@ export class EnemySpawn {
     const spawnArray = this.spawnPositions[type];
 
     for (const pos of spawnArray) {
-      if (!pos.isSpawned && Math.abs(playerX - pos.x) < this.spawnDistance) {
-        spawnFn(pos);
+      if (!pos.isSpawned && pos.isAlive && Math.abs(playerX - pos.x) < this.spawnDistance) {
         pos.isSpawned = true;
+
+        const respawn = this.scene.add
+          .sprite(pos.x, pos.y + 10, EFFECTS.RESPAWN, 0)
+          .setDepth(Z_POSITION.MISC);
+
+        respawn.play(EFFECTS_ANIMATION.RESPAWN.MAIN, true);
+        respawn.once(
+          Phaser.Animations.Events.ANIMATION_COMPLETE,
+          (anim: Phaser.Animations.Animation) => {
+            respawn.destroy();
+            spawnFn(pos);
+          }
+        );
       }
     }
   }
@@ -129,16 +142,15 @@ export class EnemySpawn {
   private handleDespawn(playerX: number): void {
     const aiList = [this.aiSkeletonWarrior, this.aiZombie, this.aiArcher];
     for (const ai of aiList) {
-      const enemies = ai.getEnemyMap();
-      enemies.keys().forEach((enemy) => {
-        const distance = Math.abs(enemy.x - playerX);
+      const enemies = ai.getEnemies();
+      enemies.forEach((enemy) => {
+        const { unit, spawn } = enemy;
+        if (unit.getDead()) return;
 
+        const distance = Math.abs(unit.x - playerX);
         if (distance > this.despawnDistance) {
-          const spawn = enemies.get(enemy);
-          if (spawn) {
-            spawn.isSpawned = false;
-          }
-          ai.despawnEnemy(enemy);
+          if (spawn) spawn.isSpawned = false;
+          ai.despawnEnemy(unit);
         }
       });
     }
@@ -163,7 +175,6 @@ export class EnemySpawn {
       },
     });
 
-    spawnPoint.isSpawned = true;
     skeleton.setDepth(Z_POSITION.ENEMY);
     this.aiSkeletonWarrior.addEnemy(skeleton, spawnPoint);
 
@@ -189,7 +200,6 @@ export class EnemySpawn {
       },
     });
 
-    spawnPoint.isSpawned = true;
     zombie.setDepth(Z_POSITION.ENEMY);
     this.aiZombie.addEnemy(zombie, spawnPoint);
 
@@ -215,7 +225,6 @@ export class EnemySpawn {
       },
     });
 
-    spawnPoint.isSpawned = true;
     archer.setDepth(Z_POSITION.ENEMY);
     this.aiArcher.addEnemy(archer, spawnPoint);
 

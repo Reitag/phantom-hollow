@@ -16,6 +16,7 @@ import { frostboltAnim } from '../spells/frost-bolt-anim';
 import { freezeAnim } from '../effects/freeze-anim';
 import { soulFireAnim } from '../misc/soul-fire-anim';
 import { lightningShieldAnim } from '../spells/lightning-shield-anim';
+import { respawnAnim } from '../effects/respawn-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -44,6 +45,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
 
   // Effects
   freezeAnim(anims);
+  respawnAnim(anims);
 
   // Misc
   soulFireAnim(anims);
