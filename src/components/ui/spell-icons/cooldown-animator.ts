@@ -1,12 +1,10 @@
-import Phaser from 'phaser';
-
-import { GraphicsMask } from '@/components/rendering/graphic-mask';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { SPELLS } from '@/constants/asset-keys';
 
-type CooldownOverlay = [{ X: number; Y: number }, Phaser.GameObjects.Graphics, boolean];
+type MaskConfig = { spell: Phaser.GameObjects.Graphics; shape: Phaser.GameObjects.Graphics };
+type CooldownOverlay = [{ X: number; Y: number }, MaskConfig, boolean];
 
 export class CooldownAnimator {
   private scene: Phaser.Scene;
@@ -21,18 +19,20 @@ export class CooldownAnimator {
     const { x, y } = coordinates;
     const overlay = this.createOverlayMask(x, y);
 
-    this.scene.tweens.addCounter({
+    const counter = this.scene.tweens.addCounter({
       from: this.fullCircle,
       to: 0,
       duration,
       ease: 'Linear',
       onUpdate: (tween) => {
         const value = tween.getValue();
-        this.drawCooldownEffect(x, y, overlay, value);
+        this.drawCooldownEffect(x, y, overlay.spell, value);
       },
       onComplete: () => {
         this.flashEffect(x, y);
-        overlay.destroy();
+        overlay.spell.destroy();
+        overlay.shape.destroy();
+        counter.destroy();
       },
     });
   }
@@ -67,7 +67,7 @@ export class CooldownAnimator {
       ],
     ];
 
-    this.scene.tweens.addCounter({
+    const counter = this.scene.tweens.addCounter({
       from: this.fullCircle,
       to: 0,
       duration,
@@ -75,28 +75,44 @@ export class CooldownAnimator {
       onUpdate: (tween) => {
         const value = tween.getValue();
 
-        overlays.forEach(([iconOverlay, overlayCoordinates, isCooldown]) => {
+        overlays.forEach(([overlayCoordinates, iconOverlay, isCooldown]) => {
           if (!isCooldown)
-            this.drawCooldownEffect(iconOverlay.X, iconOverlay.Y, overlayCoordinates, value);
+            this.drawCooldownEffect(
+              overlayCoordinates.X,
+              overlayCoordinates.Y,
+              iconOverlay.spell,
+              value
+            );
         });
       },
       onComplete: () => {
-        overlays.forEach(([iconOverlay, overlayCoordinates, isCooldown]) => {
-          if (!isCooldown) this.flashEffect(iconOverlay.X, iconOverlay.Y);
-          overlayCoordinates.destroy();
+        overlays.forEach(([overlayCoordinates, iconOverlay, isCooldown]) => {
+          if (!isCooldown) this.flashEffect(overlayCoordinates.X, overlayCoordinates.Y);
+          iconOverlay.spell.destroy();
+          iconOverlay.shape.destroy();
         });
+        overlays.length = 0;
+        counter.destroy();
       },
     });
   }
 
-  private createOverlayMask(x: number, y: number): Phaser.GameObjects.Graphics {
+  private createOverlayMask(x: number, y: number): MaskConfig {
     const size = 32;
     const half = size / 2;
+    const color = 0xffffff;
+
+    const shape = this.scene.add.graphics();
+    shape.visible = false;
+    shape.fillStyle(color);
+    shape.fillRect(x - half, y - half, size, size);
+
+    const mask = shape.createGeometryMask();
 
     const spell = this.scene.add.graphics();
-    new GraphicsMask(this.scene).squareOverlay({ x: x - half, y: y - half, size }).applyTo(spell);
+    spell.setMask(mask);
 
-    return spell;
+    return { spell, shape };
   }
 
   private drawCooldownEffect(

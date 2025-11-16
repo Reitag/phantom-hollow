@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 type RoundedRect = {
   x: number;
   y: number;
@@ -48,9 +46,13 @@ export class GraphicsMask extends Phaser.GameObjects.Graphics {
       | Phaser.GameObjects.Image
       | Phaser.GameObjects.Graphics
       | Phaser.GameObjects.Container
-  ): Phaser.GameObjects.Graphics {
-    gameObject.setMask(this.mask);
+  ): Phaser.GameObjects.Graphics | Phaser.GameObjects.Image | Phaser.GameObjects.Container {
+    return gameObject.setMask(this.mask);
+  }
 
-    return this.shape;
+  public destroy(fromScene?: boolean): void {
+    this.shape.destroy(fromScene);
+    this.mask.destroy();
+    this.destroy(fromScene);
   }
 }

@@ -1,6 +1,3 @@
-import Phaser from 'phaser';
-
-import { GraphicsMask } from '@/components/rendering/graphic-mask';
 import { UI } from '@/constants/asset-keys';
 import { HEALTH_UI, HEALTH_BAR } from '@/constants/ui-coordinates';
 
@@ -20,15 +17,19 @@ export class HealthBar {
     if (this.mask) {
       this.mask = null;
     }
+    const color = 0xffffff;
 
-    this.mask = new GraphicsMask(this.scene)
-      .roundedRect({
-        x: HEALTH_BAR.X,
-        y: HEALTH_BAR.Y,
-        width: HEALTH_BAR.WIDTH,
-        height: HEALTH_BAR.HEIGHT,
-      })
-      .applyTo(this.bar);
+    this.mask = this.scene.add.graphics();
+    this.mask.visible = false;
+    this.mask.fillStyle(color);
+    this.mask.fillRect(
+      HEALTH_BAR.X,
+      HEALTH_BAR.Y - HEALTH_BAR.HEIGHT / 2,
+      HEALTH_BAR.WIDTH,
+      HEALTH_BAR.HEIGHT
+    );
+
+    this.bar.setMask(this.mask.createGeometryMask());
   }
 
   public getFrame(): Phaser.GameObjects.Image {
