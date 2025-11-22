@@ -1,6 +1,8 @@
-import { CharacterState } from '@/components/states/core/character-state';
-import { Player } from '@/objects/characters/player/player';
-import { Character } from '@/objects/core/character';
+import { CharacterState } from '@/base/states/character-state';
+import { ENEMY_STATES } from '@/constants/state-keys';
+import { Player } from '@/entities/characters/player/player';
+import { Character } from '@/base/objects/character';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Attack extends CharacterState {
   private player: Player | null = null;
@@ -10,7 +12,7 @@ export class Attack extends CharacterState {
   private canHit = false;
 
   constructor(character: Character) {
-    super('Attack', character);
+    super(ENEMY_STATES.ATTACK, character);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -33,15 +35,19 @@ export class Attack extends CharacterState {
 
     this.character.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
 
-    this.characterMovement.setMovementLock(true);
-    this.playAnimation(this.animations.attack, true);
+    this.characterSpeed?.setMovementLock(true);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.ATTACK);
+    this.playAnimation(animKey, true);
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (!this.player) return;
 
+    this.characterSpeed?.update(delta);
+
     const direction = this.character.x > this.player.x ? -1 : 1;
-    this.character.setVelocityX(direction * this.characterMovement.getCurrentSpeed());
+    this.character.setVelocityX(direction * (this.characterSpeed?.velocity ?? 0));
 
     const isOverlapping = this.isWithinAttackReach();
 
@@ -62,7 +68,7 @@ export class Attack extends CharacterState {
   }
 
   public onExit(): void {
-    this.characterMovement.setMovementLock(false);
+    this.characterSpeed?.setMovementLock(false);
     this.character.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
   }
 
@@ -82,7 +88,8 @@ export class Attack extends CharacterState {
     anim: Phaser.Animations.Animation,
     frame: Phaser.Animations.AnimationFrame
   ): void {
-    if (anim.key === this.animations.attack && frame.index === this.frameOnHit) {
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.ATTACK);
+    if (anim.key === animKey && frame.index === this.frameOnHit) {
       this.canHit = true;
     }
   }

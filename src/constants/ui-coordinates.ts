@@ -1,4 +1,5 @@
 import { SPELLS } from './asset-keys';
+import { SCENE_SIZE } from './scene-size';
 
 // Spell
 export const SPELL_UI = {
@@ -6,6 +7,37 @@ export const SPELL_UI = {
   Y: 615,
   WIDTH: 182,
   HEIGHT: 32,
+} as const;
+
+// Inventory
+export const INVENTORY_UI = {
+  X: 10,
+  Y: 615,
+  WIDTH: 126,
+  HEIGHT: 30,
+} as const;
+
+// Store
+export const STORE_UI = {
+  BG: {
+    X: SCENE_SIZE.WIDTH / 2,
+    Y: SCENE_SIZE.HEIGHT / 2,
+    WIDTH: 550,
+    HEIGHT: 260,
+  },
+  EXIT_BUTTON: {
+    X: 249.5,
+    Y: -105.5,
+    WIDTH: 33,
+    HEIGHT: 33,
+  },
+  MASK: {
+    X: 252,
+    Y: 337,
+    WIDTH: 496,
+    HEIGHT: 180,
+    RADIUS: 10,
+  },
 } as const;
 
 // Health
@@ -23,6 +55,23 @@ export const HEALTH_BAR = {
   HEIGHT: 6,
 } as const;
 
+// Coin Icon
+export const COIN_UI = {
+  X: 10,
+  Y: 60,
+  COUNT_X: 42,
+  COUNT_Y: 60,
+} as const;
+
+// Modifier Icons
+export const MODIFIER_ICONS = {
+  ICON_SIZE: 32,
+  PADDING: 8,
+  START_X: 50,
+  BUFF_Y: 120,
+  DEBUFF_Y: 180,
+} as const;
+
 // Cast
 export const CAST_UI = {
   X: 410,
@@ -38,7 +87,7 @@ export const CAST_BAR = {
   HEIGHT: 8,
 } as const;
 
-// Icons
+// Spell Icons
 const ICON_X_FIRST = 427;
 const X_STEP = 50;
 const ICON_Y = 615;
@@ -58,8 +107,52 @@ export const WIND_ICON = {
   Y: ICON_Y,
 } as const;
 
+export const FROST_BOLT_ICON = {
+  X: ICON_X_FIRST + 3 * X_STEP,
+  Y: ICON_Y,
+} as const;
+
 export const ICON_OVERLAYS = {
   [SPELLS.FIRE_BALL]: FIREBALL_ICON,
   [SPELLS.BLINK]: BLINK_ICON,
   [SPELLS.WIND]: WIND_ICON,
+  [SPELLS.FROST_BOLT]: FROST_BOLT_ICON,
+} as const;
+
+// Inventory Slots
+export const INVENTORY_SLOTS = {
+  WIDTH: 16,
+  HEIGHT: 24,
+  PADDING: 16,
+  START_X: 17,
+  Y: 615,
+} as const;
+
+// Dialog box
+
+export const WARNING_BOX = {
+  BG: {
+    X: SCENE_SIZE.WIDTH / 2,
+    Y: SCENE_SIZE.HEIGHT / 3,
+    WIDTH: 274,
+    HEIGHT: 70,
+  },
+  YES_BTN: {
+    X: -24,
+    Y: 15,
+    WIDTH: 78,
+    HEIGHT: 14,
+  },
+  NO_BTN: {
+    X: 75,
+    Y: 15,
+    WIDTH: 78,
+    HEIGHT: 14,
+  },
+};
+
+// Warning Text
+export const WARNING_TEXT = {
+  START_Y: 100,
+  PADDING: 30,
 } as const;

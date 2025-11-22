@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
+
 import { CastBar } from './cast-bar';
 
 export class CastBarAnimator {
   private readonly FADE_DURATION = 500;
-
   private scene: Phaser.Scene;
   private castBar: CastBar;
   private currentTween: Phaser.Tweens.Tween | null = null;
@@ -13,27 +13,31 @@ export class CastBarAnimator {
     this.castBar = castBar;
   }
 
-  startCast(duration: number, onComplete: () => void) {
+  public startCast(duration: number) {
     if (this.currentTween) {
       this.currentTween.stop();
     }
 
     this.castBar.setCastBar();
 
+    this.castBar.progressWidth = 0;
+
     this.currentTween = this.scene.tweens.add({
-      targets: this.castBar.mask,
-      scaleX: 1,
+      targets: this.castBar,
+      progressWidth: this.castBar.getFullWidth(),
       ease: 'Linear',
       duration,
+      onUpdate: () => {
+        this.castBar.updateMask(this.castBar.progressWidth);
+      },
       onComplete: () => {
-        onComplete();
         this.castBar.setCompletedTexture();
         this.finishCast();
       },
     });
   }
 
-  stopCast() {
+  public stopCast() {
     if (this.currentTween) {
       this.currentTween.stop();
       this.castBar.destroy();

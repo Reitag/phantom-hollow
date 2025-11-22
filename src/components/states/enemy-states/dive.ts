@@ -1,13 +1,15 @@
-import { CharacterState } from '@/components/states/core/character-state';
-import { Character } from '@/objects/core/character';
-import { Player } from '@/objects/characters/player/player';
+import { CharacterState } from '@/base/states/character-state';
+import { Character } from '@/base/objects/character';
+import { ENEMY_STATES } from '@/constants/state-keys';
+import { Player } from '@/entities/characters/player/player';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Dive extends CharacterState {
   private player: Player | null = null;
   private damage!: number;
 
   constructor(character: Character) {
-    super('Dive', character);
+    super(ENEMY_STATES.DIVE, character);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -23,8 +25,10 @@ export class Dive extends CharacterState {
 
     this.player = player;
     this.damage = damage;
-    this.characterMovement.addModifier('Dive-speed', diveSpeed);
-    this.playAnimation(this.animations.idle);
+    this.characterSpeed?.addModifier('Dive-speed', diveSpeed);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+    this.playAnimation(animKey);
 
     this.character.scene.time.delayedCall(lifeTime, () => {
       if (!this.character.active) return;
@@ -32,13 +36,15 @@ export class Dive extends CharacterState {
     });
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
     if (!this.player || this.player.getDead()) return;
+
+    this.characterSpeed?.update(delta);
 
     const dx = this.player.x - this.character.x;
     const dy = this.player.y - this.character.y;
 
-    const speed = this.characterMovement.getCurrentSpeed();
+    const speed = this.characterSpeed?.velocity ?? 0;
 
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance > 0) {
@@ -65,8 +71,10 @@ export class Dive extends CharacterState {
   }
 
   private explode(): void {
-    this.characterMovement.setMovementLock(true);
-    this.playAnimation(this.animations.death);
+    this.characterSpeed?.setMovementLock(true);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.DEATH);
+    this.playAnimation(animKey);
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.character.destroy();
     });

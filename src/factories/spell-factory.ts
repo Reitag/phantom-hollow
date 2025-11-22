@@ -1,36 +1,43 @@
-import { ServiceKeys, ServiceLocator } from '@/components/core/service-locator';
-import { FireBall } from '@/objects/spells/direct-spells/fire-ball';
-import { Blink } from '@/objects/spells/effect-spells/blink';
-import { Wind } from '@/objects/spells/direct-spells/wind';
-import { ShadowBolt } from '@/objects/spells/direct-spells/shadow-bolt';
+import { Character } from '@/base/objects/character';
+import { SpellPower } from '@/components/stats/damage';
+import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
+import { Blink } from '@/entities/spells/effect-spells/blink';
+import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
+import { Wind } from '@/entities/spells/direct-spells/wind';
+import { FrostBolt } from '@/entities/spells/direct-spells/frost-bolt';
+import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { SPELLS } from '@/constants/asset-keys';
-import { SPELLS_ANIMATION } from '@/constants/animation-keys';
-import { FIRE_BALL_STATS, WIND_STATS, SHADOW_BOLT_STATS } from '@/constants/object-stats';
+import {
+  FIRE_BALL_STATS,
+  WIND_STATS,
+  SHADOW_BOLT_STATS,
+  FROST_BOLT_STATS,
+  LIGHTNING_SHIELD_STATS,
+} from '@/constants/object-stats';
+import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 
 export class SpellFactory {
-  private spellGroup: Phaser.Physics.Arcade.Group;
+  private spellGroup!: Phaser.Physics.Arcade.Group;
 
   constructor(private scene: Phaser.Scene) {
-    this.spellGroup = this.scene.physics.add.group({
-      runChildUpdate: true,
-      allowGravity: false,
-    });
+    const spellGroup = CollisionService.resolveGroup(GroupKeys.spell);
+    if (spellGroup) {
+      this.spellGroup = spellGroup;
+    }
   }
 
-  public createFireball(x: number, y: number, direction: number): FireBall {
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 31;
+  public createFireball(character: Character, position?: { x: number; y: number }): FireBall {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
 
     const fireBall = new FireBall({
       scene: this.scene,
-      position: { x: x + offsetX, y: y },
+      position: spawnPosition,
       keyName: SPELLS.FIRE_BALL,
       frame: 0,
-      sandbox,
-      animation: {
-        main: SPELLS_ANIMATION.FIRE_BALL.MAIN,
-        destroy: SPELLS_ANIMATION.FIRE_BALL.DESTROY,
-      },
+      caster: character,
+      spellPower: spellPower,
       damage: FIRE_BALL_STATS.HIT,
       speed: FIRE_BALL_STATS.SPEED,
       direction: direction,
@@ -41,18 +48,16 @@ export class SpellFactory {
     return fireBall;
   }
 
-  public createBlink(x: number, y: number, direction: number): Blink {
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+  public createBlink(character: Character): Blink {
+    const position = character.getPosition();
+    const direction = character.getFacingRight() ? 1 : -1;
 
     const blink = new Blink({
       scene: this.scene,
-      position: { x: x - 4 * direction, y: y + 5 },
+      position: position,
       keyName: SPELLS.BLINK,
       frame: 0,
-      sandbox,
-      animation: {
-        main: SPELLS_ANIMATION.BLINK.MAIN,
-      },
+      caster: character,
       direction: direction,
     });
 
@@ -61,20 +66,16 @@ export class SpellFactory {
     return blink;
   }
 
-  public createWind(x: number, y: number, direction: number): Wind {
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const offsetX = direction * 31;
+  public createWind(character: Character, position?: { x: number; y: number }): Wind {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
 
     const wind = new Wind({
       scene: this.scene,
-      position: { x: x + offsetX, y: y },
+      position: spawnPosition,
       keyName: SPELLS.WIND,
       frame: 0,
-      sandbox,
-      animation: {
-        main: SPELLS_ANIMATION.WIND.MAIN,
-        destroy: SPELLS_ANIMATION.WIND.DESTROY,
-      },
+      caster: character,
       speed: WIND_STATS.SPEED,
       direction: direction,
     });
@@ -84,16 +85,40 @@ export class SpellFactory {
     return wind;
   }
 
-  public createShadowBolt(x: number, y: number, direction: number): ShadowBolt {
+  public createFrostBolt(character: Character, position?: { x: number; y: number }): FrostBolt {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
+
+    const frostBolt = new FrostBolt({
+      scene: this.scene,
+      position: spawnPosition,
+      keyName: SPELLS.FROST_BOLT,
+      frame: 0,
+      caster: character,
+      spellPower: spellPower,
+      damage: FROST_BOLT_STATS.HIT,
+      speed: FROST_BOLT_STATS.SPEED,
+      direction: direction,
+    });
+
+    this.spellGroup.add(frostBolt, true);
+
+    return frostBolt;
+  }
+
+  public createShadowBolt(character: Character, position?: { x: number; y: number }): ShadowBolt {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
+
     const shadowBolt = new ShadowBolt({
       scene: this.scene,
-      position: { x: x, y: y },
+      position: spawnPosition,
       keyName: SPELLS.SHADOW_BOLT,
       frame: 0,
-      animation: {
-        main: SPELLS_ANIMATION.SHADOW_BOLT.MAIN,
-        destroy: SPELLS_ANIMATION.SHADOW_BOLT.DESTROY,
-      },
+      caster: character,
+      spellPower: spellPower,
       damage: SHADOW_BOLT_STATS.HIT,
       speed: SHADOW_BOLT_STATS.SPEED,
       direction: direction,
@@ -104,7 +129,39 @@ export class SpellFactory {
     return shadowBolt;
   }
 
+  public createLightningShield(
+    character: Character,
+    position?: { x: number; y: number }
+  ): LightningShield {
+    const spawnPosition = { x: character.x, y: character.y };
+    const spellPower = (character.getStats().damage.spellPower as SpellPower) ?? null;
+
+    const lightningShield = new LightningShield({
+      scene: this.scene,
+      position: spawnPosition,
+      keyName: SPELLS.LIGHTNING_SHIELD,
+      frame: 0,
+      caster: character,
+      spellPower: spellPower,
+      damage: LIGHTNING_SHIELD_STATS.HIT,
+    });
+
+    this.spellGroup.add(lightningShield, true);
+
+    return lightningShield;
+  }
+
   public getSpells(): Phaser.Physics.Arcade.Group {
     return this.spellGroup;
+  }
+
+  private getSpellSpawnPosition(character: Character): { x: number; y: number } {
+    const { x, y } = character.getPosition();
+    const flip = character.getFacingRight() ? 1 : -1;
+
+    const handOffsetX = 40 * flip;
+    const handOffsetY = character.height / 8;
+
+    return { x: x + handOffsetX, y: y + handOffsetY };
   }
 }

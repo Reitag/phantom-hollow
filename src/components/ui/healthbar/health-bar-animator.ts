@@ -8,7 +8,7 @@ export class HealthBarAnimator {
     this.healthBar = healthBar;
   }
 
-  reducePlayerHealth(currentHealth: number, maxHealth: number): void {
+  public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
     const percentage = this.clamp(currentHealth / maxHealth, 0, 1);
     const { X, Y, WIDTH, HEIGHT } = HEALTH_BAR;
 

@@ -12,6 +12,76 @@
     },
     {
       "type": "image",
+      "key": "wagon",
+      "url": "assets/objects/store/wagon.png"
+    },
+    {
+      "type": "image",
+      "key": "bottles",
+      "url": "assets/objects/decor/bottles.png"
+    },
+    {
+      "type": "image",
+      "key": "bowler",
+      "url": "assets/objects/decor/bowler.png"
+    },
+    {
+      "type": "image",
+      "key": "statue-left",
+      "url": "assets/objects/decor/statue-left.png"
+    },
+    {
+      "type": "image",
+      "key": "statue-right",
+      "url": "assets/objects/decor/statue-right.png"
+    },
+    {
+      "type": "image",
+      "key": "wood",
+      "url": "assets/objects/decor/wood.png"
+    },
+    {
+      "type": "image",
+      "key": "boxes",
+      "url": "assets/objects/decor/boxes.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-1",
+      "url": "assets/objects/rocks/rock-1.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-2",
+      "url": "assets/objects/rocks/rock-2.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-3",
+      "url": "assets/objects/rocks/rock-3.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-4",
+      "url": "assets/objects/rocks/rock-4.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-5",
+      "url": "assets/objects/rocks/rock-5.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-6",
+      "url": "assets/objects/rocks/rock-6.png"
+    },
+    {
+      "type": "image",
+      "key": "rock-7",
+      "url": "assets/objects/rocks/rock-7.png"
+    },
+    {
+      "type": "image",
       "key": "bush-1",
       "url": "assets/objects/bushes/Bush-1.png"
     },

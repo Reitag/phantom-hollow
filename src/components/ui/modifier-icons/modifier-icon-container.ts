@@ -1,43 +1,49 @@
+import { TYPE } from '@/constants/modifier-stats';
+import { MODIFIER_ICONS } from '@/constants/ui-coordinates';
+import { ModifierType } from '@/utils/types';
+
 type ModifierContainerConfig = {
   icon: Phaser.GameObjects.Image;
   timerText: Phaser.GameObjects.Text | undefined;
+  type: ModifierType;
 };
 
 export class ModifierIconContainer {
-  private readonly ICON_SIZE = 32;
-  private readonly PADDING = 8;
-  private readonly startX = 50;
-  private readonly y = 100;
-
   private modifierIcons: ModifierContainerConfig[] = [];
 
   constructor(private scene: Phaser.Scene) {}
 
-  public addModifierIcon(key: string, duration: number | undefined): void {
+  public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     if (this.findModifierIcon(key)) return;
 
-    const index = this.modifierIcons.length;
-    const posX = this.startX + index * (this.ICON_SIZE + this.PADDING);
+    const sameTypeIcons = this.modifierIcons.filter((m) => m.type === type);
+    const index = sameTypeIcons.length;
+    const posX =
+      MODIFIER_ICONS.START_X + index * (MODIFIER_ICONS.ICON_SIZE + MODIFIER_ICONS.PADDING);
+    const posY = type === TYPE.buff ? MODIFIER_ICONS.BUFF_Y : MODIFIER_ICONS.DEBUFF_Y;
 
-    const icon = this.scene.add.image(posX, this.y, key).setOrigin(0, 0.5);
-    icon.setDisplaySize(this.ICON_SIZE, this.ICON_SIZE);
+    const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0.5);
+    icon.setDisplaySize(MODIFIER_ICONS.ICON_SIZE, MODIFIER_ICONS.ICON_SIZE);
     icon.name = key;
 
     let timerText: Phaser.GameObjects.Text | undefined;
     if (duration) {
       timerText = this.scene.add
-        .text(posX + this.ICON_SIZE / 2, this.y + this.ICON_SIZE / 2 + 4, `${duration / 1000}`, {
-          font: '14px Arial',
-          color: '#ffffff',
-          stroke: '#000000',
-          strokeThickness: 2,
-        })
+        .text(
+          posX + MODIFIER_ICONS.ICON_SIZE / 2,
+          posY + MODIFIER_ICONS.ICON_SIZE / 2 + 4,
+          `${duration / 1000}`,
+          {
+            font: '14px Arial',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 2,
+          }
+        )
         .setOrigin(0.5, 0);
-    } else {
-      timerText = undefined;
     }
 
-    this.modifierIcons.push({ icon, timerText });
+    this.modifierIcons.push({ icon, timerText, type });
   }
 
   public startCountdown(key: string, duration: number | undefined): void {
@@ -72,6 +78,8 @@ export class ModifierIconContainer {
     entry.icon?.destroy();
     entry.timerText?.destroy();
     this.modifierIcons = this.modifierIcons.filter((elem) => elem.icon.name !== key);
+
+    this.updateUI(entry.type);
   }
 
   public removeAllModifierIcons(): void {
@@ -85,5 +93,23 @@ export class ModifierIconContainer {
 
   private findModifierIcon(key: string): ModifierContainerConfig | undefined {
     return this.modifierIcons.find((elem) => elem.icon.name === key);
+  }
+
+  private updateUI(type: ModifierType): void {
+    const iconsOfType = this.modifierIcons.filter((m) => m.type === type);
+
+    iconsOfType.forEach((m, index) => {
+      const posX =
+        MODIFIER_ICONS.START_X + index * (MODIFIER_ICONS.ICON_SIZE + MODIFIER_ICONS.PADDING);
+      const posY = type === TYPE.buff ? MODIFIER_ICONS.BUFF_Y : MODIFIER_ICONS.DEBUFF_Y;
+
+      m.icon.x = posX;
+      m.icon.y = posY;
+
+      if (m.timerText) {
+        m.timerText.x = posX + MODIFIER_ICONS.ICON_SIZE / 2;
+        m.timerText.y = posY + MODIFIER_ICONS.ICON_SIZE / 2 + 4;
+      }
+    });
   }
 }

@@ -1,39 +1,52 @@
 import Phaser from 'phaser';
-
-import { GraphicsMask } from '@/components/rendering/graphic-mask';
 import { UI } from '@/constants/asset-keys';
 import { CAST_UI, CAST_BAR } from '@/constants/ui-coordinates';
 
 export class CastBar {
   public frame!: Phaser.GameObjects.Image;
   public bar!: Phaser.GameObjects.Image;
-  public mask!: Phaser.GameObjects.Graphics;
+  public maskGraphics!: Phaser.GameObjects.Graphics;
+  public mask!: Phaser.Display.Masks.GeometryMask;
+
+  public progressWidth = 0;
 
   constructor(private scene: Phaser.Scene) {}
 
-  setCastBar(): void {
+  public setCastBar(): void {
     this.bar = this.scene.add.image(CAST_BAR.X, CAST_BAR.Y, UI.CAST_BAR).setOrigin(0, 0.5);
     this.frame = this.scene.add.image(CAST_UI.X, CAST_UI.Y, UI.CAST_ENV).setOrigin(0, 0.5);
 
-    this.mask = new GraphicsMask(this.scene)
-      .roundedRect({
-        x: CAST_BAR.X,
-        y: CAST_BAR.Y,
-        width: CAST_BAR.WIDTH,
-        height: CAST_BAR.HEIGHT,
-      })
-      .applyTo(this.bar);
+    this.maskGraphics = this.scene.make.graphics({ x: 0, y: 0 });
+    this.updateMask(0);
 
-    this.mask.scaleX = 0;
+    this.mask = this.maskGraphics.createGeometryMask();
+    this.bar.setMask(this.mask);
   }
 
-  setCompletedTexture(): void {
+  public updateMask(progressWidth: number): void {
+    this.maskGraphics.clear();
+    this.maskGraphics.fillStyle(0xffffff);
+    this.maskGraphics.fillRoundedRect(
+      CAST_BAR.X,
+      CAST_BAR.Y - CAST_BAR.HEIGHT / 2,
+      progressWidth,
+      CAST_BAR.HEIGHT,
+      1
+    );
+  }
+
+  public getFullWidth(): number {
+    return CAST_BAR.WIDTH;
+  }
+
+  public setCompletedTexture(): void {
     this.bar.setTexture(UI.CAST_BAR_GREEN);
   }
 
-  destroy(): void {
+  public destroy(): void {
     this.frame.destroy();
     this.bar.destroy();
+    this.maskGraphics.destroy();
     this.mask.destroy();
   }
 }

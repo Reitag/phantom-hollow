@@ -1,12 +1,19 @@
-import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
-import { CharacterState } from '@/components/states/core/character-state';
-import { SpellManager } from '@/managers/spell-manager';
-import { Player } from '@/objects/characters/player/player';
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { CharacterState } from '@/base/states/character-state';
+import { PLAYER_STATES } from '@/constants/state-keys';
+import { InventorySystem } from '@/systems/inventory-system';
+import { SpellSystem } from '@/systems/spell-system';
+import { Player } from '@/entities/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
 
 export class Movement extends CharacterState {
-  constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
-    super('Movement', character, input, spellManager);
+  constructor(
+    character: Player,
+    input?: KeyboardController,
+    spellSystem?: SpellSystem,
+    inventory?: InventorySystem
+  ) {
+    super(PLAYER_STATES.MOVEMENT, character, input, spellSystem, undefined, inventory);
   }
 
   public onEnter(...args: unknown[]): void {
@@ -15,7 +22,9 @@ export class Movement extends CharacterState {
     }
   }
 
-  public onUpdate(): void {
+  public onUpdate(delta: number): void {
+    this.characterSpeed?.update(delta);
+    this.inventory?.handleInput(this.input);
     this.movement();
 
     if (!this.input?.isLeftDown && !this.input?.isRightDown) {
@@ -37,19 +46,23 @@ export class Movement extends CharacterState {
     if (this.input?.isTertiaryActionDown) {
       this.initToCastSpell(SPELLS.WIND);
     }
+
+    if (this.input?.isQuaternaryActionDown) {
+      this.initToCastSpell(SPELLS.FROST_BOLT);
+    }
   }
 
   private changeToIdleState(): void {
     if (this.characterBody.blocked.down) {
-      this.stateMachine.changeState('Idle');
+      this.stateMachine.changeState(PLAYER_STATES.IDLE);
     }
   }
 
   private movement(): void {
     if (this.input?.isLeftDown) {
-      this.moveLeft(this.characterMovement.getCurrentSpeed());
+      this.moveLeft(this.characterSpeed?.velocity);
     } else if (this.input?.isRightDown) {
-      this.moveRight(this.characterMovement.getCurrentSpeed());
+      this.moveRight(this.characterSpeed?.velocity);
     } else {
       this.character.setVelocityX(0);
     }

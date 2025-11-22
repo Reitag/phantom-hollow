@@ -1,0 +1,41 @@
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { LIGHTNING_SHIELD, PROTECTION } from '@/constants/modifier-stats';
+import { UiSystem } from '@/systems/ui-system';
+import { Character } from '@/base/objects/character';
+import { Modifier } from '@/utils/types';
+import { SpellFactory } from '@/factories/spell-factory';
+import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
+
+export class SetLightning implements Modifier {
+  public id = LIGHTNING_SHIELD.id;
+  public duration = LIGHTNING_SHIELD.duration;
+  public type = LIGHTNING_SHIELD.type;
+
+  private ui: UiSystem;
+  private spellFactory: SpellFactory;
+  private lightningShield: LightningShield | null = null;
+
+  constructor(private scene: Phaser.Scene) {
+    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+    this.spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
+  }
+
+  public apply(target: Character): void {
+    this.lightningShield = this.spellFactory.createLightningShield(target);
+  }
+
+  public start(target: Character, onExpire: () => void): void {
+    this.apply(target);
+
+    this.ui.addModifierIcon(this.id, this.duration, this.type);
+
+    this.scene.time.delayedCall(this.duration, () => {
+      if (this.lightningShield && this.lightningShield.active) {
+        this.lightningShield.destroy();
+        this.lightningShield = null;
+        this.ui.removeModifierIcon(this.id);
+      }
+      onExpire();
+    });
+  }
+}

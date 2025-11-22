@@ -1,0 +1,31 @@
+import { Hover } from '@/components/states/enemy-states/hover';
+import { Dive } from '@/components/states/enemy-states/dive';
+import { CHARACTER_ANIMATION_KEYS, ENEMIES_ANIMATION } from '@/constants/animation-keys';
+import { Character, CharacterConfig } from '@/base/objects/character';
+
+export class MutatedBat extends Character {
+  public explodeCallback?: (self: Character) => void;
+
+  constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
+    super({ scene, position, keyName, frame, facingRight, stats });
+
+    this.animations = {
+      [CHARACTER_ANIMATION_KEYS.IDLE]: ENEMIES_ANIMATION.MUTADED_BAT.IDLE,
+      [CHARACTER_ANIMATION_KEYS.DEATH]: ENEMIES_ANIMATION.MUTADED_BAT.DEATH,
+    };
+
+    this.stateMachine.addState(new Hover(this));
+    this.stateMachine.addState(new Dive(this));
+
+    this.arcadeBody.setSize(10, 10);
+    this.arcadeBody.setAllowGravity(false);
+  }
+
+  public update(delta: number): void {
+    this.stateMachine.update(delta);
+  }
+
+  protected override die(): void {
+    this.explodeCallback?.(this);
+  }
+}

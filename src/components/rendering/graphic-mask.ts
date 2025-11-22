@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 type RoundedRect = {
   x: number;
   y: number;
@@ -29,25 +27,32 @@ export class GraphicsMask extends Phaser.GameObjects.Graphics {
     this.color = 0xffffff;
   }
 
-  roundedRect({ x, y, width, height, radius = /*height / 2*/ 1 }: RoundedRect): this {
+  public roundedRect({ x, y, width, height, radius = 1 }: RoundedRect): this {
     this.shape.fillStyle(this.color);
     this.shape.fillRoundedRect(x, y - height / 2, width, height, radius);
 
     return this;
   }
 
-  squareOverlay({ x, y, size }: SquareOverlay): this {
+  public squareOverlay({ x, y, size }: SquareOverlay): this {
     this.shape.fillStyle(this.color);
     this.shape.fillRect(x, y, size, size);
 
     return this;
   }
 
-  applyTo(
-    gameObject: Phaser.GameObjects.Image | Phaser.GameObjects.Graphics
-  ): Phaser.GameObjects.Graphics {
-    gameObject.setMask(this.mask);
+  public applyTo(
+    gameObject:
+      | Phaser.GameObjects.Image
+      | Phaser.GameObjects.Graphics
+      | Phaser.GameObjects.Container
+  ): Phaser.GameObjects.Graphics | Phaser.GameObjects.Image | Phaser.GameObjects.Container {
+    return gameObject.setMask(this.mask);
+  }
 
-    return this.shape;
+  public destroy(fromScene?: boolean): void {
+    this.shape.destroy(fromScene);
+    this.mask.destroy();
+    this.destroy(fromScene);
   }
 }

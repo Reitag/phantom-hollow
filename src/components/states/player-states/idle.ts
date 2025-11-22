@@ -1,22 +1,34 @@
-import { KeyboardController } from '@/components/input/controllers/keyboard-controller';
-import { CharacterState } from '@/components/states/core/character-state';
-import { SpellManager } from '@/managers/spell-manager';
-import { Player } from '@/objects/characters/player/player';
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { CharacterState } from '@/base/states/character-state';
+import { PLAYER_STATES } from '@/constants/state-keys';
+import { SpellSystem } from '@/systems/spell-system';
+import { Player } from '@/entities/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
+import { InventorySystem } from '@/systems/inventory-system';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
 export class Idle extends CharacterState {
-  constructor(character: Player, input?: KeyboardController, spellManager?: SpellManager) {
-    super('Idle', character, input, spellManager);
+  constructor(
+    character: Player,
+    input?: KeyboardController,
+    spellSystem?: SpellSystem,
+    inventory?: InventorySystem
+  ) {
+    super(PLAYER_STATES.IDLE, character, input, spellSystem, undefined, inventory);
   }
 
   public onEnter(...args: unknown[]): void {
     this.character.setVelocityX(0);
-    this.playAnimation(this.animations.idle);
+
+    const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+    this.playAnimation(animKey);
   }
 
   public onUpdate(): void {
+    this.inventory?.handleInput(this.input);
+
     if (this.input?.isLeftDown || this.input?.isRightDown || this.input?.isUpPressed) {
-      this.stateMachine.changeState('Movement');
+      this.stateMachine.changeState(PLAYER_STATES.MOVEMENT);
     }
 
     if (this.input?.isPrimaryActionDown) {
@@ -29,6 +41,10 @@ export class Idle extends CharacterState {
 
     if (this.input?.isTertiaryActionDown) {
       this.initToCastSpell(SPELLS.WIND);
+    }
+
+    if (this.input?.isQuaternaryActionDown) {
+      this.initToCastSpell(SPELLS.FROST_BOLT);
     }
   }
 }
