@@ -9,6 +9,7 @@ import { State, StateMachine } from '@/systems/state-machine';
 import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { Player } from '@/entities/characters/player/player';
 
 export abstract class CharacterState implements State {
   readonly name: string;
@@ -92,6 +93,8 @@ export abstract class CharacterState implements State {
 
   private canTransitionToCast(spell: string): boolean {
     if (
+      this.character instanceof Player &&
+      this.character.nextSpellInstant === false &&
       this.name === PLAYER_STATES.MOVEMENT &&
       (spell === SPELLS.FIRE_BALL || spell === SPELLS.FROST_BOLT)
     ) {

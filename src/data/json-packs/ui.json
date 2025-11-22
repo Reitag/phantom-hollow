@@ -142,6 +142,11 @@
     },
     {
       "type": "image",
+      "key": "arcane-mind-buff",
+      "url": "assets/icons/buffs/arcane-mind.png"
+    },
+    {
+      "type": "image",
       "key": "disease-debuff",
       "url": "assets/icons/debuffs/disease.png"
     },

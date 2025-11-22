@@ -1,4 +1,5 @@
 import {
+  ARCANE_MIND,
   DISEASE,
   LIGHTNING_SHIELD,
   PROTECTION,
@@ -6,6 +7,7 @@ import {
   SPELL_POWER,
   UNDYING,
 } from '@/constants/modifier-stats';
+import { ArcaneMind } from '@/game/modifiers/buffs/arcane-mind';
 import { Protection } from '@/game/modifiers/buffs/protection';
 import { SetLightning } from '@/game/modifiers/buffs/set-lightning';
 import { SpellIncrease } from '@/game/modifiers/buffs/spell-increase';
@@ -25,6 +27,8 @@ export class ModifierFactory {
         return new SetLightning(scene);
       case UNDYING.id:
         return new Undying(scene);
+      case ARCANE_MIND.id:
+        return new ArcaneMind(scene);
       case DISEASE.id:
         return new Disease(scene);
       case SHADOW_VULNERABILITY.id:

@@ -1,8 +1,11 @@
 import { Spell, SpellConfig } from '@/base/objects/spell';
+import { VFX } from '@/constants/asset-keys';
 import { FROST_BOLT_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
-import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
+import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION, VFX_ANIMATION } from '@/constants/animation-keys';
 import { SHARED_STATES } from '@/constants/state-keys';
+import { ARCANE_MIND } from '@/constants/modifier-stats';
+import { AttachedVfx } from '@/entities/misc/attached-vfx';
 
 export class FrostBolt extends Spell {
   constructor({
@@ -52,6 +55,21 @@ export class FrostBolt extends Spell {
 
     if (fsm.currentStateName !== SHARED_STATES.FREEZE) {
       fsm.changeState(SHARED_STATES.FREEZE);
+
+      if (fsm.currentStateName !== SHARED_STATES.FREEZE) {
+        const casterModifier = this.caster.getModifier();
+        if (!casterModifier.isModifierExist(ARCANE_MIND.id)) {
+          casterModifier.addModifier(ARCANE_MIND.id);
+          casterModifier.startModifier(ARCANE_MIND.id, this.caster);
+
+          new AttachedVfx({
+            scene: this.scene,
+            caster: this.caster,
+            keyName: VFX.ARCANE_MIND_VFX,
+            animKey: VFX_ANIMATION.ARCANE_MIND.MAIN,
+          });
+        }
+      }
     }
   }
 }

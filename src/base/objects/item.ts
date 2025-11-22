@@ -1,9 +1,9 @@
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
-import { ArcadeSpriteConfig, ItemAnimationConfig } from '@/utils/types';
+import { SpriteConfig, ItemAnimationConfig } from '@/utils/types';
 
-export interface ItemConfig extends ArcadeSpriteConfig {
+export interface ItemConfig extends SpriteConfig {
   animation?: ItemAnimationConfig;
 }
 

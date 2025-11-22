@@ -35,12 +35,23 @@ export class MeleeAttack extends Damage {
     return this.total;
   }
 }
+
 export class SpellPower extends Damage {
+  private instantCast = false;
+
   constructor(basePower: number) {
     super(basePower);
   }
 
   public get multiplier(): number {
     return this.total;
+  }
+
+  public get isInstantCast(): boolean {
+    return this.instantCast;
+  }
+
+  public set allowInstantCast(value: boolean) {
+    this.instantCast = value;
   }
 }

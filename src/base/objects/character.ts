@@ -7,10 +7,10 @@ import { SHARED_STATES } from '@/constants/state-keys';
 import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
-import { ArcadeSpriteConfig, Position, Stats } from '@/utils/types';
+import { SpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
 
-export interface CharacterConfig extends ArcadeSpriteConfig {
+export interface CharacterConfig extends SpriteConfig {
   facingRight: boolean;
   stats: {
     health: number | undefined;

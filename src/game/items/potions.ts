@@ -1,7 +1,9 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { UI } from '@/constants/asset-keys';
+import { VFX, UI } from '@/constants/asset-keys';
 import { LIGHTNING_SHIELD, PROTECTION, SPELL_POWER, UNDYING } from '@/constants/modifier-stats';
 import { InventoryItem } from '@/utils/types';
+import { AttachedVfx } from '@/entities/misc/attached-vfx';
+import { VFX_ANIMATION } from '@/constants/animation-keys';
 
 export const healthPotion = (): InventoryItem => ({
   id: 'health-potion',
@@ -13,6 +15,14 @@ export const healthPotion = (): InventoryItem => ({
   use: () => {
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
     sandbox.healPlayer(50);
+
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+    new AttachedVfx({
+      scene: player.scene,
+      caster: player,
+      keyName: VFX.HEAL_VFX,
+      animKey: VFX_ANIMATION.HEAL.MAIN,
+    });
 
     return true;
   },
@@ -32,6 +42,13 @@ export const protectPotion = (): InventoryItem => ({
     if (!modifier.isModifierExist(PROTECTION.id)) {
       modifier.addModifier(PROTECTION.id);
       modifier.startModifier(PROTECTION.id, player);
+
+      new AttachedVfx({
+        scene: player.scene,
+        caster: player,
+        keyName: VFX.PROTECTION_VFX,
+        animKey: VFX_ANIMATION.PROTECTION.MAIN,
+      });
 
       return true;
     } else {
@@ -56,6 +73,14 @@ export const spellPotion = (): InventoryItem => ({
     if (!modifier.isModifierExist(SPELL_POWER.id)) {
       modifier.addModifier(SPELL_POWER.id);
       modifier.startModifier(SPELL_POWER.id, player);
+
+      new AttachedVfx({
+        scene: player.scene,
+        caster: player,
+        keyName: VFX.SPELL_VFX,
+        animKey: VFX_ANIMATION.SPELL.MAIN,
+        offsetY: -40,
+      });
 
       return true;
     } else {
@@ -104,6 +129,13 @@ export const undyingPotion = (): InventoryItem => ({
     if (!modifier.isModifierExist(UNDYING.id)) {
       modifier.addModifier(UNDYING.id);
       modifier.startModifier(UNDYING.id, player);
+
+      new AttachedVfx({
+        scene: player.scene,
+        caster: player,
+        keyName: VFX.UNDYING_VFX,
+        animKey: VFX_ANIMATION.UNDYING.MAIN,
+      });
 
       return true;
     } else {

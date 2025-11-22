@@ -1,4 +1,4 @@
-import { CHARACTERS, EFFECTS } from '@/constants/asset-keys';
+import { CHARACTERS, VFX } from '@/constants/asset-keys';
 import {
   ARCHER_STATS,
   EVIL_WIZARD_STATS,
@@ -28,7 +28,7 @@ import {
   SKELETONS_SPAWN_POSITION,
   ZOMBIES_SPAWN_POSITION,
 } from '@/constants/spawn-positions';
-import { EFFECTS_ANIMATION } from '@/constants/animation-keys';
+import { VFX_ANIMATION } from '@/constants/animation-keys';
 
 type EnemyType = 'skeleton' | 'zombie' | 'archer';
 
@@ -124,10 +124,10 @@ export class EnemySpawn {
         pos.isSpawned = true;
 
         const respawn = this.scene.add
-          .sprite(pos.x, pos.y + 10, EFFECTS.RESPAWN, 0)
+          .sprite(pos.x, pos.y + 10, VFX.RESPAWN_VFX, 0)
           .setDepth(Z_POSITION.MISC);
 
-        respawn.play(EFFECTS_ANIMATION.RESPAWN.MAIN, true);
+        respawn.play(VFX_ANIMATION.RESPAWN.MAIN, true);
         respawn.once(
           Phaser.Animations.Events.ANIMATION_COMPLETE,
           (anim: Phaser.Animations.Animation) => {

@@ -78,6 +78,8 @@ export class ModifierIconContainer {
     entry.icon?.destroy();
     entry.timerText?.destroy();
     this.modifierIcons = this.modifierIcons.filter((elem) => elem.icon.name !== key);
+
+    this.updateUI(entry.type);
   }
 
   public removeAllModifierIcons(): void {
@@ -91,5 +93,23 @@ export class ModifierIconContainer {
 
   private findModifierIcon(key: string): ModifierContainerConfig | undefined {
     return this.modifierIcons.find((elem) => elem.icon.name === key);
+  }
+
+  private updateUI(type: ModifierType): void {
+    const iconsOfType = this.modifierIcons.filter((m) => m.type === type);
+
+    iconsOfType.forEach((m, index) => {
+      const posX =
+        MODIFIER_ICONS.START_X + index * (MODIFIER_ICONS.ICON_SIZE + MODIFIER_ICONS.PADDING);
+      const posY = type === TYPE.buff ? MODIFIER_ICONS.BUFF_Y : MODIFIER_ICONS.DEBUFF_Y;
+
+      m.icon.x = posX;
+      m.icon.y = posY;
+
+      if (m.timerText) {
+        m.timerText.x = posX + MODIFIER_ICONS.ICON_SIZE / 2;
+        m.timerText.y = posY + MODIFIER_ICONS.ICON_SIZE / 2 + 4;
+      }
+    });
   }
 }

@@ -14,7 +14,7 @@ const packs = [
   { key: 'spells-pack', url: `${packURL}spells.json` },
   { key: 'misc-pack', url: `${packURL}misc.json` },
   { key: 'weapon-pack', url: `${packURL}weapons.json` },
-  { key: 'effects-pack', url: `${packURL}effects.json` },
+  { key: 'vfx-pack', url: `${packURL}vfx.json` },
 ];
 
 export class PreloadScene extends Phaser.Scene {

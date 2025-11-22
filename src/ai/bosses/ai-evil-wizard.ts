@@ -57,8 +57,9 @@ export class AiEvilWizard extends Boss {
 
   protected finalCall(): void {
     this.aiMutatedBat.getEnemies().forEach((bat) => {
-      if (bat.active && bat.hasVelocity()) {
-        bat.setVelocity(0, 0);
+      if (bat.unit.active && bat.unit.hasVelocity()) {
+        bat.unit.setVelocity(0, 0);
+        bat.unit.getArcadeBody().allowGravity = false;
       }
     });
   }

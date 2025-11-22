@@ -13,10 +13,9 @@ import { archerAnim } from '../characters/enemies/archer-anim';
 import { darkEnergyAnim } from '../misc/dark-energy-anim';
 import { fireWormAnim } from '../characters/bosses/fire-worm-anim';
 import { frostboltAnim } from '../spells/frost-bolt-anim';
-import { freezeAnim } from '../effects/freeze-anim';
 import { soulFireAnim } from '../misc/soul-fire-anim';
 import { lightningShieldAnim } from '../spells/lightning-shield-anim';
-import { respawnAnim } from '../effects/respawn-anim';
+import { vfxAnim } from '../vfx/vfx-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -43,9 +42,8 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   // Items
   itemsAnim(anims);
 
-  // Effects
-  freezeAnim(anims);
-  respawnAnim(anims);
+  // VFX
+  vfxAnim(anims);
 
   // Misc
   soulFireAnim(anims);

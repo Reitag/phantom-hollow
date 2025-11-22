@@ -3,7 +3,6 @@ import { PROTECTION } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
 import { Character } from '@/base/objects/character';
 import { Modifier } from '@/utils/types';
-import { SpellFactory } from '@/factories/spell-factory';
 
 export class Protection implements Modifier {
   public id = PROTECTION.id;

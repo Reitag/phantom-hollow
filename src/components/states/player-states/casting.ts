@@ -1,4 +1,5 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { SpellPower } from '@/components/stats/damage';
 import { CharacterState } from '@/base/states/character-state';
 import { SPELLS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';
@@ -7,6 +8,7 @@ import { SpellSystem } from '@/systems/spell-system';
 import { UiSystem } from '@/systems/ui-system';
 import { Player } from '@/entities/characters/player/player';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { ARCANE_MIND } from '@/constants/modifier-stats';
 
 export class Casting extends CharacterState {
   private isCasting = false;
@@ -27,11 +29,20 @@ export class Casting extends CharacterState {
 
     switch (spell) {
       case SPELLS.FIRE_BALL:
-        this.startCast(FIRE_BALL_STATS.CAST_TIME, () => {
-          if (!this.character.getDead()) {
-            this.spellSystem?.castFireball(this.character);
-          }
-        });
+        if ((this.character.getStats().damage.spellPower as SpellPower).isInstantCast) {
+          this.startInstantCast(() => {
+            if (!this.character.getDead()) {
+              this.consumeInstantBuff();
+              this.spellSystem?.castFireball(this.character);
+            }
+          });
+        } else {
+          this.startCast(FIRE_BALL_STATS.CAST_TIME, () => {
+            if (!this.character.getDead()) {
+              this.spellSystem?.castFireball(this.character);
+            }
+          });
+        }
         break;
 
       case SPELLS.BLINK:
@@ -52,6 +63,7 @@ export class Casting extends CharacterState {
             this.spellSystem?.castFrostbolt(this.character);
           }
         });
+
         break;
 
       default:
@@ -74,6 +86,13 @@ export class Casting extends CharacterState {
       this.ui?.stopCast();
       this.stateMachine.changeState(PLAYER_STATES.MOVEMENT);
     }
+  }
+
+  private consumeInstantBuff(): void {
+    (this.character.getStats().damage.spellPower as SpellPower).allowInstantCast = false;
+    this.character.getModifier().removeModifier(ARCANE_MIND.id);
+
+    this.ui?.removeModifierIcon(ARCANE_MIND.id);
   }
 
   private startCast(duration: number, onComplete: () => void): void {

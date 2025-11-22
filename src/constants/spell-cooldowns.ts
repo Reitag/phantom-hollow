@@ -17,7 +17,7 @@ export const WIND = {
 
 export const FROST_BOLT = {
   NAME: SPELLS.FROST_BOLT,
-  DURATION: 2000,
+  DURATION: 7000,
 } as const;
 
 export const SUMMON_BAT = {

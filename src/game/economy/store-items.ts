@@ -74,7 +74,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(3)) {
+        //if (coinKeeper.removeCoins(3)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(spell, 1);
         }
       }
@@ -115,7 +116,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(4)) {
+        //if (coinKeeper.removeCoins(4)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(undying, 1);
         }
       }

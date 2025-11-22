@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "type": "spritesheet",
+      "key": "freeze-vfx",
+      "url": "assets/vfx/freeze.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "respawn-vfx",
+      "url": "assets/vfx/respawn.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "heal-vfx",
+      "url": "assets/vfx/heal.png",
+      "frameConfig": { "frameWidth": 60, "frameHeight": 60 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "protection-vfx",
+      "url": "assets/vfx/protection.png",
+      "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "spell-vfx",
+      "url": "assets/vfx/spell.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "undying-vfx",
+      "url": "assets/vfx/undying.png",
+      "frameConfig": { "frameWidth": 80, "frameHeight": 80 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "arcane-mind-vfx",
+      "url": "assets/vfx/arcane-mind.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    }
+  ]
+}

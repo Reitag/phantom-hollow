@@ -25,8 +25,8 @@ export type Border = {
   right: number;
 };
 
-// Physics Arcade Sprite
-export interface ArcadeSpriteConfig {
+// Sprite
+export interface SpriteConfig {
   scene: Phaser.Scene;
   position: Position;
   keyName: string;

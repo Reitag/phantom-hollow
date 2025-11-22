@@ -16,7 +16,8 @@ import { CoinKeeper } from '@/game/economy/coin-keeper';
 import { Health } from '@/components/stats/health';
 
 export class Player extends Character {
-  scene: Phaser.Scene;
+  public scene: Phaser.Scene;
+
   private controls!: KeyboardController;
   private spellSystem: SpellSystem;
   private ui: UiSystem;

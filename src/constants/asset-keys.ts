@@ -11,11 +11,6 @@ export const CHARACTERS = {
   EVIL_WIZARD: 'evil-wizard',
 } as const;
 
-export const EFFECTS = {
-  FREEZE: 'freeze',
-  RESPAWN: 'respawn',
-} as const;
-
 export const ITEMS = {
   COIN: 'coin',
 } as const;
@@ -101,9 +96,20 @@ export const UI = {
   SPELL_POWER_BUFF: 'spell-power-buff',
   LIGHTNING_SHIELD_BUFF: 'lightning-shield-buff',
   UNDYING_BUFF: 'undying-buff',
+  ARCANE_MIND_BUFF: 'arcane-mind-buff',
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
+} as const;
+
+export const VFX = {
+  FREEZE_VFX: 'freeze-vfx',
+  RESPAWN_VFX: 'respawn-vfx',
+  HEAL_VFX: 'heal-vfx',
+  PROTECTION_VFX: 'protection-vfx',
+  SPELL_VFX: 'spell-vfx',
+  UNDYING_VFX: 'undying-vfx',
+  ARCANE_MIND_VFX: 'arcane-mind-vfx',
 } as const;
 
 export const WEAPONS = {

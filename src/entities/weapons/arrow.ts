@@ -1,9 +1,9 @@
 import { Character } from '@/base/objects/character';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
-import { ArcadeSpriteConfig } from '@/utils/types';
+import { SpriteConfig } from '@/utils/types';
 
 export class Arrow extends ArcadeSprite {
-  constructor({ scene, position, keyName, frame }: ArcadeSpriteConfig) {
+  constructor({ scene, position, keyName, frame }: SpriteConfig) {
     super({ scene, position, keyName, frame });
 
     this.setSize(10, 10);

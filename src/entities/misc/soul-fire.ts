@@ -1,14 +1,11 @@
-import { ArcadeSprite } from '@/base/physics/arcade-sprite';
+import { Sprite } from '@/base/objects/sprite';
 import { MISC_ANIMATION } from '@/constants/animation-keys';
-import { Z_POSITION } from '@/constants/z-position';
-import { ArcadeSpriteConfig } from '@/utils/types';
+import { SpriteConfig } from '@/utils/types';
 
-export class SoulFire extends ArcadeSprite {
-  constructor({ scene, position, keyName, frame }: ArcadeSpriteConfig) {
+export class SoulFire extends Sprite {
+  constructor({ scene, position, keyName, frame }: SpriteConfig) {
     super({ scene, position, keyName, frame });
     this.setOrigin(0.5, 1);
-    this.getArcadeBody().allowGravity = false;
-    this.setDepth(Z_POSITION.MISC);
 
     this.playStartAnimation();
   }

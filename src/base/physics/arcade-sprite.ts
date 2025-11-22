@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { AnimationMap, ArcadeSpriteConfig } from '@/utils/types';
+import { AnimationMap, SpriteConfig } from '@/utils/types';
 import { isArcadePhysicsBody } from '@/utils/helpers';
 
 export class ArcadeSprite extends Phaser.Physics.Arcade.Sprite {
@@ -8,7 +8,7 @@ export class ArcadeSprite extends Phaser.Physics.Arcade.Sprite {
   protected keyName: string;
   protected animations: AnimationMap = {};
 
-  constructor({ scene, position, keyName, frame }: ArcadeSpriteConfig) {
+  constructor({ scene, position, keyName, frame }: SpriteConfig) {
     const { x, y } = position;
     super(scene, x, y, keyName, frame);
 

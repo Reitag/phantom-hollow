@@ -1,13 +1,13 @@
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpellPower } from '@/components/stats/damage';
-import { ArcadeSpriteConfig } from '@/utils/types';
+import { SpriteConfig } from '@/utils/types';
 import { SPELL_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { SHIFT_SPELL_REGGISTER_HITS } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
 import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
 
-export interface SpellConfig extends ArcadeSpriteConfig {
+export interface SpellConfig extends SpriteConfig {
   caster: Character;
   spellPower?: SpellPower;
   damage?: number;

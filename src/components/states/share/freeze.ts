@@ -1,8 +1,8 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
 import { SHARED_STATES } from '@/constants/state-keys';
-import { EFFECTS_ANIMATION } from '@/constants/animation-keys';
-import { EFFECTS } from '@/constants/asset-keys';
+import { VFX_ANIMATION } from '@/constants/animation-keys';
+import { VFX } from '@/constants/asset-keys';
 
 export class Freeze extends CharacterState {
   private characterKey: string;
@@ -52,15 +52,15 @@ export class Freeze extends CharacterState {
     const scene = this.character.scene;
     const { x, y, depth } = this.character;
 
-    this.freezeEffect = scene.add.sprite(x, y + 10, EFFECTS.FREEZE);
-    this.freezeEffect.play(EFFECTS_ANIMATION.FREEZE.MAIN);
+    this.freezeEffect = scene.add.sprite(x, y + 10, VFX.FREEZE_VFX);
+    this.freezeEffect.play(VFX_ANIMATION.FREEZE.MAIN);
     this.freezeEffect.setDepth(depth + 1);
   }
 
   private removeFreezeEffect(): void {
     if (!this.freezeEffect) return;
 
-    this.freezeEffect.play(EFFECTS_ANIMATION.FREEZE.END);
+    this.freezeEffect.play(VFX_ANIMATION.FREEZE.END);
 
     this.freezeEffect.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.freezeEffect?.destroy();

@@ -33,6 +33,12 @@ export const UNDYING = {
   type: TYPE.buff,
 };
 
+export const ARCANE_MIND = {
+  id: UI.ARCANE_MIND_BUFF,
+  duration: 5000,
+  type: TYPE.buff,
+};
+
 // Debuffs
 export const DISEASE = {
   id: UI.DISEASE_DEBUFF,

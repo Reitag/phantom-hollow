@@ -21,7 +21,7 @@ export const SPELL_ANIMATION_KEYS = {
   HIT: 'HIT',
 };
 
-export const EFFECT_ANIMATION_KEYS = {
+export const VFX_ANIMATION_KEYS = {
   START: 'START',
   MAIN: 'MAIN',
   END: 'END',
@@ -110,20 +110,35 @@ export const SPELLS_ANIMATION = {
   },
 } as const;
 
-export const EFFECTS_ANIMATION = {
+export const VFX_ANIMATION = {
   FREEZE: {
-    [EFFECT_ANIMATION_KEYS.MAIN]: 'freeze-main',
-    [EFFECT_ANIMATION_KEYS.END]: 'freeze-end',
+    [VFX_ANIMATION_KEYS.MAIN]: 'freeze-vfx-main',
+    [VFX_ANIMATION_KEYS.END]: 'freeze-vfx-end',
   },
   RESPAWN: {
-    [EFFECT_ANIMATION_KEYS.MAIN]: 'respawn-main',
+    [VFX_ANIMATION_KEYS.MAIN]: 'respawn-vfx-main',
+  },
+  HEAL: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'heal-vfx-main',
+  },
+  PROTECTION: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'protection-vfx-main',
+  },
+  SPELL: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'spell-vfx-main',
+  },
+  UNDYING: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'undying-vfx-main',
+  },
+  ARCANE_MIND: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'arcane-mind-vfx-main',
   },
 } as const;
 
 export const MISC_ANIMATION = {
   SOUL_FIRE: {
-    [EFFECT_ANIMATION_KEYS.START]: 'soul-fire-start',
-    [EFFECT_ANIMATION_KEYS.MAIN]: 'soul-fire-main',
+    [VFX_ANIMATION_KEYS.START]: 'soul-fire-start',
+    [VFX_ANIMATION_KEYS.MAIN]: 'soul-fire-main',
   },
 } as const;
 

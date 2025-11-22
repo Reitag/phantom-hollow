@@ -36,6 +36,8 @@ export class AiMutatedBat extends Enemy {
 
     if (!this.player || this.player.getDead()) {
       bat.setVelocity(0, 0);
+      bat.getArcadeBody().allowGravity = false;
+      return;
     }
 
     if (this.player.x > bat.x) {
