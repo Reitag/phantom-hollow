@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [0.11.0] – 2025-11-22
+
+### Added
+
+- Inventory management system, item swapping/moving/deleting
+- Potions: heal, protection, undying, SP potion
+- Coin items and PickUp/Loot systems
+- Store system and ability to buy items
+- Loot drops from enemies
+- Stats class for characters
+- Slot highlight, UI text component
+- Enemy spawn system and enemy positions
+- New side boss Blazeworm and spell power system
+- Archer enemy and Arrow weapon
+- Decor and rock layers
+- Lightning Shield spell and lightning potion
+- Frostbolt spell and freeze state
+- SoulStone, SoulFire, and full player respawn system
+- Interactable systems such as Stall and SoulPedestal
+- VFX class for buffs and debuffs
+- Arcane Mind buff (freeze-resist effect)
+
+### Changed
+
+- Reworked level one, added diversity and adjusted jump height
+- Reworked collision system
+- Updated enemy-wall collision and dynamic startPointX logic
+- Unified animation folder structure and state constants
+- Reworked character casting animation
+- Changed spell animation key resolution and spell sizes
+- Improved debug screen (Memory Monitor)
+- Improved aggro logic
+- Restructured and renamed folders
+
+### Fixed
+
+- Frame-rate independence using delta time
+- Enemy respawn issues and added respawn vfx
+- Memory leak in UI Scene
+- Various spell/collision-related issues
+- Buff/debuff icon issues
+
+### Removed
+
+- Removed Wait state
+
+
 ## [0.10.0] - 2025-09-21
 
 ### Added
