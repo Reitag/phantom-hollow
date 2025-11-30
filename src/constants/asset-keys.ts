@@ -1,6 +1,12 @@
 // AUTO-GENERATED FILE. Do not edit directly.
 // Generated from src/data/json-packs/*.json
 
+export const BACKGROUNDS = {
+  FOREST_BG: 'forest-bg',
+  MOUNT_BG: 'mount-bg',
+  SKY_BG: 'sky-bg',
+} as const;
+
 export const CHARACTERS = {
   PLAYER: 'player',
   SKELETON_WARRIOR: 'skeleton-warrior',
@@ -35,6 +41,10 @@ export const OBJECTS = {
   STATUE_RIGHT: 'statue-right',
   WOOD: 'wood',
   BOXES: 'boxes',
+  APPLE_TABLE: 'apple-table',
+  TABLE: 'table',
+  BONFIRE: 'bonfire',
+  TENT: 'tent',
   ROCK_1: 'rock-1',
   ROCK_2: 'rock-2',
   ROCK_3: 'rock-3',
@@ -58,13 +68,10 @@ export const SPELLS = {
 
 export const TILESETS = {
   ANCIENT_TILES: 'ancient-tiles',
-  GROUND: 'ground',
-  CLIFF: 'cliff',
-  DIRT: 'dirt',
-  GRASS_2: 'grass-2',
-  GRASS: 'grass',
-  MOUNT: 'mount',
-  SKY: 'sky',
+  GROUND_TILES: 'ground-tiles',
+  CLIFF_TILES: 'cliff-tiles',
+  DIRT_TILES: 'dirt-tiles',
+  GRASS_TILES: 'grass-tiles',
 } as const;
 
 export const UI = {

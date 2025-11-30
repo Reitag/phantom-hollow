@@ -1,4 +1,4 @@
-import { Interactable } from '@/base/objects/interactable';
+import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { Store } from '@/components/ui/store/store';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
@@ -7,6 +7,7 @@ export class Stall extends Interactable {
 
   constructor(scene: Phaser.Scene) {
     super(scene);
+    this.createTriggerZones(InteractableNames.stall);
     this.store = ServiceLocator.resolve(ServiceKeys.ui).getStore();
   }
 

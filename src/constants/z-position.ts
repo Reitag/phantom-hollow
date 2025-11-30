@@ -1,4 +1,7 @@
 export const Z_POSITION = {
+  // Spawn
+  SPAWN: -1000,
+
   // Environment
   /// -backgound
   SKY: 0,

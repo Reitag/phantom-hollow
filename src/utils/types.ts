@@ -83,6 +83,14 @@ export interface Modifier {
 export type ModifierType = (typeof TYPE)[keyof typeof TYPE];
 
 // Spawn Enemies
+export interface EnemySpawnData {
+  x: number;
+  y: number;
+  type: string;
+  isSpawned: boolean;
+  isAlive: boolean;
+}
+
 export interface SpawnPoint extends Position {
   isSpawned: boolean;
   isAlive: boolean;

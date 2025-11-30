@@ -5,7 +5,7 @@ import { SpriteConfig } from '@/utils/types';
 export class SoulFire extends Sprite {
   constructor({ scene, position, keyName, frame }: SpriteConfig) {
     super({ scene, position, keyName, frame });
-    this.setOrigin(0.5, 1);
+    this.setOrigin(0, 0);
 
     this.playStartAnimation();
   }

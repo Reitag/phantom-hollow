@@ -1,5 +1,6 @@
 import { UiSystem } from '@/systems/ui-system';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
+import { Tilemap } from '@/components/map/tilemap';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellSystem } from '@/systems/spell-system';
@@ -19,6 +20,7 @@ interface ServiceMap {
   inventorySystem: InventorySystem;
   lootSystem: LootSystem;
   input: KeyboardController;
+  map: Tilemap;
   collision: CollisionService;
 }
 
@@ -32,6 +34,7 @@ export const ServiceKeys = {
   inventorySystem: 'inventorySystem',
   lootSystem: 'lootSystem',
   input: 'input',
+  map: 'map',
   collision: 'collision',
 } as const;
 

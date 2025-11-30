@@ -1,5 +1,5 @@
 import { Character } from '@/base/objects/character';
-import { DESTROY_TIME } from '@/constants/spawn-positions';
+import { DESTROY_TIME } from '@/constants/spawn-properies';
 import { Player } from '@/entities/characters/player/player';
 
 export abstract class Boss {

@@ -1,4 +1,4 @@
-import { Interactable } from '@/base/objects/interactable';
+import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { MISC } from '@/constants/asset-keys';
 import { SoulFire } from '@/entities/misc/soul-fire';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -14,6 +14,7 @@ export class SoulPedestal extends Interactable {
 
   constructor(scene: Phaser.Scene) {
     super(scene);
+    this.createTriggerZones(InteractableNames['soul-pedestal']);
   }
 
   protected onEnter(): void {
