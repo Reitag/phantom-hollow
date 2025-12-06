@@ -24,7 +24,6 @@ import { CollisionService, GroupKeys } from '@/infrastructure/collision-service'
 import { VFX_ANIMATION } from '@/constants/animation-keys';
 
 type EnemyType = 'skeleton' | 'zombie' | 'archer';
-type BossType = 'evil-wizzard' | 'fire-worm';
 
 export class EnemySpawn {
   private readonly spawnDistance = 800;
@@ -41,6 +40,7 @@ export class EnemySpawn {
   );
   private aiZombie = new AiZombie(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
   private aiArcher = new AiArcher(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
+  private player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
   private aiFireWorm: AiFireWorm;
   private aiEvilWizard: AiEvilWizard;
 
@@ -103,14 +103,14 @@ export class EnemySpawn {
     );
   }
 
-  public update(player: Player, delta: number): void {
+  public update(time: number, delta: number): void {
     this.aiSkeletonWarrior.update(delta);
     this.aiZombie.update(delta);
     this.aiArcher.update(delta);
-    this.aiFireWorm.update(delta);
-    this.aiEvilWizard.update(delta);
+    this.aiFireWorm.update(time, delta);
+    this.aiEvilWizard.update(time, delta);
 
-    const playerX = Math.round(player.x);
+    const playerX = Math.round(this.player.x);
 
     this.handleSpawn(playerX, 'skeleton', (pos) => this.spawnSkeleton(pos));
     this.handleSpawn(playerX, 'zombie', (pos) => this.spawnZombie(pos));

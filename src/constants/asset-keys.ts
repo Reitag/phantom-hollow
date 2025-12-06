@@ -64,6 +64,8 @@ export const SPELLS = {
   WIND: 'wind',
   FROST_BOLT: 'frost-bolt',
   SHADOW_BOLT: 'shadow-bolt',
+  EARTH_SHAKE: 'earth-shake',
+  SHADOW_TRAIL: 'shadow-trail',
 } as const;
 
 export const TILESETS = {
@@ -117,6 +119,9 @@ export const VFX = {
   SPELL_VFX: 'spell-vfx',
   UNDYING_VFX: 'undying-vfx',
   ARCANE_MIND_VFX: 'arcane-mind-vfx',
+  EARTH_ANXIETY_VFX: 'earth-anxiety-vfx',
+  EVIL_WIZARD_DISAPPEARS_VFX: 'evil-wizard-disappears-vfx',
+  EVIL_WIZARD_APPEARS_VFX: 'evil-wizard-appears-vfx',
 } as const;
 
 export const WEAPONS = {

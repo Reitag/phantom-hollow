@@ -18,6 +18,7 @@ import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
+import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { EnemySpawn } from '@/systems/enemy-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
@@ -57,9 +58,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.initUiScene(() => this.createGameWorld());
   }
 
-  update(_: number, delta: number): void {
+  update(time: number, delta: number): void {
     this.playerHandler.update(delta);
-    this.spawn.update(this.player, delta);
+    this.spawn.update(time, delta);
     this.interactables.update();
 
     this.updateParallaxBackground();
@@ -337,8 +338,8 @@ export class LevelOneScene extends Phaser.Scene {
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
     spell.registerHit(victim);
-    // For nature shield
-    if (spell instanceof LightningShield) {
+    // For nature shield and shadow trail
+    if (spell instanceof LightningShield || spell instanceof ShadowTrail) {
       spell.applyEffect(victim);
       return;
     }

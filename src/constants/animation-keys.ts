@@ -108,6 +108,14 @@ export const SPELLS_ANIMATION = {
     [SPELL_ANIMATION_KEYS.MAIN]: 'shadow-bolt-main',
     [SPELL_ANIMATION_KEYS.HIT]: 'shadow-bolt-hit',
   },
+  EARTH_SHAKE: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'earth-shake-main',
+  },
+  SHADOW_TRAIL: {
+    [SPELL_ANIMATION_KEYS.START]: 'shadow-trail-start',
+    [SPELL_ANIMATION_KEYS.MAIN]: 'shadow-trail-main',
+    [SPELL_ANIMATION_KEYS.HIT]: 'shadow-trail-hit',
+  },
 } as const;
 
 export const VFX_ANIMATION = {
@@ -132,6 +140,15 @@ export const VFX_ANIMATION = {
   },
   ARCANE_MIND: {
     [VFX_ANIMATION_KEYS.MAIN]: 'arcane-mind-vfx-main',
+  },
+  EARTH_ANXIETY: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'earth-anxiety-vfx-main',
+  },
+  EVIL_WIZARD_DISAPPEARS: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'evil-wizard-disappears-vfx-main',
+  },
+  EVIL_WIZARD_APPEARS: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'evil-wizard-appears-vfx-main',
   },
 } as const;
 

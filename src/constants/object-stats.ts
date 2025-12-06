@@ -44,13 +44,23 @@ export const SHADOW_BOLT_STATS = {
   LIFE_TIME: 2000,
 } as const;
 
+export const SHADOW_TRAIL_STATS = {
+  HIT: 20,
+  SPEED: 300,
+  LIFE_TIME: 1100,
+} as const;
+
 export const LIGHTNING_SHIELD_STATS = {
   HIT: 5,
 } as const;
 
+export const EARTH_SHAKE_STATS = {
+  HIT: 20,
+} as const;
+
 export const PLAYER_STATS = {
   //HEALTH: 150,
-  HEALTH: 100000000000,
+  HEALTH: 3000,
   MOVE: 190,
   JUMP: 550,
   SPELL_POWER: 4,
@@ -97,7 +107,7 @@ export const MUTATED_BAT_STATS = {
 } as const;
 
 export const FIRE_WORM_STATS = {
-  HEALTH: 500,
+  HEALTH: 1000,
   WALK_BOUND: 100,
   WALK: 7,
   ENGAGE_DISTANCE: 450,
@@ -106,7 +116,7 @@ export const FIRE_WORM_STATS = {
 } as const;
 
 export const EVIL_WIZARD_STATS = {
-  HEALTH: 1000,
+  HEALTH: 200,
   WALK_BOUND: 100,
   WALK: 50,
   ENGAGE_DISTANCE: 450,

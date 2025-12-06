@@ -73,4 +73,31 @@ export function vfxAnim(anims: Phaser.Animations.AnimationManager) {
       repeat: 0,
     });
   }
+
+  if (!anims.get(VFX_ANIMATION.EARTH_ANXIETY.MAIN)) {
+    anims.create({
+      key: VFX_ANIMATION.EARTH_ANXIETY.MAIN,
+      frames: anims.generateFrameNumbers(VFX.EARTH_ANXIETY_VFX, { start: 0, end: 6 }),
+      frameRate: 10,
+      repeat: 0,
+    });
+  }
+
+  if (!anims.get(VFX_ANIMATION.EVIL_WIZARD_DISAPPEARS.MAIN)) {
+    anims.create({
+      key: VFX_ANIMATION.EVIL_WIZARD_DISAPPEARS.MAIN,
+      frames: anims.generateFrameNumbers(VFX.EVIL_WIZARD_DISAPPEARS_VFX, { start: 0, end: 12 }),
+      frameRate: 14,
+      repeat: 0,
+    });
+  }
+
+  if (!anims.get(VFX_ANIMATION.EVIL_WIZARD_APPEARS.MAIN)) {
+    anims.create({
+      key: VFX_ANIMATION.EVIL_WIZARD_APPEARS.MAIN,
+      frames: anims.generateFrameNumbers(VFX.EVIL_WIZARD_APPEARS_VFX, { start: 0, end: 8 }),
+      frameRate: 14,
+      repeat: 0,
+    });
+  }
 }

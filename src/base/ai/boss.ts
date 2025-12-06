@@ -11,13 +11,13 @@ export abstract class Boss {
     this.player = player;
   }
 
-  public update(delta: number): void {
+  public update(time: number, delta: number): void {
     if (this.boss.getDead()) {
       this.finalCall();
       this.removeBoss();
       return;
     }
-    this.updateBossState(delta);
+    this.updateBossState(time, delta);
   }
 
   public getBoss(): Character {
@@ -38,7 +38,7 @@ export abstract class Boss {
     );
   }
 
-  protected abstract updateBossState(delta: number): void;
+  protected abstract updateBossState(time: number, delta: number): void;
   protected abstract finalCall(): void;
   protected abstract chillBehaviour(): void;
   protected abstract aggroedBehaviour(): void;
@@ -56,6 +56,7 @@ export abstract class Boss {
     const inRange = this.canEngage(range);
 
     if (!inRange && !aggro.isAggroed) {
+      this.bossRecovery();
       this.chillBehaviour();
       return;
     }
@@ -74,5 +75,14 @@ export abstract class Boss {
       return true;
     }
     return false;
+  }
+
+  private bossRecovery(): void {
+    const health = this.boss.getStats().health;
+    if (!health) return;
+
+    while (health.current !== health.max) {
+      health.heal(500);
+    }
   }
 }

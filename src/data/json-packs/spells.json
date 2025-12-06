@@ -35,6 +35,18 @@
       "key": "shadow-bolt",
       "url": "assets/spells/shadow-bolt.png",
       "frameConfig": { "frameWidth": 50, "frameHeight": 50 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "earth-shake",
+      "url": "assets/spells/earth-shake.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "shadow-trail",
+      "url": "assets/spells/shadow-trail.png",
+      "frameConfig": { "frameWidth": 256, "frameHeight": 128 }
     }
   ]
 }

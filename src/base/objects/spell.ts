@@ -59,6 +59,7 @@ export abstract class Spell extends ArcadeSprite {
     playAnimation(this, animKey);
 
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+      this.onDestroyStart?.();
       this.destroy();
     });
   }
@@ -84,6 +85,8 @@ export abstract class Spell extends ArcadeSprite {
   public getCaster(): Character {
     return this.caster;
   }
+
+  protected onDestroyStart?(): void {}
 
   protected playStartAnimation(): void {
     if (!this.animations) return;
