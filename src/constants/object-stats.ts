@@ -59,8 +59,8 @@ export const EARTH_SHAKE_STATS = {
 } as const;
 
 export const PLAYER_STATS = {
-  //HEALTH: 150,
-  HEALTH: 3000,
+  HEALTH: 150,
+  //HEALTH: 3000,
   MOVE: 190,
   JUMP: 550,
   SPELL_POWER: 4,

@@ -25,7 +25,8 @@ export class SoulPedestal extends Interactable {
 
   protected onLeave(): void {
     this.scene.events.off('trigger-soul-stone', this.setSoulStone, this);
-    this.scene.registry.set('active-soul-pedestal', null);
+    //this.scene.registry.set('active-soul-pedestal', null);
+    this.scene.registry.remove('active-soul-pedestal');
   }
 
   private setSoulStone(): void {

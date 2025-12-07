@@ -8,6 +8,7 @@ import { Player } from '@/entities/characters/player/player';
 import { Z_POSITION } from '@/constants/z-position';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
 import { VFX } from '@/constants/asset-keys';
+import { TriggerZone } from '@/game/interactables/trigger-zone';
 import { Boss } from '../../base/ai/boss';
 
 export class AiFireWorm extends Boss {
@@ -28,6 +29,10 @@ export class AiFireWorm extends Boss {
     super(boss, player);
     this.spellCooldowns = new SpellCooldowns(this.boss.scene);
     this.castFireballHandler = () => this.castFireball();
+
+    this.triggerZone = new TriggerZone(this.boss.scene, 'fire-worm');
+    this.scene.events.on(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.on(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
   protected updateBossState(time: number, delta: number): void {
@@ -75,7 +80,11 @@ export class AiFireWorm extends Boss {
     }
   }
 
-  protected finalCall(): void {}
+  protected finalCall(): void {
+    if (!this.triggerZone) return;
+    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
+  }
 
   private updateFacingDirection(): void {
     this.boss.flipCharacterToRight(this.player.x > this.boss.x);

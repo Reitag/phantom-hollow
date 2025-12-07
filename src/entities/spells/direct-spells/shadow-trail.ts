@@ -66,7 +66,8 @@ export class ShadowTrail extends Spell {
   }
 
   protected override onDestroyStart(): void {
-    const casterX = (this.direction ?? 1) > 0 ? this.arcadeBody.right : this.arcadeBody.left;
+    const casterX =
+      (this.direction ?? 1) > 0 ? this.arcadeBody.right - 20 : this.arcadeBody.left + 20;
     this.caster.setPosition(casterX, this.caster.y);
     this.emit('spellFinished');
   }

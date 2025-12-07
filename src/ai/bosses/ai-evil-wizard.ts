@@ -15,6 +15,7 @@ import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
 import { CHARACTERS, VFX } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { TriggerZone } from '@/game/interactables/trigger-zone';
 import { AttachedVfx } from '@/entities/misc/attached-vfx';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
 import { Boss } from '../../base/ai/boss';
@@ -33,12 +34,16 @@ export class AiEvilWizard extends Boss {
   constructor(boss: Character, player: Player) {
     super(boss, player);
 
-    this.spellCooldowns = new SpellCooldowns(this.boss.scene);
+    this.spellCooldowns = new SpellCooldowns(this.scene);
     this.castShadowBoltHandler = this.castShadowBolt.bind(this);
 
     this.dreadAura = this.createDreadAura();
 
     this.aiMutatedBat = new AiMutatedBat(this.player);
+
+    this.triggerZone = new TriggerZone(this.boss.scene, 'evil-wizard');
+    this.scene.events.on(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.on(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
   protected updateBossState(time: number, delta: number): void {
@@ -59,6 +64,10 @@ export class AiEvilWizard extends Boss {
         bat.unit.getArcadeBody().allowGravity = false;
       }
     });
+
+    if (!this.triggerZone) return;
+    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
   protected chillBehaviour(): void {
@@ -174,7 +183,7 @@ export class AiEvilWizard extends Boss {
     this.dreadAura = null;
 
     const disappear = new AttachedVfx({
-      scene: this.boss.scene,
+      scene: this.scene,
       caster: this.boss,
       keyName: VFX.EVIL_WIZARD_DISAPPEARS_VFX,
       animKey: VFX_ANIMATION.EVIL_WIZARD_DISAPPEARS.MAIN,
@@ -189,7 +198,7 @@ export class AiEvilWizard extends Boss {
         this.boss.flipCharacterToRight(this.player.x > this.boss.x);
 
         const appear = new AttachedVfx({
-          scene: this.boss.scene,
+          scene: this.scene,
           caster: this.boss,
           keyName: VFX.EVIL_WIZARD_APPEARS_VFX,
           animKey: VFX_ANIMATION.EVIL_WIZARD_APPEARS.MAIN,
@@ -207,7 +216,7 @@ export class AiEvilWizard extends Boss {
   private createDreadAura(): DreadAura {
     return new DreadAura(
       {
-        scene: this.boss.scene,
+        scene: this.scene,
         position: { x: this.boss.x, y: this.boss.y },
         keyName: DREAD_AURA_STATS.KEY_NAME,
         caster: this.boss,

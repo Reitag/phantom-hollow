@@ -95,3 +95,6 @@ export interface SpawnPoint extends Position {
   isSpawned: boolean;
   isAlive: boolean;
 }
+
+// Trigger Keys
+export type Triggerkey = 'fire-worm' | 'evil-wizard';
