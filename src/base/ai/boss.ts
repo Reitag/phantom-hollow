@@ -18,7 +18,6 @@ export abstract class Boss {
 
   public update(time: number, delta: number): void {
     if (this.boss.getDead()) {
-      console.log(this.triggerZone);
       this.finalCall();
       this.removeBoss();
       return;

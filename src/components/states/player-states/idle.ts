@@ -31,6 +31,10 @@ export class Idle extends CharacterState {
       this.stateMachine.changeState(PLAYER_STATES.MOVEMENT);
     }
 
+    if (this.input?.isDownDown) {
+      this.stateMachine.changeState(PLAYER_STATES.DUCK);
+    }
+
     if (this.input?.isPrimaryActionDown) {
       this.initToCastSpell(SPELLS.FIRE_BALL);
     }

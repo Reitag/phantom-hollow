@@ -14,6 +14,7 @@ import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
 import { CoinKeeper } from '@/game/economy/coin-keeper';
 import { Health } from '@/components/stats/health';
+import { Duck } from '@/components/states/player-states/duck';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -24,6 +25,7 @@ export class Player extends Character {
   private inventory: InventorySystem;
 
   private coinKeeper: CoinKeeper;
+  private isInAir: boolean = false;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
@@ -38,6 +40,8 @@ export class Player extends Character {
     this.animations = {
       [CHARACTER_ANIMATION_KEYS.IDLE]: PLAYER_ANIMATION.IDLE,
       [CHARACTER_ANIMATION_KEYS.MOVE]: PLAYER_ANIMATION.MOVE,
+      [CHARACTER_ANIMATION_KEYS.JUMP]: PLAYER_ANIMATION.JUMP,
+      [CHARACTER_ANIMATION_KEYS.FALL]: PLAYER_ANIMATION.FALL,
       [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: PLAYER_ANIMATION.CAST_START,
       [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: PLAYER_ANIMATION.CAST_MAIN,
       [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: PLAYER_ANIMATION.CAST_END,
@@ -47,6 +51,13 @@ export class Player extends Character {
 
     this.initKeyboard();
     this.initStateMachine();
+
+    // Needs to dispatch
+    this.on(
+      Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + PLAYER_ANIMATION.JUMP,
+      this.handleJumpEnd,
+      this
+    );
 
     const spriteHeight = this.height;
     const spriteWidth = this.width;
@@ -69,17 +80,35 @@ export class Player extends Character {
 
   private initStateMachine(): void {
     this.stateMachine.addState(new Idle(this, this.controls, this.spellSystem, this.inventory));
+    this.stateMachine.addState(
+      new Duck(this, this.controls, this.inventory, CHARACTERS.PLAYER, 36)
+    );
     this.stateMachine.addState(new Movement(this, this.controls, this.spellSystem, this.inventory));
     this.stateMachine.addState(new Casting(this, this.controls, this.spellSystem, this.ui));
     this.stateMachine.addState(new Ready(this, this.controls, this.ui));
-    this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 101, this.ui));
+    this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 69, this.ui));
 
     this.stateMachine.changeState(PLAYER_STATES.IDLE);
   }
 
   public update(delta: number): void {
+    if (this.getDead()) return;
     this.stateMachine.update(delta);
     this.controls.update();
+    this.handleFall();
+  }
+
+  public playAnimation(
+    key: string | undefined,
+    ignoreIfPlaying?: boolean
+  ): Phaser.GameObjects.GameObject | undefined {
+    if (!key) return;
+
+    if (this.isInAir && key !== PLAYER_ANIMATION.JUMP && key !== PLAYER_ANIMATION.FALL) {
+      return this;
+    }
+
+    return this.anims.play(key, ignoreIfPlaying);
   }
 
   public getCoinKeeper(): CoinKeeper {
@@ -93,6 +122,7 @@ export class Player extends Character {
   protected override onDeathStart(): void {
     this.controls.disable();
     this.ui.removeAllModfierIcons();
+    this.isInAir = false;
   }
 
   protected override onAliveStart(): void {
@@ -103,5 +133,42 @@ export class Player extends Character {
     this.stats.health = null;
     this.stats.health = new Health(max);
     this.ui.restorePlayerHealth();
+  }
+
+  private handleFall(): void {
+    if (!this.body?.blocked.down) {
+      if (!this.isInAir && this.anims.currentAnim?.key !== PLAYER_ANIMATION.JUMP) {
+        this.isInAir = true;
+
+        const animKey = this.resolveAnimation(CHARACTER_ANIMATION_KEYS.FALL);
+        if (!animKey) throw new Error('AnimeKey must be initialized');
+
+        this.playAnimation(animKey, true);
+      }
+
+      return;
+    }
+
+    if (this.isInAir) {
+      this.isInAir = false;
+
+      if (this.anims.currentAnim?.key === PLAYER_ANIMATION.FALL) {
+        const animKey = this.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
+        this.playAnimation(animKey, true);
+      }
+    }
+  }
+
+  private handleJumpEnd(
+    anim: Phaser.Animations.Animation,
+    frame: Phaser.Animations.AnimationFrame
+  ): void {
+    if (anim.key === PLAYER_ANIMATION.JUMP) {
+      if (!this.body?.blocked.down) {
+        const fallKey = this.resolveAnimation(CHARACTER_ANIMATION_KEYS.FALL);
+        this.playAnimation(fallKey, true);
+        this.isInAir = true;
+      }
+    }
   }
 }

@@ -25,7 +25,13 @@ export class Movement extends CharacterState {
   public onUpdate(delta: number): void {
     this.characterSpeed?.update(delta);
     this.inventory?.handleInput(this.input);
-    this.movement();
+
+    if (this.input?.isDownDown) {
+      this.character.setVelocityX(0);
+      this.stateMachine.changeState(PLAYER_STATES.DUCK);
+    } else {
+      this.movement();
+    }
 
     if (!this.input?.isLeftDown && !this.input?.isRightDown) {
       this.changeToIdleState();

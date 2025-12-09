@@ -2,6 +2,8 @@ export const CHARACTER_ANIMATION_KEYS = {
   IDLE: 'IDLE',
   MOVE: 'MOVE',
   RUN: 'RUN',
+  JUMP: 'JUMP',
+  FALL: 'FALL',
   ATTACK: 'ATTACK',
   CAST: {
     CAST_START: 'CAST_START',
@@ -30,6 +32,8 @@ export const VFX_ANIMATION_KEYS = {
 export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.IDLE]: 'player-idle',
   [CHARACTER_ANIMATION_KEYS.MOVE]: 'player-move',
+  [CHARACTER_ANIMATION_KEYS.JUMP]: 'player-jump',
+  [CHARACTER_ANIMATION_KEYS.FALL]: 'player-fall',
   [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: 'player-cast-start',
   [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: 'player-cast-main',
   [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: 'player-cast-end',

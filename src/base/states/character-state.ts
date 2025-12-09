@@ -71,6 +71,8 @@ export abstract class CharacterState implements State {
 
   protected jump(): void {
     if (this.characterBody.blocked.down) {
+      const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.JUMP);
+      this.playAnimation(animKey, true);
       this.character.setVelocityY(PLAYER_STATS.JUMP * -1);
     }
   }
@@ -83,7 +85,11 @@ export abstract class CharacterState implements State {
       return;
     }
     if (!force && this.character.anims.currentAnim?.key === key) return;
-    this.character.anims.play(key, true);
+    if (this.character instanceof Player) {
+      this.character.playAnimation(key, force ?? undefined);
+    } else {
+      this.character.anims.play(key, true);
+    }
   }
 
   protected initToCastSpell(spell: string): void {
@@ -94,7 +100,6 @@ export abstract class CharacterState implements State {
   private canTransitionToCast(spell: string): boolean {
     if (
       this.character instanceof Player &&
-      this.character.nextSpellInstant === false &&
       this.name === PLAYER_STATES.MOVEMENT &&
       (spell === SPELLS.FIRE_BALL || spell === SPELLS.FROST_BOLT)
     ) {
