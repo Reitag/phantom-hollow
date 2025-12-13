@@ -1,3 +1,4 @@
+import { Character } from '@/base/objects/character';
 import { Dialog } from '@/components/ui/dialog/dialog';
 import { InventoryIconContainer } from '@/components/ui/inventory-icons/inventory-icon-container';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
@@ -149,5 +150,9 @@ export class UiSystem {
 
   public hideTooltip(): void {
     this.text.removeTooltip();
+  }
+
+  public showDamageDealt(amount: number | string, target: Character): void {
+    this.text.addDamageDisplayOnScreen(amount, target);
   }
 }

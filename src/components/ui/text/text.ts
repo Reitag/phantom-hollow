@@ -1,6 +1,8 @@
+import { Character } from '@/base/objects/character';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { baseStyle } from '@/constants/tooltip-params';
 import { WARNING_TEXT } from '@/constants/ui-coordinates';
+import { Z_POSITION } from '@/constants/z-position';
 import { TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
 
 enum TooltipLayout {
@@ -10,6 +12,7 @@ enum TooltipLayout {
 
 export class Text {
   private textContainer: Phaser.GameObjects.Text[] = [];
+  private damageDisplayContainer: Phaser.GameObjects.Text[] = [];
 
   // Tooltips
   private container: Phaser.GameObjects.Container | null = null;
@@ -62,6 +65,47 @@ export class Text {
         duration: 50,
         ease: 'Sine.easeInOut',
       });
+    });
+  }
+
+  // Damage display
+  public addDamageDisplayOnScreen(amount: number | string, target: Character): void {
+    const scene = target.scene;
+    const { x, y } = target.getWorldTransformMatrix().transformPoint(0, 0);
+    const posX = x;
+    const posY = y - 20;
+
+    target.setDataEnabled();
+
+    const stack = target.getData('damageTextStack') ?? 0;
+    target.setData('damageTextStack', stack + 1);
+
+    const offsetY = stack * 14;
+
+    if (typeof amount === 'number') amount = Phaser.Math.RoundTo(amount, 0);
+
+    const damageText = scene.add
+      .text(posX, posY - offsetY, `${amount}`, {
+        font: '12px Arial',
+        color: '#ffffffff',
+        stroke: '#000000',
+        strokeThickness: 1,
+      })
+      .setOrigin(0.5, 0.5)
+      .setDepth(Z_POSITION.UI);
+
+    scene.tweens.add({
+      targets: damageText,
+      y: posY - 30 - offsetY,
+      alpha: 0,
+      duration: 2700,
+      ease: 'Sine.easeOut',
+      onComplete: () => {
+        damageText.destroy();
+
+        const current = target.getData('damageTextStack') ?? 1;
+        target.setData('damageTextStack', Math.max(0, current - 1));
+      },
     });
   }
 

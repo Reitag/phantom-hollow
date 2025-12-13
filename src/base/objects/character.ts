@@ -9,6 +9,7 @@ import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export interface CharacterConfig extends SpriteConfig {
   facingRight: boolean;
@@ -110,6 +111,9 @@ export class Character extends ArcadeSprite {
 
     const finalDamage = amount * (this.stats.defense?.multiplier ?? 1);
     this.stats.health?.applyDamage(finalDamage);
+
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    ui.showDamageDealt(finalDamage, this);
 
     if (attacker && attacker instanceof Player) {
       this.stats?.aggro?.increase(80);

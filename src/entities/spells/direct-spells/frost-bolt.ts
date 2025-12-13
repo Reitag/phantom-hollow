@@ -6,6 +6,7 @@ import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION, VFX_ANIMATION } from '@/constan
 import { SHARED_STATES } from '@/constants/state-keys';
 import { ARCANE_MIND } from '@/constants/modifier-stats';
 import { AttachedVfx } from '@/entities/misc/attached-vfx';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class FrostBolt extends Spell {
   constructor({
@@ -57,6 +58,9 @@ export class FrostBolt extends Spell {
       fsm.changeState(SHARED_STATES.FREEZE);
 
       if (fsm.currentStateName !== SHARED_STATES.FREEZE) {
+        const ui = ServiceLocator.resolve(ServiceKeys.ui);
+        if (target.active) ui.showDamageDealt('Resist', target);
+
         const casterModifier = this.caster.getModifier();
         if (!casterModifier.isModifierExist(ARCANE_MIND.id)) {
           casterModifier.addModifier(ARCANE_MIND.id);
