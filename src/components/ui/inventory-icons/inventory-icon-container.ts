@@ -1,3 +1,4 @@
+import { ITEM_TOOLTIPS } from '@/constants/tooltip-params';
 import { INVENTORY_SLOTS } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
@@ -13,6 +14,8 @@ export class InventoryIconContainer {
 
   public setIcon(index: number, key: string, quantity: number): void {
     this.removeIcon(index);
+
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
 
     const posX =
       INVENTORY_SLOTS.START_X + index * (INVENTORY_SLOTS.WIDTH + INVENTORY_SLOTS.PADDING);
@@ -35,15 +38,28 @@ export class InventoryIconContainer {
     this.inventoryIcons[index] = { icon, quantityText };
 
     // Feature here
-    icon.setInteractive({ useHandCursor: true, draggable: true }).setData('index', index);
+    icon
+      .setInteractive({ useHandCursor: true, draggable: true })
+      .setData('index', index)
+      .setData('key', key);
+
+    // Drag start
     icon.on('dragstart', (_: Phaser.Input.Pointer) => {
+      this.scene.game.canvas.style.cursor = 'grab';
       quantityText.setVisible(false);
     });
+    icon.on('dragstart', ui.hideTooltip, ui);
+
+    // Dragging
     icon.on('drag', (_: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+      this.scene.game.canvas.style.cursor = 'grabbing';
       icon.x = dragX;
       icon.y = dragY;
     });
+
+    // Drag end
     icon.on('dragend', (pointer: Phaser.Input.Pointer) => {
+      this.scene.game.canvas.style.cursor = 'default';
       quantityText.setVisible(true);
 
       const dropIndex = this.getSlotIndexAt(pointer.x, pointer.y);
@@ -55,6 +71,37 @@ export class InventoryIconContainer {
         this.handleDestroy(fromIndex);
       }
     });
+
+    // Pointer over
+    icon.on('pointerover', (pointer: Phaser.Input.Pointer) => {
+      this.scene.game.canvas.style.cursor = 'help';
+      const keyItem = icon.getData('key');
+      const tooltipArray = Object.values(ITEM_TOOLTIPS).map(
+        ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({
+          id,
+          title,
+          prop_1,
+          prop_2,
+          prop_3,
+          prop_4,
+        })
+      );
+
+      const info = tooltipArray.find((tooltip) => keyItem === tooltip.id);
+      if (!info) return;
+      ui.showVerticalTooltip(
+        {
+          x: icon.x - 10,
+          y: icon.y - 30,
+          width: 300,
+          fillColor: 0x000000,
+        },
+        info
+      );
+    });
+
+    // Ponter out
+    icon.on('pointerout', ui.hideTooltip, ui);
   }
 
   public updateQuantity(index: number, quantity: number): void {

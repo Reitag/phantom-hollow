@@ -142,7 +142,8 @@ export class Store {
       row.add(icon);
 
       const text = this.scene.add
-        .text(17, 0, `${item.name} - ${item.description}`, {
+        //.text(17, 0, `${item.name} - ${item.description}`, {
+        .text(17, 0, `${item.name}`, {
           font: '14px Arial',
           color: '#ffffff',
         })

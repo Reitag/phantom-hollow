@@ -116,7 +116,7 @@ export const FIRE_WORM_STATS = {
 } as const;
 
 export const EVIL_WIZARD_STATS = {
-  HEALTH: 200,
+  HEALTH: 2000,
   WALK_BOUND: 100,
   WALK: 50,
   ENGAGE_DISTANCE: 450,

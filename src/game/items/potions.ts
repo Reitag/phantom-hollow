@@ -8,7 +8,7 @@ import { VFX_ANIMATION } from '@/constants/animation-keys';
 export const healthPotion = (): InventoryItem => ({
   id: 'health-potion',
   name: 'Health Potion',
-  description: 'Restores 50 HP',
+  description: 'Use: Restores 50 health.',
   iconKey: UI.HEALTH_POTION_ICON,
   maxStack: 5,
   isUnique: false,
@@ -31,7 +31,7 @@ export const healthPotion = (): InventoryItem => ({
 export const protectPotion = (): InventoryItem => ({
   id: 'protect-potion',
   name: 'Protect Potion',
-  description: 'Reduces damage taken for 10 seconds',
+  description: 'Use: Reduces damage taken from physical and spell attacks by 50% for 10 sec.',
   iconKey: UI.PROTECTION_POTION_ICON,
   maxStack: 5,
   isUnique: false,
@@ -62,7 +62,7 @@ export const protectPotion = (): InventoryItem => ({
 export const spellPotion = (): InventoryItem => ({
   id: 'spell-potion',
   name: 'Spell Potion',
-  description: 'Increase spell power for 15 seconds',
+  description: 'Use: Increases spell power by 100% for 15 sec.',
   iconKey: UI.SPELL_POTION_ICON,
   maxStack: 5,
   isUnique: false,
@@ -94,7 +94,9 @@ export const spellPotion = (): InventoryItem => ({
 export const lightningPotion = (): InventoryItem => ({
   id: 'lightning-potion',
   name: 'Lightning Potion',
-  description: 'Set Lightning Shield, causing damage to enemies',
+  description:
+    'Use: Surrounds you with a Lightning Shield for 10 sec.\n\n' +
+    'Lightning Shield deals periodic damage to nearby enemies.',
   iconKey: UI.LIGHTNING_POTION_ICON,
   maxStack: 5,
   isUnique: false,
@@ -118,7 +120,7 @@ export const lightningPotion = (): InventoryItem => ({
 export const undyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
-  description: 'Makes you immune to death for 5 seconds',
+  description: 'Use: Prevents death for 5 sec, leaving you at 1 Health instead.',
   iconKey: UI.UNDYING_POTION_ICON,
   maxStack: 3,
   isUnique: false,
