@@ -82,7 +82,11 @@ export class Text {
 
     const offsetY = stack * 14;
 
-    if (typeof amount === 'number') amount = Phaser.Math.RoundTo(amount, 0);
+    if (typeof amount === 'number') {
+      amount = Phaser.Math.RoundTo(amount, 0);
+
+      if (amount === 0) return;
+    }
 
     const damageText = scene.add
       .text(posX, posY - offsetY, `${amount}`, {

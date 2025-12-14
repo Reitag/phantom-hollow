@@ -20,7 +20,7 @@ export interface StoreItem {
 export const STORE_ITEMS: StoreItem[] = [
   {
     ...healthPotion(),
-    price: 1,
+    price: 2,
     onBuy: () => {
       const health = healthPotion();
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
@@ -32,8 +32,7 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        //if (coinKeeper.removeCoins(1)) {
-        if (coinKeeper.removeCoins(0)) {
+        if (coinKeeper.removeCoins(2)) {
           inventory.addItem(health, 1);
         }
       }
@@ -53,8 +52,7 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        //if (coinKeeper.removeCoins(2)) {
-        if (coinKeeper.removeCoins(0)) {
+        if (coinKeeper.removeCoins(2)) {
           inventory.addItem(protect, 1);
         }
       }
@@ -74,8 +72,7 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        //if (coinKeeper.removeCoins(3)) {
-        if (coinKeeper.removeCoins(0)) {
+        if (coinKeeper.removeCoins(3)) {
           inventory.addItem(spell, 1);
         }
       }
@@ -83,7 +80,7 @@ export const STORE_ITEMS: StoreItem[] = [
   },
   {
     ...lightningPotion(),
-    price: 4,
+    price: 3,
     onBuy: () => {
       const lightning = lightningPotion();
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
@@ -95,8 +92,7 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        //if (coinKeeper.removeCoins(4)) {
-        if (coinKeeper.removeCoins(0)) {
+        if (coinKeeper.removeCoins(3)) {
           inventory.addItem(lightning, 1);
         }
       }
@@ -104,7 +100,7 @@ export const STORE_ITEMS: StoreItem[] = [
   },
   {
     ...undyingPotion(),
-    price: 5,
+    price: 3,
     onBuy: () => {
       const undying = undyingPotion();
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
@@ -116,8 +112,7 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        //if (coinKeeper.removeCoins(4)) {
-        if (coinKeeper.removeCoins(0)) {
+        if (coinKeeper.removeCoins(3)) {
           inventory.addItem(undying, 1);
         }
       }
@@ -125,7 +120,7 @@ export const STORE_ITEMS: StoreItem[] = [
   },
   {
     ...soulStone(),
-    price: 0,
+    price: 4,
     onBuy: () => {
       const stone = soulStone();
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
@@ -147,7 +142,7 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(0)) {
+        if (coinKeeper.removeCoins(4)) {
           inventory.addItem(stone, 1);
         }
       }
