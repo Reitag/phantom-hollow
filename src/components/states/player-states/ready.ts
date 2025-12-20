@@ -1,12 +1,12 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
-import { CharacterState } from '@/base/states/character-state';
+import { PlayerState } from '@/base/states/player-state';
 import { PLAYER_STATES } from '@/constants/state-keys';
 import { UiSystem } from '@/systems/ui-system';
 import { Player } from '@/entities/characters/player/player';
 import { SPELLS } from '@/constants/asset-keys';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 
-export class Ready extends CharacterState {
+export class Ready extends PlayerState {
   constructor(player: Player, input?: KeyboardController, ui?: UiSystem) {
     super(PLAYER_STATES.READY, player, input, undefined, ui);
   }

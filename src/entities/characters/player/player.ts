@@ -15,6 +15,8 @@ import { InventorySystem } from '@/systems/inventory-system';
 import { CoinKeeper } from '@/game/economy/coin-keeper';
 import { Health } from '@/components/stats/health';
 import { Duck } from '@/components/states/player-states/duck';
+import { Jump } from '@/components/states/player-states/jump';
+import { Fall } from '@/components/states/player-states/fall';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -25,7 +27,6 @@ export class Player extends Character {
   private inventory: InventorySystem;
 
   private coinKeeper: CoinKeeper;
-  private isInAir: boolean = false;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
@@ -52,13 +53,6 @@ export class Player extends Character {
     this.initKeyboard();
     this.initStateMachine();
 
-    // Needs to dispatch
-    this.on(
-      Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + PLAYER_ANIMATION.JUMP,
-      this.handleJumpEnd,
-      this
-    );
-
     const spriteHeight = this.height;
     const spriteWidth = this.width;
     const bodyHeight = 30;
@@ -79,13 +73,22 @@ export class Player extends Character {
   }
 
   private initStateMachine(): void {
-    this.stateMachine.addState(new Idle(this, this.controls, this.spellSystem, this.inventory));
     this.stateMachine.addState(
-      new Duck(this, this.controls, this.inventory, CHARACTERS.PLAYER, 36)
+      new Idle(this, this.controls, this.spellSystem, this.ui, this.inventory)
     );
-    this.stateMachine.addState(new Movement(this, this.controls, this.spellSystem, this.inventory));
+    this.stateMachine.addState(
+      new Jump(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
+    this.stateMachine.addState(
+      new Fall(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
+    this.stateMachine.addState(
+      new Duck(this, this.controls, this.inventory, CHARACTERS.PLAYER, 38)
+    );
+    this.stateMachine.addState(
+      new Movement(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
     this.stateMachine.addState(new Casting(this, this.controls, this.spellSystem, this.ui));
-    this.stateMachine.addState(new Ready(this, this.controls, this.ui));
     this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 69, this.ui));
 
     this.stateMachine.changeState(PLAYER_STATES.IDLE);
@@ -96,19 +99,6 @@ export class Player extends Character {
     this.stateMachine.update(delta);
     this.controls.update();
     this.handleFall();
-  }
-
-  public playAnimation(
-    key: string | undefined,
-    ignoreIfPlaying?: boolean
-  ): Phaser.GameObjects.GameObject | undefined {
-    if (!key) return;
-
-    if (this.isInAir && key !== PLAYER_ANIMATION.JUMP && key !== PLAYER_ANIMATION.FALL) {
-      return this;
-    }
-
-    return this.anims.play(key, ignoreIfPlaying);
   }
 
   public getCoinKeeper(): CoinKeeper {
@@ -122,7 +112,6 @@ export class Player extends Character {
   protected override onDeathStart(): void {
     this.controls.disable();
     this.ui.removeAllModfierIcons();
-    this.isInAir = false;
   }
 
   protected override onAliveStart(): void {
@@ -136,38 +125,11 @@ export class Player extends Character {
   }
 
   private handleFall(): void {
-    if (!this.body?.blocked.down) {
-      if (!this.isInAir && this.anims.currentAnim?.key !== PLAYER_ANIMATION.JUMP) {
-        this.isInAir = true;
-
-        const animKey = this.resolveAnimation(CHARACTER_ANIMATION_KEYS.FALL);
-        if (!animKey) throw new Error('AnimeKey must be initialized');
-
-        this.playAnimation(animKey, true);
-      }
-
-      return;
-    }
-
-    if (this.isInAir) {
-      this.isInAir = false;
-
-      if (this.anims.currentAnim?.key === PLAYER_ANIMATION.FALL) {
-        const animKey = this.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
-        this.playAnimation(animKey, true);
-      }
-    }
-  }
-
-  private handleJumpEnd(
-    anim: Phaser.Animations.Animation,
-    frame: Phaser.Animations.AnimationFrame
-  ): void {
-    if (anim.key === PLAYER_ANIMATION.JUMP) {
-      if (!this.body?.blocked.down) {
-        const fallKey = this.resolveAnimation(CHARACTER_ANIMATION_KEYS.FALL);
-        this.playAnimation(fallKey, true);
-        this.isInAir = true;
+    if (!this.arcadeBody.blocked.down) {
+      if (this.stateMachine.currentStateName !== PLAYER_STATES.JUMP) {
+        if (this.stateMachine.currentStateName !== PLAYER_STATES.FALL) {
+          this.stateMachine.changeState(PLAYER_STATES.FALL);
+        }
       }
     }
   }

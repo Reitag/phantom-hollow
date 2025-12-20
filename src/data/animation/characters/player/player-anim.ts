@@ -23,7 +23,7 @@ export function playerAnim(anims: Phaser.Animations.AnimationManager) {
   if (!anims.get(PLAYER_ANIMATION.JUMP)) {
     anims.create({
       key: PLAYER_ANIMATION.JUMP,
-      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 31, end: 33 }),
+      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 31, end: 34 }),
       frameRate: 16,
       repeat: 0,
     });
@@ -32,8 +32,8 @@ export function playerAnim(anims: Phaser.Animations.AnimationManager) {
   if (!anims.get(PLAYER_ANIMATION.FALL)) {
     anims.create({
       key: PLAYER_ANIMATION.FALL,
-      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 34, end: 35 }),
-      frameRate: 2,
+      frames: anims.generateFrameNumbers(CHARACTERS.PLAYER, { start: 35, end: 37 }),
+      frameRate: 8,
       repeat: -1,
     });
   }

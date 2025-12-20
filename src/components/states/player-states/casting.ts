@@ -140,6 +140,7 @@ export class Casting extends CharacterState {
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.isInstantCasting = false;
     });
+
     onComplete();
   }
 }

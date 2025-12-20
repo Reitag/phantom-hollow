@@ -5,7 +5,6 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { InventorySystem } from '@/systems/inventory-system';
 
 export class Duck extends CharacterState {
-  input: KeyboardController;
   private characterKey: string;
   private duckFrame: string | number;
 
@@ -23,7 +22,6 @@ export class Duck extends CharacterState {
     duckFrame: string | number
   ) {
     super(PLAYER_STATES.DUCK, character, input, undefined, undefined, inventory);
-    this.input = input;
     this.characterKey = characterKey;
     this.duckFrame = duckFrame;
   }
@@ -49,7 +47,7 @@ export class Duck extends CharacterState {
   public onUpdate(): void {
     this.inventory?.handleInput(this.input);
 
-    if (!this.input.isDownDown) {
+    if (!this.input?.isDownDown) {
       this.stateMachine.changeState(SHARED_STATES.IDLE);
     }
   }
