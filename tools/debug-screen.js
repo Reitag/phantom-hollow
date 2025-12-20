@@ -100,10 +100,13 @@ export class DebugScreen extends Phaser.Scene {
       const key = s.sys.settings.key;
       const objects = s.sys.displayList.length;
       const bodies = s.physics?.world?.bodies?.entries.length || 0;
-      return { key, objects, bodies };
+      const events = s.events.eventNames();
+      return { key, objects, bodies, events };
     });
 
-    const sceneLines = sceneStats.map((s) => `  ${s.key}: obj=${s.objects}, bodies=${s.bodies}`);
+    const sceneLines = sceneStats.map(
+      (s) => `  ${s.key}: obj=${s.objects}, bodies=${s.bodies}, events=${s.events.length}`
+    );
 
     // display info
     this.text.setText([

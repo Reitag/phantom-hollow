@@ -14,6 +14,9 @@ import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
 import { CoinKeeper } from '@/game/economy/coin-keeper';
 import { Health } from '@/components/stats/health';
+import { Duck } from '@/components/states/player-states/duck';
+import { Jump } from '@/components/states/player-states/jump';
+import { Fall } from '@/components/states/player-states/fall';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -38,6 +41,8 @@ export class Player extends Character {
     this.animations = {
       [CHARACTER_ANIMATION_KEYS.IDLE]: PLAYER_ANIMATION.IDLE,
       [CHARACTER_ANIMATION_KEYS.MOVE]: PLAYER_ANIMATION.MOVE,
+      [CHARACTER_ANIMATION_KEYS.JUMP]: PLAYER_ANIMATION.JUMP,
+      [CHARACTER_ANIMATION_KEYS.FALL]: PLAYER_ANIMATION.FALL,
       [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: PLAYER_ANIMATION.CAST_START,
       [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: PLAYER_ANIMATION.CAST_MAIN,
       [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: PLAYER_ANIMATION.CAST_END,
@@ -68,18 +73,32 @@ export class Player extends Character {
   }
 
   private initStateMachine(): void {
-    this.stateMachine.addState(new Idle(this, this.controls, this.spellSystem, this.inventory));
-    this.stateMachine.addState(new Movement(this, this.controls, this.spellSystem, this.inventory));
+    this.stateMachine.addState(
+      new Idle(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
+    this.stateMachine.addState(
+      new Jump(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
+    this.stateMachine.addState(
+      new Fall(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
+    this.stateMachine.addState(
+      new Duck(this, this.controls, this.inventory, CHARACTERS.PLAYER, 38)
+    );
+    this.stateMachine.addState(
+      new Movement(this, this.controls, this.spellSystem, this.ui, this.inventory)
+    );
     this.stateMachine.addState(new Casting(this, this.controls, this.spellSystem, this.ui));
-    this.stateMachine.addState(new Ready(this, this.controls, this.ui));
-    this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 101, this.ui));
+    this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 69, this.ui));
 
     this.stateMachine.changeState(PLAYER_STATES.IDLE);
   }
 
   public update(delta: number): void {
+    if (this.getDead()) return;
     this.stateMachine.update(delta);
     this.controls.update();
+    this.handleFall();
   }
 
   public getCoinKeeper(): CoinKeeper {
@@ -103,5 +122,15 @@ export class Player extends Character {
     this.stats.health = null;
     this.stats.health = new Health(max);
     this.ui.restorePlayerHealth();
+  }
+
+  private handleFall(): void {
+    if (!this.arcadeBody.blocked.down) {
+      if (this.stateMachine.currentStateName !== PLAYER_STATES.JUMP) {
+        if (this.stateMachine.currentStateName !== PLAYER_STATES.FALL) {
+          this.stateMachine.changeState(PLAYER_STATES.FALL);
+        }
+      }
+    }
   }
 }

@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.12.0] – 2025-12-20
+
+### Added
+
+- Jump, fall and duck player states
+- Boss trigger zones
+- Tooltips for spells, items, modifiers, and the store
+- On-screen damage dealt display
+
+### Changed
+
+- Refactored level logic: moved spawn points from code to Tiled
+- Expanded boss mechanics with new spells and behavior updates
+- Updated player sprite
+
+### Removed
+
+- Ready player state (no longer used)
+
+
 ## [0.11.0] – 2025-11-22
 
 ### Added

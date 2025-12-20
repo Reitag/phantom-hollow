@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { TILESETS } from '@/constants/asset-keys';
+import { BACKGROUNDS, TILESETS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { SOUL_PEDESTAL_POSITIONS, STALL_POSITIONS } from '@/constants/interactables-positions';
 import { Tilemap } from '@/components/map/tilemap';
@@ -14,10 +14,11 @@ import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { SpellFactory } from '@/factories/spell-factory';
-import { InteractableKeeper } from '@/systems/interacteble-keeper';
+import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
+import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { EnemySpawn } from '@/systems/enemy-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
@@ -38,7 +39,8 @@ export class LevelOneScene extends Phaser.Scene {
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
   private mount!: Phaser.GameObjects.TileSprite;
-  private grass!: Phaser.GameObjects.TileSprite;
+  private forest!: Phaser.GameObjects.TileSprite;
+  private sky!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
   private canPlayerGetDamage = true;
@@ -56,9 +58,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.initUiScene(() => this.createGameWorld());
   }
 
-  update(_: number, delta: number): void {
+  update(time: number, delta: number): void {
     this.playerHandler.update(delta);
-    this.spawn.update(this.player, delta);
+    this.spawn.update(time, delta);
     this.interactables.update();
 
     this.updateParallaxBackground();
@@ -114,22 +116,25 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private createParallaxBackground(): void {
-    this.add.image(0, 0, TILESETS.SKY).setOrigin(0);
-
-    this.mount = this.add
-      .tileSprite(0, 310, WORLD_PARAMS.WIDTH, 338, TILESETS.MOUNT)
+    this.sky = this.add
+      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.SKY_BG)
       .setOrigin(0)
       .setScrollFactor(0);
 
-    this.grass = this.add
-      .tileSprite(0, 450, WORLD_PARAMS.WIDTH, 130, TILESETS.GRASS)
+    this.mount = this.add
+      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.MOUNT_BG)
+      .setOrigin(0)
+      .setScrollFactor(0);
+
+    this.forest = this.add
+      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.FOREST_BG)
       .setOrigin(0)
       .setScrollFactor(0);
   }
 
   private updateParallaxBackground(): void {
     this.mount.tilePositionX = this.camera.scrollX * 0.2;
-    this.grass.tilePositionX = this.camera.scrollX * 0.5;
+    this.forest.tilePositionX = this.camera.scrollX * 0.5;
   }
 
   private createTilemap(): void {
@@ -185,6 +190,7 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   private registerSystems(): void {
+    ServiceLocator.register(ServiceKeys.map, this.map);
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
@@ -202,19 +208,8 @@ export class LevelOneScene extends Phaser.Scene {
   private createInteractableObjects(): void {
     this.interactables = new InteractableKeeper();
 
-    // Stall
-    const stall = new Stall(this);
-    stall.addTriggerZone(STALL_POSITIONS.FIRST);
-    stall.addTriggerZone(STALL_POSITIONS.SECOND);
-    stall.addTriggerZone(STALL_POSITIONS.THIRD);
-    this.interactables.add(stall);
-
-    // Soul Pedestal
-    const pedestal = new SoulPedestal(this);
-    pedestal.addTriggerZone(SOUL_PEDESTAL_POSITIONS.FIRST);
-    pedestal.addTriggerZone(SOUL_PEDESTAL_POSITIONS.SECOND);
-    pedestal.addTriggerZone(SOUL_PEDESTAL_POSITIONS.THIRD);
-    this.interactables.add(pedestal);
+    this.interactables.add(new Stall(this));
+    this.interactables.add(new SoulPedestal(this));
   }
 
   private registerCollisions(): void {
@@ -343,8 +338,8 @@ export class LevelOneScene extends Phaser.Scene {
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
     spell.registerHit(victim);
-    // For nature shield
-    if (spell instanceof LightningShield) {
+    // For nature shield and shadow trail
+    if (spell instanceof LightningShield || spell instanceof ShadowTrail) {
       spell.applyEffect(victim);
       return;
     }

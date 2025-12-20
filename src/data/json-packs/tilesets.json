@@ -3,38 +3,27 @@
     {
       "type": "image",
       "key": "ancient-tiles",
-      "url": "assets/tilesets/level-1/ancient-tiles.png"
+      "url": "assets/tilesets/ancient-tiles.png"
     },
     {
       "type": "image",
-      "key": "ground",
-      "url": "assets/tilesets/level-1/ground.png"
+      "key": "ground-tiles",
+      "url": "assets/tilesets/ground.png"
     },
     {
       "type": "image",
-      "key": "cliff",
-      "url": "assets/tilesets/level-1/cliff.png"
+      "key": "cliff-tiles",
+      "url": "assets/tilesets/cliff.png"
     },
     {
       "type": "image",
-      "key": "dirt",
-      "url": "assets/tilesets/level-1/dirt.png"
+      "key": "dirt-tiles",
+      "url": "assets/tilesets/dirt.png"
     },
     {
       "type": "image",
-      "key": "grass-2",
+      "key": "grass-tiles",
       "url": "assets/tilesets/grass.png"
-    },
-    {
-      "type": "image",
-      "key": "grass",
-      "url": "assets/tilesets/level-1/grass.png"
-    },
-    {
-      "type": "image",
-      "key": "mount",
-      "url": "assets/tilesets/level-1/mount.png"
-    },
-    { "type": "image", "key": "sky", "url": "assets/tilesets/level-1/sky.png" }
+    }
   ]
 }

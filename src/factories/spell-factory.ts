@@ -3,9 +3,11 @@ import { SpellPower } from '@/components/stats/damage';
 import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { Blink } from '@/entities/spells/effect-spells/blink';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
+import { EarthShake } from '@/entities/spells/aura-spells/earth-shake';
 import { Wind } from '@/entities/spells/direct-spells/wind';
 import { FrostBolt } from '@/entities/spells/direct-spells/frost-bolt';
 import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
+import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { SPELLS } from '@/constants/asset-keys';
 import {
   FIRE_BALL_STATS,
@@ -13,6 +15,8 @@ import {
   SHADOW_BOLT_STATS,
   FROST_BOLT_STATS,
   LIGHTNING_SHIELD_STATS,
+  EARTH_SHAKE_STATS,
+  SHADOW_TRAIL_STATS,
 } from '@/constants/object-stats';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 
@@ -129,6 +133,28 @@ export class SpellFactory {
     return shadowBolt;
   }
 
+  public createShadowTrail(character: Character, position?: { x: number; y: number }): ShadowTrail {
+    const spawnPosition = position ?? this.getSpellSpawnPosition(character);
+    const direction = character.getFacingRight() ? 1 : -1;
+    const spellPower = character.getStats().damage.spellPower as SpellPower;
+
+    const shadowTrail = new ShadowTrail({
+      scene: this.scene,
+      position: spawnPosition,
+      keyName: SPELLS.SHADOW_TRAIL,
+      frame: 0,
+      caster: character,
+      spellPower: spellPower,
+      damage: SHADOW_TRAIL_STATS.HIT,
+      speed: SHADOW_TRAIL_STATS.SPEED,
+      direction: direction,
+    });
+
+    this.spellGroup.add(shadowTrail, true);
+
+    return shadowTrail;
+  }
+
   public createLightningShield(
     character: Character,
     position?: { x: number; y: number }
@@ -149,6 +175,24 @@ export class SpellFactory {
     this.spellGroup.add(lightningShield, true);
 
     return lightningShield;
+  }
+
+  public createEarthShake(character: Character, position: { x: number; y: number }): EarthShake {
+    const spellPower = (character.getStats().damage.spellPower as SpellPower) ?? null;
+
+    const earthShake = new EarthShake({
+      scene: this.scene,
+      position: position,
+      keyName: SPELLS.EARTH_SHAKE,
+      frame: 0,
+      caster: character,
+      spellPower: spellPower,
+      damage: EARTH_SHAKE_STATS.HIT,
+    });
+
+    this.spellGroup.add(earthShake, true);
+
+    return earthShake;
   }
 
   public getSpells(): Phaser.Physics.Arcade.Group {

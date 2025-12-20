@@ -9,6 +9,7 @@ type VFXConfig = {
   offsetX?: number;
   offsetY?: number;
   frame?: number;
+  isFlipping?: boolean;
 };
 
 export class AttachedVfx extends Sprite {
@@ -17,7 +18,16 @@ export class AttachedVfx extends Sprite {
   private offsetY: number;
   private animKey: string;
 
-  constructor({ scene, caster, keyName, animKey, offsetX = 0, offsetY = 0, frame = 0 }: VFXConfig) {
+  constructor({
+    scene,
+    caster,
+    keyName,
+    animKey,
+    offsetX = 0,
+    offsetY = 0,
+    frame = 0,
+    isFlipping = false,
+  }: VFXConfig) {
     const position = caster.getPosition();
     super({ scene, position, keyName, frame });
 
@@ -25,6 +35,10 @@ export class AttachedVfx extends Sprite {
     this.animKey = animKey;
     this.offsetX = offsetX;
     this.offsetY = offsetY;
+
+    if (isFlipping) {
+      this.setFlipX(!this.caster.getFacingRight());
+    }
 
     this.playAnimation();
     this.bindDestroyOnAnimationEnd();
@@ -44,7 +58,7 @@ export class AttachedVfx extends Sprite {
   }
 
   private bindDestroyOnAnimationEnd(): void {
-    this.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+    this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.destroy();
     });
   }

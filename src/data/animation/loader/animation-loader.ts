@@ -16,6 +16,8 @@ import { frostboltAnim } from '../spells/frost-bolt-anim';
 import { soulFireAnim } from '../misc/soul-fire-anim';
 import { lightningShieldAnim } from '../spells/lightning-shield-anim';
 import { vfxAnim } from '../vfx/vfx-anim';
+import { earthShakeAnim } from '../spells/earth-shake-anim';
+import { shadowTrailAnim } from '../spells/shadow-trail-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -28,6 +30,8 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   windAnim(anims);
   shadowboltAnim(anims);
   frostboltAnim(anims);
+  earthShakeAnim(anims);
+  shadowTrailAnim(anims);
 
   // Enemies
   skeletonwarriorAnim(anims);

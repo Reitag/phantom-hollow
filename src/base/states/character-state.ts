@@ -3,7 +3,6 @@ import { Character } from '@/base/objects/character';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { SPELLS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';
-import { PLAYER_STATS } from '@/constants/object-stats';
 import { InventorySystem } from '@/systems/inventory-system';
 import { State, StateMachine } from '@/systems/state-machine';
 import { SpellSystem } from '@/systems/spell-system';
@@ -69,12 +68,6 @@ export abstract class CharacterState implements State {
     this.playAnimation(animKey);
   }
 
-  protected jump(): void {
-    if (this.characterBody.blocked.down) {
-      this.character.setVelocityY(PLAYER_STATS.JUMP * -1);
-    }
-  }
-
   protected playAnimation(key: string | undefined, force = false): void {
     if (!key) return;
     const exists = this.character.scene.anims.exists(key);
@@ -91,10 +84,9 @@ export abstract class CharacterState implements State {
     this.stateMachine.changeState(PLAYER_STATES.READY);
   }
 
-  private canTransitionToCast(spell: string): boolean {
+  protected canTransitionToCast(spell: string): boolean {
     if (
       this.character instanceof Player &&
-      this.character.nextSpellInstant === false &&
       this.name === PLAYER_STATES.MOVEMENT &&
       (spell === SPELLS.FIRE_BALL || spell === SPELLS.FROST_BOLT)
     ) {

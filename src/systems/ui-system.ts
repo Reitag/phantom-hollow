@@ -1,3 +1,4 @@
+import { Character } from '@/base/objects/character';
 import { Dialog } from '@/components/ui/dialog/dialog';
 import { InventoryIconContainer } from '@/components/ui/inventory-icons/inventory-icon-container';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
@@ -11,7 +12,13 @@ import { Coins } from '@/components/ui/coins/coins';
 import { Store } from '@/components/ui/store/store';
 import { Text } from '@/components/ui/text/text';
 import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
-import { ModifierType, Position, InventorySlot } from '@/utils/types';
+import {
+  ModifierType,
+  Position,
+  InventorySlot,
+  TooltipFrameConfig,
+  TooltipContentConfig,
+} from '@/utils/types';
 
 export class UiSystem {
   private healthBar: HealthBar;
@@ -131,5 +138,21 @@ export class UiSystem {
 
   public addWarningtext(text: string): void {
     this.text.addWarningTextOnScreen(text);
+  }
+
+  public showVerticalTooltip(frame: TooltipFrameConfig, content: TooltipContentConfig): void {
+    this.text.addVerticalTooltip(frame, content);
+  }
+
+  public showHorizontalTooltip(frame: TooltipFrameConfig, content: TooltipContentConfig): void {
+    this.text.addHorizontalTooltip(frame, content);
+  }
+
+  public hideTooltip(): void {
+    this.text.removeTooltip();
+  }
+
+  public showDamageDealt(amount: number | string, target: Character): void {
+    this.text.addDamageDisplayOnScreen(amount, target);
   }
 }

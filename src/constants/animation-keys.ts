@@ -2,6 +2,8 @@ export const CHARACTER_ANIMATION_KEYS = {
   IDLE: 'IDLE',
   MOVE: 'MOVE',
   RUN: 'RUN',
+  JUMP: 'JUMP',
+  FALL: 'FALL',
   ATTACK: 'ATTACK',
   CAST: {
     CAST_START: 'CAST_START',
@@ -30,6 +32,8 @@ export const VFX_ANIMATION_KEYS = {
 export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.IDLE]: 'player-idle',
   [CHARACTER_ANIMATION_KEYS.MOVE]: 'player-move',
+  [CHARACTER_ANIMATION_KEYS.JUMP]: 'player-jump',
+  [CHARACTER_ANIMATION_KEYS.FALL]: 'player-fall',
   [CHARACTER_ANIMATION_KEYS.CAST.CAST_START]: 'player-cast-start',
   [CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN]: 'player-cast-main',
   [CHARACTER_ANIMATION_KEYS.CAST.CAST_END]: 'player-cast-end',
@@ -108,6 +112,14 @@ export const SPELLS_ANIMATION = {
     [SPELL_ANIMATION_KEYS.MAIN]: 'shadow-bolt-main',
     [SPELL_ANIMATION_KEYS.HIT]: 'shadow-bolt-hit',
   },
+  EARTH_SHAKE: {
+    [SPELL_ANIMATION_KEYS.MAIN]: 'earth-shake-main',
+  },
+  SHADOW_TRAIL: {
+    [SPELL_ANIMATION_KEYS.START]: 'shadow-trail-start',
+    [SPELL_ANIMATION_KEYS.MAIN]: 'shadow-trail-main',
+    [SPELL_ANIMATION_KEYS.HIT]: 'shadow-trail-hit',
+  },
 } as const;
 
 export const VFX_ANIMATION = {
@@ -132,6 +144,15 @@ export const VFX_ANIMATION = {
   },
   ARCANE_MIND: {
     [VFX_ANIMATION_KEYS.MAIN]: 'arcane-mind-vfx-main',
+  },
+  EARTH_ANXIETY: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'earth-anxiety-vfx-main',
+  },
+  EVIL_WIZARD_DISAPPEARS: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'evil-wizard-disappears-vfx-main',
+  },
+  EVIL_WIZARD_APPEARS: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'evil-wizard-appears-vfx-main',
   },
 } as const;
 

@@ -5,7 +5,7 @@ import { InventoryItem } from '@/utils/types';
 export const soulStone = (): InventoryItem => ({
   id: 'soul-stone',
   name: 'Soul Stone',
-  description: 'Set respawn point to Soul Pedestal',
+  description: 'Use: Binds your soul to a Soul Pedestal, allowing resurrection at that location.',
   iconKey: UI.SOUL_STONE_ICON,
   maxStack: 1,
   isUnique: true,

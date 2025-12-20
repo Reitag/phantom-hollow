@@ -1,5 +1,8 @@
 export const PLAYER_STATES = {
   IDLE: 'Idle',
+  JUMP: 'Jump',
+  FALL: 'Fall',
+  DUCK: 'Duck',
   READY: 'Ready',
   CASTING: 'Casting',
   MOVEMENT: 'Movement',

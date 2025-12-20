@@ -24,6 +24,7 @@ export const TILELAYER_NAMES = {
 } as const;
 
 export const OBJECTLAYER_NAMES = {
+  SPAWN: 'spawn-layer',
   STORE: 'store-layer',
   DECOR: 'decor-layer',
   ROCK: 'rock-layer',
@@ -36,10 +37,10 @@ export function createTilemapOne(scene: Phaser.Scene) {
 
   const tilesetsConfig = [
     { name: TILESET_NAMES.ANCIENT, key: TILESETS.ANCIENT_TILES },
-    { name: TILESET_NAMES.GROUND, key: TILESETS.GROUND },
-    { name: TILESET_NAMES.CLIFF, key: TILESETS.CLIFF },
-    { name: TILESET_NAMES.GRASS, key: TILESETS.GRASS_2 },
-    { name: TILESET_NAMES.DIRT, key: TILESETS.DIRT },
+    { name: TILESET_NAMES.GROUND, key: TILESETS.GROUND_TILES },
+    { name: TILESET_NAMES.CLIFF, key: TILESETS.CLIFF_TILES },
+    { name: TILESET_NAMES.GRASS, key: TILESETS.GRASS_TILES },
+    { name: TILESET_NAMES.DIRT, key: TILESETS.DIRT_TILES },
   ];
   const tileLayersConfig = [
     {
@@ -100,6 +101,19 @@ export function createTilemapOne(scene: Phaser.Scene) {
     },
   ];
   const objectLayersConfig = [
+    {
+      name: OBJECTLAYER_NAMES.SPAWN,
+      render: (obj: Phaser.Types.Tilemaps.TiledObject, depth: number) => {
+        const name = obj.name;
+        if (!name) {
+          console.warn('Object missing name for tree-layer:', obj);
+          return;
+        }
+
+        const image = scene.add.image(obj.x ?? 0, obj.y ?? 0, name).setOrigin(0, 1);
+        image.setDepth(depth);
+      },
+    },
     {
       name: OBJECTLAYER_NAMES.STORE,
       render: (obj: Phaser.Types.Tilemaps.TiledObject, depth: number) => {
@@ -175,6 +189,7 @@ export function createTilemapOne(scene: Phaser.Scene) {
     [OBJECTLAYER_NAMES.STORE]: Z_POSITION.STORE,
     [OBJECTLAYER_NAMES.DECOR]: Z_POSITION.DECOR,
     [OBJECTLAYER_NAMES.ROCK]: Z_POSITION.ROCK,
+    [OBJECTLAYER_NAMES.SPAWN]: Z_POSITION.SPAWN,
     [TILELAYER_NAMES.BUSH]: Z_POSITION.BUSH,
     [TILELAYER_NAMES.SPEAR]: Z_POSITION.SPEAR,
     [TILELAYER_NAMES.PLATFORM_BG]: Z_POSITION.PLATFORM_BG,

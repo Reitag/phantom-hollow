@@ -78,13 +78,21 @@ export class Casting extends CharacterState {
     }
 
     if (
-      (this.input?.isLeftDown || this.input?.isRightDown || this.input?.isUpPressed) &&
+      (this.input?.isLeftDown ||
+        this.input?.isRightDown ||
+        this.input?.isUpPressed ||
+        this.input?.isDownDown) &&
       this.isCasting
     ) {
       this.isCasting = false;
       this.character.anims.stop();
       this.ui?.stopCast();
-      this.stateMachine.changeState(PLAYER_STATES.MOVEMENT);
+
+      if (this.input?.isLeftDown || this.input?.isRightDown || this.input?.isUpPressed) {
+        this.stateMachine.changeState(PLAYER_STATES.MOVEMENT);
+      } else if (this.input?.isDownDown) {
+        this.stateMachine.changeState(PLAYER_STATES.DUCK);
+      }
     }
   }
 
@@ -113,7 +121,7 @@ export class Casting extends CharacterState {
 
     this.character.scene.time.delayedCall(duration, () => {
       if (this.isCasting) {
-        this.playAnimation(animEndCast);
+        if (!this.character.getDead()) this.playAnimation(animEndCast);
         onComplete();
 
         this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animEndCast, () => {
@@ -132,6 +140,7 @@ export class Casting extends CharacterState {
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.isInstantCasting = false;
     });
+
     onComplete();
   }
 }

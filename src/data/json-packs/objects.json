@@ -47,6 +47,26 @@
     },
     {
       "type": "image",
+      "key": "apple-table",
+      "url": "assets/objects/decor/apple-table.png"
+    },
+    {
+      "type": "image",
+      "key": "table",
+      "url": "assets/objects/decor/table.png"
+    },
+    {
+      "type": "image",
+      "key": "bonfire",
+      "url": "assets/objects/decor/bonfire.png"
+    },
+    {
+      "type": "image",
+      "key": "tent",
+      "url": "assets/objects/decor/tent.png"
+    },
+    {
+      "type": "image",
       "key": "rock-1",
       "url": "assets/objects/rocks/rock-1.png"
     },

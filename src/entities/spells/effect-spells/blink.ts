@@ -27,28 +27,16 @@ export class Blink extends Spell {
         this.destroy();
       });
 
-      this.hideCaster();
+      this.caster.disableBody(undefined, true);
 
       this.scene.time.delayedCall(BLINK_STATS.DELAY, () => {
         this.teleportTo(BLINK_STATS.DISTANCE, this.direction as number);
-        this.showCaster();
+        this.caster.enableBody(undefined, undefined, undefined, undefined, true);
       });
     }
   }
 
   public applyEffect(target: Character): void {}
-
-  private hideCaster(): void {
-    const arcadeBody = this.caster.getArcadeBody();
-    arcadeBody.enable = false;
-    this.caster.setVisible(false);
-  }
-
-  private showCaster(): void {
-    const arcadeBody = this.caster.getArcadeBody();
-    arcadeBody.enable = true;
-    this.caster.setVisible(true);
-  }
 
   private teleportTo(distance: number, direction: number): void {
     const step = 5;

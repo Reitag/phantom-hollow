@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "type": "image",
+      "key": "forest-bg",
+      "url": "assets/backgrounds/forest.png"
+    },
+    {
+      "type": "image",
+      "key": "mount-bg",
+      "url": "assets/backgrounds/mount.png"
+    },
+    {
+      "type": "image",
+      "key": "sky-bg",
+      "url": "assets/backgrounds/sky.png"
+    }
+  ]
+}

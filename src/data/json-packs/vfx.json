@@ -41,6 +41,24 @@
       "key": "arcane-mind-vfx",
       "url": "assets/vfx/arcane-mind.png",
       "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "earth-anxiety-vfx",
+      "url": "assets/vfx/earth-anxiety.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "evil-wizard-disappears-vfx",
+      "url": "assets/vfx/evil-wizard-disappears.png",
+      "frameConfig": { "frameWidth": 130, "frameHeight": 130 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "evil-wizard-appears-vfx",
+      "url": "assets/vfx/evil-wizard-appears.png",
+      "frameConfig": { "frameWidth": 130, "frameHeight": 130 }
     }
   ]
 }

@@ -3,31 +3,31 @@
     {
       "type": "spritesheet",
       "key": "player",
-      "url": "assets/characters/player.png",
-      "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
+      "url": "assets/characters/player/player.png",
+      "frameConfig": { "frameWidth": 80, "frameHeight": 48 }
     },
     {
       "type": "spritesheet",
       "key": "skeleton-warrior",
-      "url": "assets/characters/skeleton-warrior.png",
+      "url": "assets/characters/enemies/skeleton-warrior.png",
       "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
     },
     {
       "type": "spritesheet",
       "key": "zombie",
-      "url": "assets/characters/zombie.png",
+      "url": "assets/characters/enemies/zombie.png",
       "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
     },
     {
       "type": "spritesheet",
       "key": "archer",
-      "url": "assets/characters/archer.png",
+      "url": "assets/characters/enemies/archer.png",
       "frameConfig": { "frameWidth": 40, "frameHeight": 40 }
     },
     {
       "type": "spritesheet",
       "key": "mutated-bat",
-      "url": "assets/characters/mutated-bat.png",
+      "url": "assets/characters/enemies/mutated-bat.png",
       "frameConfig": { "frameWidth": 96, "frameHeight": 80 }
     },
     {

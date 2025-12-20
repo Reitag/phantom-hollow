@@ -1,5 +1,5 @@
 import { Character } from '@/base/objects/character';
-import { DESTROY_TIME, RESPAWN_TIME } from '@/constants/spawn-positions';
+import { DESTROY_TIME, RESPAWN_TIME } from '@/constants/spawn-properies';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { StateMachine } from '@/systems/state-machine';

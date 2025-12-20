@@ -12,6 +12,7 @@ import {
   COIN_UI,
   FROST_BOLT_ICON,
 } from '@/constants/ui-coordinates';
+import { SPELL_TOOLTIPS } from '@/constants/tooltip-params';
 
 export class UiScene extends Phaser.Scene {
   private ui!: UiSystem;
@@ -29,10 +30,22 @@ export class UiScene extends Phaser.Scene {
     this.add.image(COIN_UI.X, COIN_UI.Y, UI.COIN_UI).setOrigin(0, 0.5);
 
     // Spell icons
-    const fireball = this.add.image(FIREBALL_ICON.X, FIREBALL_ICON.Y, UI.FIRE_BALL_ICON);
-    const blink = this.add.image(BLINK_ICON.X, BLINK_ICON.Y, UI.BLINK_ICON);
-    const wind = this.add.image(WIND_ICON.X, WIND_ICON.Y, UI.WIND_ICON);
-    const frostbolt = this.add.image(FROST_BOLT_ICON.X, FROST_BOLT_ICON.Y, UI.FROSTBOLT_ICON);
+    const fireball = this.add
+      .image(FIREBALL_ICON.X, FIREBALL_ICON.Y, UI.FIRE_BALL_ICON)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.FIREBALL);
+    const blink = this.add
+      .image(BLINK_ICON.X, BLINK_ICON.Y, UI.BLINK_ICON)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.BLINK);
+    const wind = this.add
+      .image(WIND_ICON.X, WIND_ICON.Y, UI.WIND_ICON)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.WIND);
+    const frostbolt = this.add
+      .image(FROST_BOLT_ICON.X, FROST_BOLT_ICON.Y, UI.FROSTBOLT_ICON)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.FROSTBOLT);
 
     // Spell labels
     this.addKeyLabel(fireball, 'Z');
@@ -44,6 +57,8 @@ export class UiScene extends Phaser.Scene {
     this.addInventoryKeyLabels();
 
     this.ui = new UiSystem(this);
+
+    this.tooltipSpellsInit({ fireball: fireball, blink: blink, wind: wind, frostbolt: frostbolt });
   }
 
   public getUI(): UiSystem {
@@ -80,6 +95,33 @@ export class UiScene extends Phaser.Scene {
         .setOrigin(1, 0)
         .setDepth(10)
         .setAlpha(0.9);
+    });
+  }
+
+  private tooltipSpellsInit(spells: {
+    fireball: Phaser.GameObjects.Image;
+    blink: Phaser.GameObjects.Image;
+    wind: Phaser.GameObjects.Image;
+    frostbolt: Phaser.GameObjects.Image;
+  }): void {
+    const { fireball, blink, wind, frostbolt } = spells;
+
+    [fireball, blink, wind, frostbolt].forEach((spell) => {
+      spell.on('pointerover', (pointer: Phaser.Input.Pointer) => {
+        this.scene.scene.game.canvas.style.cursor = 'help';
+        const info = spell.getData('spell');
+        this.ui.showVerticalTooltip(
+          {
+            x: spell.x - 50,
+            y: spell.y - 30,
+            width: 300,
+            fillColor: 0x000000,
+          },
+          info
+        );
+      });
+
+      spell.on('pointerout', this.ui.hideTooltip, this.ui);
     });
   }
 }

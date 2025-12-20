@@ -6,15 +6,18 @@ import {
   MUTATED_BAT_STATS,
   SHADOW_BOLT_STATS,
 } from '@/constants/object-stats';
-import { SHADOW_BOLT, SUMMON_BAT } from '@/constants/spell-cooldowns';
+import { SHADOW_BOLT, SHADOW_TRAIL, SUMMON_BAT } from '@/constants/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
-import { CHARACTERS } from '@/constants/asset-keys';
+import { CHARACTERS, VFX } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { TriggerZone } from '@/game/interactables/trigger-zone';
+import { AttachedVfx } from '@/entities/misc/attached-vfx';
+import { VFX_ANIMATION } from '@/constants/animation-keys';
 import { Boss } from '../../base/ai/boss';
 import { AiMutatedBat } from '../enemies/ai-mutated-bat';
 
@@ -23,34 +26,33 @@ export class AiEvilWizard extends Boss {
   private readonly spellCooldowns: SpellCooldowns;
   private readonly castShadowBoltHandler: () => void;
 
-  private readonly dreadAura: DreadAura;
   private readonly aiMutatedBat: AiMutatedBat;
+
+  private dreadAura: DreadAura | null;
+  private isBusy = false;
 
   constructor(boss: Character, player: Player) {
     super(boss, player);
 
-    this.spellCooldowns = new SpellCooldowns(this.boss.scene);
+    this.spellCooldowns = new SpellCooldowns(this.scene);
     this.castShadowBoltHandler = this.castShadowBolt.bind(this);
 
-    this.dreadAura = new DreadAura(
-      {
-        scene: boss.scene,
-        position: { x: boss.x, y: boss.y },
-        keyName: DREAD_AURA_STATS.KEY_NAME,
-        caster: boss,
-        damage: DREAD_AURA_STATS.DAMAGE,
-      },
-      DREAD_AURA_STATS.RANGE
-    );
+    this.dreadAura = this.createDreadAura();
 
     this.aiMutatedBat = new AiMutatedBat(this.player);
+
+    this.triggerZone = new TriggerZone(this.boss.scene, 'evil-wizard');
+    this.scene.events.on(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.on(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
-  protected updateBossState(delta: number): void {
+  protected updateBossState(time: number, delta: number): void {
+    if (this.isBusy) this.isBusy = false;
+
     this.boss.update(delta);
     this.aiMutatedBat.update(delta);
 
-    this.dreadAura.update(this.player, delta);
+    this.dreadAura?.update(this.player, delta);
 
     this.updateAggro(delta, EVIL_WIZARD_STATS.ENGAGE_DISTANCE);
   }
@@ -62,6 +64,10 @@ export class AiEvilWizard extends Boss {
         bat.unit.getArcadeBody().allowGravity = false;
       }
     });
+
+    if (!this.triggerZone) return;
+    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
   protected chillBehaviour(): void {
@@ -79,7 +85,10 @@ export class AiEvilWizard extends Boss {
     const fsm = this.boss.getStateMachine();
     const currentState = fsm.currentStateName;
 
-    if (!this.spellCooldowns.isOnCooldown(SHADOW_BOLT.NAME)) {
+    const health = this.boss.getStats()?.health;
+    if (!health) return;
+
+    if (!this.spellCooldowns.isOnCooldown(SHADOW_BOLT.NAME) && !this.isBusy) {
       this.spellCooldowns.startCooldown(SHADOW_BOLT.NAME, SHADOW_BOLT.DURATION);
       if (currentState !== ENEMY_STATES.CASTING) {
         fsm.changeState(
@@ -90,9 +99,29 @@ export class AiEvilWizard extends Boss {
       }
     }
 
+    if (health.current < (health.max * 2) / 3) {
+      this.phaseTwo();
+    }
+
+    if (health.current < health.max / 3) {
+      if (currentState !== ENEMY_STATES.CASTING) {
+        this.phaseThree();
+      }
+    }
+  }
+
+  private phaseTwo(): void {
     if (!this.spellCooldowns.isOnCooldown(SUMMON_BAT.NAME)) {
       this.spellCooldowns.startCooldown(SUMMON_BAT.NAME, SUMMON_BAT.DURATION);
       this.summonBat();
+    }
+  }
+
+  private phaseThree(): void {
+    if (!this.spellCooldowns.isOnCooldown(SHADOW_TRAIL.NAME)) {
+      this.isBusy = true;
+      this.spellCooldowns.startCooldown(SHADOW_TRAIL.NAME, SHADOW_TRAIL.DURATION);
+      this.castShadowTral();
     }
   }
 
@@ -131,6 +160,8 @@ export class AiEvilWizard extends Boss {
   }
 
   private castShadowBolt(): void {
+    if (this.isBusy) return;
+
     const { x, y } = this.boss.getPosition();
     const flip = this.boss.getFacingRight() ? 1 : -1;
 
@@ -144,5 +175,54 @@ export class AiEvilWizard extends Boss {
 
     const shadowBolt = this.spellFactory.createShadowBolt(this.boss, spawnPosition);
     shadowBolt.cast();
+  }
+
+  private castShadowTral(): void {
+    this.boss.disableBody(undefined, true);
+    this.dreadAura?.destroy();
+    this.dreadAura = null;
+
+    const disappear = new AttachedVfx({
+      scene: this.scene,
+      caster: this.boss,
+      keyName: VFX.EVIL_WIZARD_DISAPPEARS_VFX,
+      animKey: VFX_ANIMATION.EVIL_WIZARD_DISAPPEARS.MAIN,
+      isFlipping: true,
+    });
+
+    disappear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+      const spell = this.spellFactory.createShadowTrail(this.boss);
+      spell.cast();
+
+      spell.once('spellFinished', () => {
+        this.boss.flipCharacterToRight(this.player.x > this.boss.x);
+
+        const appear = new AttachedVfx({
+          scene: this.scene,
+          caster: this.boss,
+          keyName: VFX.EVIL_WIZARD_APPEARS_VFX,
+          animKey: VFX_ANIMATION.EVIL_WIZARD_APPEARS.MAIN,
+          isFlipping: true,
+        });
+        appear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+          this.boss.enableBody(undefined, undefined, undefined, undefined, true);
+          this.dreadAura = this.createDreadAura();
+          this.isBusy = false;
+        });
+      });
+    });
+  }
+
+  private createDreadAura(): DreadAura {
+    return new DreadAura(
+      {
+        scene: this.scene,
+        position: { x: this.boss.x, y: this.boss.y },
+        keyName: DREAD_AURA_STATS.KEY_NAME,
+        caster: this.boss,
+        damage: DREAD_AURA_STATS.DAMAGE,
+      },
+      DREAD_AURA_STATS.RANGE
+    );
   }
 }

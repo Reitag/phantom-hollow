@@ -29,3 +29,13 @@ export const SHADOW_BOLT = {
   NAME: SPELLS.SHADOW_BOLT,
   DURATION: 6000,
 } as const;
+
+export const EARTH_SHAKE = {
+  NAME: SPELLS.EARTH_SHAKE,
+  DURATION: 6000,
+} as const;
+
+export const SHADOW_TRAIL = {
+  NAME: SPELLS.SHADOW_TRAIL,
+  DURATION: 10000,
+} as const;

@@ -12,7 +12,7 @@ import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior'
 import { Zombie } from '@/entities/characters/enemies/zombie';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { FireWorm } from '@/entities/characters/bosses/fire-worm';
-import { SpawnPoint } from '@/utils/types';
+import { EnemySpawnData, Position, SpawnPoint } from '@/utils/types';
 import { Z_POSITION } from '@/constants/z-position';
 import { AiArcher } from '@/ai/enemies/ai-archer';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
@@ -21,25 +21,18 @@ import { AiFireWorm } from '@/ai/bosses/ai-fire-worm';
 import { AiEvilWizard } from '@/ai/bosses/ai-evil-wizard';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
-import {
-  ARCHERS_SPAWN_POSITION,
-  EVIL_WIZZARD_SPAWN_POSITION,
-  FIRE_WORM_SPAWN_POSITION,
-  SKELETONS_SPAWN_POSITION,
-  ZOMBIES_SPAWN_POSITION,
-} from '@/constants/spawn-positions';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
 
 type EnemyType = 'skeleton' | 'zombie' | 'archer';
 
 export class EnemySpawn {
-  private readonly spawnDistance = 700;
-  private readonly despawnDistance = 800;
+  private readonly spawnDistance = 800;
+  private readonly despawnDistance = 900;
 
-  private readonly spawnPositions: Record<EnemyType, SpawnPoint[]> = {
-    skeleton: SKELETONS_SPAWN_POSITION,
-    zombie: ZOMBIES_SPAWN_POSITION,
-    archer: ARCHERS_SPAWN_POSITION,
+  private readonly spawnPositions: Record<EnemyType, SpawnPoint[]>;
+  private readonly spawnBosses = {
+    ['fire-worm']: 'fire-worm',
+    ['evil-wizzard']: 'evil-wizzard',
   };
 
   private aiSkeletonWarrior = new AiSkeletonWarrior(
@@ -47,13 +40,23 @@ export class EnemySpawn {
   );
   private aiZombie = new AiZombie(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
   private aiArcher = new AiArcher(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
+  private player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
   private aiFireWorm: AiFireWorm;
   private aiEvilWizard: AiEvilWizard;
 
   constructor(private scene: Phaser.Scene) {
+    const spawns = this.loadEnemySpawnPoints();
+    const bossSpawns = this.loadBossesSpawnPoints();
+
+    this.spawnPositions = {
+      skeleton: spawns['skeleton'] || [],
+      zombie: spawns['zombie'] || [],
+      archer: spawns['archer'] || [],
+    };
+
     const evelWizzard = new EvilWizzard({
       scene: scene,
-      position: EVIL_WIZZARD_SPAWN_POSITION,
+      position: bossSpawns[this.spawnBosses['evil-wizzard']],
       keyName: CHARACTERS.EVIL_WIZARD,
       frame: 0,
       facingRight: false,
@@ -77,7 +80,7 @@ export class EnemySpawn {
 
     const fireWorm = new FireWorm({
       scene: scene,
-      position: FIRE_WORM_SPAWN_POSITION,
+      position: bossSpawns[this.spawnBosses['fire-worm']],
       keyName: CHARACTERS.FIRE_WORM,
       frame: 0,
       facingRight: false,
@@ -100,14 +103,14 @@ export class EnemySpawn {
     );
   }
 
-  public update(player: Player, delta: number): void {
+  public update(time: number, delta: number): void {
     this.aiSkeletonWarrior.update(delta);
     this.aiZombie.update(delta);
     this.aiArcher.update(delta);
-    this.aiFireWorm.update(delta);
-    this.aiEvilWizard.update(delta);
+    this.aiFireWorm.update(time, delta);
+    this.aiEvilWizard.update(time, delta);
 
-    const playerX = Math.round(player.x);
+    const playerX = Math.round(this.player.x);
 
     this.handleSpawn(playerX, 'skeleton', (pos) => this.spawnSkeleton(pos));
     this.handleSpawn(playerX, 'zombie', (pos) => this.spawnZombie(pos));
@@ -229,5 +232,61 @@ export class EnemySpawn {
     this.aiArcher.addEnemy(archer, spawnPoint);
 
     CollisionService.resolveGroup(GroupKeys.enemy)?.add(archer, true);
+  }
+
+  private loadEnemySpawnPoints(): Record<string, EnemySpawnData[]> {
+    const result: Record<string, EnemySpawnData[]> = {};
+
+    const map = ServiceLocator.resolve(ServiceKeys.map);
+    const objectLayer = map.getObjectLayer('spawn-layer');
+    if (!objectLayer) return result;
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'enemy-spawn') continue;
+
+      const spawnType = obj.properties.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'enemy'
+      )?.value;
+
+      if (!spawnType) continue;
+      if (!result[spawnType]) result[spawnType] = [];
+      if (!obj.x || !obj.y) continue;
+
+      result[spawnType].push({
+        x: obj.x,
+        y: obj.y + 8,
+        type: spawnType,
+        isSpawned: false,
+        isAlive: true,
+      });
+    }
+
+    return result;
+  }
+
+  private loadBossesSpawnPoints(): Record<string, Position> {
+    const result: Record<string, Position> = {};
+
+    const map = ServiceLocator.resolve(ServiceKeys.map);
+    const objectLayer = map.getObjectLayer('spawn-layer');
+    if (!objectLayer) return result;
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'enemy-spawn') continue;
+
+      const bossType = obj.properties.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'boss'
+      )?.value;
+
+      if (!bossType) continue;
+      if (!obj.x || !obj.y) continue;
+
+      result[bossType] = {
+        x: obj.x,
+        y: obj.y,
+      };
+    }
+
+    return result;
   }
 }

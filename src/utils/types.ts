@@ -83,7 +83,46 @@ export interface Modifier {
 export type ModifierType = (typeof TYPE)[keyof typeof TYPE];
 
 // Spawn Enemies
+export interface EnemySpawnData {
+  x: number;
+  y: number;
+  type: string;
+  isSpawned: boolean;
+  isAlive: boolean;
+}
+
 export interface SpawnPoint extends Position {
   isSpawned: boolean;
   isAlive: boolean;
 }
+
+// Trigger Keys
+export type Triggerkey = 'fire-worm' | 'evil-wizard';
+
+// Tooltip params
+export type TooltipFrameConfig = {
+  x: number;
+  y: number;
+  width: number;
+  height?: number | undefined;
+  fillColor?: number | undefined;
+  fillAlpha?: number | undefined;
+};
+
+type PropConfig = {
+  param?: {
+    fontSize?: string | undefined;
+    fontStyle?: string | undefined;
+    color?: string | undefined;
+  };
+  text: string;
+};
+
+export type TooltipContentConfig = {
+  id?: string | undefined;
+  title?: PropConfig | undefined;
+  prop_1?: PropConfig | undefined;
+  prop_2?: PropConfig | undefined;
+  prop_3?: PropConfig | undefined;
+  prop_4?: PropConfig | undefined;
+};

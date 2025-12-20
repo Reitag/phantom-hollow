@@ -1,6 +1,6 @@
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_STATS } from '@/constants/object-stats';
-import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-positions';
+import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-properies';
 import { SHARED_STATES } from '@/constants/state-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { Player } from '@/entities/characters/player/player';

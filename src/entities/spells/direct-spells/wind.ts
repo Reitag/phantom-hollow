@@ -2,6 +2,9 @@ import { Spell, SpellConfig } from '@/base/objects/spell';
 import { WIND_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
+import { FireWorm } from '@/entities/characters/bosses/fire-worm';
+import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Wind extends Spell {
   constructor({ scene, position, keyName, frame, caster, damage, speed, direction }: SpellConfig) {
@@ -36,6 +39,12 @@ export class Wind extends Spell {
 
   public applyEffect(target: Character): void {
     if (!target) return;
-    target.getStats().speed?.applyForce(WIND_STATS.FORCE);
+
+    if (target instanceof FireWorm || target instanceof EvilWizzard) {
+      const ui = ServiceLocator.resolve(ServiceKeys.ui);
+      ui.showDamageDealt('Unvulnerable', target);
+    } else {
+      target.getStats().speed?.applyForce(WIND_STATS.FORCE);
+    }
   }
 }

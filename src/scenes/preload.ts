@@ -6,6 +6,7 @@ const packURL = 'src/data/json-packs/';
 
 const packs = [
   { key: 'tilesets-pack', url: `${packURL}tilesets.json` },
+  { key: 'backgrounds-pack', url: `${packURL}backgrounds.json` },
   { key: 'objects-pack', url: `${packURL}objects.json` },
   { key: 'maps-pack', url: `${packURL}maps.json` },
   { key: 'ui-pack', url: `${packURL}ui.json` },
