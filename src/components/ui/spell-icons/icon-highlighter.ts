@@ -1,27 +1,23 @@
 import Phaser from 'phaser';
 
-import { ICON_OVERLAYS, INVENTORY_SLOTS } from '@/constants/ui-coordinates';
+import { INVENTORY_SLOTS } from '@/constants/ui-coordinates';
+import { Position } from '@/utils/types';
+import { ICON_SIZE } from '@/constants/ui';
 
 export class IconHighlighter {
-  private scene: Phaser.Scene;
+  private readonly ICON_SIZE = ICON_SIZE;
+
   private spellHighlight: Phaser.GameObjects.Rectangle | null = null;
   private slotHighlight: Phaser.GameObjects.Rectangle | null = null;
 
-  constructor(scene: Phaser.Scene) {
-    this.scene = scene;
-  }
+  constructor(private scene: Phaser.Scene) {}
 
-  public addSpellHighlight(spellKey: string): void {
+  public addSpellHighlight(coordinates: Position): void {
     if (this.spellHighlight) return;
 
-    const key = spellKey as keyof typeof ICON_OVERLAYS;
-    const position = ICON_OVERLAYS[key];
-    if (!position) return;
-
-    const size = 32;
     this.spellHighlight = this.scene.add
-      .rectangle(position.X, position.Y, size, size)
-      .setOrigin(0.5)
+      .rectangle(coordinates.x, coordinates.y, this.ICON_SIZE, this.ICON_SIZE)
+      .setOrigin(0)
       .setFillStyle(0xfff8c9, 0.4)
       .setStrokeStyle(2, 0xffffff, 1);
   }

@@ -44,13 +44,13 @@ export class Tilemap {
   constructor(
     private scene: Phaser.Scene,
     private mapKey: string,
-    private tilesetsConfig: TilesetConfig[],
-    private tileLayersConfig: TileLayerConfig[],
-    private objectLayersConfig: ObjectLayerConfig[],
+    private tilesetsConfig?: TilesetConfig[],
+    private tileLayersConfig?: TileLayerConfig[],
+    private objectLayersConfig?: ObjectLayerConfig[],
     private layerDepths: LayerDepths = {}
   ) {}
 
-  create(): this {
+  public create(): this {
     this.tilemap = this.scene.make.tilemap({ key: this.mapKey });
 
     this.createTilesets();
@@ -68,6 +68,8 @@ export class Tilemap {
   }
 
   private createTilesets(): void {
+    if (!this.tilesetsConfig) return;
+
     for (const { name, key } of this.tilesetsConfig) {
       const tileset = this.tilemap.addTilesetImage(name, key);
 
@@ -80,6 +82,8 @@ export class Tilemap {
   }
 
   private createTileLayers(): void {
+    if (!this.tileLayersConfig) return;
+
     for (const { name, tilesets, x, y, collide } of this.tileLayersConfig) {
       const ts = tilesets
         .map((tsName) => this.tilesets[tsName])
@@ -100,6 +104,8 @@ export class Tilemap {
   }
 
   private createObjectLayers(): void {
+    if (!this.objectLayersConfig) return;
+
     for (const { name, render } of this.objectLayersConfig) {
       const layer = this.tilemap.getObjectLayer(name);
 

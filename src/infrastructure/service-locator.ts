@@ -13,6 +13,7 @@ import { CollisionService } from './collision-service';
 interface ServiceMap {
   playerHandler: PlayerHandler;
   ui: UiSystem;
+  uiCoords: Phaser.Types.Tilemaps.TiledObject[];
   cooldowns: SpellCooldowns;
   spellFactory: SpellFactory;
   spellSystem: SpellSystem;
@@ -27,6 +28,7 @@ interface ServiceMap {
 export const ServiceKeys = {
   playerHandler: 'playerHandler',
   ui: 'ui',
+  uiCoords: 'uiCoords',
   cooldowns: 'cooldowns',
   spellFactory: 'spellFactory',
   spellSystem: 'spellSystem',

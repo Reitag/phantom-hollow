@@ -79,9 +79,12 @@ export class UiSystem {
     this.cooldownAnimator.startGlobalCooldown(duration);
   }
 
-  public highlightSpell(spellKey: string): void {
+  /*public highlightSpell(spellKey: string): void {
     const key = spellKey as keyof typeof ICON_OVERLAYS;
     this.iconHighlighter.addSpellHighlight(key);
+  }*/
+  public highlightSpell(coordinates: Position): void {
+    this.iconHighlighter.addSpellHighlight(coordinates);
   }
 
   public removeHighlight(): void {

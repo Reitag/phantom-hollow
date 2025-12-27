@@ -1,8 +1,10 @@
 import { TYPE } from '@/constants/modifier-stats';
 import { MODIFIER_TOOLTIPS } from '@/constants/tooltip-params';
-import { MODIFIER_ICONS } from '@/constants/ui-coordinates';
+//import { MODIFIER_ICONS } from '@/constants/ui-coordinates';
+import { MODIFIER_ICONS } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { ModifierType } from '@/utils/types';
+import { getUiCoords } from '@/utils/helpers';
+import { ModifierType, Position } from '@/utils/types';
 
 type ModifierContainerConfig = {
   icon: Phaser.GameObjects.Image;
@@ -12,8 +14,15 @@ type ModifierContainerConfig = {
 
 export class ModifierIconContainer {
   private modifierIcons: ModifierContainerConfig[] = [];
+  private buffCoords: Position;
+  private deBuffCoords: Position;
 
-  constructor(private scene: Phaser.Scene) {}
+  constructor(private scene: Phaser.Scene) {
+    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
+
+    this.buffCoords = getUiCoords(uiCoords, 'buff');
+    this.deBuffCoords = getUiCoords(uiCoords, 'debuff');
+  }
 
   public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     if (this.findModifierIcon(key)) return;
@@ -22,12 +31,11 @@ export class ModifierIconContainer {
 
     const sameTypeIcons = this.modifierIcons.filter((m) => m.type === type);
     const index = sameTypeIcons.length;
-    const posX =
-      MODIFIER_ICONS.START_X + index * (MODIFIER_ICONS.ICON_SIZE + MODIFIER_ICONS.PADDING);
-    const posY = type === TYPE.buff ? MODIFIER_ICONS.BUFF_Y : MODIFIER_ICONS.DEBUFF_Y;
+    const posX = this.buffCoords.x + index * (MODIFIER_ICONS.SIZE + MODIFIER_ICONS.PADDING);
+    const posY = type === TYPE.buff ? this.buffCoords.y : this.deBuffCoords.y;
 
-    const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0.5);
-    icon.setDisplaySize(MODIFIER_ICONS.ICON_SIZE, MODIFIER_ICONS.ICON_SIZE);
+    const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0);
+    icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
     icon.setInteractive({ useHandCursor: true });
     icon.name = key;
 
@@ -66,8 +74,8 @@ export class ModifierIconContainer {
     if (duration) {
       timerText = this.scene.add
         .text(
-          posX + MODIFIER_ICONS.ICON_SIZE / 2,
-          posY + MODIFIER_ICONS.ICON_SIZE / 2 + 4,
+          posX + MODIFIER_ICONS.SIZE / 2,
+          posY + MODIFIER_ICONS.SIZE / 2 + 16,
           `${duration / 1000}`,
           {
             font: '14px Arial',
@@ -135,16 +143,15 @@ export class ModifierIconContainer {
     const iconsOfType = this.modifierIcons.filter((m) => m.type === type);
 
     iconsOfType.forEach((m, index) => {
-      const posX =
-        MODIFIER_ICONS.START_X + index * (MODIFIER_ICONS.ICON_SIZE + MODIFIER_ICONS.PADDING);
-      const posY = type === TYPE.buff ? MODIFIER_ICONS.BUFF_Y : MODIFIER_ICONS.DEBUFF_Y;
+      const posX = this.buffCoords.x + index * (MODIFIER_ICONS.SIZE + MODIFIER_ICONS.PADDING);
+      const posY = type === TYPE.buff ? this.buffCoords.y : this.deBuffCoords.y;
 
       m.icon.x = posX;
       m.icon.y = posY;
 
       if (m.timerText) {
-        m.timerText.x = posX + MODIFIER_ICONS.ICON_SIZE / 2;
-        m.timerText.y = posY + MODIFIER_ICONS.ICON_SIZE / 2 + 4;
+        m.timerText.x = posX + MODIFIER_ICONS.SIZE / 2;
+        m.timerText.y = posY + MODIFIER_ICONS.SIZE / 2 + 4;
       }
     });
   }

@@ -126,3 +126,6 @@ export type TooltipContentConfig = {
   prop_3?: PropConfig | undefined;
   prop_4?: PropConfig | undefined;
 };
+
+// UI Coords
+export type SpellSlot = 'primary' | 'secondary' | 'tertiary' | 'quaternary';

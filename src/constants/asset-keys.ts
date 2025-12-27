@@ -23,6 +23,7 @@ export const ITEMS = {
 
 export const MAPS = {
   LEVEL_1: 'level-1',
+  UI_LEVEL: 'ui-level',
 } as const;
 
 export const MISC = {
@@ -77,8 +78,7 @@ export const TILESETS = {
 } as const;
 
 export const UI = {
-  SPELL_UI: 'spell-ui',
-  INVENTORY_UI: 'inventory-ui',
+  INVENTORY_SLOT: 'inventory-slot',
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
   WIND_ICON: 'wind-icon',

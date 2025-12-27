@@ -33,15 +33,10 @@ export class Sandbox {
     this.ui.reducePlayerHealth(stats.health!.current, stats.health!.max);
   }
 
-  public startCooldown(spellKey: string, delay: number): void {
+  public startCooldown(spellKey: string, coordinates: Position, delay: number): void {
     this.cooldowns.startCooldown(spellKey, delay);
     this.startGlobalCooldown();
-
-    const key = spellKey as keyof typeof ICON_OVERLAYS;
-    const icon = ICON_OVERLAYS[key];
-    if (icon) {
-      this.ui.startIconCooldown({ x: icon.X, y: icon.Y }, delay);
-    }
+    this.ui.startIconCooldown({ x: coordinates.x, y: coordinates.y }, delay);
     this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
   }
 

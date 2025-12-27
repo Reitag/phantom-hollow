@@ -2,13 +2,8 @@
   "files": [
     {
       "type": "image",
-      "key": "spell-ui",
-      "url": "assets/ui/spell-ui.png"
-    },
-    {
-      "type": "image",
-      "key": "inventory-ui",
-      "url": "assets/ui/inventory-ui.png"
+      "key": "inventory-slot",
+      "url": "assets/ui/inventory-slot.png"
     },
     {
       "type": "image",

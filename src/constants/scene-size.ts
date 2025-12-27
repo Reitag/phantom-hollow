@@ -1,4 +1,4 @@
 export const SCENE_SIZE = {
-  WIDTH: 1000,
+  WIDTH: 1024,
   HEIGHT: 640,
 } as const;

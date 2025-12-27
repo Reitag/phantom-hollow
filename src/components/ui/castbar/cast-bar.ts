@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { UI } from '@/constants/asset-keys';
-import { CAST_UI, CAST_BAR } from '@/constants/ui-coordinates';
+import { Position } from '@/utils/types';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { getUiCoords } from '@/utils/helpers';
 
 export class CastBar {
   public frame!: Phaser.GameObjects.Image;
@@ -8,13 +10,24 @@ export class CastBar {
   public maskGraphics!: Phaser.GameObjects.Graphics;
   public mask!: Phaser.Display.Masks.GeometryMask;
 
+  private frameCoords: Position;
+  private barCoords: Position;
+
   public progressWidth = 0;
 
-  constructor(private scene: Phaser.Scene) {}
+  constructor(private scene: Phaser.Scene) {
+    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
+    this.frameCoords = getUiCoords(uiCoords, 'cast-env');
+    this.barCoords = getUiCoords(uiCoords, 'cast-bar');
+  }
 
   public setCastBar(): void {
-    this.bar = this.scene.add.image(CAST_BAR.X, CAST_BAR.Y, UI.CAST_BAR).setOrigin(0, 0.5);
-    this.frame = this.scene.add.image(CAST_UI.X, CAST_UI.Y, UI.CAST_ENV).setOrigin(0, 0.5);
+    this.bar = this.scene.add
+      .image(this.barCoords.x, this.barCoords.y, UI.CAST_BAR)
+      .setOrigin(0, 0);
+    this.frame = this.scene.add
+      .image(this.frameCoords.x, this.frameCoords.y, UI.CAST_ENV)
+      .setOrigin(0, 0);
 
     this.maskGraphics = this.scene.make.graphics({ x: 0, y: 0 });
     this.updateMask(0);
@@ -27,16 +40,16 @@ export class CastBar {
     this.maskGraphics.clear();
     this.maskGraphics.fillStyle(0xffffff);
     this.maskGraphics.fillRoundedRect(
-      CAST_BAR.X,
-      CAST_BAR.Y - CAST_BAR.HEIGHT / 2,
+      this.barCoords.x,
+      this.barCoords.y,
       progressWidth,
-      CAST_BAR.HEIGHT,
+      this.bar!.height,
       1
     );
   }
 
   public getFullWidth(): number {
-    return CAST_BAR.WIDTH;
+    return this.bar!.width;
   }
 
   public setCompletedTexture(): void {

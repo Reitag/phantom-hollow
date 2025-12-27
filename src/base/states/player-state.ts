@@ -6,10 +6,13 @@ import { SpellPower } from '@/components/stats/damage';
 import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
 import { SPELLS } from '@/constants/asset-keys';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { getUiCoords } from '@/utils/helpers';
 import { CharacterState } from './character-state';
 import { Character } from '../objects/character';
 
 export abstract class PlayerState extends CharacterState {
+  private uiCoords: Phaser.Types.Tilemaps.TiledObject[];
   constructor(
     name: string,
     character: Character,
@@ -19,6 +22,8 @@ export abstract class PlayerState extends CharacterState {
     inventory?: InventorySystem
   ) {
     super(name, character, input, spellSystem, ui, inventory);
+
+    this.uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
   }
 
   protected movement(): void {
@@ -40,7 +45,7 @@ export abstract class PlayerState extends CharacterState {
   protected attemptToCast(): void {
     // ───────── Primary (Fireball)
     if (this.input?.isPrimaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.FIRE_BALL);
+      this.ui?.highlightSpell(getUiCoords(this.uiCoords, 'primary'));
       return;
     }
 
@@ -70,7 +75,7 @@ export abstract class PlayerState extends CharacterState {
 
     // ───────── Secondary (Blink)
     if (this.input?.isSecondaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.BLINK);
+      this.ui?.highlightSpell(getUiCoords(this.uiCoords, 'secondary'));
       return;
     }
 
@@ -88,7 +93,7 @@ export abstract class PlayerState extends CharacterState {
 
     // ───────── Tertiary (Wind)
     if (this.input?.isTertiaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.WIND);
+      this.ui?.highlightSpell(getUiCoords(this.uiCoords, 'tertiary'));
       return;
     }
 
@@ -106,7 +111,7 @@ export abstract class PlayerState extends CharacterState {
 
     // ───────── Quaternary (Frostbolt)
     if (this.input?.isQuaternaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.FROST_BOLT);
+      this.ui?.highlightSpell(getUiCoords(this.uiCoords, 'quaternary'));
       return;
     }
 
