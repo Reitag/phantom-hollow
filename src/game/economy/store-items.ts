@@ -32,7 +32,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(2)) {
+        //if (coinKeeper.removeCoins(2)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(health, 1);
         }
       }
@@ -52,7 +53,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(2)) {
+        //if (coinKeeper.removeCoins(2)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(protect, 1);
         }
       }
@@ -72,7 +74,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(3)) {
+        //if (coinKeeper.removeCoins(3)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(spell, 1);
         }
       }
@@ -92,7 +95,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(3)) {
+        //if (coinKeeper.removeCoins(3)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(lightning, 1);
         }
       }
@@ -112,7 +116,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(3)) {
+        //if (coinKeeper.removeCoins(3)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(undying, 1);
         }
       }
@@ -127,7 +132,7 @@ export const STORE_ITEMS: StoreItem[] = [
       const ui = ServiceLocator.resolve(ServiceKeys.ui);
 
       if (stone.isUnique) {
-        const alreadyOwned = inventory.getItems().some((slot) => slot && slot.item.id === stone.id);
+        const alreadyOwned = inventory.getSlots().some((slot) => slot && slot.item.id === stone.id);
 
         if (alreadyOwned) {
           ui.addWarningtext('There is only one unique item in inventory');
@@ -142,7 +147,8 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(4)) {
+        //if (coinKeeper.removeCoins(4)) {
+        if (coinKeeper.removeCoins(0)) {
           inventory.addItem(stone, 1);
         }
       }

@@ -28,7 +28,7 @@ export class UiScene extends Phaser.Scene {
     // Spell icons
     this.createSpellIcons();
     // Inventory Slots
-    this.createInventorySlots();
+    //this.createInventorySlots();
   }
 
   public getUI(): UiSystem {

@@ -11,7 +11,6 @@ import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
 import { Coins } from '@/components/ui/coins/coins';
 import { Store } from '@/components/ui/store/store';
 import { Text } from '@/components/ui/text/text';
-import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import {
   ModifierType,
   Position,
@@ -79,10 +78,6 @@ export class UiSystem {
     this.cooldownAnimator.startGlobalCooldown(duration);
   }
 
-  /*public highlightSpell(spellKey: string): void {
-    const key = spellKey as keyof typeof ICON_OVERLAYS;
-    this.iconHighlighter.addSpellHighlight(key);
-  }*/
   public highlightSpell(coordinates: Position): void {
     this.iconHighlighter.addSpellHighlight(coordinates);
   }
@@ -115,14 +110,8 @@ export class UiSystem {
     return this.store;
   }
 
-  public updateInventory(items: (InventorySlot | null)[]): void {
-    items.forEach((slot, index) => {
-      if (slot) {
-        this.inventoryIconContainer.setIcon(index, slot.item.iconKey, slot.quantity);
-      } else {
-        this.inventoryIconContainer.removeIcon(index);
-      }
-    });
+  public getIconContainer(): InventoryIconContainer {
+    return this.inventoryIconContainer;
   }
 
   public increaseCoinCounter(amount: number): void {

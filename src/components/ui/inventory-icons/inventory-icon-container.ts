@@ -1,5 +1,6 @@
+import { Cell } from '@/base/ui/cell';
 import { ITEM_TOOLTIPS } from '@/constants/tooltip-params';
-import { INVENTORY_SLOTS } from '@/constants/ui-coordinates';
+import { INVENTORY_ICON_SIZE } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type InventoryContainerConfig = {
@@ -7,91 +8,95 @@ type InventoryContainerConfig = {
   quantityText: Phaser.GameObjects.Text | undefined;
 };
 
-export class InventoryIconContainer {
-  private inventoryIcons: (InventoryContainerConfig | null)[] = [null, null, null, null];
+export class InventoryIconContainer extends Cell {
+  private readonly depthGap = 100;
+  private inventoryIcons: (InventoryContainerConfig | null)[] = Array(this.cells.length).fill(null);
 
-  constructor(private scene: Phaser.Scene) {}
+  constructor(scene: Phaser.Scene) {
+    super(scene);
+  }
 
   public setIcon(index: number, key: string, quantity: number): void {
     this.removeIcon(index);
 
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
-    const posX =
-      INVENTORY_SLOTS.START_X + index * (INVENTORY_SLOTS.WIDTH + INVENTORY_SLOTS.PADDING);
-    const icon = this.scene.add.image(posX, INVENTORY_SLOTS.Y, key).setOrigin(0, 0.5);
-    icon.setDisplaySize(INVENTORY_SLOTS.WIDTH, INVENTORY_SLOTS.HEIGHT);
-    icon.name = key;
+    const slotPos = {
+      x: this.getCellPosition(index).x + 3,
+      y: this.getCellPosition(index).y + 3,
+    };
 
-    const quantityText = this.scene.add.text(
-      posX + 13,
-      INVENTORY_SLOTS.Y + 3,
-      quantity.toString(),
-      {
+    const icon = this.scene.add
+      .image(slotPos.x, slotPos.y, key)
+      .setOrigin(0, 0)
+      .setDisplaySize(INVENTORY_ICON_SIZE, INVENTORY_ICON_SIZE)
+      .setDepth(10);
+
+    const quantityText = this.scene.add
+      .text(slotPos.x + 13, slotPos.y - 13, quantity.toString(), {
         fontSize: '12px',
         color: '#fff',
         stroke: '#000',
         strokeThickness: 2,
-      }
-    );
+      })
+      .setDepth(11);
 
     this.inventoryIcons[index] = { icon, quantityText };
 
-    // Feature here
     icon
       .setInteractive({ useHandCursor: true, draggable: true })
       .setData('index', index)
       .setData('key', key);
 
-    // Drag start
-    icon.on('dragstart', (_: Phaser.Input.Pointer) => {
+    icon.on('dragstart', () => {
       this.scene.game.canvas.style.cursor = 'grab';
       quantityText.setVisible(false);
+      icon.setDepth(icon.depth + this.depthGap);
     });
+
     icon.on('dragstart', ui.hideTooltip, ui);
 
-    // Dragging
-    icon.on('drag', (_: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-      this.scene.game.canvas.style.cursor = 'grabbing';
-      icon.x = dragX;
-      icon.y = dragY;
+    icon.on('drag', (_: Phaser.Input.Pointer, x: number, y: number) => {
+      icon.x = x;
+      icon.y = y;
     });
 
-    // Drag end
     icon.on('dragend', (pointer: Phaser.Input.Pointer) => {
       this.scene.game.canvas.style.cursor = 'default';
       quantityText.setVisible(true);
 
-      const dropIndex = this.getSlotIndexAt(pointer.x, pointer.y);
+      const dropIndex = this.getIndex({ x: pointer.x, y: pointer.y });
       const fromIndex = icon.getData('index');
 
-      if (dropIndex !== null && dropIndex !== fromIndex) {
-        this.handleSwap(fromIndex, dropIndex);
-      } else {
-        this.handleDestroy(fromIndex);
+      if (dropIndex !== -1 && dropIndex !== fromIndex) {
+        inventory.swapSlots(fromIndex, dropIndex);
+
+        icon.x = slotPos.x;
+        icon.y = slotPos.y;
+        icon.setDepth(icon.depth - this.depthGap);
+      }
+      if (dropIndex === -1) {
+        const dialog = ui.addWarningDialog('Do you want to destroy this item?');
+
+        dialog.once('confirm', () => {
+          inventory.destroySlot(fromIndex);
+        });
+
+        dialog.once('cancel', () => {
+          inventory.updateUI();
+        });
       }
     });
 
-    // Pointer over
-    icon.on('pointerover', (pointer: Phaser.Input.Pointer) => {
-      this.scene.game.canvas.style.cursor = 'help';
+    icon.on('pointerover', () => {
       const keyItem = icon.getData('key');
-      const tooltipArray = Object.values(ITEM_TOOLTIPS).map(
-        ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({
-          id,
-          title,
-          prop_1,
-          prop_2,
-          prop_3,
-          prop_4,
-        })
-      );
-
-      const info = tooltipArray.find((tooltip) => keyItem === tooltip.id);
+      const info = Object.values(ITEM_TOOLTIPS).find((tooltip) => tooltip.id === keyItem);
       if (!info) return;
+
       ui.showVerticalTooltip(
         {
-          x: icon.x - 10,
+          x: icon.x - 280,
           y: icon.y - 30,
           width: 300,
           fillColor: 0x000000,
@@ -100,15 +105,15 @@ export class InventoryIconContainer {
       );
     });
 
-    // Ponter out
-    icon.on('pointerout', ui.hideTooltip, ui);
-  }
+    icon.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+      if (ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer().getDead()) return;
 
-  public updateQuantity(index: number, quantity: number): void {
-    const entry = this.inventoryIcons[index];
-    if (entry && entry.quantityText) {
-      entry.quantityText.setText(quantity.toString());
-    }
+      const pos = { x: pointer.x, y: pointer.y };
+      const index = this.getIndex(pos);
+      inventory.useSlot(index);
+    });
+
+    icon.on('pointerout', ui.hideTooltip, ui);
   }
 
   public removeIcon(index: number): void {
@@ -117,58 +122,6 @@ export class InventoryIconContainer {
 
     entry.icon.destroy();
     entry.quantityText?.destroy();
-
     this.inventoryIcons[index] = null;
-  }
-
-  private getSlotIndexAt(x: number, y: number): number | null {
-    for (let i = 0; i < 4; i++) {
-      const slotX = INVENTORY_SLOTS.START_X + i * (INVENTORY_SLOTS.WIDTH + INVENTORY_SLOTS.PADDING);
-      const slotY = INVENTORY_SLOTS.Y;
-
-      if (
-        x >= slotX &&
-        x <= slotX + INVENTORY_SLOTS.WIDTH &&
-        y >= slotY - INVENTORY_SLOTS.HEIGHT / 2 &&
-        y <= slotY + INVENTORY_SLOTS.HEIGHT / 2
-      ) {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  private handleSwap(fromIndex: number, toIndex: number): void {
-    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-    const items = inventory.getItems();
-
-    const temp = items[fromIndex];
-    items[fromIndex] = items[toIndex];
-    items[toIndex] = temp;
-
-    inventory.setItems(items);
-  }
-
-  private handleDestroy(fromIndex: number): void {
-    const ui = ServiceLocator.resolve(ServiceKeys.ui);
-    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-    const items = inventory.getItems();
-
-    const dialog = ui.addWarningDialog('Do you want to destroy this item?');
-
-    dialog.once('confirm', () => {
-      items[fromIndex] = null;
-
-      this.removeIcon(fromIndex);
-      inventory.setItems(items);
-    });
-
-    dialog.once('cancel', () => {
-      ui.updateInventory(items);
-    });
-  }
-
-  private findInventoryrIcon(key: string): InventoryContainerConfig | null | undefined {
-    return this.inventoryIcons.find((elem) => elem?.icon.name === key);
   }
 }
