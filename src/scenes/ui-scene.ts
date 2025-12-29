@@ -27,8 +27,6 @@ export class UiScene extends Phaser.Scene {
 
     // Spell icons
     this.createSpellIcons();
-    // Inventory Slots
-    //this.createInventorySlots();
   }
 
   public getUI(): UiSystem {
@@ -86,27 +84,10 @@ export class UiScene extends Phaser.Scene {
     this.tooltipSpellsInit({ fireball: fireball, blink: blink, wind: wind, frostbolt: frostbolt });
 
     // Spell labels
-    this.addKeyLabel(fireball, 'Z');
-    this.addKeyLabel(blink, 'X');
-    this.addKeyLabel(wind, 'C');
-    this.addKeyLabel(frostbolt, 'V');
-  }
-
-  private createInventorySlots(): void {
-    const INVENTORY_KEYS = ['A', 'S', 'D', 'F'];
-
-    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
-
-    const slot1 = getUiCoords(uiCoords, 'slot-1');
-    const slot2 = getUiCoords(uiCoords, 'slot-2');
-    const slot3 = getUiCoords(uiCoords, 'slot-3');
-    const slot4 = getUiCoords(uiCoords, 'slot-4');
-
-    [slot1, slot2, slot3, slot4].forEach((slot, index) => {
-      const image = this.add.image(slot.x, slot.y, UI.INVENTORY_SLOT).setOrigin(0, 0);
-
-      //this.addKeyLabel(image, INVENTORY_KEYS[index]);
-    });
+    this.addKeyLabel(fireball, 'E');
+    this.addKeyLabel(blink, 'C');
+    this.addKeyLabel(wind, 'F');
+    this.addKeyLabel(frostbolt, 'R');
   }
 
   private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {

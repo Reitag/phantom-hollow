@@ -96,9 +96,9 @@ export class InventoryIconContainer extends Cell {
 
       ui.showVerticalTooltip(
         {
-          x: icon.x - 280,
-          y: icon.y - 30,
-          width: 300,
+          x: icon.x - 220,
+          y: icon.y + 20,
+          width: 200,
           fillColor: 0x000000,
         },
         info

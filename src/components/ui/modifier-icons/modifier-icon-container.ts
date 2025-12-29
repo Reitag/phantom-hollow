@@ -151,7 +151,7 @@ export class ModifierIconContainer {
 
       if (m.timerText) {
         m.timerText.x = posX + MODIFIER_ICONS.SIZE / 2;
-        m.timerText.y = posY + MODIFIER_ICONS.SIZE / 2 + 4;
+        m.timerText.y = posY + MODIFIER_ICONS.SIZE / 2 + 16;
       }
     });
   }
