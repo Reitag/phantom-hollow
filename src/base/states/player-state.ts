@@ -91,7 +91,7 @@ export abstract class PlayerState extends CharacterState {
       return;
     }
 
-    // ───────── Tertiary (Wind)
+    // ───────── Tertiary (Wind Wave)
     if (this.input?.isTertiaryActionDown) {
       this.ui?.highlightSpell(getUiCoords(this.uiCoords, 'tertiary'));
       return;
@@ -100,12 +100,12 @@ export abstract class PlayerState extends CharacterState {
     if (this.input?.isTertiaryActionReleased) {
       this.ui?.removeHighlight();
 
-      if (!this.spellSystem?.canCast(SPELLS.WIND)) {
+      if (!this.spellSystem?.canCast(SPELLS.WIND_WAVE)) {
         this.ui?.addWarningtext(SPELL_WARNING_MESSAGES.SPELL_NOT_READY);
         return;
       }
 
-      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.WIND);
+      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.WIND_WAVE);
       return;
     }
 

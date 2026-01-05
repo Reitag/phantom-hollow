@@ -80,7 +80,7 @@ export const SPELL_TOOLTIPS: {
   WIND: {
     title: {
       param: spelltitleParams,
-      text: 'Wind',
+      text: 'Wind Pulse',
     },
     prop_1: {
       param: spellCastParams,
@@ -91,7 +91,7 @@ export const SPELL_TOOLTIPS: {
       text: `${WIND.DURATION / 1000} sec cooldown`,
     },
     prop_3: {
-      text: 'Knocks back all targets in its path.',
+      text: 'Releases a sudden burst of wind in both directions, knocking back nearby enemies.',
     },
   },
   FROSTBOLT: {

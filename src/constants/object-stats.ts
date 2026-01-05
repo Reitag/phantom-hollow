@@ -1,6 +1,6 @@
 import { UI } from './asset-keys';
 
-export const SHIFT_SPELL_REGGISTER_HITS = 500;
+export const SHIFT_SPELL_REGGISTER_HITS = 1000;
 
 export const SPIKE_HIT = 10;
 
@@ -18,10 +18,8 @@ export const BLINK_STATS = {
   DELAY: 500,
 } as const;
 
-export const WIND_STATS = {
-  FORCE: 200,
-  SPEED: 300,
-  LIFE_TIME: 700,
+export const WIND_WAVE_STATS = {
+  FORCE: 300,
 } as const;
 
 export const FROST_BOLT_STATS = {

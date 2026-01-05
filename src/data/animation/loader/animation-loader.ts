@@ -1,7 +1,7 @@
 import { playerAnim } from '../characters/player/player-anim';
 import { fireballAnim } from '../spells/fire-ball-anim';
 import { blinkAnim } from '../spells/blink-anim';
-import { windAnim } from '../spells/wind-anim';
+import { windWaveAnim } from '../spells/wind-wave-anim';
 import { shadowboltAnim } from '../spells/shadowbolt-anim';
 import { skeletonwarriorAnim } from '../characters/enemies/skeleton-warrior-anim';
 import { zombieAnim } from '../characters/enemies/zombie-anim';
@@ -27,7 +27,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   fireballAnim(anims);
   blinkAnim(anims);
   lightningShieldAnim(anims);
-  windAnim(anims);
+  windWaveAnim(anims);
   shadowboltAnim(anims);
   frostboltAnim(anims);
   earthShakeAnim(anims);

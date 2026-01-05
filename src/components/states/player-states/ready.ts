@@ -43,28 +43,28 @@ export class Ready extends PlayerState {
     }
 
     if (this.input?.isPrimaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.FIRE_BALL);
+      /*this.ui?.highlightSpell(SPELLS.FIRE_BALL);*/
     } else if (this.input?.isPrimaryActionReleased) {
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FIRE_BALL);
       return;
     }
 
     if (this.input?.isSecondaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.BLINK);
+      /*this.ui?.highlightSpell(SPELLS.BLINK);*/
     } else if (this.input?.isSecondaryActionReleased) {
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.BLINK);
       return;
     }
 
     if (this.input?.isTertiaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.WIND);
+      /*this.ui?.highlightSpell(SPELLS.WIND);*/
     } else if (this.input?.isTertiaryActionReleased) {
-      this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.WIND);
+      /*this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.WIND);*/
       return;
     }
 
     if (this.input?.isQuaternaryActionDown) {
-      this.ui?.highlightSpell(SPELLS.FROST_BOLT);
+      /*this.ui?.highlightSpell(SPELLS.FROST_BOLT);*/
     } else if (this.input?.isQuaternaryActionReleased) {
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FROST_BOLT);
       return;
@@ -75,11 +75,11 @@ export class Ready extends PlayerState {
     this.ui?.removeHighlight();
   }
 
-  private movement(): void {
+  /*private movement(): void {
     if (this.input?.isLeftDown) {
       this.moveLeft(this.characterSpeed?.velocity);
     } else if (this.input?.isRightDown) {
       this.moveRight(this.characterSpeed?.velocity);
     }
-  }
+  }*/
 }

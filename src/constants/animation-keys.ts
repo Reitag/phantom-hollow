@@ -99,9 +99,8 @@ export const SPELLS_ANIMATION = {
   LIGHTNING_SHIELD: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'lightning-shield-main',
   },
-  WIND: {
+  WIND_WAVE: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'wind-main',
-    [SPELL_ANIMATION_KEYS.HIT]: 'wind-hit',
   },
   FROST_BOLT: {
     [SPELL_ANIMATION_KEYS.START]: 'frost-bolt-start',

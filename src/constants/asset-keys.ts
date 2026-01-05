@@ -62,7 +62,7 @@ export const SPELLS = {
   FIRE_BALL: 'fire-ball',
   BLINK: 'blink',
   LIGHTNING_SHIELD: 'lightning-shield',
-  WIND: 'wind',
+  WIND_WAVE: 'wind-wave',
   FROST_BOLT: 'frost-bolt',
   SHADOW_BOLT: 'shadow-bolt',
   EARTH_SHAKE: 'earth-shake',
