@@ -9,6 +9,7 @@ export const BACKGROUNDS = {
 
 export const CHARACTERS = {
   PLAYER: 'player',
+  ALCHEMIST: 'alchemist',
   SKELETON_WARRIOR: 'skeleton-warrior',
   ZOMBIE: 'zombie',
   ARCHER: 'archer',
@@ -28,6 +29,7 @@ export const MAPS = {
 
 export const MISC = {
   SOUL_FIRE: 'soul-fire',
+  BON_FIRE: 'bon-fire',
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
 } as const;

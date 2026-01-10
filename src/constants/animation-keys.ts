@@ -160,6 +160,9 @@ export const MISC_ANIMATION = {
     [VFX_ANIMATION_KEYS.START]: 'soul-fire-start',
     [VFX_ANIMATION_KEYS.MAIN]: 'soul-fire-main',
   },
+  BON_FIRE: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'bonfire-main',
+  },
 } as const;
 
 export const ITEMS_ANIMATION = {

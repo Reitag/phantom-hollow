@@ -18,6 +18,7 @@ import { lightningShieldAnim } from '../spells/lightning-shield-anim';
 import { vfxAnim } from '../vfx/vfx-anim';
 import { earthShakeAnim } from '../spells/earth-shake-anim';
 import { shadowTrailAnim } from '../spells/shadow-trail-anim';
+import { bonFireAnim } from '../misc/bon-fire-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -51,6 +52,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
 
   // Misc
   soulFireAnim(anims);
+  bonFireAnim(anims);
   portalAnim(anims);
   darkEnergyAnim(anims);
 }

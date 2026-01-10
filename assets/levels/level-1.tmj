@@ -2703,6 +2703,18 @@
                  "width":26,
                  "x":10020,
                  "y":512
+                }, 
+                {
+                 "gid":225,
+                 "height":32,
+                 "id":926,
+                 "name":"bowler",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":5056,
+                 "y":544
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3862,6 +3874,40 @@
                  "y":415
                 }, 
                 {
+                 "height":24,
+                 "id":929,
+                 "name":"misc-spawn",
+                 "properties":[
+                        {
+                         "name":"misc",
+                         "type":"string",
+                         "value":"bonfire"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":20,
+                 "x":5062,
+                 "y":512.5
+                }, 
+                {
+                 "height":0,
+                 "id":928,
+                 "name":"npc-spawn",
+                 "properties":[
+                        {
+                         "name":"npc",
+                         "type":"string",
+                         "value":"alchemist"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":0,
+                 "x":5105,
+                 "y":512
+                }, 
+                {
                  "height":64,
                  "id":917,
                  "name":"interactable-spawn",
@@ -3996,6 +4042,23 @@
                  "width":992,
                  "x":16512,
                  "y":224
+                }, 
+                {
+                 "height":64,
+                 "id":925,
+                 "name":"interactable-spawn",
+                 "properties":[
+                        {
+                         "name":"trigger",
+                         "type":"string",
+                         "value":"alchemist-quest"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":64,
+                 "x":5088,
+                 "y":480
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4004,7 +4067,7 @@
          "y":0
         }],
  "nextlayerid":42,
- "nextobjectid":925,
+ "nextobjectid":930,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

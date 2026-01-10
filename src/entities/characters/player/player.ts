@@ -3,7 +3,6 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Idle } from '@/components/states/player-states/idle';
 import { Movement } from '@/components/states/player-states/movement';
 import { Casting } from '@/components/states/player-states/casting';
-import { Ready } from '@/components/states/player-states/ready';
 import { Death } from '@/components/states/share/death';
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';

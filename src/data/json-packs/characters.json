@@ -8,6 +8,12 @@
     },
     {
       "type": "spritesheet",
+      "key": "alchemist",
+      "url": "assets/characters/npc/alchemist.png",
+      "frameConfig": { "frameWidth": 48, "frameHeight": 48 }
+    },
+    {
+      "type": "spritesheet",
       "key": "skeleton-warrior",
       "url": "assets/characters/enemies/skeleton-warrior.png",
       "frameConfig": { "frameWidth": 48, "frameHeight": 48 }

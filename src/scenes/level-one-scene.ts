@@ -3,15 +3,17 @@ import Phaser from 'phaser';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { BACKGROUNDS } from '@/constants/asset-keys';
+import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
+import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
+import { BonFire } from '@/entities/misc/bonfire';
 import { SpellFactory } from '@/factories/spell-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
@@ -19,6 +21,7 @@ import { Coin } from '@/entities/items/coin';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { EnemySpawn } from '@/systems/enemy-spawn';
+import { NPCSpawn } from '@/systems/npc-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
@@ -26,6 +29,7 @@ import { CollisionService, GroupKeys } from '@/infrastructure/collision-service'
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
+import { Position } from '@/utils/types';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
@@ -42,6 +46,7 @@ export class LevelOneScene extends Phaser.Scene {
   private sky!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
+  private npc!: NPCSpawn;
   private canPlayerGetDamage = true;
   private isGameInitialized = false;
 
@@ -49,7 +54,7 @@ export class LevelOneScene extends Phaser.Scene {
     super('LevelOneScene');
   }
 
-  create(): void {
+  public create(): void {
     if (this.isGameInitialized) return;
     this.isGameInitialized = true;
 
@@ -57,9 +62,10 @@ export class LevelOneScene extends Phaser.Scene {
     this.initUiScene(() => this.createGameWorld());
   }
 
-  update(time: number, delta: number): void {
+  public update(time: number, delta: number): void {
     this.playerHandler.update(delta);
     this.spawn.update(time, delta);
+    this.npc.update();
     this.interactables.update();
 
     this.updateParallaxBackground();
@@ -109,7 +115,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.createInteractableObjects();
 
     this.registerCollisions();
-    this.createSpawnEnemySystem();
+    this.createSpawnSystems();
+
+    this.createMiscs();
 
     this.setupCamera();
   }
@@ -182,6 +190,13 @@ export class LevelOneScene extends Phaser.Scene {
         allowGravity: true,
       })
     );
+
+    CollisionService.registerGroup(
+      GroupKeys.npc,
+      this.physics.add.group({
+        allowGravity: true,
+      })
+    );
   }
 
   private createWorldBounds(): void {
@@ -209,10 +224,12 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.interactables.add(new Stall(this));
     this.interactables.add(new SoulPedestal(this));
+    this.interactables.add(new AlchemistQuestTrigger(this));
   }
 
   private registerCollisions(): void {
     const enemies = CollisionService.resolveGroup(GroupKeys.enemy);
+    const npc = CollisionService.resolveGroup(GroupKeys.npc);
     const spells = CollisionService.resolveGroup(GroupKeys.spell);
     const weapons = CollisionService.resolveGroup(GroupKeys.weapon);
     const items = CollisionService.resolveGroup(GroupKeys.item);
@@ -227,6 +244,7 @@ export class LevelOneScene extends Phaser.Scene {
     [ground, platform, cave].forEach((layer) => {
       CollisionService.registerCollisions(this, layer, [
         { entity: this.player },
+        { entity: npc },
         {
           entity: enemies,
           callback: this.handleEnemyCollision as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
@@ -299,8 +317,38 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.setFPS(120);
   }
 
-  private createSpawnEnemySystem(): void {
+  private createSpawnSystems(): void {
     this.spawn = new EnemySpawn(this);
+    this.npc = new NPCSpawn(this);
+  }
+
+  private createMiscs(): void {
+    const result: Record<string, Position> = {};
+    const map = ServiceLocator.resolve(ServiceKeys.map);
+    const objectLayer = map.getObjectLayer('spawn-layer');
+    if (!objectLayer) throw new Error('Spawn-layer does not resolved');
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'misc-spawn') continue;
+
+      const miscType = obj.properties.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'misc'
+      )?.value;
+
+      if (!miscType) continue;
+      if (!obj.x || !obj.y) continue;
+      result[miscType] = {
+        x: obj.x,
+        y: obj.y,
+      };
+    }
+
+    new BonFire({
+      scene: this,
+      position: { x: result['bonfire'].x, y: result['bonfire'].y },
+      keyName: MISC.BON_FIRE,
+      frame: 0,
+    });
   }
 
   private setupCamera(): void {

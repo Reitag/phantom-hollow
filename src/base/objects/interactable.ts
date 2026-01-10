@@ -8,6 +8,7 @@ export const InteractableNames = {
   ['stall']: 'stall',
   ['fire-worm']: 'fire-worm',
   ['evil-wizard']: 'evil-wizard',
+  ['alchemist-quest']: 'alchemist-quest',
 } as const;
 
 export abstract class Interactable {

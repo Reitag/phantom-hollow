@@ -6,7 +6,6 @@ import {
   SKELETON_WARRIOR_STATS,
   ZOMBIE_STATS,
 } from '@/constants/object-stats';
-import { Player } from '@/entities/characters/player/player';
 import { Archer } from '@/entities/characters/enemies/archer';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { Zombie } from '@/entities/characters/enemies/zombie';
