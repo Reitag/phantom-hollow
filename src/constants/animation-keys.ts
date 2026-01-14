@@ -41,6 +41,12 @@ export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.DEATH]: 'player-death',
 } as const;
 
+export const NPC_ANIMATION = {
+  ALCHEMIST: {
+    [CHARACTER_ANIMATION_KEYS.IDLE]: 'alchemist-idle',
+  },
+} as const;
+
 export const ENEMIES_ANIMATION = {
   SKELETON_WARRIOR: {
     [CHARACTER_ANIMATION_KEYS.IDLE]: 'sk-warrior-idle',

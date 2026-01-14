@@ -48,6 +48,7 @@ export const OBJECTS = {
   TABLE: 'table',
   BONFIRE: 'bonfire',
   TENT: 'tent',
+  STUMP: 'stump',
   ROCK_1: 'rock-1',
   ROCK_2: 'rock-2',
   ROCK_3: 'rock-3',

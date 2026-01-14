@@ -19,10 +19,14 @@ import { vfxAnim } from '../vfx/vfx-anim';
 import { earthShakeAnim } from '../spells/earth-shake-anim';
 import { shadowTrailAnim } from '../spells/shadow-trail-anim';
 import { bonFireAnim } from '../misc/bon-fire-anim';
+import { alchemistAnim } from '../characters/npc/alchemist-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
   playerAnim(anims);
+
+  // NPC
+  alchemistAnim(anims);
 
   // Spells
   fireballAnim(anims);
