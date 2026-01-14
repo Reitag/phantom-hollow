@@ -1,4 +1,5 @@
 import { Z_POSITION } from '@/constants/z-position';
+import { AttachedVfx } from '@/entities/misc/attached-vfx';
 import { SpriteConfig } from '@/utils/types';
 
 export class Sprite extends Phaser.GameObjects.Sprite {
@@ -12,6 +13,10 @@ export class Sprite extends Phaser.GameObjects.Sprite {
 
     scene.add.existing(this);
 
-    this.setDepth(Z_POSITION.MISC);
+    if (this instanceof AttachedVfx) {
+      this.setDepth(Z_POSITION.VFX);
+    } else {
+      this.setDepth(Z_POSITION.MISC);
+    }
   }
 }

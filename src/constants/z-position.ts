@@ -34,6 +34,7 @@ export const Z_POSITION = {
   PLAYER: 190,
   ENEMY: 200,
   SPELL: 210,
+  VFX: 220,
 
   // UI
   UI: 1000,

@@ -328,8 +328,8 @@ export const MODIFIER_TOOLTIPS: {
   },
 };
 
-// Store tooltip
-const storeTextParams = {
+// Interactables
+const interactTextParams = {
   fontStyle: 'bold',
   color: '#d7d7d7ff',
 } as const;
@@ -338,9 +338,10 @@ const qParams = {
   color: '#f2c94c',
 } as const;
 
+// Store tooltip
 export const STORE_TOOLTIP: TooltipContentConfig = {
   prop_1: {
-    param: storeTextParams,
+    param: interactTextParams,
     text: 'Press ',
   },
   prop_2: {
@@ -348,7 +349,23 @@ export const STORE_TOOLTIP: TooltipContentConfig = {
     text: "'Q'",
   },
   prop_3: {
-    param: storeTextParams,
+    param: interactTextParams,
     text: ' to Open Store',
+  },
+} as const;
+
+// Quests
+export const QUEST_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Interact',
   },
 } as const;

@@ -1,6 +1,6 @@
 import { Cell } from '@/base/ui/cell';
 import { ITEM_TOOLTIPS } from '@/constants/tooltip-params';
-import { INVENTORY_ICON_SIZE } from '@/constants/ui';
+import { ICON_SIZE } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type InventoryContainerConfig = {
@@ -16,6 +16,16 @@ export class InventoryIconContainer extends Cell {
     super(scene);
   }
 
+  public get iconContainer(): Phaser.GameObjects.Image[] {
+    const arrIcon = [];
+    for (const inventory of this.inventoryIcons) {
+      if (inventory) {
+        arrIcon.push(inventory.icon);
+      }
+    }
+    return arrIcon;
+  }
+
   public setIcon(index: number, key: string, quantity: number): void {
     this.removeIcon(index);
 
@@ -23,14 +33,14 @@ export class InventoryIconContainer extends Cell {
     const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
     const slotPos = {
-      x: this.getCellPosition(index).x + 3,
-      y: this.getCellPosition(index).y + 3,
+      x: this.getCellPosition(index).x,
+      y: this.getCellPosition(index).y,
     };
 
     const icon = this.scene.add
       .image(slotPos.x, slotPos.y, key)
       .setOrigin(0, 0)
-      .setDisplaySize(INVENTORY_ICON_SIZE, INVENTORY_ICON_SIZE)
+      .setDisplaySize(ICON_SIZE, ICON_SIZE)
       .setDepth(10);
 
     const quantityText = this.scene.add
@@ -42,12 +52,12 @@ export class InventoryIconContainer extends Cell {
       })
       .setDepth(11);
 
-    this.inventoryIcons[index] = { icon, quantityText };
-
     icon
       .setInteractive({ useHandCursor: true, draggable: true })
       .setData('index', index)
       .setData('key', key);
+
+    this.inventoryIcons[index] = { icon, quantityText };
 
     icon.on('dragstart', () => {
       this.scene.game.canvas.style.cursor = 'grab';
@@ -89,7 +99,7 @@ export class InventoryIconContainer extends Cell {
       }
     });
 
-    icon.on('pointerover', () => {
+    /*icon.on('pointerover', () => {
       const keyItem = icon.getData('key');
       const info = Object.values(ITEM_TOOLTIPS).find((tooltip) => tooltip.id === keyItem);
       if (!info) return;
@@ -103,7 +113,7 @@ export class InventoryIconContainer extends Cell {
         },
         info
       );
-    });
+    });*/
 
     icon.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       if (ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer().getDead()) return;
@@ -113,7 +123,7 @@ export class InventoryIconContainer extends Cell {
       inventory.useSlot(index);
     });
 
-    icon.on('pointerout', ui.hideTooltip, ui);
+    //icon.on('pointerout', ui.hideTooltip, ui);
   }
 
   public removeIcon(index: number): void {

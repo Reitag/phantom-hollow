@@ -26,6 +26,7 @@ export abstract class InputController {
   protected fourthItemUse = false;
 
   protected actionDown = false;
+  protected utilityDown = false;
 
   get isLeftDown(): boolean {
     return this.left;
@@ -99,6 +100,10 @@ export abstract class InputController {
     return this.actionDown;
   }
 
+  get isUtilityDown(): boolean {
+    return this.utilityDown;
+  }
+
   abstract update(): void;
 
   public disable(): void {
@@ -128,5 +133,6 @@ export abstract class InputController {
     this.thirdItemUse = false;
     this.fourthItemUse = false;
     this.actionDown = false;
+    this.utilityDown = false;
   }
 }

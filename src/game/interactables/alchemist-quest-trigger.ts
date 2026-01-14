@@ -1,4 +1,5 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
+import { QUEST_TOOLTIP } from '@/constants/tooltip-params';
 
 export class AlchemistQuestTrigger extends Interactable {
   constructor(scene: Phaser.Scene) {
@@ -7,7 +8,15 @@ export class AlchemistQuestTrigger extends Interactable {
   }
 
   protected onEnter(): void {
-    console.log('[AlchemistQuest] Player entered trigger zone');
+    this.ui.showHorizontalTooltip(
+      {
+        x: this.scene.scale.width / 2 - 60,
+        y: this.player.y - 40,
+        width: 170,
+        fillColor: 0x000000,
+      },
+      QUEST_TOOLTIP
+    );
   }
 
   protected onInteract(): void {
@@ -15,6 +24,6 @@ export class AlchemistQuestTrigger extends Interactable {
   }
 
   protected onLeave(): void {
-    console.log('[AlchemistQuest] Player left trigger zone');
+    this.ui.hideTooltip();
   }
 }

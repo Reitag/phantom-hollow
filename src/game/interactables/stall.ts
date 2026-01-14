@@ -2,16 +2,14 @@ import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { Store } from '@/components/ui/store/store';
 import { STORE_TOOLTIP } from '@/constants/tooltip-params';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { UiSystem } from '@/systems/ui-system';
 
 export class Stall extends Interactable {
-  private ui: UiSystem;
   private store: Store;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createTriggerZones(InteractableNames.stall);
-    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+
     this.store = ServiceLocator.resolve(ServiceKeys.ui).getStore();
   }
 
@@ -19,8 +17,8 @@ export class Stall extends Interactable {
     this.store.registerStoreEvents();
     this.ui.showHorizontalTooltip(
       {
-        x: this.scene.scale.width / 2 + 210,
-        y: this.scene.scale.height - 8,
+        x: this.scene.scale.width / 2 - 60,
+        y: this.player.y - 40,
         width: 170,
         fillColor: 0x000000,
       },
