@@ -1,36 +1,18 @@
-import { InputController } from '@/base/input/input-controller';
-import { InventoryIconContainer } from '@/components/ui/inventory-icons/inventory-icon-container';
+import { PanelService } from '@/infrastructure/panel-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { InventoryItem, InventorySlot } from '@/utils/types';
 
 export class InventorySystem {
   private slots: (InventorySlot | null)[];
-  private iconContainer: InventoryIconContainer;
+  private panel: PanelService;
 
   constructor() {
-    this.iconContainer = ServiceLocator.resolve(ServiceKeys.ui).getIconContainer();
-    this.slots = Array(this.iconContainer.cellQuantity).fill(null);
+    this.panel = ServiceLocator.resolve(ServiceKeys.panel);
+    this.slots = Array(this.panel.inventoryBar.cellQuantity).fill(null);
   }
 
   public getSlot(index: number): InventorySlot | null {
     return this.slots[index] ?? null;
-  }
-
-  public handleInput(input: InputController | null): void {
-    if (!input) return;
-
-    if (input.isFirstItemDown) {
-      this.useSlot(0); // Slot 0 (A)
-    }
-    if (input.isSecondItemDown) {
-      this.useSlot(1); // Slot 1 (S)
-    }
-    if (input.isThirdItemDown) {
-      this.useSlot(2); // Slot 2 (D)
-    }
-    if (input.isFourthItemDown) {
-      this.useSlot(3); // Slot 3 (F)
-    }
   }
 
   public canAdd(item: InventoryItem, quantity: number = 1): boolean {
@@ -100,10 +82,7 @@ export class InventorySystem {
   }
 
   public swapSlots(from: number, to: number): void {
-    const temp = this.slots[from];
-    this.slots[from] = this.slots[to];
-    this.slots[to] = temp;
-
+    [this.slots[from], this.slots[to]] = [this.slots[to], this.slots[from]];
     this.updateUI();
   }
 
@@ -135,9 +114,9 @@ export class InventorySystem {
   public updateUI(): void {
     this.slots.forEach((slot, index) => {
       if (slot) {
-        this.iconContainer.setIcon(index, slot.item.iconKey, slot.quantity);
+        this.panel.inventoryBar.setIcon(index, slot.item.iconKey, slot.quantity);
       } else {
-        this.iconContainer.removeIcon(index);
+        this.panel.inventoryBar.removeIcon(index);
       }
     });
   }

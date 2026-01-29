@@ -1,4 +1,8 @@
-export const ICON_SIZE = 36 as const;
+export const ICONS = {
+  SIZE: 32,
+  BORDER: 2,
+  DEPTH: 10,
+} as const;
 
 export const MODIFIER_ICONS = {
   SIZE: 32,

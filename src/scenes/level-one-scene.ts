@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
+import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
-import { HoverTooltip } from '@/components/ui/tooltip/hover-tooltip';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
@@ -42,7 +42,6 @@ export class LevelOneScene extends Phaser.Scene {
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
-  private tooltips!: HoverTooltip;
   private mount!: Phaser.GameObjects.TileSprite;
   private forest!: Phaser.GameObjects.TileSprite;
   private sky!: Phaser.GameObjects.TileSprite;
@@ -61,6 +60,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.isGameInitialized = true;
 
     this.physics.world.createDebugGraphic();
+    this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
   }
 
@@ -69,7 +69,6 @@ export class LevelOneScene extends Phaser.Scene {
     this.spawn.update(time, delta);
     this.npc.update();
     this.interactables.update();
-    this.tooltips.update();
 
     this.updateParallaxBackground();
 
@@ -80,6 +79,15 @@ export class LevelOneScene extends Phaser.Scene {
       }
     }
     // Debug
+  }
+
+  private initKeyboard(): void {
+    const keyboard = this.input.keyboard;
+    if (!keyboard) {
+      throw new Error('Keyboard input not available yet.');
+    }
+
+    ServiceLocator.register(ServiceKeys.input, new KeyboardController(keyboard));
   }
 
   private initUiScene(initWorld: () => void): void {
@@ -352,9 +360,6 @@ export class LevelOneScene extends Phaser.Scene {
       keyName: MISC.BON_FIRE,
       frame: 0,
     });
-
-    // Tooltips
-    this.tooltips = new HoverTooltip();
   }
 
   private setupCamera(): void {

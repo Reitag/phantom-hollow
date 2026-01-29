@@ -45,8 +45,6 @@ export class Duck extends CharacterState {
   }
 
   public onUpdate(): void {
-    this.inventory?.handleInput(this.input);
-
     if (!this.input?.isDownDown) {
       this.stateMachine.changeState(SHARED_STATES.IDLE);
     }

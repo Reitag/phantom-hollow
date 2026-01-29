@@ -1,15 +1,15 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
-import { SPELLS } from '@/constants/asset-keys';
-import { getUiCoords } from '@/utils/helpers';
-import { ICON_SIZE } from '@/constants/ui';
+import { ICONS } from '@/constants/ui';
 
 type MaskConfig = { spell: Phaser.GameObjects.Graphics; destroy: () => void };
 type CooldownTarget = { x: number; y: number; active: boolean };
 
 export class CooldownAnimator {
   private readonly FULL_CIRCLE = 360;
-  private readonly ICON_SIZE = ICON_SIZE;
+  private readonly ICON_SIZE = ICONS.SIZE;
+  private readonly ICON_BORDER = ICONS.BORDER;
+  private readonly ICON_DEPTH = ICONS.DEPTH;
   private readonly ICON_RADIUS = 32;
   private readonly START_ANGLE = 270;
 
@@ -20,18 +20,18 @@ export class CooldownAnimator {
     this.runCooldown([{ ...target, active: true }], duration);
   }
 
-  public startGlobalCooldown(duration: number): void {
+  public startGlobalCooldown(
+    targets: { spellId: string; position: Position }[],
+    duration: number
+  ): void {
     const cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
-    const coords = this.getSpellCoords();
 
-    const targets: CooldownTarget[] = [
-      { ...this.toCentered(coords[0]), active: true },
-      { ...this.toCentered(coords[1]), active: !cooldowns.isOnCooldown(SPELLS.BLINK) },
-      { ...this.toCentered(coords[2]), active: !cooldowns.isOnCooldown(SPELLS.WIND) },
-      { ...this.toCentered(coords[3]), active: !cooldowns.isOnCooldown(SPELLS.FROST_BOLT) },
-    ];
+    const resolvedTargets: CooldownTarget[] = targets.map(({ spellId, position }) => ({
+      ...this.toCentered(position),
+      active: !cooldowns.isOnCooldown(spellId),
+    }));
 
-    this.runCooldown(targets, duration);
+    this.runCooldown(resolvedTargets, duration);
   }
 
   private runCooldown(targets: CooldownTarget[], duration: number): void {
@@ -66,7 +66,7 @@ export class CooldownAnimator {
   }
 
   private createOverlayMask(x: number, y: number): MaskConfig {
-    const half = this.ICON_SIZE / 2;
+    const half = this.ICON_SIZE / 2 - this.ICON_BORDER / 2;
     const color = 0xffffff;
 
     const shape = this.scene.add.graphics();
@@ -76,7 +76,7 @@ export class CooldownAnimator {
 
     const mask = shape.createGeometryMask();
 
-    const spell = this.scene.add.graphics();
+    const spell = this.scene.add.graphics().setDepth(this.ICON_DEPTH + 1);
     spell.setMask(mask);
 
     return {
@@ -110,7 +110,7 @@ export class CooldownAnimator {
   }
 
   private flashEffect(x: number, y: number): void {
-    const flash = this.scene.add.circle(x, y, 10, 0xffffff, 0.5);
+    const flash = this.scene.add.circle(x, y, 10, 0xffffff, 0.5).setDepth(this.ICON_DEPTH + 1);
     this.scene.tweens.add({
       targets: flash,
       alpha: 0,
@@ -122,24 +122,10 @@ export class CooldownAnimator {
   }
 
   private toCentered(pos: Position): Position {
-    const half = this.ICON_SIZE / 2;
+    const half = this.ICON_SIZE / 2 + this.ICON_BORDER - 1;
     return {
       x: pos.x + half,
       y: pos.y + half,
     };
-  }
-
-  private getSpellCoords(): {
-    x: number;
-    y: number;
-  }[] {
-    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
-
-    const primary = getUiCoords(uiCoords, 'primary');
-    const secondary = getUiCoords(uiCoords, 'secondary');
-    const tertiary = getUiCoords(uiCoords, 'tertiary');
-    const quaternary = getUiCoords(uiCoords, 'quaternary');
-
-    return [primary, secondary, tertiary, quaternary];
   }
 }

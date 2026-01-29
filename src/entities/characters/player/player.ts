@@ -1,10 +1,11 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { PanelService } from '@/infrastructure/panel-service';
 import { Idle } from '@/components/states/player-states/idle';
 import { Movement } from '@/components/states/player-states/movement';
 import { Casting } from '@/components/states/player-states/casting';
 import { Death } from '@/components/states/share/death';
-import { CHARACTERS } from '@/constants/asset-keys';
+import { CHARACTERS, SPELLS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';
 import { CHARACTER_ANIMATION_KEYS, PLAYER_ANIMATION } from '@/constants/animation-keys';
 import { Character, CharacterConfig } from '@/base/objects/character';
@@ -16,15 +17,16 @@ import { Health } from '@/components/stats/health';
 import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
+import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
 
-  private controls!: KeyboardController;
+  private panel: PanelService;
+  private controls: KeyboardController;
   private spellSystem: SpellSystem;
   private ui: UiSystem;
   private inventory: InventorySystem;
-
   private coinKeeper: CoinKeeper;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
@@ -34,7 +36,8 @@ export class Player extends Character {
     this.spellSystem = ServiceLocator.resolve(ServiceKeys.spellSystem);
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-
+    this.controls = ServiceLocator.resolve(ServiceKeys.input);
+    this.panel = ServiceLocator.resolve(ServiceKeys.panel);
     this.coinKeeper = new CoinKeeper();
 
     this.animations = {
@@ -49,7 +52,6 @@ export class Player extends Character {
       [CHARACTER_ANIMATION_KEYS.DEATH]: PLAYER_ANIMATION.DEATH,
     };
 
-    this.initKeyboard();
     this.initStateMachine();
 
     const spriteHeight = this.height;
@@ -59,16 +61,6 @@ export class Player extends Character {
 
     this.arcadeBody.setSize(bodyWidth, bodyHeight);
     this.arcadeBody.setOffset((spriteWidth - bodyWidth) / 2, spriteHeight - bodyHeight);
-  }
-
-  private initKeyboard(): void {
-    const keyboard = this.scene.input.keyboard;
-    if (!keyboard) {
-      throw new Error('Keyboard input not available yet.');
-    }
-
-    this.controls = new KeyboardController(keyboard);
-    ServiceLocator.register(ServiceKeys.input, this.controls);
   }
 
   private initStateMachine(): void {
@@ -97,11 +89,31 @@ export class Player extends Character {
     if (this.getDead()) return;
     this.stateMachine.update(delta);
     this.controls.update();
+    this.panel.update(this.controls);
     this.handleFall();
   }
 
   public getCoinKeeper(): CoinKeeper {
     return this.coinKeeper;
+  }
+
+  public attemptToCastFromSlot(spellId: string): void {
+    const spell = Object.values(SPELLS).find((s) => s === spellId);
+    if (!spell) return;
+
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+
+    if (!this.spellSystem.canCast(spell)) {
+      ui.addWarningtext(SPELL_WARNING_MESSAGES.SPELL_NOT_READY);
+      return;
+    }
+
+    if ((spell === SPELLS.FIRE_BALL || spell === SPELLS.FROST_BOLT) && this.hasVelocity()) {
+      ui.addWarningtext(SPELL_WARNING_MESSAGES.CANNOT_CAST_MOVING);
+      return;
+    }
+
+    this.stateMachine.changeState(PLAYER_STATES.CASTING, spell);
   }
 
   protected override onDamaged(): void {

@@ -4,19 +4,16 @@ import { Sandbox } from '@/infrastructure/sandbox';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { BLINK, FROST_BOLT, GLOBAL, WIND } from '@/constants/spell-cooldowns';
-import { getUiCoords } from '@/utils/helpers';
 
 export class SpellSystem {
   private cooldowns: SpellCooldowns;
   private spellFactory: SpellFactory;
   private sandbox: Sandbox;
-  private uiCoords: Phaser.Types.Tilemaps.TiledObject[];
 
   constructor() {
     this.cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     this.spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
     this.sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    this.uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
   }
 
   public canCast(spellKey: string): boolean {
@@ -34,7 +31,7 @@ export class SpellSystem {
     const blink = this.spellFactory.createBlink(character);
 
     blink.cast();
-    this.sandbox.startCooldown(BLINK.NAME, getUiCoords(this.uiCoords, 'secondary'), BLINK.DURATION);
+    this.sandbox.startCooldown(BLINK.NAME, BLINK.DURATION);
   }
 
   public castWindPulse(character: Character): void {
@@ -46,17 +43,13 @@ export class SpellSystem {
     const wind = this.spellFactory.createWindPulse(character, position);
 
     wind.castWaves();
-    this.sandbox.startCooldown(WIND.NAME, getUiCoords(this.uiCoords, 'tertiary'), WIND.DURATION);
+    this.sandbox.startCooldown(WIND.NAME, WIND.DURATION);
   }
 
   public castFrostbolt(character: Character): void {
     const frostBolt = this.spellFactory.createFrostBolt(character);
 
     frostBolt.cast();
-    this.sandbox.startCooldown(
-      FROST_BOLT.NAME,
-      getUiCoords(this.uiCoords, 'quaternary'),
-      FROST_BOLT.DURATION
-    );
+    this.sandbox.startCooldown(FROST_BOLT.NAME, FROST_BOLT.DURATION);
   }
 }

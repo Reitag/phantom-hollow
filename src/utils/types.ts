@@ -127,5 +127,25 @@ export type TooltipContentConfig = {
   prop_4?: PropConfig | undefined;
 };
 
-// UI Coords
-export type SpellSlot = 'primary' | 'secondary' | 'tertiary' | 'quaternary';
+// Icon Binders
+export type IconHandler = (
+  pointer: Phaser.Input.Pointer,
+  localX: number,
+  localY: number,
+  event?: Phaser.Types.Input.EventData
+) => void;
+
+export interface IconClickContext {
+  onHover(index: number): void;
+  onHoverOut(): void;
+  onPress(index: number): void;
+  onRelease(index: number): void;
+}
+
+export interface IconDragContext {
+  onHover(icon: Phaser.GameObjects.Image): void;
+  onHoverOut(): void;
+  onDragStart(icon: Phaser.GameObjects.Image): void;
+  onDrag(icon: Phaser.GameObjects.Image, x: number, y: number): void;
+  onDragEnd(icon: Phaser.GameObjects.Image, pointer: Phaser.Input.Pointer): void;
+}

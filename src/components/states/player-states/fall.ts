@@ -26,7 +26,6 @@ export class Fall extends PlayerState {
 
   public onUpdate(delta: number): void {
     this.characterSpeed?.update(delta);
-    this.inventory?.handleInput(this.input);
     this.movement();
 
     if (this.characterBody.blocked.down) {
@@ -37,8 +36,6 @@ export class Fall extends PlayerState {
         }
       });
     }
-
-    this.attemptToCast();
   }
 
   public onExit(): void {}

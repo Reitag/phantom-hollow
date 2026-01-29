@@ -26,8 +26,6 @@ export class Idle extends PlayerState {
   }
 
   public onUpdate(): void {
-    this.inventory?.handleInput(this.input);
-
     if (this.input?.isUpPressed) {
       this.jump();
     }
@@ -39,7 +37,5 @@ export class Idle extends PlayerState {
     if (this.input?.isDownDown) {
       this.stateMachine.changeState(PLAYER_STATES.DUCK);
     }
-
-    this.attemptToCast();
   }
 }

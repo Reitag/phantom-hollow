@@ -40,7 +40,7 @@ export class Death extends CharacterState {
 
       loot.spawnCoins(positions);
     }
-    this.ui?.removeHighlight();
+    //this.ui?.removeHighlight(); This line triggers error
     this.setToZeroVelocityX();
 
     this.character.removeAllListeners();

@@ -42,7 +42,7 @@ export abstract class PlayerState extends CharacterState {
     }
   }
 
-  protected attemptToCast(): void {
+  /*protected attemptToCast(): void {
     // ───────── Primary (Fireball)
     if (this.input?.isPrimaryActionDown) {
       this.ui?.highlightSpell(getUiCoords(this.uiCoords, 'primary'));
@@ -130,5 +130,5 @@ export abstract class PlayerState extends CharacterState {
 
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FROST_BOLT);
     }
-  }
+  }*/
 }

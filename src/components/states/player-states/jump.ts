@@ -33,12 +33,9 @@ export class Jump extends PlayerState {
 
   public onUpdate(delta: number): void {
     this.characterSpeed?.update(delta);
-    this.inventory?.handleInput(this.input);
     this.movement();
 
     if (this.characterBody.blocked.down) this.stateMachine.changeState(PLAYER_STATES.IDLE);
-
-    this.attemptToCast();
   }
 
   public onExit(): void {}

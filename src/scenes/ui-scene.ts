@@ -24,9 +24,6 @@ export class UiScene extends Phaser.Scene {
 
     // Miscs
     this.createMiscIcons();
-
-    // Spell icons
-    this.createSpellIcons();
   }
 
   public getUI(): UiSystem {
@@ -51,7 +48,7 @@ export class UiScene extends Phaser.Scene {
     this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
   }
 
-  private createSpellIcons(): void {
+  /*private createSpellIcons(): void {
     const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
 
     const primary = getUiCoords(uiCoords, 'primary');
@@ -88,7 +85,7 @@ export class UiScene extends Phaser.Scene {
     this.addKeyLabel(blink, 'C');
     this.addKeyLabel(wind, 'F');
     this.addKeyLabel(frostbolt, 'R');
-  }
+  }*/
 
   private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {
     this.add

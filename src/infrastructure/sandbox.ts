@@ -3,8 +3,8 @@ import { Player } from '@/entities/characters/player/player';
 import { UiSystem } from '@/systems/ui-system';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { GLOBAL } from '@/constants/spell-cooldowns';
-import { ICON_OVERLAYS } from '@/constants/ui-coordinates';
 import { Position } from '@/utils/types';
+import { PanelService } from './panel-service';
 
 type PlayerPosition = Position & {
   direction: 1 | -1;
@@ -13,10 +13,12 @@ type PlayerPosition = Position & {
 export class Sandbox {
   private cooldowns: SpellCooldowns;
   private ui: UiSystem;
+  private panel: PanelService;
 
   constructor() {
     this.cooldowns = ServiceLocator.resolve(ServiceKeys.cooldowns);
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+    this.panel = ServiceLocator.resolve(ServiceKeys.panel);
   }
 
   public getPlayerPosition(): PlayerPosition {
@@ -33,16 +35,16 @@ export class Sandbox {
     this.ui.reducePlayerHealth(stats.health!.current, stats.health!.max);
   }
 
-  public startCooldown(spellKey: string, coordinates: Position, delay: number): void {
+  public startCooldown(spellKey: string, delay: number): void {
     this.cooldowns.startCooldown(spellKey, delay);
     this.startGlobalCooldown();
-    this.ui.startIconCooldown({ x: coordinates.x, y: coordinates.y }, delay);
-    this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
+    this.panel.spellBar.startSpellIconCooldown(spellKey, delay);
+    this.panel.spellBar.startGlobalSpellIconsCooldown(GLOBAL.DURATION);
   }
 
   public startGlobalCooldown(): void {
     this.cooldowns.startGlobalCooldowns();
-    this.ui.startGlobalIconsCooldown(GLOBAL.DURATION);
+    this.panel.spellBar.startGlobalSpellIconsCooldown(GLOBAL.DURATION);
   }
 
   public setText(text: string): void {

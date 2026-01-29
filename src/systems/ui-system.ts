@@ -1,23 +1,16 @@
 import { Character } from '@/base/objects/character';
 import { Dialog } from '@/components/ui/dialog/dialog';
-import { InventoryIconContainer } from '@/components/ui/inventory-icons/inventory-icon-container';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
-import { CooldownAnimator } from '@/components/ui/spell-icons/cooldown-animator';
 import { HealthBar } from '@/components/ui/healthbar/health-bar';
 import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator';
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
-import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
 import { Coins } from '@/components/ui/coins/coins';
 import { Store } from '@/components/ui/store/store';
 import { Text } from '@/components/ui/text/text';
-import {
-  ModifierType,
-  Position,
-  InventorySlot,
-  TooltipFrameConfig,
-  TooltipContentConfig,
-} from '@/utils/types';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { PanelService } from '@/infrastructure/panel-service';
+import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
 
 export class UiSystem {
   private healthBar: HealthBar;
@@ -26,10 +19,6 @@ export class UiSystem {
   private castBar: CastBar;
   private castBarAnimator: CastBarAnimator;
 
-  private cooldownAnimator: CooldownAnimator;
-  private iconHighlighter: IconHighlighter;
-
-  private inventoryIconContainer: InventoryIconContainer;
   private modifierIconContainer: ModifierIconContainer;
 
   private store!: Store;
@@ -43,15 +32,13 @@ export class UiSystem {
     this.castBar = new CastBar(uiScene);
     this.castBarAnimator = new CastBarAnimator(uiScene, this.castBar);
 
-    this.cooldownAnimator = new CooldownAnimator(uiScene);
-    this.iconHighlighter = new IconHighlighter(uiScene);
-
-    this.inventoryIconContainer = new InventoryIconContainer(uiScene);
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
 
     this.store = new Store(uiScene);
     this.coins = new Coins(uiScene);
     this.text = new Text(uiScene);
+
+    ServiceLocator.register(ServiceKeys.panel, new PanelService(uiScene));
   }
 
   public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
@@ -70,22 +57,6 @@ export class UiSystem {
     this.castBarAnimator.stopCast();
   }
 
-  public startIconCooldown(coordinates: Position, duration: number): void {
-    this.cooldownAnimator.startSingleCooldown(coordinates, duration);
-  }
-
-  public startGlobalIconsCooldown(duration: number): void {
-    this.cooldownAnimator.startGlobalCooldown(duration);
-  }
-
-  public highlightSpell(coordinates: Position): void {
-    this.iconHighlighter.addSpellHighlight(coordinates);
-  }
-
-  public removeHighlight(): void {
-    this.iconHighlighter.removeSpellHighlight();
-  }
-
   public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     this.modifierIconContainer.addModifierIcon(key, duration, type);
 
@@ -102,16 +73,8 @@ export class UiSystem {
     this.modifierIconContainer.removeAllModifierIcons();
   }
 
-  public highlightSpot(index: number): void {
-    this.iconHighlighter.addSlotHighlight(index);
-  }
-
   public getStore(): Store {
     return this.store;
-  }
-
-  public getIconContainer(): InventoryIconContainer {
-    return this.inventoryIconContainer;
   }
 
   public increaseCoinCounter(amount: number): void {
