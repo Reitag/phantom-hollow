@@ -19,24 +19,29 @@ export const INVENTORY_UI = {
 
 // Store
 export const STORE_UI = {
-  BG: {
-    X: SCENE_SIZE.WIDTH / 2,
-    Y: SCENE_SIZE.HEIGHT / 2,
-    WIDTH: 550,
-    HEIGHT: 260,
-  },
   EXIT_BUTTON: {
-    X: 249.5,
-    Y: -105.5,
+    X: 768.5,
+    Y: 26.5,
     WIDTH: 33,
     HEIGHT: 33,
   },
-  MASK: {
-    X: 252,
-    Y: 337,
-    WIDTH: 496,
-    HEIGHT: 180,
-    RADIUS: 10,
+  ITEM_CARD: {
+    ICON: {
+      X: 25.5,
+      Y: 28.5,
+    },
+    NAME: {
+      X: 52,
+      Y: 13,
+    },
+    PRICE: {
+      X: 52,
+      Y: 30,
+    },
+    TEXT: {
+      X: 15,
+      Y: 65,
+    },
   },
 } as const;
 

@@ -24,6 +24,7 @@ export class IconHighlighter {
         this.ICON_SIZE
       )
       .setOrigin(0)
+      .setDepth(ICONS.DEPTH)
       .setFillStyle(0xfce2bd, 0.2)
       .setStrokeStyle(2, 0xffcc85, 0.2);
   }

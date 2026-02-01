@@ -67,6 +67,11 @@
     },
     {
       "type": "image",
+      "key": "item-card",
+      "url": "assets/ui/store/item-card.png"
+    },
+    {
+      "type": "image",
       "key": "dialog-ui",
       "url": "assets/ui/dialog/dialog-ui.png"
     },

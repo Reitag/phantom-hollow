@@ -94,6 +94,7 @@ export const UI = {
   CAST_ENV: 'cast-env',
   STORE_UI: 'store-ui',
   STORE_UI_CLOSE_BUTTON: 'store-ui-close-button',
+  ITEM_CARD: 'item-card',
   DIALOG_UI: 'dialog-ui',
   DIALOG_UI_BUTTON_YES: 'dialog-ui-button-yes',
   DIALOG_UI_BUTTON_NO: 'dialog-ui-button-no',

@@ -1,11 +1,12 @@
-import { GraphicsMask } from '@/components/rendering/graphic-mask';
 import { UI } from '@/constants/asset-keys';
+import { SCENE_SIZE } from '@/constants/scene-size';
 import { STORE_UI } from '@/constants/ui-coordinates';
 import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
+import { Position } from '@/utils/types';
 
 type Bundle = {
   item: StoreItem;
-  button: Phaser.GameObjects.Text;
+  card: Phaser.GameObjects.Container;
 };
 
 type Handlers = {
@@ -16,44 +17,37 @@ type Handlers = {
 };
 
 export class Store {
-  private readonly rowHeight = 60;
-  private readonly visibleRows = 3;
-
   private onCloseDown = () => this.closeStore();
   private onCloseOver = () => this.onButtonHover(true);
   private onCloseOut = () => this.onButtonHover(false);
 
   private open = false;
-  private scrollOffset = 0;
   private store: Phaser.GameObjects.Container;
   private container: Phaser.GameObjects.Container;
   private closeButton: Phaser.GameObjects.Image;
-  private maskGraphics!: GraphicsMask;
+  private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundles: Bundle[] = [];
-  private bundleHandlers = new Map<Phaser.GameObjects.Text, Handlers>();
+  private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   constructor(public scene: Phaser.Scene) {
     // Container and bg
-    this.store = this.scene.add.container(STORE_UI.BG.X, STORE_UI.BG.Y);
+    this.store = this.scene.add.container(SCENE_SIZE.WIDTH / 2, SCENE_SIZE.HEIGHT / 2);
     this.store.setVisible(false);
 
-    const bg = this.scene.add.image(0, 0, UI.STORE_UI).setOrigin(0.5, 0.5);
+    const bg = this.scene.add.image(0, 0, UI.STORE_UI);
     this.store.add(bg);
 
-    // Items container
-    this.container = this.scene.add.container(
-      -STORE_UI.BG.WIDTH / 2 + 60,
-      -STORE_UI.BG.HEIGHT / 2 + 85
-    );
+    const conPos = this.alignCoords(bg, 399.5, 157.5);
+    this.container = this.scene.add.container(conPos.x, conPos.y);
     this.store.add(this.container);
 
-    // Create items and mask
+    // Create items
     this.createStoreItems();
-    this.createAndApplyMask();
 
     // Close button
+    const btnPos = this.alignCoords(bg, STORE_UI.EXIT_BUTTON.X, STORE_UI.EXIT_BUTTON.Y);
     this.closeButton = this.scene.add
-      .image(STORE_UI.EXIT_BUTTON.X, STORE_UI.EXIT_BUTTON.Y, UI.STORE_UI_CLOSE_BUTTON)
+      .image(btnPos.x, btnPos.y, UI.STORE_UI_CLOSE_BUTTON)
       .setInteractive({ useHandCursor: true });
 
     this.store.add(this.closeButton);
@@ -77,31 +71,53 @@ export class Store {
     }
 
     this.bundles.forEach((bundle) => {
+      const card = bundle.card;
+      const bg = card.getByName('background') as Phaser.GameObjects.Image;
+      const pos = this.alignCoords(bg, bg.x, bg.y);
       const onOver = () => {
-        bundle.button.setStyle({ color: '#ffd84d' });
-        bundle.button.setScale(1.1);
+        this.hoverEffect = this.scene.add
+          .graphics()
+          .fillStyle(0xfce2bd, 0.2)
+          .fillRoundedRect(pos.x, pos.y, bg.width, bg.height, 6);
+        card.add(this.hoverEffect);
       };
 
       const onOut = () => {
-        bundle.button.setStyle({ color: '#ffff00' });
-        bundle.button.setScale(1);
+        if (this.hoverEffect) {
+          card.remove(this.hoverEffect);
+          this.hoverEffect.destroy();
+          this.hoverEffect = null;
+        }
       };
 
       const onDown = () => {
-        bundle.button.setTint(0xffaa00);
-        bundle.button.setScale(0.95);
+        if (this.hoverEffect) {
+          card.remove(this.hoverEffect);
+          this.hoverEffect.destroy();
+        }
+        this.hoverEffect = this.scene.add
+          .graphics()
+          .fillStyle(0x877965, 0.2)
+          .fillRoundedRect(pos.x, pos.y, bg.width, bg.height, 6);
+        card.add(this.hoverEffect);
       };
 
       const onUp = () => {
-        bundle.button.clearTint();
-        bundle.button.setScale(1.1);
+        if (this.hoverEffect) {
+          card.remove(this.hoverEffect);
+          this.hoverEffect.destroy();
+        }
+        this.hoverEffect = this.scene.add
+          .graphics()
+          .fillStyle(0xfce2bd, 0.2)
+          .fillRoundedRect(pos.x, pos.y, bg.width, bg.height, 6);
+        card.add(this.hoverEffect);
         this.purchaseItem(bundle.item);
       };
 
-      this.bundleHandlers.set(bundle.button, { onOver, onOut, onDown, onUp });
+      this.bundleHandlers.set(bg, { onOver, onOut, onDown, onUp });
 
-      bundle.button
-        .on('pointerover', onOver)
+      bg.on('pointerover', onOver)
         .on('pointerout', onOut)
         .on('pointerdown', onDown)
         .on('pointerup', onUp);
@@ -118,68 +134,88 @@ export class Store {
       .off('pointerout', this.onCloseOut);
 
     this.bundles.forEach((bundle) => {
-      const handlers = this.bundleHandlers.get(bundle.button);
+      const bg = bundle.card.getByName('background') as Phaser.GameObjects.Image;
+      const handlers = this.bundleHandlers.get(bg);
       if (!handlers) return;
 
-      bundle.button
-        .off('pointerover', handlers.onOver)
+      bg.off('pointerover', handlers.onOver)
         .off('pointerout', handlers.onOut)
         .off('pointerdown', handlers.onDown)
         .off('pointerup', handlers.onUp);
 
-      this.bundleHandlers.delete(bundle.button);
+      this.bundleHandlers.delete(bg);
     });
   }
 
   private createStoreItems(): void {
-    STORE_ITEMS.forEach((item, i) => {
-      const rowY = i * this.rowHeight;
+    const columns = 3;
+    const cardSpacingX = 251;
+    const rowSpacingY = 192;
 
-      const row = this.scene.add.container(0, rowY);
-      this.container.add(row);
+    STORE_ITEMS.forEach((item, index) => {
+      const rowIndex = Math.floor(index / columns);
+      const colIndex = index % columns;
 
-      const icon = this.scene.add.image(0, 0, item.iconKey);
-      row.add(icon);
+      // create row only once
+      let row = this.container.getByName(`row-${rowIndex}`) as Phaser.GameObjects.Container;
 
-      const text = this.scene.add
-        //.text(17, 0, `${item.name} - ${item.description}`, {
-        .text(17, 0, `${item.name}`, {
-          font: '14px Arial',
-          color: '#ffffff',
-        })
-        .setOrigin(0, 0.5);
-      row.add(text);
+      if (!row) {
+        row = this.scene.add.container(0, rowIndex * rowSpacingY);
+        row.name = `row-${rowIndex}`;
+        this.container.add(row);
+      }
 
-      const priceText = this.scene.add
-        .text(420, 0, `${item.price}`, {
-          font: '16px Arial',
-          color: '#ffff00',
-        })
-        .setOrigin(0.5, 0.5)
-        .setInteractive({ useHandCursor: true });
+      const cardX = (colIndex - 1) * cardSpacingX;
 
-      row.add(priceText);
-
-      const bundle = {
-        item: item,
-        button: priceText,
-      };
-      this.bundles.push(bundle);
+      const card = this.createItemCard(item, cardX, 0);
+      row.add(card);
     });
   }
 
-  private createAndApplyMask(): void {
-    this.maskGraphics = new GraphicsMask(this.scene);
+  private createItemCard(item: StoreItem, x: number, y: number) {
+    const card = this.scene.add.container(x, y);
+    const bg = this.scene.add
+      .image(0, 0, UI.ITEM_CARD)
+      .setName('background')
+      .setInteractive({ useHandCursor: true });
 
-    this.maskGraphics.roundedRect({
-      x: STORE_UI.MASK.X,
-      y: STORE_UI.MASK.Y,
-      width: STORE_UI.MASK.WIDTH,
-      height: STORE_UI.MASK.HEIGHT,
-      radius: STORE_UI.MASK.RADIUS,
+    const imgPos = this.alignCoords(bg, STORE_UI.ITEM_CARD.ICON.X, STORE_UI.ITEM_CARD.ICON.Y);
+    const namePos = this.alignCoords(bg, STORE_UI.ITEM_CARD.NAME.X, STORE_UI.ITEM_CARD.NAME.Y);
+    const pricePos = this.alignCoords(bg, STORE_UI.ITEM_CARD.PRICE.X, STORE_UI.ITEM_CARD.PRICE.Y);
+    const textPos = this.alignCoords(bg, STORE_UI.ITEM_CARD.TEXT.X, STORE_UI.ITEM_CARD.TEXT.Y);
+
+    const icon = this.scene.add.image(imgPos.x, imgPos.y, item.iconKey);
+    const name = this.scene.add.text(namePos.x, namePos.y, `${item.name}`, {
+      font: '12px Arial',
+      color: '##fff2d8',
+    });
+    const price = this.scene.add.text(pricePos.x, pricePos.y, `${item.price} coins`, {
+      font: '12px Arial',
+      color: '#ffd84d',
+    });
+    const text = this.scene.add.text(textPos.x, textPos.y, `${item.description}`, {
+      font: '12px Arial',
+      color: '#000000',
+      fixedWidth: 200,
+      fixedHeight: 90,
+      wordWrap: {
+        width: 200,
+      },
     });
 
-    this.maskGraphics.applyTo(this.container);
+    card.add([bg, icon, name, text, price]);
+
+    this.bundles.push({ item, card });
+
+    return card;
+  }
+
+  // Converts Figma top-left coords to Phaser centered local coords
+  private alignCoords(bg: Phaser.GameObjects.Image, x: number, y: number): Position {
+    return {
+      x: x - bg.width / 2,
+      y: y - bg.height / 2,
+    };
   }
 
   private purchaseItem(item: StoreItem): void {
@@ -197,33 +233,10 @@ export class Store {
   private openStore() {
     this.store.setVisible(true);
     this.open = true;
-    this.registerScroll();
   }
 
   private closeStore() {
     this.store.setVisible(false);
     this.open = false;
-    this.unregisterScroll();
-  }
-
-  private registerScroll(): void {
-    this.scene.input.on('wheel', this.onScroll, this);
-  }
-
-  private unregisterScroll(): void {
-    this.scene.input.off('wheel', this.onScroll, this);
-  }
-
-  private onScroll(
-    _pointer: Phaser.Input.Pointer,
-    _gameObjects: Phaser.GameObjects.GameObject[],
-    _dx: number,
-    dy: number
-  ): void {
-    const totalHeight = this.bundles.length * this.rowHeight;
-    const maxOffset = Math.max(0, totalHeight - this.visibleRows * this.rowHeight);
-
-    this.scrollOffset = Phaser.Math.Clamp(this.scrollOffset + dy * 0.5, 0, maxOffset);
-    this.container.y = -this.scrollOffset - STORE_UI.BG.HEIGHT / 2 + 85;
   }
 }
