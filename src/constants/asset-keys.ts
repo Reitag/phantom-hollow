@@ -32,6 +32,7 @@ export const MISC = {
   BON_FIRE: 'bon-fire',
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
+  SHINING: 'shining',
 } as const;
 
 export const OBJECTS = {
@@ -59,6 +60,8 @@ export const OBJECTS = {
   BUSH_1: 'bush-1',
   BUSH_2: 'bush-2',
   BUSH_3: 'bush-3',
+  CHEST_CLOSE: 'chest-close',
+  CHEST_OPEN: 'chest-open',
 } as const;
 
 export const SPELLS = {

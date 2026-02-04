@@ -20,6 +20,7 @@ import { earthShakeAnim } from '../spells/earth-shake-anim';
 import { shadowTrailAnim } from '../spells/shadow-trail-anim';
 import { bonFireAnim } from '../misc/bon-fire-anim';
 import { alchemistAnim } from '../characters/npc/alchemist-anim';
+import { shiningAnim } from '../misc/shining-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -59,4 +60,5 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   bonFireAnim(anims);
   portalAnim(anims);
   darkEnergyAnim(anims);
+  shiningAnim(anims);
 }

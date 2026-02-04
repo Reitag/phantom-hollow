@@ -23,6 +23,12 @@
       "key": "dark-energy",
       "url": "assets/misc/dark-energy.png",
       "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "shining",
+      "url": "assets/misc/shining.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
     }
   ]
 }

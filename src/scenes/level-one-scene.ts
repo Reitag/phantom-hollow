@@ -12,6 +12,7 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
+import { LootZone } from '@/game/interactables/loot-zone';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
@@ -62,6 +63,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.createDebugGraphic();
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
+
+    // Fire worm's loot spawn
+    this.events.on('fire-worm:died', this.onFireWormDied, this);
   }
 
   public update(time: number, delta: number): void {
@@ -236,6 +240,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.add(new Stall(this));
     this.interactables.add(new SoulPedestal(this));
     this.interactables.add(new AlchemistQuestTrigger(this));
+    this.interactables.add(new LootZone(this));
   }
 
   private registerCollisions(): void {
@@ -457,5 +462,12 @@ export class LevelOneScene extends Phaser.Scene {
     }
 
     item.destroy();
+  }
+
+  private onFireWormDied(data: { x: number; y: number }): void {
+    const lootZone = this.interactables.get(LootZone);
+    const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
+
+    lootZone?.createLootZone(zone, [{ id: 'spell-potion', amount: 3 }]);
   }
 }

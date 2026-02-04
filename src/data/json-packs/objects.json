@@ -119,6 +119,16 @@
       "type": "image",
       "key": "bush-3",
       "url": "assets/objects/bushes/Bush-3.png"
+    },
+    {
+      "type": "image",
+      "key": "chest-close",
+      "url": "assets/objects/chest/chest-close.png"
+    },
+    {
+      "type": "image",
+      "key": "chest-open",
+      "url": "assets/objects/chest/chest-open.png"
     }
   ]
 }

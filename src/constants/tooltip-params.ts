@@ -369,3 +369,19 @@ export const QUEST_TOOLTIP: TooltipContentConfig = {
     text: ' to Interact',
   },
 } as const;
+
+// Loot Zones
+export const LOOT_ZONE_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Loot the Items',
+  },
+} as const;

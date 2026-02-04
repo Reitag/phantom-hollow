@@ -1,21 +1,20 @@
-import { SPELLS } from './asset-keys';
 import { SCENE_SIZE } from './scene-size';
 
 // Spell
-export const SPELL_UI = {
+/*export const SPELL_UI = {
   X: 409,
   Y: 615,
   WIDTH: 182,
   HEIGHT: 32,
-} as const;
+} as const;*/
 
 // Inventory
-export const INVENTORY_UI = {
+/*export const INVENTORY_UI = {
   X: 10,
   Y: 615,
   WIDTH: 126,
   HEIGHT: 30,
-} as const;
+} as const;*/
 
 // Store
 export const STORE_UI = {
@@ -45,8 +44,16 @@ export const STORE_UI = {
   },
 } as const;
 
+// Interact tooltip
+export const INTERACT_TOOLTIP = {
+  X: 620,
+  Y: 628,
+  WIDTH: 170,
+  FILL_COLOR: 0x000000,
+} as const;
+
 // Health
-export const HEALTH_UI = {
+/*export const HEALTH_UI = {
   X: 10,
   Y: 20,
   WIDTH: 194,
@@ -58,27 +65,27 @@ export const HEALTH_BAR = {
   Y: HEALTH_UI.Y,
   WIDTH: 157,
   HEIGHT: 6,
-} as const;
+} as const;*/
 
 // Coin Icon
-export const COIN_UI = {
+/*export const COIN_UI = {
   X: 10,
   Y: 60,
   COUNT_X: 42,
   COUNT_Y: 60,
-} as const;
+} as const;*/
 
 // Modifier Icons
-export const MODIFIER_ICONS = {
+/*export const MODIFIER_ICONS = {
   ICON_SIZE: 32,
   PADDING: 8,
   START_X: 50,
   BUFF_Y: 120,
   DEBUFF_Y: 180,
-} as const;
+} as const;*/
 
 // Cast
-export const CAST_UI = {
+/*export const CAST_UI = {
   X: 410,
   Y: 580,
   WIDTH: 180,
@@ -90,10 +97,10 @@ export const CAST_BAR = {
   Y: CAST_UI.Y,
   WIDTH: 176,
   HEIGHT: 8,
-} as const;
+} as const;*/
 
 // Spell Icons
-const ICON_X_FIRST = 427;
+/*const ICON_X_FIRST = 427;
 const X_STEP = 50;
 const ICON_Y = 615;
 
@@ -122,16 +129,16 @@ export const ICON_OVERLAYS = {
   [SPELLS.BLINK]: BLINK_ICON,
   [SPELLS.WIND_WAVE]: WIND_ICON,
   [SPELLS.FROST_BOLT]: FROST_BOLT_ICON,
-} as const;
+} as const;*/
 
 // Inventory Slots
-export const INVENTORY_SLOTS = {
+/*export const INVENTORY_SLOTS = {
   WIDTH: 16,
   HEIGHT: 24,
   PADDING: 16,
   START_X: 17,
   Y: 615,
-} as const;
+} as const;*/
 
 // Dialog box
 

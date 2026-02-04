@@ -169,6 +169,9 @@ export const MISC_ANIMATION = {
   BON_FIRE: {
     [VFX_ANIMATION_KEYS.MAIN]: 'bonfire-main',
   },
+  SHINING: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'shining-main',
+  },
 } as const;
 
 export const ITEMS_ANIMATION = {

@@ -6,6 +6,7 @@ import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { FireWorm } from '@/entities/characters/bosses/fire-worm';
 
 export class Death extends CharacterState {
   private characterKey: string;
@@ -23,7 +24,7 @@ export class Death extends CharacterState {
   }
 
   public onEnter(): void {
-    if (!(this.character instanceof Player)) {
+    if (!(this.character instanceof Player || this.character instanceof FireWorm)) {
       const loot = ServiceLocator.resolve(ServiceKeys.lootSystem);
 
       const coinCount = Phaser.Math.Between(1, 3);

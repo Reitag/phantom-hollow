@@ -1,6 +1,7 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { Store } from '@/components/ui/store/store';
 import { STORE_TOOLTIP } from '@/constants/tooltip-params';
+import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Stall extends Interactable {
@@ -17,10 +18,10 @@ export class Stall extends Interactable {
     this.store.registerStoreEvents();
     this.ui.showHorizontalTooltip(
       {
-        x: this.scene.scale.width / 2 - 60,
-        y: this.player.y - 40,
-        width: 170,
-        fillColor: 0x000000,
+        x: INTERACT_TOOLTIP.X,
+        y: INTERACT_TOOLTIP.Y,
+        width: INTERACT_TOOLTIP.WIDTH,
+        fillColor: INTERACT_TOOLTIP.FILL_COLOR,
       },
       STORE_TOOLTIP
     );

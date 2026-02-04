@@ -7,6 +7,7 @@ import { Rectangle } from '@/utils/types';
 export const InteractableNames = {
   ['soul-pedestal']: 'soul-pedestal',
   ['stall']: 'stall',
+  ['chest']: 'chest',
   ['fire-worm']: 'fire-worm',
   ['evil-wizard']: 'evil-wizard',
   ['alchemist-quest']: 'alchemist-quest',
