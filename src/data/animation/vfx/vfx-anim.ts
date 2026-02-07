@@ -74,6 +74,15 @@ export function vfxAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
+  if (!anims.get(VFX_ANIMATION.CONCENTRATION.MAIN)) {
+    anims.create({
+      key: VFX_ANIMATION.CONCENTRATION.MAIN,
+      frames: anims.generateFrameNumbers(VFX.CONCENTRATION_VFX, { start: 0, end: 6 }),
+      frameRate: 10,
+      repeat: 0,
+    });
+  }
+
   if (!anims.get(VFX_ANIMATION.EARTH_ANXIETY.MAIN)) {
     anims.create({
       key: VFX_ANIMATION.EARTH_ANXIETY.MAIN,

@@ -1,8 +1,9 @@
+import { UI } from '@/constants/asset-keys';
 import { TYPE } from '@/constants/modifier-stats';
 import { MODIFIER_TOOLTIPS } from '@/constants/tooltip-params';
-//import { MODIFIER_ICONS } from '@/constants/ui-coordinates';
 import { MODIFIER_ICONS } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { UiSystem } from '@/systems/ui-system';
 import { getUiCoords } from '@/utils/helpers';
 import { ModifierType, Position } from '@/utils/types';
 
@@ -10,6 +11,7 @@ type ModifierContainerConfig = {
   icon: Phaser.GameObjects.Image;
   timerText: Phaser.GameObjects.Text | undefined;
   type: ModifierType;
+  onPointerOver?: (pointer: Phaser.Input.Pointer) => void;
 };
 
 export class ModifierIconContainer {
@@ -27,8 +29,6 @@ export class ModifierIconContainer {
   public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     if (this.findModifierIcon(key)) return;
 
-    const ui = ServiceLocator.resolve(ServiceKeys.ui);
-
     const sameTypeIcons = this.modifierIcons.filter((m) => m.type === type);
     const index = sameTypeIcons.length;
     const posX = this.buffCoords.x + index * (MODIFIER_ICONS.SIZE + MODIFIER_ICONS.PADDING);
@@ -38,37 +38,6 @@ export class ModifierIconContainer {
     icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
     icon.setInteractive({ useHandCursor: true });
     icon.name = key;
-
-    // Pointer over
-    icon.on('pointerover', (pointer: Phaser.Input.Pointer) => {
-      this.scene.game.canvas.style.cursor = 'help';
-      const keyItem = icon.name;
-      const tooltipArray = Object.values(MODIFIER_TOOLTIPS).map(
-        ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({
-          id,
-          title,
-          prop_1,
-          prop_2,
-          prop_3,
-          prop_4,
-        })
-      );
-
-      const info = tooltipArray.find((tooltip) => keyItem === tooltip.id);
-      if (!info) return;
-      ui.showVerticalTooltip(
-        {
-          x: icon.x - 10,
-          y: icon.y - 30,
-          width: 300,
-          fillColor: 0x000000,
-        },
-        info
-      );
-    });
-
-    // Pointer out
-    icon.on('pointerout', ui.hideTooltip, ui);
 
     let timerText: Phaser.GameObjects.Text | undefined;
     if (duration) {
@@ -88,6 +57,7 @@ export class ModifierIconContainer {
     }
 
     this.modifierIcons.push({ icon, timerText, type });
+    this.attachTooltip({ icon, timerText, type });
   }
 
   public startCountdown(key: string, duration: number | undefined): void {
@@ -119,7 +89,9 @@ export class ModifierIconContainer {
     const entry = this.findModifierIcon(key);
     if (!entry) return;
 
-    entry.icon?.destroy();
+    this.detachTooltip(entry);
+
+    entry.icon.destroy();
     entry.timerText?.destroy();
     this.modifierIcons = this.modifierIcons.filter((elem) => elem.icon.name !== key);
 
@@ -127,12 +99,34 @@ export class ModifierIconContainer {
   }
 
   public removeAllModifierIcons(): void {
-    for (const entry of this.modifierIcons) {
-      entry.icon?.destroy();
-      entry.timerText?.destroy();
+    const toRemove = this.modifierIcons
+      .filter((e) => e.icon.name !== UI.CONCENTRATION_BUFF)
+      .map((e) => e.icon.name);
+
+    toRemove.forEach((key) => this.removeModifierIcon(key));
+  }
+
+  private attachTooltip(entry: ModifierContainerConfig): void {
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+
+    const onPointerOver = this.onIconPointerOver(entry.icon, ui);
+
+    entry.onPointerOver = onPointerOver;
+    entry.icon.on('pointerover', onPointerOver);
+    entry.icon.on('pointerout', ui.hideTooltip, ui);
+  }
+
+  private detachTooltip(entry: ModifierContainerConfig): void {
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    ui.hideTooltip();
+
+    if (entry.onPointerOver) {
+      entry.icon.off('pointerover', entry.onPointerOver);
     }
 
-    this.modifierIcons = [];
+    entry.icon.off('pointerout', ui.hideTooltip, ui);
+    entry.icon.removeAllListeners();
+    entry.icon.disableInteractive();
   }
 
   private findModifierIcon(key: string): ModifierContainerConfig | undefined {
@@ -154,5 +148,37 @@ export class ModifierIconContainer {
         m.timerText.y = posY + MODIFIER_ICONS.SIZE / 2 + 16;
       }
     });
+  }
+
+  private onIconPointerOver(
+    icon: Phaser.GameObjects.Image,
+    ui: UiSystem
+  ): (pointer: Phaser.Input.Pointer) => void {
+    return () => {
+      this.scene.game.canvas.style.cursor = 'help';
+      const keyItem = icon.name;
+      const tooltipArray = Object.values(MODIFIER_TOOLTIPS).map(
+        ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({
+          id,
+          title,
+          prop_1,
+          prop_2,
+          prop_3,
+          prop_4,
+        })
+      );
+
+      const info = tooltipArray.find((tooltip) => keyItem === tooltip.id);
+      if (!info) return;
+      ui.showVerticalTooltip(
+        {
+          x: icon.x,
+          y: icon.y + 120,
+          width: 300,
+          fillColor: 0x000000,
+        },
+        info
+      );
+    };
   }
 }

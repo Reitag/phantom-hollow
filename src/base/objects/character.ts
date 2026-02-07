@@ -10,6 +10,7 @@ import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { Casting } from '@/components/stats/casting';
 
 export interface CharacterConfig extends SpriteConfig {
   facingRight: boolean;
@@ -21,6 +22,7 @@ export interface CharacterConfig extends SpriteConfig {
       spellPower: number | undefined;
     };
     defense: number | undefined;
+    casting: boolean;
     aggro: boolean;
   };
 }
@@ -50,6 +52,7 @@ export class Character extends ArcadeSprite {
           stats.damage.spellPower !== undefined ? new SpellPower(stats.damage.spellPower) : null,
       },
       defense: stats.defense !== undefined ? new Defense(stats.defense) : null,
+      casting: stats.casting !== false ? new Casting() : null,
       aggro: stats.aggro !== false ? new Aggro() : null,
     };
 

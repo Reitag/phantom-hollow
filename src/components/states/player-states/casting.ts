@@ -13,6 +13,7 @@ import { ARCANE_MIND } from '@/constants/modifier-stats';
 export class Casting extends PlayerState {
   private isCasting = false;
   private isInstantCasting = false;
+  private castTime: number = 1;
 
   constructor(
     character: Player,
@@ -37,7 +38,10 @@ export class Casting extends PlayerState {
             }
           });
         } else {
-          this.startCast(FIRE_BALL_STATS.CAST_TIME, () => {
+          const castTime = this.character.getStats()?.casting?.value;
+          if (castTime !== undefined) this.castTime = castTime;
+
+          this.startCast(FIRE_BALL_STATS.CAST_TIME * this.castTime, () => {
             if (!this.character.getDead()) {
               this.spellSystem?.castFireball(this.character);
             }
@@ -57,14 +61,18 @@ export class Casting extends PlayerState {
         });
         break;
 
-      case SPELLS.FROST_BOLT:
-        this.startCast(FROST_BOLT_STATS.CAST_TIME, () => {
+      case SPELLS.FROST_BOLT: {
+        const castTime = this.character.getStats()?.casting?.value;
+        if (castTime !== undefined) this.castTime = castTime;
+
+        this.startCast(FROST_BOLT_STATS.CAST_TIME * this.castTime, () => {
           if (!this.character.getDead()) {
             this.spellSystem?.castFrostbolt(this.character);
           }
         });
 
         break;
+      }
 
       default:
         break;

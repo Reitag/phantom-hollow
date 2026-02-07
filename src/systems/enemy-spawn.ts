@@ -67,6 +67,7 @@ export class EnemySpawn {
           spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
         },
         defense: undefined,
+        casting: true,
         aggro: true,
       },
     }).setDepth(Z_POSITION.ENEMY);
@@ -91,6 +92,7 @@ export class EnemySpawn {
           spellPower: FIRE_WORM_STATS.SPELL_POWER,
         },
         defense: undefined,
+        casting: true,
         aggro: true,
       },
     }).setDepth(Z_POSITION.ENEMY);
@@ -173,6 +175,7 @@ export class EnemySpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: true,
       },
     });
@@ -198,6 +201,7 @@ export class EnemySpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: true,
       },
     });
@@ -223,6 +227,7 @@ export class EnemySpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: true,
       },
     });

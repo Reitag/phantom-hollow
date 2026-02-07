@@ -122,6 +122,11 @@
     },
     {
       "type": "image",
+      "key": "stone-of-concentration-icon",
+      "url": "assets/icons/stones/stone-of-concentration.png"
+    },
+    {
+      "type": "image",
       "key": "protection-buff",
       "url": "assets/icons/buffs/protection.png"
     },
@@ -144,6 +149,11 @@
       "type": "image",
       "key": "arcane-mind-buff",
       "url": "assets/icons/buffs/arcane-mind.png"
+    },
+    {
+      "type": "image",
+      "key": "concentration-buff",
+      "url": "assets/icons/buffs/concentration.png"
     },
     {
       "type": "image",

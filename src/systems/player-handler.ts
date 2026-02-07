@@ -31,6 +31,7 @@ export class PlayerHandler {
           spellPower: PLAYER_STATS.SPELL_POWER,
         },
         defense: 1,
+        casting: true,
         aggro: false,
       },
       facingRight: true,

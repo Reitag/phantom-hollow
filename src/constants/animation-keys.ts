@@ -150,6 +150,9 @@ export const VFX_ANIMATION = {
   ARCANE_MIND: {
     [VFX_ANIMATION_KEYS.MAIN]: 'arcane-mind-vfx-main',
   },
+  CONCENTRATION: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'concentration-vfx-main',
+  },
   EARTH_ANXIETY: {
     [VFX_ANIMATION_KEYS.MAIN]: 'earth-anxiety-vfx-main',
   },

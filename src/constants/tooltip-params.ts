@@ -6,11 +6,12 @@ import {
   spellPotion,
   undyingPotion,
 } from '@/game/items/potions';
-import { soulStone } from '@/game/items/stones';
+import { soulStone, stoneOfConcentration } from '@/game/items/stones';
 import { DREAD_AURA_STATS, FIRE_BALL_STATS, FROST_BOLT_STATS } from './object-stats';
 import { BLINK, FROST_BOLT, WIND } from './spell-cooldowns';
 import {
   ARCANE_MIND,
+  CONCENTRATION,
   DISEASE,
   LIGHTNING_SHIELD,
   PROTECTION,
@@ -136,6 +137,7 @@ export const ITEM_TOOLTIPS: {
   LIGHTNING_POTION: TooltipContentConfig;
   UNDYING_POTION: TooltipContentConfig;
   SOUL_STONE: TooltipContentConfig;
+  STONE_OF_CONCENTRATION: TooltipContentConfig;
 } = {
   HEALTH_POTION: {
     id: healthPotion().iconKey,
@@ -221,6 +223,20 @@ export const ITEM_TOOLTIPS: {
       text: soulStone().description,
     },
   },
+  STONE_OF_CONCENTRATION: {
+    id: stoneOfConcentration().iconKey,
+    title: {
+      param: stoneTitleParams,
+      text: stoneOfConcentration().name,
+    },
+    prop_1: {
+      text: 'Unique item',
+    },
+    prop_2: {
+      param: textParams,
+      text: stoneOfConcentration().description,
+    },
+  },
 };
 
 // Modifier tooltips
@@ -238,6 +254,7 @@ const debuffParams = {
 
 export const MODIFIER_TOOLTIPS: {
   ARCANE_MIND: TooltipContentConfig;
+  CONCENTRATION: TooltipContentConfig;
   PROTECTION: TooltipContentConfig;
   SPELL_POWER: TooltipContentConfig;
   LIGHTNING_SHIELD: TooltipContentConfig;
@@ -254,6 +271,16 @@ export const MODIFIER_TOOLTIPS: {
     },
     prop_1: {
       text: 'Fireball becomes an instant cast spell.',
+    },
+  },
+  CONCENTRATION: {
+    id: CONCENTRATION.id,
+    title: {
+      param: buffParams,
+      text: 'Concentration',
+    },
+    prop_1: {
+      text: 'Casting speed increased by 15%.',
     },
   },
   PROTECTION: {

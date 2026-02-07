@@ -61,8 +61,32 @@ export class LootZone extends Interactable {
       }),
     });
 
-    // Second chest
-    // code
+    // Second static loot zone
+    const secondLootZone = this.scene.add
+      .image(
+        (staticLootZones[1] as Phaser.GameObjects.Zone).x,
+        (staticLootZones[1] as Phaser.GameObjects.Zone).y,
+        OBJECTS.CHEST_CLOSE,
+        0
+      )
+      .setOrigin(0, 0)
+      .setDepth(Z_POSITION.DECOR);
+
+    this.lootZones.push({
+      zone: staticLootZones[1] as Phaser.GameObjects.Zone,
+      chestSprite: secondLootZone,
+      loot: [{ id: 'stone-of-concentration', amount: 1 }],
+      activated: false,
+      vfx: new Shining({
+        scene: this.scene,
+        position: {
+          x: (staticLootZones[1] as Phaser.GameObjects.Zone).x,
+          y: (staticLootZones[1] as Phaser.GameObjects.Zone).y,
+        },
+        keyName: MISC.SHINING,
+        frame: 0,
+      }),
+    });
   }
 
   public createLootZone(zone: Phaser.GameObjects.Zone, loot: Loot[]): void {

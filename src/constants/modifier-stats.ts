@@ -39,6 +39,12 @@ export const ARCANE_MIND = {
   type: TYPE.buff,
 };
 
+export const CONCENTRATION = {
+  id: UI.CONCENTRATION_BUFF,
+  effect: 0.85,
+  type: TYPE.buff,
+};
+
 // Debuffs
 export const DISEASE = {
   id: UI.DISEASE_DEBUFF,
