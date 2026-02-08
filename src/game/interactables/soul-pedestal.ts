@@ -25,7 +25,6 @@ export class SoulPedestal extends Interactable {
 
   protected onLeave(): void {
     this.scene.events.off('trigger-soul-stone', this.setSoulStone, this);
-    //this.scene.registry.set('active-soul-pedestal', null);
     this.scene.registry.remove('active-soul-pedestal');
   }
 
@@ -56,7 +55,7 @@ export class SoulPedestal extends Interactable {
 
     const newSpawn = { x: this.activeZone.x, y: this.activeZone.y };
     playerHandler.setNewResurrectPosition(newSpawn);
-    inventory.removeItem(stoneIndex);
+    inventory.destroySlot(stoneIndex);
 
     if (this.soulFire.fire?.active) {
       this.soulFire.fire.destroy();

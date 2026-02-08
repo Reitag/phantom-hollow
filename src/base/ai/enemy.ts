@@ -1,5 +1,6 @@
 import { Character } from '@/base/objects/character';
 import { DESTROY_TIME, RESPAWN_TIME } from '@/constants/spawn-properies';
+import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { StateMachine } from '@/systems/state-machine';
@@ -65,12 +66,18 @@ export abstract class Enemy {
     unit.destroy();
   }
 
+  // This method does not use anywhere
   public handleCollision(enemy: Character): void {
-    const { x, y } = this.distanceToPlayer(enemy);
+    const fsm = enemy.getStateMachine();
 
-    if (!this.canEngage(enemy, x, y)) {
-      enemy.flipCharacterToRight(!enemy.getFacingRight());
-      return;
+    if (fsm.currentStateName === ENEMY_STATES.CHASE) {
+      const aggro = enemy.getStats().aggro;
+      if (!aggro) return;
+
+      if (aggro.meter > 0) {
+        aggro.reset();
+        enemy.flipCharacterToRight(!enemy.getFacingRight());
+      }
     }
   }
 

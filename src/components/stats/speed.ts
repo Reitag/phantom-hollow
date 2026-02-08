@@ -43,7 +43,6 @@ export class Speed {
   }
 
   public applyForce(force: number): void {
-    if (typeof this.saved === 'number') return;
     this.force += force;
   }
 

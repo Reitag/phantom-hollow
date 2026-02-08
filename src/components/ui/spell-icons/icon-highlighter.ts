@@ -1,27 +1,48 @@
 import Phaser from 'phaser';
 
-import { ICON_OVERLAYS, INVENTORY_SLOTS } from '@/constants/ui-coordinates';
+import { INVENTORY_SLOTS } from '@/constants/ui-coordinates';
+import { Position } from '@/utils/types';
+import { ICONS } from '@/constants/ui';
 
 export class IconHighlighter {
-  private scene: Phaser.Scene;
-  private spellHighlight: Phaser.GameObjects.Rectangle | null = null;
-  private slotHighlight: Phaser.GameObjects.Rectangle | null = null;
+  private readonly ICON_SIZE = ICONS.SIZE;
+  private readonly ICON_BORDER = ICONS.BORDER;
 
-  constructor(scene: Phaser.Scene) {
-    this.scene = scene;
+  private spellHighlight: Phaser.GameObjects.Rectangle | null = null;
+  private slotHover: Phaser.GameObjects.Rectangle | null = null;
+
+  constructor(private scene: Phaser.Scene) {}
+
+  public addSlotHoverEffect(coordinates: Position): void {
+    if (this.slotHover) return;
+
+    this.slotHover = this.scene.add
+      .rectangle(
+        coordinates.x + this.ICON_BORDER,
+        coordinates.y + this.ICON_BORDER,
+        this.ICON_SIZE,
+        this.ICON_SIZE
+      )
+      .setOrigin(0)
+      .setDepth(ICONS.DEPTH)
+      .setFillStyle(0xfce2bd, 0.2)
+      .setStrokeStyle(2, 0xffcc85, 0.2);
   }
 
-  public addSpellHighlight(spellKey: string): void {
+  public addSpellHighlight(coordinates: Position): void {
     if (this.spellHighlight) return;
 
-    const key = spellKey as keyof typeof ICON_OVERLAYS;
-    const position = ICON_OVERLAYS[key];
-    if (!position) return;
+    this.removeSlotHoverEffect();
 
-    const size = 32;
     this.spellHighlight = this.scene.add
-      .rectangle(position.X, position.Y, size, size)
-      .setOrigin(0.5)
+      .rectangle(
+        coordinates.x + this.ICON_BORDER,
+        coordinates.y + this.ICON_BORDER,
+        this.ICON_SIZE,
+        this.ICON_SIZE
+      )
+      .setOrigin(0)
+      .setDepth(ICONS.DEPTH)
       .setFillStyle(0xfff8c9, 0.4)
       .setStrokeStyle(2, 0xffffff, 1);
   }
@@ -33,36 +54,10 @@ export class IconHighlighter {
     }
   }
 
-  public addSlotHighlight(index: number): void {
-    if (this.slotHighlight) return;
-
-    const posX = 25 + index * (INVENTORY_SLOTS.WIDTH + INVENTORY_SLOTS.PADDING);
-    const position = {
-      x: posX,
-      y: INVENTORY_SLOTS.Y,
-    };
-    const size = 24;
-    this.slotHighlight = this.scene.add
-      .rectangle(position.x, position.y, size, size)
-      .setOrigin(0.5)
-      .setFillStyle(0xfff8c9, 0.4)
-      .setStrokeStyle(2, 0xffffff, 1);
-
-    this.removeSlotHighlight();
-  }
-
-  private removeSlotHighlight(): void {
-    if (this.slotHighlight) {
-      this.scene.tweens.add({
-        targets: this.slotHighlight,
-        alpha: 0,
-        duration: 200,
-        ease: 'Sine.easeIn',
-        onComplete: () => {
-          this.slotHighlight?.destroy();
-          this.slotHighlight = null;
-        },
-      });
+  public removeSlotHoverEffect(): void {
+    if (this.slotHover) {
+      this.slotHover.destroy();
+      this.slotHover = null;
     }
   }
 }

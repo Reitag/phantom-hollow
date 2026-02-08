@@ -25,7 +25,6 @@ export class Movement extends PlayerState {
 
   public onUpdate(delta: number): void {
     this.characterSpeed?.update(delta);
-    this.inventory?.handleInput(this.input);
 
     if (this.input?.isDownDown) {
       this.character.setVelocityX(0);
@@ -41,8 +40,6 @@ export class Movement extends PlayerState {
     if (this.input?.isUpPressed) {
       this.jump();
     }
-
-    this.attemptToCast();
   }
 
   private changeToIdleState(): void {

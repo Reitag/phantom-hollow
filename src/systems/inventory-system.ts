@@ -1,18 +1,18 @@
-import { ServiceLocator, ServiceKeys } from '@/infrastructure/service-locator';
-import { InputController } from '@/base/input/input-controller';
-import { InventorySlot, InventoryItem } from '@/utils/types';
-import { UiSystem } from './ui-system';
+import { PanelService } from '@/infrastructure/panel-service';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { InventoryItem, InventorySlot } from '@/utils/types';
 
 export class InventorySystem {
-  private readonly max = 4;
-
-  private slots: (InventorySlot | null)[] = [];
-  private ui: UiSystem;
+  private slots: (InventorySlot | null)[];
+  private panel: PanelService;
 
   constructor() {
-    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
+    this.panel = ServiceLocator.resolve(ServiceKeys.panel);
+    this.slots = Array(this.panel.inventoryBar.cellQuantity).fill(null);
+  }
 
-    this.slots = Array(this.max).fill(null);
+  public getSlot(index: number): InventorySlot | null {
+    return this.slots[index] ?? null;
   }
 
   public canAdd(item: InventoryItem, quantity: number = 1): boolean {
@@ -30,7 +30,7 @@ export class InventorySystem {
     }
 
     if (remaining > 0) {
-      const emptySlots = this.slots.filter((s) => s === null).length;
+      const emptySlots = this.slots.filter((slot) => slot === null).length;
       const capacityFromEmpty = emptySlots * item.maxStack;
       return remaining <= capacityFromEmpty;
     }
@@ -38,30 +38,19 @@ export class InventorySystem {
     return true;
   }
 
-  public setItems(items: (InventorySlot | null)[]): void {
-    this.slots = items;
-    this.updateUI();
-  }
-
-  public getItems(): (InventorySlot | null)[] {
-    return [...this.slots];
-  }
-
-  public addItem(item: InventoryItem, quantity: number = 1): void {
+  public addItem(item: InventoryItem, quantity = 1): void {
     for (const slot of this.slots) {
-      if (slot && slot.item.id === item.id) {
-        const availableSpace = item.maxStack - slot.quantity;
+      if (!slot || slot.item.id !== item.id) continue;
 
-        if (availableSpace > 0) {
-          const toAdd = Math.min(availableSpace, quantity);
-          slot.quantity += toAdd;
-          quantity -= toAdd;
+      const free = item.maxStack - slot.quantity;
+      if (free <= 0) continue;
 
-          if (quantity <= 0) {
-            this.updateUI();
-            return;
-          }
-        }
+      const add = Math.min(free, quantity);
+      slot.quantity += add;
+      quantity -= add;
+      if (quantity <= 0) {
+        this.updateUI();
+        return;
       }
     }
 
@@ -79,9 +68,11 @@ export class InventorySystem {
     }
   }
 
-  public removeItem(index: number, quantity: number = 1): void {
+  public useSlot(index: number, quantity: number = 1): void {
     const slot = this.slots[index];
     if (!slot) return;
+
+    if (!slot.item.use()) return;
 
     slot.quantity -= quantity;
     if (slot.quantity <= 0) {
@@ -90,44 +81,18 @@ export class InventorySystem {
     this.updateUI();
   }
 
-  public useItem(index: number): void {
-    const slot = this.slots[index];
-    this.ui.highlightSpot(index);
-    if (!slot) return;
-
-    if (!slot.item.use()) return;
-    slot.quantity -= 1;
-
-    if (slot.quantity <= 0) {
-      this.slots[index] = null;
-    }
+  public swapSlots(from: number, to: number): void {
+    [this.slots[from], this.slots[to]] = [this.slots[to], this.slots[from]];
     this.updateUI();
   }
 
-  public handleInput(input: InputController | null): void {
-    if (!input) return;
-
-    if (input.isFirstItemDown) {
-      this.useItem(0); // Slot 0 (A)
-    }
-    if (input.isSecondItemDown) {
-      this.useItem(1); // Slot 1 (S)
-    }
-    if (input.isThirdItemDown) {
-      this.useItem(2); // Slot 2 (D)
-    }
-    if (input.isFourthItemDown) {
-      this.useItem(3); // Slot 3 (F)
-    }
+  public destroySlot(index: number): void {
+    this.slots[index] = null;
+    this.updateUI();
   }
 
-  public isIncludeItem(id: string): boolean {
-    for (const slot of this.slots) {
-      if (!slot) continue;
-      if (slot.item.id !== id) continue;
-      if (slot.item.id === id) return true;
-    }
-    return false;
+  public getSlots(): (InventorySlot | null)[] {
+    return [...this.slots];
   }
 
   public getItemIndex(id: string): number | undefined {
@@ -146,7 +111,13 @@ export class InventorySystem {
     return undefined;
   }
 
-  private updateUI(): void {
-    this.ui.updateInventory(this.getItems());
+  public updateUI(): void {
+    this.slots.forEach((slot, index) => {
+      if (slot) {
+        this.panel.inventoryBar.setIcon(index, slot.item.iconKey, slot.quantity);
+      } else {
+        this.panel.inventoryBar.removeIcon(index);
+      }
+    });
   }
 }

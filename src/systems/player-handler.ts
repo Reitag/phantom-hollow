@@ -31,6 +31,7 @@ export class PlayerHandler {
           spellPower: PLAYER_STATS.SPELL_POWER,
         },
         defense: 1,
+        casting: true,
         aggro: false,
       },
       facingRight: true,
@@ -45,7 +46,7 @@ export class PlayerHandler {
       this.deathHandled = true;
 
       const ui = ServiceLocator.resolve(ServiceKeys.ui);
-      const dialog = ui.addWarningDialog('Do you want to release the corspe?');
+      const dialog = ui.addWarningDialog('Do you want to return to your resurrection point?');
 
       dialog.once('confirm', () => {
         this.respawnAfterResurrect();

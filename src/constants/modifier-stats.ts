@@ -15,20 +15,20 @@ export const PROTECTION = {
 
 export const SPELL_POWER = {
   id: UI.SPELL_POWER_BUFF,
-  duration: 15000,
+  duration: 20000,
   effect: 2,
   type: TYPE.buff,
 };
 
 export const LIGHTNING_SHIELD = {
   id: UI.LIGHTNING_SHIELD_BUFF,
-  duration: 10000,
+  duration: 15000,
   type: TYPE.buff,
 };
 
 export const UNDYING = {
   id: UI.UNDYING_BUFF,
-  duration: 5000,
+  duration: 10000,
   hp_left: 1,
   type: TYPE.buff,
 };
@@ -36,6 +36,12 @@ export const UNDYING = {
 export const ARCANE_MIND = {
   id: UI.ARCANE_MIND_BUFF,
   duration: 5000,
+  type: TYPE.buff,
+};
+
+export const CONCENTRATION = {
+  id: UI.CONCENTRATION_BUFF,
+  effect: 0.8,
   type: TYPE.buff,
 };
 

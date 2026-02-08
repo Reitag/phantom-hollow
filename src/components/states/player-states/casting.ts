@@ -1,6 +1,6 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { SpellPower } from '@/components/stats/damage';
-import { CharacterState } from '@/base/states/character-state';
+import { PlayerState } from '@/base/states/player-state';
 import { SPELLS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';
 import { FIRE_BALL_STATS, FROST_BOLT_STATS } from '@/constants/object-stats';
@@ -10,9 +10,10 @@ import { Player } from '@/entities/characters/player/player';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { ARCANE_MIND } from '@/constants/modifier-stats';
 
-export class Casting extends CharacterState {
+export class Casting extends PlayerState {
   private isCasting = false;
   private isInstantCasting = false;
+  private castTime: number = 1;
 
   constructor(
     character: Player,
@@ -37,7 +38,10 @@ export class Casting extends CharacterState {
             }
           });
         } else {
-          this.startCast(FIRE_BALL_STATS.CAST_TIME, () => {
+          const castTime = this.character.getStats()?.casting?.value;
+          if (castTime !== undefined) this.castTime = castTime;
+
+          this.startCast(FIRE_BALL_STATS.CAST_TIME * this.castTime, () => {
             if (!this.character.getDead()) {
               this.spellSystem?.castFireball(this.character);
             }
@@ -49,22 +53,26 @@ export class Casting extends CharacterState {
         this.spellSystem?.castBlink(this.character);
         break;
 
-      case SPELLS.WIND:
+      case SPELLS.WIND_WAVE:
         this.startInstantCast(() => {
           if (!this.character.getDead()) {
-            this.spellSystem?.castWind(this.character);
+            this.spellSystem?.castWindPulse(this.character);
           }
         });
         break;
 
-      case SPELLS.FROST_BOLT:
-        this.startCast(FROST_BOLT_STATS.CAST_TIME, () => {
+      case SPELLS.FROST_BOLT: {
+        const castTime = this.character.getStats()?.casting?.value;
+        if (castTime !== undefined) this.castTime = castTime;
+
+        this.startCast(FROST_BOLT_STATS.CAST_TIME * this.castTime, () => {
           if (!this.character.getDead()) {
             this.spellSystem?.castFrostbolt(this.character);
           }
         });
 
         break;
+      }
 
       default:
         break;
@@ -72,6 +80,15 @@ export class Casting extends CharacterState {
   }
 
   public onUpdate(): void {
+    // For instant cast, movement is able
+    if (this.isInstantCasting) {
+      if (this.input?.isUpPressed) {
+        this.jump();
+      }
+      this.movement();
+      return;
+    }
+
     if (!this.isCasting && !this.isInstantCasting) {
       this.stateMachine.changeState(PLAYER_STATES.IDLE);
       return;
@@ -137,10 +154,24 @@ export class Casting extends CharacterState {
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.INSTANT_CAST);
     this.playAnimation(animKey);
 
-    this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+    this.character.scene.time.delayedCall(200, () => {
       this.isInstantCasting = false;
     });
 
     onComplete();
+  }
+
+  protected override moveLeft(speed: number | undefined): void {
+    if (!speed) return;
+
+    this.character.setVelocityX(-speed);
+    this.character.flipCharacterToRight(false);
+  }
+
+  protected override moveRight(speed: number | undefined): void {
+    if (!speed) return;
+
+    this.character.setVelocityX(speed);
+    this.character.flipCharacterToRight(true);
   }
 }

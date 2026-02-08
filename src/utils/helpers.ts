@@ -47,3 +47,16 @@ export function require<T>(value: T | null | undefined, msg: string): NonNullabl
 
   return value;
 }
+
+export function getUiCoords(
+  coords: Phaser.Types.Tilemaps.TiledObject[],
+  name: string
+): { x: number; y: number } {
+  const obj = coords.find((c) => c.name === name);
+
+  if (!obj || obj.x == null || obj.y == null) {
+    throw new Error(`UI coords "${name}" not found`);
+  }
+
+  return { x: obj.x, y: obj.y };
+}

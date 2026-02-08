@@ -14,7 +14,7 @@ export class Ready extends PlayerState {
   public onEnter(...args: unknown[]): void {}
 
   public onUpdate(delta: number): void {
-    this.characterSpeed?.update(delta);
+    /*this.characterSpeed?.update(delta);
     this.movement();
 
     if (this.input?.isUpPressed) {
@@ -44,7 +44,7 @@ export class Ready extends PlayerState {
 
     if (this.input?.isPrimaryActionDown) {
       this.ui?.highlightSpell(SPELLS.FIRE_BALL);
-    } else if (this.input?.isPrimaryActionReleased) {
+   } else if (this.input?.isPrimaryActionReleased) {
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FIRE_BALL);
       return;
     }
@@ -68,18 +68,18 @@ export class Ready extends PlayerState {
     } else if (this.input?.isQuaternaryActionReleased) {
       this.stateMachine.changeState(PLAYER_STATES.CASTING, SPELLS.FROST_BOLT);
       return;
-    }
+    }*/
   }
 
   public onExit(): void {
-    this.ui?.removeHighlight();
+    //this.ui?.removeHighlight();
   }
 
-  private movement(): void {
+  /*private movement(): void {
     if (this.input?.isLeftDown) {
       this.moveLeft(this.characterSpeed?.velocity);
     } else if (this.input?.isRightDown) {
       this.moveRight(this.characterSpeed?.velocity);
     }
-  }
+  }*/
 }

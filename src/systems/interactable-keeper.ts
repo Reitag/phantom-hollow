@@ -13,6 +13,10 @@ export class InteractableKeeper {
     }
   }
 
+  public get<T extends Interactable>(ctor: new (arg: Phaser.Scene) => T): T | undefined {
+    return this.list.find((obj) => obj instanceof ctor) as T | undefined;
+  }
+
   public clear(): void {
     this.list.length = 0;
   }

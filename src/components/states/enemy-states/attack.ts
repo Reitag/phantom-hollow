@@ -48,6 +48,7 @@ export class Attack extends CharacterState {
 
     const direction = this.character.x > this.player.x ? -1 : 1;
     this.character.setVelocityX(direction * (this.characterSpeed?.velocity ?? 0));
+    this.character.setFlipX(direction < 0);
 
     const isOverlapping = this.isWithinAttackReach();
 
@@ -59,6 +60,7 @@ export class Attack extends CharacterState {
 
     if (!isOverlapping) {
       this.character.stop();
+      return;
     }
 
     if (this.player.getDead()) {
@@ -76,8 +78,12 @@ export class Attack extends CharacterState {
     if (!this.player) return false;
 
     const buffer = 20; // attack reach
-    const charBounds = this.character.getBounds();
-    const playerBounds = this.player.getBounds();
+
+    const charBounds = new Phaser.Geom.Rectangle();
+    const playerBounds = new Phaser.Geom.Rectangle();
+
+    this.character.getArcadeBody().getBounds(charBounds);
+    this.player.getArcadeBody().getBounds(playerBounds);
 
     Phaser.Geom.Rectangle.Inflate(charBounds, buffer, 0);
 

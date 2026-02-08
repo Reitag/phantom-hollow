@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.13.0] – 2026-02-08
+
+### Added
+
+- Alchemist NPC with environment setup and spawn system
+- Alchemist quest trigger zone
+- New item icons and a utility key for panel bar usage
+- Loot zones for item drops
+- Wind Pulse spell along with spritesheet and icon
+- Stone of Concentration item
+- Blazeworm Fang quest item
+
+### Changed
+
+- Updated inventory slot visuals and bound UI coordinates to Tiled
+- Refactored UI panel bars interaction: added icon-based clicking and dragging modes
+- Reworked movement, spell and inventory key bindings
+- Updated store UI
+- Improved modifier icon container
+- Updated README file
+
+### Fixed
+
+- Fixed split-sprite rendering bug
+- Fixed minor UI and gameplay bugs
+
+### Removed
+
+- Wind spell
+
+
 ## [0.12.0] – 2025-12-20
 
 ### Added

@@ -5,6 +5,7 @@ type LayerConfig = {
 
 export const GroupKeys = {
   enemy: 'enemy',
+  npc: 'npc',
   spell: 'spell',
   weapon: 'weapon',
   item: 'item',

@@ -1,72 +1,68 @@
 import Phaser from 'phaser';
 
 import { InputController } from '@/base/input/input-controller';
+import { SLOT_KEYS_CODES } from '@/constants/key-bindings';
+import { KeyBindingsService } from '@/infrastructure/keybinds-service';
 
 export class KeyboardController extends InputController {
-  private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  private primaryKey: Phaser.Input.Keyboard.Key;
-  private secondaryKey: Phaser.Input.Keyboard.Key;
-  private tertiaryKey: Phaser.Input.Keyboard.Key;
-  private quaternaryKey: Phaser.Input.Keyboard.Key;
+  // Key bindins
+  private keyBindins: KeyBindingsService;
 
-  private firstItemKey: Phaser.Input.Keyboard.Key;
-  private secondItemKey: Phaser.Input.Keyboard.Key;
-  private thirdItemKey: Phaser.Input.Keyboard.Key;
-  private fourthItemKey: Phaser.Input.Keyboard.Key;
+  // Movement
+  private leftKey: Phaser.Input.Keyboard.Key;
+  private rightKey: Phaser.Input.Keyboard.Key;
+  private downKey: Phaser.Input.Keyboard.Key;
+  private jumpKey: Phaser.Input.Keyboard.Key;
 
+  // Action / Utility
   private actionKey: Phaser.Input.Keyboard.Key;
+  private utilityKey: Phaser.Input.Keyboard.Key;
 
-  constructor(input: Phaser.Input.Keyboard.KeyboardPlugin) {
-    super();
-    this.cursors = input.createCursorKeys();
+  private slotKeys: Phaser.Input.Keyboard.Key[];
 
-    this.primaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-    this.secondaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.X);
-    this.tertiaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.C);
-    this.quaternaryKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.V);
+  constructor(input: Phaser.Input.Keyboard.KeyboardPlugin, slotCount = SLOT_KEYS_CODES.length) {
+    super(slotCount);
 
-    this.firstItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    this.secondItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    this.thirdItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    this.fourthItemKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+    // Key bindins
+    this.keyBindins = new KeyBindingsService(slotCount);
 
+    // Movement
+    this.leftKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    this.rightKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    this.downKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.jumpKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+
+    this.slotKeys = SLOT_KEYS_CODES.map(({ code, label }, index) => {
+      this.actionSlotLabels[index] = label;
+      return input.addKey(code);
+    });
+
+    // Action / interact / utility
     this.actionKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    this.utilityKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+  }
+
+  public get keys(): KeyBindingsService {
+    return this.keyBindins;
   }
 
   public override update(): void {
     if (this.disabled) return;
 
-    // Movement keys
-    this.left = this.cursors.left?.isDown ?? false;
-    this.right = this.cursors.right?.isDown ?? false;
-    this.up = this.cursors.up?.isDown ?? false;
-    this.down = this.cursors.down?.isDown ?? false;
+    // Movement
+    this.movement.left = this.leftKey.isDown;
+    this.movement.right = this.rightKey.isDown;
+    this.movement.down = this.downKey.isDown;
+    this.movement.upPressed = Phaser.Input.Keyboard.JustDown(this.jumpKey);
 
-    this.upPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up);
-
-    // Primary action
-    this.primaryActionDown = this.primaryKey.isDown;
-    this.primaryActionReleased = Phaser.Input.Keyboard.JustUp(this.primaryKey);
-
-    // Secondary action
-    this.secondaryActionDown = this.secondaryKey.isDown;
-    this.secondaryActionReleased = Phaser.Input.Keyboard.JustUp(this.secondaryKey);
-
-    // Tertiary action
-    this.tertiaryActionDown = this.tertiaryKey.isDown;
-    this.tertiaryActionReleased = Phaser.Input.Keyboard.JustUp(this.tertiaryKey);
-
-    // Quaternary action
-    this.quaternaryActionDown = this.quaternaryKey.isDown;
-    this.quaternaryActionReleased = Phaser.Input.Keyboard.JustUp(this.quaternaryKey);
-
-    // Items
-    this.firstItemUse = Phaser.Input.Keyboard.JustDown(this.firstItemKey);
-    this.secondItemUse = Phaser.Input.Keyboard.JustDown(this.secondItemKey);
-    this.thirdItemUse = Phaser.Input.Keyboard.JustDown(this.thirdItemKey);
-    this.fourthItemUse = Phaser.Input.Keyboard.JustDown(this.fourthItemKey);
-
-    // Action
+    // Action / Utility
     this.actionDown = Phaser.Input.Keyboard.JustDown(this.actionKey);
+    this.utilityDown = this.utilityKey.isDown;
+
+    // Slots
+    this.slotKeys.forEach((key, index) => {
+      this.actionSlotsDown[index] = key.isDown;
+      this.actionSlotsReleased[index] = Phaser.Input.Keyboard.JustUp(key);
+    });
   }
 }

@@ -1,5 +1,6 @@
 import { Character } from '@/base/objects/character';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
+import { ARROW_STATS } from '@/constants/object-stats';
 import { SpriteConfig } from '@/utils/types';
 
 export class Arrow extends ArcadeSprite {
@@ -8,7 +9,7 @@ export class Arrow extends ArcadeSprite {
 
     this.setSize(10, 10);
 
-    scene.time.delayedCall(3000, () => {
+    scene.time.delayedCall(ARROW_STATS.LIFE_TIME, () => {
       if (this.active) this.destroy();
     });
   }
@@ -17,7 +18,7 @@ export class Arrow extends ArcadeSprite {
     const dx = target.x - this.x;
     const dy = target.y - this.y;
 
-    const speed = 400;
+    const speed = ARROW_STATS.SPEED;
 
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance > 0) {

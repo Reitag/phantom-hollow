@@ -4,6 +4,11 @@
       "type": "tilemapTiledJSON",
       "key": "level-1",
       "url": "assets/levels/level-1.tmj"
+    },
+    {
+      "type": "tilemapTiledJSON",
+      "key": "ui-level",
+      "url": "assets/levels/ui-level.tmj"
     }
   ]
 }

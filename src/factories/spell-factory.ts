@@ -4,14 +4,13 @@ import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { Blink } from '@/entities/spells/effect-spells/blink';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { EarthShake } from '@/entities/spells/aura-spells/earth-shake';
-import { Wind } from '@/entities/spells/direct-spells/wind';
+import { WindPulse } from '@/entities/spells/effect-spells/wind-pulse';
 import { FrostBolt } from '@/entities/spells/direct-spells/frost-bolt';
 import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { SPELLS } from '@/constants/asset-keys';
 import {
   FIRE_BALL_STATS,
-  WIND_STATS,
   SHADOW_BOLT_STATS,
   FROST_BOLT_STATS,
   LIGHTNING_SHIELD_STATS,
@@ -70,21 +69,15 @@ export class SpellFactory {
     return blink;
   }
 
-  public createWind(character: Character, position?: { x: number; y: number }): Wind {
+  public createWindPulse(character: Character, position?: { x: number; y: number }): WindPulse {
     const spawnPosition = position ?? this.getSpellSpawnPosition(character);
-    const direction = character.getFacingRight() ? 1 : -1;
 
-    const wind = new Wind({
-      scene: this.scene,
-      position: spawnPosition,
-      keyName: SPELLS.WIND,
-      frame: 0,
-      caster: character,
-      speed: WIND_STATS.SPEED,
-      direction: direction,
+    const wind = new WindPulse(this.scene, spawnPosition, character);
+
+    const waves = wind.getWindWaves();
+    Object.values(waves).forEach((wave) => {
+      this.spellGroup.add(wave, true);
     });
-
-    this.spellGroup.add(wind, true);
 
     return wind;
   }
@@ -203,7 +196,7 @@ export class SpellFactory {
     const { x, y } = character.getPosition();
     const flip = character.getFacingRight() ? 1 : -1;
 
-    const handOffsetX = 40 * flip;
+    const handOffsetX = 19 * flip; // 18 is dangerous
     const handOffsetY = character.height / 8;
 
     return { x: x + handOffsetX, y: y + handOffsetY };

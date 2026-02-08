@@ -1,5 +1,6 @@
 import { UI } from '@/constants/asset-keys';
-import { HEALTH_UI, HEALTH_BAR } from '@/constants/ui-coordinates';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { getUiCoords } from '@/utils/helpers';
 
 export class HealthBar {
   public frame: Phaser.GameObjects.Image;
@@ -7,8 +8,12 @@ export class HealthBar {
   public mask: Phaser.GameObjects.Graphics | null = null;
 
   constructor(private scene: Phaser.Scene) {
-    this.bar = scene.add.image(HEALTH_BAR.X, HEALTH_BAR.Y, UI.HEALTH_BAR).setOrigin(0, 0.5);
-    this.frame = scene.add.image(HEALTH_UI.X, HEALTH_UI.Y, UI.HEALTH_ENV).setOrigin(0, 0.5);
+    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
+    const bar = getUiCoords(uiCoords, 'health-bar');
+    const frame = getUiCoords(uiCoords, 'health-env');
+
+    this.frame = scene.add.image(frame.x, frame.y, UI.HEALTH_ENV).setOrigin(0, 0);
+    this.bar = scene.add.image(bar.x, bar.y, UI.HEALTH_BAR).setOrigin(0, 0);
 
     this.setMask();
   }
@@ -22,12 +27,7 @@ export class HealthBar {
     this.mask = this.scene.add.graphics();
     this.mask.visible = false;
     this.mask.fillStyle(color);
-    this.mask.fillRect(
-      HEALTH_BAR.X,
-      HEALTH_BAR.Y - HEALTH_BAR.HEIGHT / 2,
-      HEALTH_BAR.WIDTH,
-      HEALTH_BAR.HEIGHT
-    );
+    this.mask.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
 
     this.bar.setMask(this.mask.createGeometryMask());
   }

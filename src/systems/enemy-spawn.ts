@@ -6,7 +6,6 @@ import {
   SKELETON_WARRIOR_STATS,
   ZOMBIE_STATS,
 } from '@/constants/object-stats';
-import { Player } from '@/entities/characters/player/player';
 import { Archer } from '@/entities/characters/enemies/archer';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { Zombie } from '@/entities/characters/enemies/zombie';
@@ -68,6 +67,7 @@ export class EnemySpawn {
           spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
         },
         defense: undefined,
+        casting: true,
         aggro: true,
       },
     }).setDepth(Z_POSITION.ENEMY);
@@ -92,6 +92,7 @@ export class EnemySpawn {
           spellPower: FIRE_WORM_STATS.SPELL_POWER,
         },
         defense: undefined,
+        casting: true,
         aggro: true,
       },
     }).setDepth(Z_POSITION.ENEMY);
@@ -174,6 +175,7 @@ export class EnemySpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: true,
       },
     });
@@ -199,6 +201,7 @@ export class EnemySpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: true,
       },
     });
@@ -224,6 +227,7 @@ export class EnemySpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: true,
       },
     });
@@ -262,6 +266,19 @@ export class EnemySpawn {
     }
 
     return result;
+
+    // Using this section for testing enemy behaviour
+    /*const test: Record<string, EnemySpawnData[]> = {};
+    test['skeleton'] = [];
+    test['skeleton'].push({
+      x: 6656,
+      y: 328,
+      type: 'skeleton',
+      isSpawned: false,
+      isAlive: true,
+    });
+
+    return test;*/
   }
 
   private loadBossesSpawnPoints(): Record<string, Position> {

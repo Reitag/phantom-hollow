@@ -28,11 +28,13 @@ export const Z_POSITION = {
   PLATFORMS: 150,
 
   // Sprite objects
-  ITEM: 160,
-  PLAYER: 170,
-  ENEMY: 180,
-  SPELL: 190,
-  MISC: 200,
+  MISC: 160,
+  ITEM: 170,
+  NPC: 180,
+  PLAYER: 190,
+  ENEMY: 200,
+  SPELL: 210,
+  VFX: 220,
 
   // UI
   UI: 1000,

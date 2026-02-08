@@ -5,6 +5,7 @@ import { Speed } from '@/components/stats/speed';
 import { TYPE } from '@/constants/modifier-stats';
 import { Character } from '@/base/objects/character';
 import { Aggro } from '@/components/stats/aggro';
+import { Casting } from '@/components/stats/casting';
 
 export type Position = {
   x: number;
@@ -51,6 +52,7 @@ export interface Stats {
   speed: Speed | null;
   damage: Record<string, Damage | null>;
   defense: Defense | null;
+  casting: Casting | null;
   aggro: Aggro | null;
 }
 
@@ -126,3 +128,26 @@ export type TooltipContentConfig = {
   prop_3?: PropConfig | undefined;
   prop_4?: PropConfig | undefined;
 };
+
+// Icon Binders
+export type IconHandler = (
+  pointer: Phaser.Input.Pointer,
+  localX: number,
+  localY: number,
+  event?: Phaser.Types.Input.EventData
+) => void;
+
+export interface IconClickContext {
+  onHover(index: number): void;
+  onHoverOut(): void;
+  onPress(index: number): void;
+  onRelease(index: number): void;
+}
+
+export interface IconDragContext {
+  onHover(icon: Phaser.GameObjects.Image): void;
+  onHoverOut(): void;
+  onDragStart(icon: Phaser.GameObjects.Image): void;
+  onDrag(icon: Phaser.GameObjects.Image, x: number, y: number): void;
+  onDragEnd(icon: Phaser.GameObjects.Image, pointer: Phaser.Input.Pointer): void;
+}

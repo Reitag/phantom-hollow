@@ -1,7 +1,7 @@
 import { playerAnim } from '../characters/player/player-anim';
 import { fireballAnim } from '../spells/fire-ball-anim';
 import { blinkAnim } from '../spells/blink-anim';
-import { windAnim } from '../spells/wind-anim';
+import { windWaveAnim } from '../spells/wind-wave-anim';
 import { shadowboltAnim } from '../spells/shadowbolt-anim';
 import { skeletonwarriorAnim } from '../characters/enemies/skeleton-warrior-anim';
 import { zombieAnim } from '../characters/enemies/zombie-anim';
@@ -18,16 +18,22 @@ import { lightningShieldAnim } from '../spells/lightning-shield-anim';
 import { vfxAnim } from '../vfx/vfx-anim';
 import { earthShakeAnim } from '../spells/earth-shake-anim';
 import { shadowTrailAnim } from '../spells/shadow-trail-anim';
+import { bonFireAnim } from '../misc/bon-fire-anim';
+import { alchemistAnim } from '../characters/npc/alchemist-anim';
+import { shiningAnim } from '../misc/shining-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
   playerAnim(anims);
 
+  // NPC
+  alchemistAnim(anims);
+
   // Spells
   fireballAnim(anims);
   blinkAnim(anims);
   lightningShieldAnim(anims);
-  windAnim(anims);
+  windWaveAnim(anims);
   shadowboltAnim(anims);
   frostboltAnim(anims);
   earthShakeAnim(anims);
@@ -51,6 +57,8 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
 
   // Misc
   soulFireAnim(anims);
+  bonFireAnim(anims);
   portalAnim(anims);
   darkEnergyAnim(anims);
+  shiningAnim(anims);
 }

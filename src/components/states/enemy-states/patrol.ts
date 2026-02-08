@@ -12,6 +12,10 @@ export class Patrol extends CharacterState {
   private isWaiting = false;
   private isPatroling = true;
 
+  private rightBorder: number | undefined = undefined;
+  private leftBorder: number | undefined = undefined;
+
+  private preservedWalkBound: number | undefined = undefined;
   private walkBound!: number;
 
   private initX: number;
@@ -31,7 +35,12 @@ export class Patrol extends CharacterState {
     const walkBound = args.find((elem): elem is number => typeof elem === 'number');
     if (!walkBound) throw new Error('Walk bound value must be a number');
 
-    this.walkBound = walkBound;
+    if (this.preservedWalkBound === undefined) {
+      this.preservedWalkBound = walkBound;
+      this.walkBound = walkBound;
+    } else {
+      this.walkBound = this.preservedWalkBound;
+    }
 
     this.leftX = this.initX - this.walkBound;
     this.rightX = this.initX + this.walkBound;
@@ -39,6 +48,7 @@ export class Patrol extends CharacterState {
 
   public onUpdate(delta: number): void {
     if (this.isWaiting) return;
+
     this.characterSpeed?.update(delta);
 
     if (this.initY !== this.character.y && this.isPatroling) {
@@ -73,6 +83,7 @@ export class Patrol extends CharacterState {
 
   public onExit(): void {
     this.isPatroling = false;
+    this.preservedWalkBound = this.walkBound;
   }
 
   private pausePatrol(): void {
@@ -83,7 +94,7 @@ export class Patrol extends CharacterState {
     this.isWaiting = true;
 
     this.character.scene.time.delayedCall(1000, () => {
-      this.character.toggleFacingDirection();
+      this.flipCharacterToRight(!this.character.getFacingRight());
       this.isWaiting = false;
     });
   }
@@ -93,21 +104,20 @@ export class Patrol extends CharacterState {
     const bounds = this.character.getBounds();
 
     const checkY = bounds.bottom + 2;
-    const step = 4;
+    const step = 1;
     const maxDistance = 1000;
+    const halfWidth = bounds.width / 2;
 
     let right = 0;
     let left = 0;
 
     while (
-      collision.isCollidingWithTile(bounds.right + right, checkY) && // still on ground
-      !collision.isCollidingWithTile(bounds.right + right, bounds.centerY + 4) && // no wall
+      collision.isCollidingWithTile(bounds.right + right, checkY) &&
+      !collision.isCollidingWithTile(bounds.right + right, bounds.centerY + 4) &&
       right < maxDistance
     ) {
       right += step;
     }
-
-    const rightBorder = bounds.right + right;
 
     while (
       collision.isCollidingWithTile(bounds.left - left, checkY) &&
@@ -117,20 +127,46 @@ export class Patrol extends CharacterState {
       left += step;
     }
 
-    const leftBorder = bounds.left - left;
+    this.rightBorder = bounds.right + right - halfWidth;
+    this.leftBorder = bounds.left - left + halfWidth;
 
-    const margin = (rightBorder - leftBorder) * 0.3;
+    const space = this.rightBorder - this.leftBorder;
 
-    const minX = leftBorder + margin;
-    const maxX = rightBorder - margin;
+    let newX: number;
 
-    const newX = Phaser.Math.Between(minX, maxX);
+    if (space < 50) {
+      this.walkBound = 0;
+      newX = (this.leftBorder + this.rightBorder) / 2;
+      if (ENABLE_DEBUGGING) {
+        this.graphickDebugg(
+          bounds,
+          { left: this.leftBorder, center: newX, right: this.rightBorder },
+          { left, center: checkY, right }
+        );
+      }
+      return newX;
+    }
+
+    let margin: number;
+
+    if (space < 160) {
+      this.walkBound = 10;
+      margin = Math.min(space * 0.3, 16);
+    } else {
+      this.walkBound = this.preservedWalkBound ?? 0;
+      margin = space * 0.3;
+    }
+
+    const minX = this.leftBorder + margin;
+    const maxX = this.rightBorder - margin;
+
+    newX = Phaser.Math.Between(minX, maxX);
 
     if (ENABLE_DEBUGGING) {
       this.graphickDebugg(
         bounds,
-        { left: leftBorder, center: newX, right: rightBorder },
-        { left: left, center: checkY, right: right }
+        { left: this.leftBorder, center: newX, right: this.rightBorder },
+        { left, center: checkY, right }
       );
     }
 

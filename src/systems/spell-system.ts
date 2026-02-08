@@ -34,10 +34,15 @@ export class SpellSystem {
     this.sandbox.startCooldown(BLINK.NAME, BLINK.DURATION);
   }
 
-  public castWind(character: Character): void {
-    const wind = this.spellFactory.createWind(character);
+  public castWindPulse(character: Character): void {
+    const position = {
+      x: character.x,
+      y: character.y,
+    };
 
-    wind.cast();
+    const wind = this.spellFactory.createWindPulse(character, position);
+
+    wind.castWaves();
     this.sandbox.startCooldown(WIND.NAME, WIND.DURATION);
   }
 

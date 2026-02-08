@@ -41,6 +41,12 @@ export const PLAYER_ANIMATION = {
   [CHARACTER_ANIMATION_KEYS.DEATH]: 'player-death',
 } as const;
 
+export const NPC_ANIMATION = {
+  ALCHEMIST: {
+    [CHARACTER_ANIMATION_KEYS.IDLE]: 'alchemist-idle',
+  },
+} as const;
+
 export const ENEMIES_ANIMATION = {
   SKELETON_WARRIOR: {
     [CHARACTER_ANIMATION_KEYS.IDLE]: 'sk-warrior-idle',
@@ -99,9 +105,8 @@ export const SPELLS_ANIMATION = {
   LIGHTNING_SHIELD: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'lightning-shield-main',
   },
-  WIND: {
+  WIND_WAVE: {
     [SPELL_ANIMATION_KEYS.MAIN]: 'wind-main',
-    [SPELL_ANIMATION_KEYS.HIT]: 'wind-hit',
   },
   FROST_BOLT: {
     [SPELL_ANIMATION_KEYS.START]: 'frost-bolt-start',
@@ -145,6 +150,9 @@ export const VFX_ANIMATION = {
   ARCANE_MIND: {
     [VFX_ANIMATION_KEYS.MAIN]: 'arcane-mind-vfx-main',
   },
+  CONCENTRATION: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'concentration-vfx-main',
+  },
   EARTH_ANXIETY: {
     [VFX_ANIMATION_KEYS.MAIN]: 'earth-anxiety-vfx-main',
   },
@@ -160,6 +168,12 @@ export const MISC_ANIMATION = {
   SOUL_FIRE: {
     [VFX_ANIMATION_KEYS.START]: 'soul-fire-start',
     [VFX_ANIMATION_KEYS.MAIN]: 'soul-fire-main',
+  },
+  BON_FIRE: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'bonfire-main',
+  },
+  SHINING: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'shining-main',
   },
 } as const;
 

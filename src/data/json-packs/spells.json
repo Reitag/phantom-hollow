@@ -20,9 +20,9 @@
     },
     {
       "type": "spritesheet",
-      "key": "wind",
-      "url": "assets/spells/wind.png",
-      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+      "key": "wind-wave",
+      "url": "assets/spells/wind-wave.png",
+      "frameConfig": { "frameWidth": 55, "frameHeight": 35 }
     },
     {
       "type": "spritesheet",

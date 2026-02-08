@@ -67,6 +67,11 @@
     },
     {
       "type": "image",
+      "key": "stump",
+      "url": "assets/objects/decor/stump.png"
+    },
+    {
+      "type": "image",
       "key": "rock-1",
       "url": "assets/objects/rocks/rock-1.png"
     },
@@ -114,6 +119,16 @@
       "type": "image",
       "key": "bush-3",
       "url": "assets/objects/bushes/Bush-3.png"
+    },
+    {
+      "type": "image",
+      "key": "chest-close",
+      "url": "assets/objects/chest/chest-close.png"
+    },
+    {
+      "type": "image",
+      "key": "chest-open",
+      "url": "assets/objects/chest/chest-open.png"
     }
   ]
 }

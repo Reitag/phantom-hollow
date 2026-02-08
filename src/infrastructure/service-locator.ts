@@ -9,10 +9,12 @@ import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { CollisionService } from './collision-service';
+import { PanelService } from './panel-service';
 
 interface ServiceMap {
   playerHandler: PlayerHandler;
   ui: UiSystem;
+  uiCoords: Phaser.Types.Tilemaps.TiledObject[];
   cooldowns: SpellCooldowns;
   spellFactory: SpellFactory;
   spellSystem: SpellSystem;
@@ -22,11 +24,13 @@ interface ServiceMap {
   input: KeyboardController;
   map: Tilemap;
   collision: CollisionService;
+  panel: PanelService;
 }
 
 export const ServiceKeys = {
   playerHandler: 'playerHandler',
   ui: 'ui',
+  uiCoords: 'uiCoords',
   cooldowns: 'cooldowns',
   spellFactory: 'spellFactory',
   spellSystem: 'spellSystem',
@@ -36,6 +40,7 @@ export const ServiceKeys = {
   input: 'input',
   map: 'map',
   collision: 'collision',
+  panel: 'panel',
 } as const;
 
 export class ServiceLocator {

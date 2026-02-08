@@ -11,7 +11,7 @@ export const BLINK = {
 } as const;
 
 export const WIND = {
-  NAME: SPELLS.WIND,
+  NAME: SPELLS.WIND_WAVE,
   DURATION: 3000,
 } as const;
 

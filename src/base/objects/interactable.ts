@@ -1,18 +1,22 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { UiSystem } from '@/systems/ui-system';
 import { Rectangle } from '@/utils/types';
 
 export const InteractableNames = {
   ['soul-pedestal']: 'soul-pedestal',
   ['stall']: 'stall',
+  ['chest']: 'chest',
   ['fire-worm']: 'fire-worm',
   ['evil-wizard']: 'evil-wizard',
+  ['alchemist-quest']: 'alchemist-quest',
 } as const;
 
 export abstract class Interactable {
   protected triggerZones: Phaser.Physics.Arcade.StaticGroup;
   protected player: Player;
+  protected ui: UiSystem;
   protected input: KeyboardController;
 
   protected activeZone: Phaser.GameObjects.Zone | null = null;
@@ -21,6 +25,7 @@ export abstract class Interactable {
   constructor(protected scene: Phaser.Scene) {
     this.triggerZones = this.scene.physics.add.staticGroup();
     this.player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.input = ServiceLocator.resolve(ServiceKeys.input);
   }
 

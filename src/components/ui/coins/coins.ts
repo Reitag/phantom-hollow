@@ -1,18 +1,22 @@
-import { COIN_UI } from '@/constants/ui-coordinates';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { getUiCoords } from '@/utils/helpers';
 
 export class Coins {
   private count = 0;
   private textObject: Phaser.GameObjects.Text;
 
   constructor(private scene: Phaser.Scene) {
+    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
+    const coinCoord = getUiCoords(uiCoords, 'coin-count');
+
     this.textObject = this.scene.add
-      .text(COIN_UI.COUNT_X, COIN_UI.COUNT_Y, this.count.toString(), {
+      .text(coinCoord.x, coinCoord.y - 3, this.count.toString(), {
         font: '16px Arial',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(0, 0);
   }
 
   public increaseCoins(value: number): void {

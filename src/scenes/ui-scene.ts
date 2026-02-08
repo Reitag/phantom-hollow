@@ -2,100 +2,102 @@ import Phaser from 'phaser';
 
 import { UiSystem } from '@/systems/ui-system';
 import { UI } from '@/constants/asset-keys';
-import {
-  SPELL_UI,
-  INVENTORY_UI,
-  FIREBALL_ICON,
-  BLINK_ICON,
-  WIND_ICON,
-  INVENTORY_SLOTS,
-  COIN_UI,
-  FROST_BOLT_ICON,
-} from '@/constants/ui-coordinates';
 import { SPELL_TOOLTIPS } from '@/constants/tooltip-params';
+import { createUiTilemap } from '@/tilemap/tilemap-ui';
+import { Tilemap } from '@/components/map/tilemap';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { getUiCoords } from '@/utils/helpers';
 
 export class UiScene extends Phaser.Scene {
   private ui!: UiSystem;
+  private uiTilemapCoords!: Tilemap;
 
   constructor() {
     super('UiScene');
   }
 
   public create(): void {
-    // UI panels
-    this.add.image(SPELL_UI.X, SPELL_UI.Y, UI.SPELL_UI).setOrigin(0, 0.5);
-    this.add.image(INVENTORY_UI.X, INVENTORY_UI.Y, UI.INVENTORY_UI).setOrigin(0, 0.5);
-
-    // Coin icon
-    this.add.image(COIN_UI.X, COIN_UI.Y, UI.COIN_UI).setOrigin(0, 0.5);
-
-    // Spell icons
-    const fireball = this.add
-      .image(FIREBALL_ICON.X, FIREBALL_ICON.Y, UI.FIRE_BALL_ICON)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.FIREBALL);
-    const blink = this.add
-      .image(BLINK_ICON.X, BLINK_ICON.Y, UI.BLINK_ICON)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.BLINK);
-    const wind = this.add
-      .image(WIND_ICON.X, WIND_ICON.Y, UI.WIND_ICON)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.WIND);
-    const frostbolt = this.add
-      .image(FROST_BOLT_ICON.X, FROST_BOLT_ICON.Y, UI.FROSTBOLT_ICON)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.FROSTBOLT);
-
-    // Spell labels
-    this.addKeyLabel(fireball, 'Z');
-    this.addKeyLabel(blink, 'X');
-    this.addKeyLabel(wind, 'C');
-    this.addKeyLabel(frostbolt, 'V');
-
-    // Inventory labels
-    this.addInventoryKeyLabels();
+    this.createCoordLayer();
+    this.registerUiObjects();
 
     this.ui = new UiSystem(this);
 
-    this.tooltipSpellsInit({ fireball: fireball, blink: blink, wind: wind, frostbolt: frostbolt });
+    // Miscs
+    this.createMiscIcons();
   }
 
   public getUI(): UiSystem {
     return this.ui;
   }
 
+  private createCoordLayer(): void {
+    this.uiTilemapCoords = createUiTilemap(this);
+  }
+
+  private registerUiObjects(): void {
+    const coordLayer = this.uiTilemapCoords.getObjectLayer('coord-layer');
+    if (!coordLayer) throw new Error('No coord layer');
+
+    ServiceLocator.register(ServiceKeys.uiCoords, coordLayer.objects);
+  }
+
+  private createMiscIcons(): void {
+    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
+
+    const coinCoord = getUiCoords(uiCoords, 'coin-icon');
+    this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
+  }
+
+  /*private createSpellIcons(): void {
+    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
+
+    const primary = getUiCoords(uiCoords, 'primary');
+    const secondary = getUiCoords(uiCoords, 'secondary');
+    const tertiary = getUiCoords(uiCoords, 'tertiary');
+    const quaternary = getUiCoords(uiCoords, 'quaternary');
+
+    const fireball = this.add
+      .image(primary.x, primary.y, UI.FIRE_BALL_ICON)
+      .setOrigin(0, 0)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.FIREBALL);
+    const blink = this.add
+      .image(secondary.x, secondary.y, UI.BLINK_ICON)
+      .setOrigin(0, 0)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.BLINK);
+    const wind = this.add
+      .image(tertiary.x, tertiary.y, UI.WIND_ICON)
+      .setOrigin(0, 0)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.WIND);
+    const frostbolt = this.add
+      .image(quaternary.x, quaternary.y, UI.FROSTBOLT_ICON)
+      .setOrigin(0, 0)
+      .setInteractive({ useHandCursor: true })
+      .setData('spell', SPELL_TOOLTIPS.FROSTBOLT);
+
+    // Tooltips
+    this.tooltipSpellsInit({ fireball: fireball, blink: blink, wind: wind, frostbolt: frostbolt });
+
+    // Spell labels
+    this.addKeyLabel(fireball, 'E');
+    this.addKeyLabel(blink, 'C');
+    this.addKeyLabel(wind, 'F');
+    this.addKeyLabel(frostbolt, 'R');
+  }*/
+
   private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {
     this.add
-      .text(icon.x + 16, icon.y - 5, keyText, {
+      .text(icon.x + 22, icon.y - 5, keyText, {
         font: '12px Arial',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,
       })
-      .setOrigin(1, 1)
+      .setOrigin(0, 0)
       .setDepth(10)
       .setAlpha(0.9);
-  }
-
-  private addInventoryKeyLabels(): void {
-    const INVENTORY_KEYS = ['A', 'S', 'D', 'F'];
-
-    INVENTORY_KEYS.forEach((key, index) => {
-      const x = INVENTORY_SLOTS.START_X + index * (INVENTORY_SLOTS.WIDTH + INVENTORY_SLOTS.PADDING);
-      const y = INVENTORY_SLOTS.Y;
-
-      this.add
-        .text(x + INVENTORY_SLOTS.WIDTH - 2, y - INVENTORY_SLOTS.HEIGHT - 7, key, {
-          font: '12px Arial',
-          color: '#ffffff',
-          stroke: '#000000',
-          strokeThickness: 3,
-        })
-        .setOrigin(1, 0)
-        .setDepth(10)
-        .setAlpha(0.9);
-    });
   }
 
   private tooltipSpellsInit(spells: {

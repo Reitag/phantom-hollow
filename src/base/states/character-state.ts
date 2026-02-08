@@ -48,11 +48,26 @@ export abstract class CharacterState implements State {
     }
   }
 
+  protected setVelocityToX(speed: number): void {
+    const currentVelocity = this.character.getArcadeBody().velocity.x.valueOf();
+    if (currentVelocity === speed) return;
+
+    this.character.setVelocityX(speed);
+  }
+
+  protected flipCharacterToRight(value: boolean): void {
+    const isFacingRight = this.character.getFacingRight();
+    if (isFacingRight === value) return;
+
+    this.character.flipCharacterToRight(value);
+  }
+
   protected moveLeft(speed: number | undefined): void {
     if (!speed) return;
 
-    this.character.setVelocityX(-speed);
-    this.character.flipCharacterToRight(false);
+    this.setVelocityToX(-speed);
+    //this.character.flipCharacterToRight(false);
+    this.flipCharacterToRight(false);
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
     this.playAnimation(animKey);
@@ -61,8 +76,9 @@ export abstract class CharacterState implements State {
   protected moveRight(speed: number | undefined): void {
     if (!speed) return;
 
-    this.character.setVelocityX(speed);
-    this.character.flipCharacterToRight(true);
+    this.setVelocityToX(speed);
+    //this.character.flipCharacterToRight(true);
+    this.flipCharacterToRight(true);
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
     this.playAnimation(animKey);

@@ -8,6 +8,12 @@
     },
     {
       "type": "spritesheet",
+      "key": "bon-fire",
+      "url": "assets/misc/bon-fire.png",
+      "frameConfig": { "frameWidth": 20, "frameHeight": 24 }
+    },
+    {
+      "type": "spritesheet",
       "key": "portal",
       "url": "assets/misc/portal.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
@@ -17,6 +23,12 @@
       "key": "dark-energy",
       "url": "assets/misc/dark-energy.png",
       "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "shining",
+      "url": "assets/misc/shining.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
     }
   ]
 }

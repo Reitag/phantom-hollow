@@ -6,11 +6,13 @@ import {
   spellPotion,
   undyingPotion,
 } from '@/game/items/potions';
-import { soulStone } from '@/game/items/stones';
+import { soulStone, stoneOfConcentration } from '@/game/items/stones';
+import { firewormFang } from '@/game/items/quests';
 import { DREAD_AURA_STATS, FIRE_BALL_STATS, FROST_BOLT_STATS } from './object-stats';
 import { BLINK, FROST_BOLT, WIND } from './spell-cooldowns';
 import {
   ARCANE_MIND,
+  CONCENTRATION,
   DISEASE,
   LIGHTNING_SHIELD,
   PROTECTION,
@@ -80,7 +82,7 @@ export const SPELL_TOOLTIPS: {
   WIND: {
     title: {
       param: spelltitleParams,
-      text: 'Wind',
+      text: 'Wind Pulse',
     },
     prop_1: {
       param: spellCastParams,
@@ -91,7 +93,7 @@ export const SPELL_TOOLTIPS: {
       text: `${WIND.DURATION / 1000} sec cooldown`,
     },
     prop_3: {
-      text: 'Knocks back all targets in its path.',
+      text: 'Releases a sudden burst of wind in both directions, knocking back nearby enemies.',
     },
   },
   FROSTBOLT: {
@@ -110,7 +112,7 @@ export const SPELL_TOOLTIPS: {
     prop_3: {
       text:
         'Launches a frozen projectile that deals damage and attempts to freeze the target.\n' +
-        'If the target resists the freeze, it instead applies *Arcane Mind*.\n\n' +
+        'If the target resists the freeze, it instead applies *Arcane Mind* for 5 sec.\n\n' +
         '*Arcane Mind* is a buff that makes your next Fireball an instant cast.',
     },
   },
@@ -118,15 +120,29 @@ export const SPELL_TOOLTIPS: {
 
 // Items tooltips
 const potionTitleParams = {
-  color: '#a6a6a6ff',
+  color: '#ffffff',
 } as const;
 
 const stoneTitleParams = {
-  color: '#6fcf97',
+  //color: '#6fcf97',
+  color: '#1be401',
+} as const;
+
+const concentrationStoneTitleParams = {
+  //color: '#6795c4',
+  color: '#0070dd',
+} as const;
+
+const questTitleParams = {
+  color: '#ffd100',
 } as const;
 
 const textParams = {
   color: '#f2c94c',
+} as const;
+
+const additionTextParams = {
+  color: '#9d9d9d',
 } as const;
 
 export const ITEM_TOOLTIPS: {
@@ -136,6 +152,8 @@ export const ITEM_TOOLTIPS: {
   LIGHTNING_POTION: TooltipContentConfig;
   UNDYING_POTION: TooltipContentConfig;
   SOUL_STONE: TooltipContentConfig;
+  STONE_OF_CONCENTRATION: TooltipContentConfig;
+  FIREWORM_FANG: TooltipContentConfig;
 } = {
   HEALTH_POTION: {
     id: healthPotion().iconKey,
@@ -221,6 +239,38 @@ export const ITEM_TOOLTIPS: {
       text: soulStone().description,
     },
   },
+  STONE_OF_CONCENTRATION: {
+    id: stoneOfConcentration().iconKey,
+    title: {
+      param: concentrationStoneTitleParams,
+      text: stoneOfConcentration().name,
+    },
+    prop_1: {
+      text: 'Unique item',
+    },
+    prop_2: {
+      param: textParams,
+      text: stoneOfConcentration().description,
+    },
+    prop_3: {
+      param: additionTextParams,
+      text: '"The longer you stare into it, the quieter the world becomes."',
+    },
+  },
+  FIREWORM_FANG: {
+    id: firewormFang().iconKey,
+    title: {
+      param: questTitleParams,
+      text: firewormFang().name,
+    },
+    prop_1: {
+      text: 'Quest item',
+    },
+    prop_3: {
+      param: additionTextParams,
+      text: '"Still warm to the touch. It reeks of sulfur and ash."',
+    },
+  },
 };
 
 // Modifier tooltips
@@ -238,6 +288,7 @@ const debuffParams = {
 
 export const MODIFIER_TOOLTIPS: {
   ARCANE_MIND: TooltipContentConfig;
+  CONCENTRATION: TooltipContentConfig;
   PROTECTION: TooltipContentConfig;
   SPELL_POWER: TooltipContentConfig;
   LIGHTNING_SHIELD: TooltipContentConfig;
@@ -254,6 +305,16 @@ export const MODIFIER_TOOLTIPS: {
     },
     prop_1: {
       text: 'Fireball becomes an instant cast spell.',
+    },
+  },
+  CONCENTRATION: {
+    id: CONCENTRATION.id,
+    title: {
+      param: buffParams,
+      text: 'Concentration',
+    },
+    prop_1: {
+      text: 'Casting speed increased by 20%.',
     },
   },
   PROTECTION: {
@@ -328,8 +389,8 @@ export const MODIFIER_TOOLTIPS: {
   },
 };
 
-// Store tooltip
-const storeTextParams = {
+// Interactables
+const interactTextParams = {
   fontStyle: 'bold',
   color: '#d7d7d7ff',
 } as const;
@@ -338,9 +399,10 @@ const qParams = {
   color: '#f2c94c',
 } as const;
 
+// Store tooltip
 export const STORE_TOOLTIP: TooltipContentConfig = {
   prop_1: {
-    param: storeTextParams,
+    param: interactTextParams,
     text: 'Press ',
   },
   prop_2: {
@@ -348,7 +410,39 @@ export const STORE_TOOLTIP: TooltipContentConfig = {
     text: "'Q'",
   },
   prop_3: {
-    param: storeTextParams,
+    param: interactTextParams,
     text: ' to Open Store',
+  },
+} as const;
+
+// Quests
+export const QUEST_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Interact',
+  },
+} as const;
+
+// Loot Zones
+export const LOOT_ZONE_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Loot the Items',
   },
 } as const;

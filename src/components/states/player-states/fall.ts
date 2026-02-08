@@ -26,7 +26,6 @@ export class Fall extends PlayerState {
 
   public onUpdate(delta: number): void {
     this.characterSpeed?.update(delta);
-    this.inventory?.handleInput(this.input);
     this.movement();
 
     if (this.characterBody.blocked.down) {
@@ -37,8 +36,6 @@ export class Fall extends PlayerState {
         }
       });
     }
-
-    this.attemptToCast();
   }
 
   public onExit(): void {}
@@ -46,14 +43,14 @@ export class Fall extends PlayerState {
   protected override moveLeft(speed: number | undefined): void {
     if (!speed) return;
 
-    this.character.setVelocityX(-speed);
-    this.character.flipCharacterToRight(false);
+    this.setVelocityToX(-speed);
+    this.flipCharacterToRight(false);
   }
 
   protected override moveRight(speed: number | undefined): void {
     if (!speed) return;
 
-    this.character.setVelocityX(speed);
-    this.character.flipCharacterToRight(true);
+    this.setVelocityToX(speed);
+    this.flipCharacterToRight(true);
   }
 }

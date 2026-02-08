@@ -10,6 +10,7 @@ import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { Casting } from '@/components/stats/casting';
 
 export interface CharacterConfig extends SpriteConfig {
   facingRight: boolean;
@@ -21,17 +22,16 @@ export interface CharacterConfig extends SpriteConfig {
       spellPower: number | undefined;
     };
     defense: number | undefined;
+    casting: boolean;
     aggro: boolean;
   };
 }
 
 export class Character extends ArcadeSprite {
-  protected facingRight!: boolean;
+  protected facingRight: boolean;
   protected isDead = false;
   protected stateMachine: StateMachine;
-
   protected modifier: ModifierSystem;
-
   protected stats: Stats;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
@@ -50,6 +50,7 @@ export class Character extends ArcadeSprite {
           stats.damage.spellPower !== undefined ? new SpellPower(stats.damage.spellPower) : null,
       },
       defense: stats.defense !== undefined ? new Defense(stats.defense) : null,
+      casting: stats.casting !== false ? new Casting() : null,
       aggro: stats.aggro !== false ? new Aggro() : null,
     };
 
@@ -85,6 +86,8 @@ export class Character extends ArcadeSprite {
   }
 
   public flipCharacterToRight(value: boolean): void {
+    if (this.isDead) return;
+
     this.facingRight = value;
     this.setFlipX(!value);
   }

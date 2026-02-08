@@ -81,6 +81,11 @@ export class AiFireWorm extends Boss {
   }
 
   protected finalCall(): void {
+    this.scene.events.emit('fire-worm:died', {
+      x: this.boss.x,
+      y: this.boss.y,
+    });
+
     if (!this.triggerZone) return;
     this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
     this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);

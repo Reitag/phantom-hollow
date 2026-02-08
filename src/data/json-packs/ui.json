@@ -2,13 +2,8 @@
   "files": [
     {
       "type": "image",
-      "key": "spell-ui",
-      "url": "assets/ui/spell-ui.png"
-    },
-    {
-      "type": "image",
-      "key": "inventory-ui",
-      "url": "assets/ui/inventory-ui.png"
+      "key": "inventory-slot",
+      "url": "assets/ui/inventory-slot.png"
     },
     {
       "type": "image",
@@ -72,6 +67,11 @@
     },
     {
       "type": "image",
+      "key": "item-card",
+      "url": "assets/ui/store/item-card.png"
+    },
+    {
+      "type": "image",
       "key": "dialog-ui",
       "url": "assets/ui/dialog/dialog-ui.png"
     },
@@ -122,6 +122,11 @@
     },
     {
       "type": "image",
+      "key": "stone-of-concentration-icon",
+      "url": "assets/icons/stones/stone-of-concentration.png"
+    },
+    {
+      "type": "image",
       "key": "protection-buff",
       "url": "assets/icons/buffs/protection.png"
     },
@@ -147,6 +152,11 @@
     },
     {
       "type": "image",
+      "key": "concentration-buff",
+      "url": "assets/icons/buffs/concentration.png"
+    },
+    {
+      "type": "image",
       "key": "disease-debuff",
       "url": "assets/icons/debuffs/disease.png"
     },
@@ -159,6 +169,11 @@
       "type": "image",
       "key": "shadow-vulnerability-debuff",
       "url": "assets/icons/debuffs/shadow-vulnerability.png"
+    },
+    {
+      "type": "image",
+      "key": "fireworm-fang-quest-item",
+      "url": "assets/icons/quests/fireworm-fang.png"
     }
   ]
 }
