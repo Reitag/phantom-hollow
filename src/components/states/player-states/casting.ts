@@ -80,7 +80,7 @@ export class Casting extends PlayerState {
   }
 
   public onUpdate(): void {
-    // for instant cast, movement is able
+    // For instant cast, movement is able
     if (this.isInstantCasting) {
       if (this.input?.isUpPressed) {
         this.jump();

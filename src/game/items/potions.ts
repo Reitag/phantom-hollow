@@ -62,7 +62,7 @@ export const protectPotion = (): InventoryItem => ({
 export const spellPotion = (): InventoryItem => ({
   id: 'spell-potion',
   name: 'Spell Potion',
-  description: 'Use: Increases spell power by 100% for 15 sec.',
+  description: 'Use: Increases spell power by 100% for 20 sec.',
   iconKey: UI.SPELL_POTION_ICON,
   maxStack: 5,
   isUnique: false,
@@ -95,7 +95,7 @@ export const lightningPotion = (): InventoryItem => ({
   id: 'lightning-potion',
   name: 'Lightning Potion',
   description:
-    'Use: Surrounds you with a Lightning Shield for 10 sec.\n\n' +
+    'Use: Surrounds you with a Lightning Shield for 15 sec.\n\n' +
     'Lightning Shield deals periodic damage to nearby enemies.',
   iconKey: UI.LIGHTNING_POTION_ICON,
   maxStack: 5,
@@ -120,7 +120,7 @@ export const lightningPotion = (): InventoryItem => ({
 export const undyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
-  description: 'Use: Prevents death for 5 sec, leaving you at 1 Health instead.',
+  description: 'Use: Prevents death for 10 sec, leaving you at 1 Health instead.',
   iconKey: UI.UNDYING_POTION_ICON,
   maxStack: 3,
   isUnique: false,

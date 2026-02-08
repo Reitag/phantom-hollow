@@ -40,8 +40,8 @@ export class Chase extends CharacterState {
     const direction = this.character.x > this.player.x ? -1 : 1;
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
 
-    this.character.setFlipX(direction < 0);
-    this.character.setVelocityX(direction * (this.characterSpeed?.velocity ?? 0));
+    this.flipCharacterToRight(direction > 0);
+    this.setVelocityToX(direction * (this.characterSpeed?.velocity ?? 0));
     this.playAnimation(animKey);
   }
 
@@ -57,7 +57,7 @@ export class Chase extends CharacterState {
       this.collision.isEntityColliding(this.character) &&
       Math.abs(this.player.y - this.character.y) > 2
     ) {
-      this.character.setFlipX(direction < 0);
+      this.flipCharacterToRight(direction > 0);
       const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
       this.playAnimation(animKey, true);
       return true;
@@ -69,8 +69,11 @@ export class Chase extends CharacterState {
     if (!this.player) return false;
     const direction = this.character.x > this.player.x ? -1 : 1;
 
-    if (this.character.y !== this.player.y && Math.abs(this.character.x - this.player.x) < 5) {
-      this.character.setFlipX(direction < 0);
+    if (
+      Math.abs(this.character.y - this.player.y) > 2 &&
+      Math.abs(this.character.x - this.player.x) < 5
+    ) {
+      this.flipCharacterToRight(direction < 0);
       this.setToZeroVelocityX();
       const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
       this.playAnimation(animKey, true);

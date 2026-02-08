@@ -43,14 +43,14 @@ export class Fall extends PlayerState {
   protected override moveLeft(speed: number | undefined): void {
     if (!speed) return;
 
-    this.character.setVelocityX(-speed);
-    this.character.flipCharacterToRight(false);
+    this.setVelocityToX(-speed);
+    this.flipCharacterToRight(false);
   }
 
   protected override moveRight(speed: number | undefined): void {
     if (!speed) return;
 
-    this.character.setVelocityX(speed);
-    this.character.flipCharacterToRight(true);
+    this.setVelocityToX(speed);
+    this.flipCharacterToRight(true);
   }
 }

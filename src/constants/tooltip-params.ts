@@ -7,6 +7,7 @@ import {
   undyingPotion,
 } from '@/game/items/potions';
 import { soulStone, stoneOfConcentration } from '@/game/items/stones';
+import { firewormFang } from '@/game/items/quests';
 import { DREAD_AURA_STATS, FIRE_BALL_STATS, FROST_BOLT_STATS } from './object-stats';
 import { BLINK, FROST_BOLT, WIND } from './spell-cooldowns';
 import {
@@ -111,7 +112,7 @@ export const SPELL_TOOLTIPS: {
     prop_3: {
       text:
         'Launches a frozen projectile that deals damage and attempts to freeze the target.\n' +
-        'If the target resists the freeze, it instead applies *Arcane Mind*.\n\n' +
+        'If the target resists the freeze, it instead applies *Arcane Mind* for 5 sec.\n\n' +
         '*Arcane Mind* is a buff that makes your next Fireball an instant cast.',
     },
   },
@@ -119,15 +120,29 @@ export const SPELL_TOOLTIPS: {
 
 // Items tooltips
 const potionTitleParams = {
-  color: '#a6a6a6ff',
+  color: '#ffffff',
 } as const;
 
 const stoneTitleParams = {
-  color: '#6fcf97',
+  //color: '#6fcf97',
+  color: '#1be401',
+} as const;
+
+const concentrationStoneTitleParams = {
+  //color: '#6795c4',
+  color: '#0070dd',
+} as const;
+
+const questTitleParams = {
+  color: '#ffd100',
 } as const;
 
 const textParams = {
   color: '#f2c94c',
+} as const;
+
+const additionTextParams = {
+  color: '#9d9d9d',
 } as const;
 
 export const ITEM_TOOLTIPS: {
@@ -138,6 +153,7 @@ export const ITEM_TOOLTIPS: {
   UNDYING_POTION: TooltipContentConfig;
   SOUL_STONE: TooltipContentConfig;
   STONE_OF_CONCENTRATION: TooltipContentConfig;
+  FIREWORM_FANG: TooltipContentConfig;
 } = {
   HEALTH_POTION: {
     id: healthPotion().iconKey,
@@ -226,7 +242,7 @@ export const ITEM_TOOLTIPS: {
   STONE_OF_CONCENTRATION: {
     id: stoneOfConcentration().iconKey,
     title: {
-      param: stoneTitleParams,
+      param: concentrationStoneTitleParams,
       text: stoneOfConcentration().name,
     },
     prop_1: {
@@ -235,6 +251,24 @@ export const ITEM_TOOLTIPS: {
     prop_2: {
       param: textParams,
       text: stoneOfConcentration().description,
+    },
+    prop_3: {
+      param: additionTextParams,
+      text: '"The longer you stare into it, the quieter the world becomes."',
+    },
+  },
+  FIREWORM_FANG: {
+    id: firewormFang().iconKey,
+    title: {
+      param: questTitleParams,
+      text: firewormFang().name,
+    },
+    prop_1: {
+      text: 'Quest item',
+    },
+    prop_3: {
+      param: additionTextParams,
+      text: '"Still warm to the touch. It reeks of sulfur and ash."',
     },
   },
 };
@@ -280,7 +314,7 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Concentration',
     },
     prop_1: {
-      text: 'Casting speed increased by 15%.',
+      text: 'Casting speed increased by 20%.',
     },
   },
   PROTECTION: {

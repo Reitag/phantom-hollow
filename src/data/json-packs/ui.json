@@ -169,6 +169,11 @@
       "type": "image",
       "key": "shadow-vulnerability-debuff",
       "url": "assets/icons/debuffs/shadow-vulnerability.png"
+    },
+    {
+      "type": "image",
+      "key": "fireworm-fang-quest-item",
+      "url": "assets/icons/quests/fireworm-fang.png"
     }
   ]
 }

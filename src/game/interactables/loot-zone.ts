@@ -75,13 +75,40 @@ export class LootZone extends Interactable {
     this.lootZones.push({
       zone: staticLootZones[1] as Phaser.GameObjects.Zone,
       chestSprite: secondLootZone,
-      loot: [{ id: 'stone-of-concentration', amount: 1 }],
+      loot: [{ id: 'spell-potion', amount: 3 }],
       activated: false,
       vfx: new Shining({
         scene: this.scene,
         position: {
           x: (staticLootZones[1] as Phaser.GameObjects.Zone).x,
           y: (staticLootZones[1] as Phaser.GameObjects.Zone).y,
+        },
+        keyName: MISC.SHINING,
+        frame: 0,
+      }),
+    });
+
+    // Third static loot zone
+    const thirdLootZone = this.scene.add
+      .image(
+        (staticLootZones[2] as Phaser.GameObjects.Zone).x,
+        (staticLootZones[2] as Phaser.GameObjects.Zone).y,
+        OBJECTS.CHEST_CLOSE,
+        0
+      )
+      .setOrigin(0, 0)
+      .setDepth(Z_POSITION.DECOR);
+
+    this.lootZones.push({
+      zone: staticLootZones[2] as Phaser.GameObjects.Zone,
+      chestSprite: thirdLootZone,
+      loot: [{ id: 'stone-of-concentration', amount: 1 }],
+      activated: false,
+      vfx: new Shining({
+        scene: this.scene,
+        position: {
+          x: (staticLootZones[2] as Phaser.GameObjects.Zone).x,
+          y: (staticLootZones[2] as Phaser.GameObjects.Zone).y,
         },
         keyName: MISC.SHINING,
         frame: 0,

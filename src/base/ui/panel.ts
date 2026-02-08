@@ -113,10 +113,16 @@ export abstract class Panel {
     },
 
     onPress: (i) => {
+      const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+      if (player.getDead()) return;
+
       this.iconHighlighter.addSpellHighlight(this.getCellPosition(i));
     },
 
     onRelease: (i) => {
+      const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+      if (player.getDead()) return;
+
       this.iconHighlighter.removeSpellHighlight();
       this.emitSlotRelease(i);
     },

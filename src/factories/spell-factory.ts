@@ -196,7 +196,7 @@ export class SpellFactory {
     const { x, y } = character.getPosition();
     const flip = character.getFacingRight() ? 1 : -1;
 
-    const handOffsetX = 40 * flip;
+    const handOffsetX = 19 * flip; // 18 is dangerous
     const handOffsetY = character.height / 8;
 
     return { x: x + handOffsetX, y: y + handOffsetY };

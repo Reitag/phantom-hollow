@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
-import { SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
+import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
@@ -65,7 +65,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.initUiScene(() => this.createGameWorld());
 
     // Fire worm's loot spawn
-    this.events.on('fire-worm:died', this.onFireWormDied, this);
+    this.events.once('fire-worm:died', this.onFireWormDied, this);
   }
 
   public update(time: number, delta: number): void {
@@ -373,12 +373,15 @@ export class LevelOneScene extends Phaser.Scene {
     this.camera.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 
-  private handleEnemyCollision(enemy: Phaser.GameObjects.GameObject): void {
+  private handleEnemyCollision(
+    enemy: Phaser.GameObjects.GameObject,
+    tile: Phaser.Tilemaps.Tile
+  ): void {
     if (!(enemy instanceof Character)) return;
 
     const collision = ServiceLocator.resolve(ServiceKeys.collision);
     if (collision.isEntityColliding(enemy)) {
-      enemy.flipCharacterToRight(!enemy.getFacingRight());
+      // No code here, using as 'placeholder' for some possible future cases
     }
   }
 
@@ -430,7 +433,7 @@ export class LevelOneScene extends Phaser.Scene {
     weapon: Phaser.GameObjects.GameObject
   ): void {
     if (target instanceof Player && weapon instanceof Arrow) {
-      target.takeDamage(10);
+      target.takeDamage(ARROW_STATS.HIT);
       weapon.destroy();
     }
   }
@@ -468,6 +471,6 @@ export class LevelOneScene extends Phaser.Scene {
     const lootZone = this.interactables.get(LootZone);
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
 
-    lootZone?.createLootZone(zone, [{ id: 'spell-potion', amount: 3 }]);
+    lootZone?.createLootZone(zone, [{ id: 'fireworm-fang', amount: 1 }]);
   }
 }

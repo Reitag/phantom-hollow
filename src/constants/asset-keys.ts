@@ -118,6 +118,7 @@ export const UI = {
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
+  FIREWORM_FANG_QUEST_ITEM: 'fireworm-fang-quest-item',
 } as const;
 
 export const VFX = {

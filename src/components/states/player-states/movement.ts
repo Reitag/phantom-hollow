@@ -40,8 +40,6 @@ export class Movement extends PlayerState {
     if (this.input?.isUpPressed) {
       this.jump();
     }
-
-    //this.attemptToCast();
   }
 
   private changeToIdleState(): void {

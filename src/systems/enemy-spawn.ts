@@ -266,6 +266,19 @@ export class EnemySpawn {
     }
 
     return result;
+
+    // Using this section for testing enemy behaviour
+    /*const test: Record<string, EnemySpawnData[]> = {};
+    test['skeleton'] = [];
+    test['skeleton'].push({
+      x: 6656,
+      y: 328,
+      type: 'skeleton',
+      isSpawned: false,
+      isAlive: true,
+    });
+
+    return test;*/
   }
 
   private loadBossesSpawnPoints(): Record<string, Position> {

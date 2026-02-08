@@ -28,12 +28,10 @@ export interface CharacterConfig extends SpriteConfig {
 }
 
 export class Character extends ArcadeSprite {
-  protected facingRight!: boolean;
+  protected facingRight: boolean;
   protected isDead = false;
   protected stateMachine: StateMachine;
-
   protected modifier: ModifierSystem;
-
   protected stats: Stats;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
@@ -88,6 +86,8 @@ export class Character extends ArcadeSprite {
   }
 
   public flipCharacterToRight(value: boolean): void {
+    if (this.isDead) return;
+
     this.facingRight = value;
     this.setFlipX(!value);
   }
