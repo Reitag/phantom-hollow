@@ -28,6 +28,7 @@ export class Player extends Character {
   private ui: UiSystem;
   private inventory: InventorySystem;
   private coinKeeper: CoinKeeper;
+  private onQuest = false;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
@@ -83,6 +84,14 @@ export class Player extends Character {
     this.stateMachine.addState(new Death(this, CHARACTERS.PLAYER, 69, this.ui));
 
     this.stateMachine.changeState(PLAYER_STATES.IDLE);
+  }
+
+  public get isOnQuest(): boolean {
+    return this.onQuest;
+  }
+
+  public set isOnQuest(value: boolean) {
+    this.onQuest = value;
   }
 
   public update(delta: number): void {

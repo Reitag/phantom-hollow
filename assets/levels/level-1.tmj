@@ -3927,6 +3927,23 @@
                  "y":512.5
                 }, 
                 {
+                 "height":32,
+                 "id":941,
+                 "name":"misc-spawn",
+                 "properties":[
+                        {
+                         "name":"misc",
+                         "type":"string",
+                         "value":"quest-mark"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":32,
+                 "x":5097.33333333333,
+                 "y":458.666666666667
+                }, 
+                {
                  "height":0,
                  "id":928,
                  "name":"npc-spawn",
@@ -4154,7 +4171,7 @@
          "y":0
         }],
  "nextlayerid":42,
- "nextobjectid":940,
+ "nextobjectid":942,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

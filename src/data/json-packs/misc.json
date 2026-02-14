@@ -29,6 +29,12 @@
       "key": "shining",
       "url": "assets/misc/shining.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "quest-mark",
+      "url": "assets/misc/quest-mark.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
     }
   ]
 }

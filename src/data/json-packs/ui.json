@@ -72,6 +72,21 @@
     },
     {
       "type": "image",
+      "key": "quest-ui",
+      "url": "assets/ui/quest/quest-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui-accept-btn",
+      "url": "assets/ui/quest/quest-ui-accept-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui-decline-btn",
+      "url": "assets/ui/quest/quest-ui-decline-btn.png"
+    },
+    {
+      "type": "image",
       "key": "dialog-ui",
       "url": "assets/ui/dialog/dialog-ui.png"
     },

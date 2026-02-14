@@ -16,6 +16,7 @@ import { LootZone } from '@/game/interactables/loot-zone';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
+import { QuestMark } from '@/entities/misc/quest-mark';
 import { SpellFactory } from '@/factories/spell-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
@@ -49,11 +50,16 @@ export class LevelOneScene extends Phaser.Scene {
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
   private npc!: NPCSpawn;
+  private questMark!: QuestMark;
   private canPlayerGetDamage = true;
   private isGameInitialized = false;
 
   constructor() {
     super('LevelOneScene');
+  }
+
+  public get quest(): QuestMark {
+    return this.questMark;
   }
 
   public create(): void {
@@ -63,9 +69,6 @@ export class LevelOneScene extends Phaser.Scene {
     this.physics.world.createDebugGraphic();
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
-
-    // Fire worm's loot spawn
-    this.events.once('fire-worm:died', this.onFireWormDied, this);
   }
 
   public update(time: number, delta: number): void {
@@ -365,6 +368,13 @@ export class LevelOneScene extends Phaser.Scene {
       keyName: MISC.BON_FIRE,
       frame: 0,
     });
+
+    this.questMark = new QuestMark({
+      scene: this,
+      position: { x: result['quest-mark'].x, y: result['quest-mark'].y },
+      keyName: MISC.QUEST_MARK,
+      frame: 0,
+    });
   }
 
   private setupCamera(): void {
@@ -467,7 +477,7 @@ export class LevelOneScene extends Phaser.Scene {
     item.destroy();
   }
 
-  private onFireWormDied(data: { x: number; y: number }): void {
+  public onFireWormDied(data: { x: number; y: number }): void {
     const lootZone = this.interactables.get(LootZone);
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
 

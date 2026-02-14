@@ -1,30 +1,51 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
+import { Quest } from '@/components/ui/boards/quest';
 import { QUEST_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class AlchemistQuestTrigger extends Interactable {
+  private quest: Quest;
+
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createTriggerZones(InteractableNames['alchemist-quest']);
+
+    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getQuest();
   }
 
   protected onEnter(): void {
-    this.ui.showHorizontalTooltip(
-      {
-        x: INTERACT_TOOLTIP.X,
-        y: INTERACT_TOOLTIP.Y,
-        width: INTERACT_TOOLTIP.WIDTH,
-        fillColor: INTERACT_TOOLTIP.FILL_COLOR,
-      },
-      QUEST_TOOLTIP
-    );
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+
+    if (player.isOnQuest) {
+      return;
+    }
+
+    if (this.quest.registerQuestEvents()) {
+      this.ui.showHorizontalTooltip(
+        {
+          x: INTERACT_TOOLTIP.X,
+          y: INTERACT_TOOLTIP.Y,
+          width: INTERACT_TOOLTIP.WIDTH,
+          fillColor: INTERACT_TOOLTIP.FILL_COLOR,
+        },
+        QUEST_TOOLTIP
+      );
+    }
   }
 
   protected onInteract(): void {
-    console.log('[AlchemistQuest] Player interacted (E pressed)');
+    if (!this.quest.isOpen) {
+      this.quest.scene.events.emit('open-quest');
+      this.ui.hideTooltip();
+    }
   }
 
   protected onLeave(): void {
+    if (this.quest.isOpen) {
+      this.quest.scene.events.emit('close-quest');
+    }
+    this.quest.unregisterQuestEvents();
     this.ui.hideTooltip();
   }
 }

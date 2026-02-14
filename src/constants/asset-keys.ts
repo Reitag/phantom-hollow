@@ -33,6 +33,7 @@ export const MISC = {
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
   SHINING: 'shining',
+  QUEST_MARK: 'quest-mark',
 } as const;
 
 export const OBJECTS = {
@@ -98,6 +99,9 @@ export const UI = {
   STORE_UI: 'store-ui',
   STORE_UI_CLOSE_BUTTON: 'store-ui-close-button',
   ITEM_CARD: 'item-card',
+  QUEST_UI: 'quest-ui',
+  QUEST_UI_ACCEPT_BTN: 'quest-ui-accept-btn',
+  QUEST_UI_DECLINE_BTN: 'quest-ui-decline-btn',
   DIALOG_UI: 'dialog-ui',
   DIALOG_UI_BUTTON_YES: 'dialog-ui-button-yes',
   DIALOG_UI_BUTTON_NO: 'dialog-ui-button-no',

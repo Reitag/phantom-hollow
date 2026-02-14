@@ -9,6 +9,6 @@ export const firewormFang = (): InventoryItem => ({
   maxStack: 1,
   isUnique: true,
   use: () => {
-    return true;
+    return false;
   },
 });

@@ -6,11 +6,12 @@ import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { Coins } from '@/components/ui/coins/coins';
-import { Store } from '@/components/ui/store/store';
+import { Store } from '@/components/ui/boards/store';
 import { Text } from '@/components/ui/text/text';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { PanelService } from '@/infrastructure/panel-service';
 import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
+import { Quest } from '@/components/ui/boards/quest';
 
 export class UiSystem {
   private healthBar: HealthBar;
@@ -21,7 +22,9 @@ export class UiSystem {
 
   private modifierIconContainer: ModifierIconContainer;
 
-  private store!: Store;
+  private store: Store;
+  private quest: Quest;
+
   private coins: Coins;
   private text: Text;
 
@@ -35,6 +38,8 @@ export class UiSystem {
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
 
     this.store = new Store(uiScene);
+    this.quest = new Quest(uiScene);
+
     this.coins = new Coins(uiScene);
     this.text = new Text(uiScene);
 
@@ -75,6 +80,10 @@ export class UiSystem {
 
   public getStore(): Store {
     return this.store;
+  }
+
+  public getQuest(): Quest {
+    return this.quest;
   }
 
   public increaseCoinCounter(amount: number): void {

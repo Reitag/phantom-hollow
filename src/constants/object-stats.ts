@@ -64,8 +64,8 @@ export const ARROW_STATS = {
 } as const;
 
 export const PLAYER_STATS = {
-  HEALTH: 200,
-  //HEALTH: 3000,
+  //HEALTH: 200,
+  HEALTH: 3000,
   MOVE: 190,
   JUMP: 550,
   SPELL_POWER: 4,

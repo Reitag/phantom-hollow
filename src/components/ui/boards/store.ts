@@ -2,7 +2,7 @@ import { UI } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { STORE_UI } from '@/constants/ui-coordinates';
 import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
-import { Position } from '@/utils/types';
+import { Board } from '@/base/ui/board';
 
 type Bundle = {
   item: StoreItem;
@@ -16,30 +16,28 @@ type Handlers = {
   onUp: () => void;
 };
 
-export class Store {
-  private onCloseDown = () => this.closeStore();
+export class Store extends Board {
+  private onCloseDown = () => this.closeBoard();
   private onCloseOver = () => this.onButtonHover(true);
   private onCloseOut = () => this.onButtonHover(false);
 
-  private open = false;
-  private store: Phaser.GameObjects.Container;
-  private container: Phaser.GameObjects.Container;
   private closeButton: Phaser.GameObjects.Image;
   private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundles: Bundle[] = [];
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
-  constructor(public scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene) {
+    super(scene);
     // Container and bg
-    this.store = this.scene.add.container(SCENE_SIZE.WIDTH / 2, SCENE_SIZE.HEIGHT / 2);
-    this.store.setVisible(false);
+    this.board = this.scene.add.container(SCENE_SIZE.WIDTH / 2, SCENE_SIZE.HEIGHT / 2);
+    this.board.setVisible(false);
 
     const bg = this.scene.add.image(0, 0, UI.STORE_UI);
-    this.store.add(bg);
+    this.board.add(bg);
 
     const conPos = this.alignCoords(bg, 399.5, 157.5);
     this.container = this.scene.add.container(conPos.x, conPos.y);
-    this.store.add(this.container);
+    this.board.add(this.container);
 
     // Create items
     this.createStoreItems();
@@ -50,17 +48,13 @@ export class Store {
       .image(btnPos.x, btnPos.y, UI.STORE_UI_CLOSE_BUTTON)
       .setInteractive({ useHandCursor: true });
 
-    this.store.add(this.closeButton);
-  }
-
-  public get isOpen(): boolean {
-    return this.open;
+    this.board.add(this.closeButton);
   }
 
   public registerStoreEvents() {
     if (!this.scene.events.listeners('open-store').length) {
-      this.scene.events.on('open-store', this.openStore, this);
-      this.scene.events.on('close-store', this.closeStore, this);
+      this.scene.events.on('open-store', this.openBoard, this);
+      this.scene.events.on('close-store', this.closeBoard, this);
     }
 
     if (!this.closeButton.listeners('pointerdown').length) {
@@ -125,8 +119,8 @@ export class Store {
   }
 
   public unregisterStoreEvents() {
-    this.scene.events.off('open-store', this.openStore, this);
-    this.scene.events.off('close-store', this.closeStore, this);
+    this.scene.events.off('open-store', this.openBoard, this);
+    this.scene.events.off('close-store', this.closeBoard, this);
 
     this.closeButton
       .off('pointerdown', this.onCloseDown)
@@ -157,12 +151,12 @@ export class Store {
       const colIndex = index % columns;
 
       // create row only once
-      let row = this.container.getByName(`row-${rowIndex}`) as Phaser.GameObjects.Container;
+      let row = this.container?.getByName(`row-${rowIndex}`) as Phaser.GameObjects.Container;
 
       if (!row) {
         row = this.scene.add.container(0, rowIndex * rowSpacingY);
         row.name = `row-${rowIndex}`;
-        this.container.add(row);
+        this.container?.add(row);
       }
 
       const cardX = (colIndex - 1) * cardSpacingX;
@@ -210,14 +204,6 @@ export class Store {
     return card;
   }
 
-  // Converts Figma top-left coords to Phaser centered local coords
-  private alignCoords(bg: Phaser.GameObjects.Image, x: number, y: number): Position {
-    return {
-      x: x - bg.width / 2,
-      y: y - bg.height / 2,
-    };
-  }
-
   private purchaseItem(item: StoreItem): void {
     item.onBuy();
   }
@@ -228,15 +214,5 @@ export class Store {
     } else {
       this.closeButton.setScale(1).clearTint();
     }
-  }
-
-  private openStore() {
-    this.store.setVisible(true);
-    this.open = true;
-  }
-
-  private closeStore() {
-    this.store.setVisible(false);
-    this.open = false;
   }
 }
