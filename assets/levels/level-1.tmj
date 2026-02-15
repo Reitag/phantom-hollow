@@ -3927,7 +3927,7 @@
                  "y":512.5
                 }, 
                 {
-                 "height":32,
+                 "height":20,
                  "id":941,
                  "name":"misc-spawn",
                  "properties":[
@@ -3939,9 +3939,9 @@
                  "rotation":0,
                  "type":"spawn",
                  "visible":true,
-                 "width":32,
-                 "x":5097.33333333333,
-                 "y":458.666666666667
+                 "width":20,
+                 "x":5102.83,
+                 "y":475.667
                 }, 
                 {
                  "height":0,

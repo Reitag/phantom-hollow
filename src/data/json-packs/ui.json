@@ -132,6 +132,11 @@
     },
     {
       "type": "image",
+      "key": "haste-potion-icon",
+      "url": "assets/icons/potions/haste-potion.png"
+    },
+    {
+      "type": "image",
       "key": "soul-stone-icon",
       "url": "assets/icons/stones/soul-stone.png"
     },
@@ -164,6 +169,11 @@
       "type": "image",
       "key": "arcane-mind-buff",
       "url": "assets/icons/buffs/arcane-mind.png"
+    },
+    {
+      "type": "image",
+      "key": "haste-buff",
+      "url": "assets/icons/buffs/haste.png"
     },
     {
       "type": "image",

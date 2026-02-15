@@ -74,6 +74,15 @@ export function vfxAnim(anims: Phaser.Animations.AnimationManager) {
     });
   }
 
+  if (!anims.get(VFX_ANIMATION.HASTE.MAIN)) {
+    anims.create({
+      key: VFX_ANIMATION.HASTE.MAIN,
+      frames: anims.generateFrameNumbers(VFX.HASTE_VFX, { start: 0, end: 5 }),
+      frameRate: 10,
+      repeat: 0,
+    });
+  }
+
   if (!anims.get(VFX_ANIMATION.CONCENTRATION.MAIN)) {
     anims.create({
       key: VFX_ANIMATION.CONCENTRATION.MAIN,

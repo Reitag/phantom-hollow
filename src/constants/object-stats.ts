@@ -64,8 +64,8 @@ export const ARROW_STATS = {
 } as const;
 
 export const PLAYER_STATS = {
-  //HEALTH: 200,
-  HEALTH: 3000,
+  HEALTH: 200,
+  //HEALTH: 3000,
   MOVE: 190,
   JUMP: 550,
   SPELL_POWER: 4,
@@ -121,7 +121,7 @@ export const FIRE_WORM_STATS = {
 } as const;
 
 export const EVIL_WIZARD_STATS = {
-  HEALTH: 2000,
+  HEALTH: 2500,
   WALK_BOUND: 100,
   WALK: 50,
   ENGAGE_DISTANCE: 450,

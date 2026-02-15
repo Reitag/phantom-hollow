@@ -137,16 +137,8 @@ export class Quest extends Board {
     });
   }
 
-  public get action(): Phaser.Scene {
-    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
-    const scene = player.scene;
-
-    return scene;
-  }
-
   private acceptQuest(): void {
     const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
-    //const scene = player.scene;
 
     if (player.isOnQuest === false && !this.action.events.listeners('fire-worm:died').length) {
       player.isOnQuest = true;
@@ -163,7 +155,7 @@ export class Quest extends Board {
   private completeQuest(): void {
     const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
     const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const reward = LOOT_FACTORY['health-potion'];
+    const reward = LOOT_FACTORY['haste-potion'];
     const fang = LOOT_FACTORY['fireworm-fang'];
     const fangIndex = inventory.getItemIndex(fang().id);
 
@@ -186,5 +178,12 @@ export class Quest extends Board {
     this.buttons.add(this.completeButton);
     this.completeButton.setVisible(true);
     (this.action as LevelOneScene).quest.changeMarkToCompleted();
+  }
+
+  private get action(): Phaser.Scene {
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+    const scene = player.scene;
+
+    return scene;
   }
 }

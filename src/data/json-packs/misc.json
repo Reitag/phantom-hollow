@@ -34,7 +34,7 @@
       "type": "spritesheet",
       "key": "quest-mark",
       "url": "assets/misc/quest-mark.png",
-      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+      "frameConfig": { "frameWidth": 20, "frameHeight": 20 }
     }
   ]
 }

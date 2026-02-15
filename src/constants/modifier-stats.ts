@@ -39,6 +39,12 @@ export const ARCANE_MIND = {
   type: TYPE.buff,
 };
 
+export const HASTE = {
+  id: UI.HASTE_BUFF,
+  effect: 0.15,
+  type: TYPE.buff,
+};
+
 export const CONCENTRATION = {
   id: UI.CONCENTRATION_BUFF,
   effect: 0.8,

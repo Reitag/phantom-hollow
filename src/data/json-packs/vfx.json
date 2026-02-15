@@ -44,6 +44,12 @@
     },
     {
       "type": "spritesheet",
+      "key": "haste-vfx",
+      "url": "assets/vfx/haste.png",
+      "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
       "key": "concentration-vfx",
       "url": "assets/vfx/concentration.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
