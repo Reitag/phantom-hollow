@@ -58,6 +58,9 @@ export class AiEvilWizard extends Boss {
   }
 
   protected finalCall(): void {
+    this.dreadAura?.destroy();
+    this.dreadAura = null;
+
     this.aiMutatedBat.getEnemies().forEach((bat) => {
       if (bat.unit.active && bat.unit.hasVelocity()) {
         bat.unit.setVelocity(0, 0);
@@ -150,6 +153,7 @@ export class AiEvilWizard extends Boss {
         speed: MUTATED_BAT_STATS.FLY,
         damage: { meleeAttack: undefined, spellPower: undefined },
         defense: undefined,
+        casting: false,
         aggro: false,
       },
     }).setDepth(Z_POSITION.ENEMY);

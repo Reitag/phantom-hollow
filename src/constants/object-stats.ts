@@ -32,7 +32,7 @@ export const FROST_BOLT_STATS = {
 
 export const DREAD_AURA_STATS = {
   KEY_NAME: UI.DREAD_AURA_DEBUFF,
-  DAMAGE: 1,
+  DAMAGE: 5,
   RANGE: 250,
 };
 

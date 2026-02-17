@@ -66,7 +66,7 @@ export class LevelOneScene extends Phaser.Scene {
     if (this.isGameInitialized) return;
     this.isGameInitialized = true;
 
-    //this.physics.world.createDebugGraphic();
+    this.physics.world.createDebugGraphic();
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
   }
