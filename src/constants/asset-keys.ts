@@ -39,7 +39,7 @@ export const MISC = {
 export const OBJECTS = {
   TREE_NORMAL: 'tree-normal',
   TREE_SHADOW: 'tree-shadow',
-  WAGON: 'wagon',
+  STORE: 'store',
   BOTTLES: 'bottles',
   BOWLER: 'bowler',
   STATUE_LEFT: 'statue-left',

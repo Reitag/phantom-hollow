@@ -6,7 +6,7 @@ export function questMarkAnim(anims: Phaser.Animations.AnimationManager) {
     anims.create({
       key: MISC_ANIMATION.QUEST_MARK.MAIN,
       frames: anims.generateFrameNumbers(MISC.QUEST_MARK, { start: 0, end: 1 }),
-      frameRate: 2,
+      frameRate: 1,
       repeat: -1,
     });
   }
@@ -15,7 +15,7 @@ export function questMarkAnim(anims: Phaser.Animations.AnimationManager) {
     anims.create({
       key: MISC_ANIMATION.QUEST_MARK.MAIN_2,
       frames: anims.generateFrameNumbers(MISC.QUEST_MARK, { start: 2, end: 3 }),
-      frameRate: 2,
+      frameRate: 1,
       repeat: -1,
     });
   }
@@ -24,7 +24,7 @@ export function questMarkAnim(anims: Phaser.Animations.AnimationManager) {
     anims.create({
       key: MISC_ANIMATION.QUEST_MARK.MAIN_3,
       frames: anims.generateFrameNumbers(MISC.QUEST_MARK, { start: 4, end: 5 }),
-      frameRate: 2,
+      frameRate: 1,
       repeat: -1,
     });
   }
