@@ -32,15 +32,15 @@ export const STORE_UI = {
 export const QUEST_UI = {
   ACCEPT_BTN: {
     X: 80,
-    Y: 360,
+    Y: 390,
   },
   DECLINE_BTN: {
     X: 220,
-    Y: 360,
+    Y: 390,
   },
   COMPLETE_BTN: {
-    X: 160,
-    Y: 360,
+    X: 149.5,
+    Y: 390,
   },
 } as const;
 

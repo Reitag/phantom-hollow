@@ -87,6 +87,11 @@
     },
     {
       "type": "image",
+      "key": "quest-ui-complete-btn",
+      "url": "assets/ui/quest/quest-ui-complete-btn.png"
+    },
+    {
+      "type": "image",
       "key": "dialog-ui",
       "url": "assets/ui/dialog/dialog-ui.png"
     },

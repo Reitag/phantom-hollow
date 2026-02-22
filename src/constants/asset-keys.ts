@@ -102,6 +102,7 @@ export const UI = {
   QUEST_UI: 'quest-ui',
   QUEST_UI_ACCEPT_BTN: 'quest-ui-accept-btn',
   QUEST_UI_DECLINE_BTN: 'quest-ui-decline-btn',
+  QUEST_UI_COMPLETE_BTN: 'quest-ui-complete-btn',
   DIALOG_UI: 'dialog-ui',
   DIALOG_UI_BUTTON_YES: 'dialog-ui-button-yes',
   DIALOG_UI_BUTTON_NO: 'dialog-ui-button-no',
