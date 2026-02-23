@@ -7,8 +7,8 @@ export const SPIKE_HIT = 10;
 export const SPEAR_HIT = 50;
 
 export const FIRE_BALL_STATS = {
-  //HIT: 25,
-  HIT: 2500,
+  HIT: 25,
+  //HIT: 2500,
   SPEED: 300,
   CAST_TIME: 800,
   LIFE_TIME: 1100,

@@ -1,8 +1,9 @@
 import { Character } from '@/base/objects/character';
 import { Dialog } from '@/components/ui/dialog/dialog';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
-import { HealthBar } from '@/components/ui/healthbar/health-bar';
+import { PlayerHealthBar } from '@/components/ui/healthbar/player-health-bar';
 import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator';
+import { BossHealthBar } from '@/components/ui/healthbar/boss-health-bar';
 import { CastBar } from '@/components/ui/castbar/cast-bar';
 import { CastBarAnimator } from '@/components/ui/castbar/cast-bar-animator';
 import { Coins } from '@/components/ui/coins/coins';
@@ -14,8 +15,16 @@ import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/
 import { Quest } from '@/components/ui/boards/quest';
 
 export class UiSystem {
-  private healthBar: HealthBar;
+  private healthBar: PlayerHealthBar;
   private healthBarAnimator: HealthBarAnimator;
+
+  private bossHealths: Record<
+    string,
+    {
+      bossHealthBar: BossHealthBar;
+      healthAnimator: HealthBarAnimator;
+    }
+  > = {};
 
   private castBar: CastBar;
   private castBarAnimator: CastBarAnimator;
@@ -29,8 +38,11 @@ export class UiSystem {
   private text: Text;
 
   constructor(private uiScene: Phaser.Scene) {
-    this.healthBar = new HealthBar(uiScene);
+    this.healthBar = new PlayerHealthBar(uiScene);
     this.healthBarAnimator = new HealthBarAnimator(this.healthBar);
+
+    this.createBossHealth('fireworm', 'Blazeworm');
+    this.createBossHealth('evil-wizard', 'Sacryth, the Duskbringer');
 
     this.castBar = new CastBar(uiScene);
     this.castBarAnimator = new CastBarAnimator(uiScene, this.castBar);
@@ -52,6 +64,23 @@ export class UiSystem {
 
   public restorePlayerHealth(): void {
     this.healthBar.setMask();
+  }
+
+  public showBossHealthBar(key: string): void {
+    this.hideBossHealthBar();
+    this.bossHealths[key].bossHealthBar.show();
+  }
+
+  public hideBossHealthBar(): void {
+    Object.values(this.bossHealths).forEach((b) => b.bossHealthBar.hide());
+  }
+
+  public reduceBossHealth(key: string, currentHealth: number, maxHealth: number): void {
+    this.bossHealths[key].healthAnimator.reduceBossHealth(currentHealth, maxHealth);
+  }
+
+  public restoreBossesHealth(): void {
+    Object.values(this.bossHealths).forEach((b) => b.bossHealthBar.setMask());
   }
 
   public startCast(duration: number): void {
@@ -118,5 +147,15 @@ export class UiSystem {
 
   public showDamageDealt(amount: number | string, target: Character): void {
     this.text.addDamageDisplayOnScreen(amount, target);
+  }
+
+  private createBossHealth(key: string, bossName: string) {
+    const bar = new BossHealthBar(this.uiScene, bossName);
+    const animator = new HealthBarAnimator(bar);
+
+    this.bossHealths[key] = {
+      bossHealthBar: bar,
+      healthAnimator: animator,
+    };
   }
 }

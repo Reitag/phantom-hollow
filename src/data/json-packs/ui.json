@@ -57,6 +57,16 @@
     },
     {
       "type": "image",
+      "key": "boss-health-bar",
+      "url": "assets/ui/health/boss-health-bar.png"
+    },
+    {
+      "type": "image",
+      "key": "boss-health-env",
+      "url": "assets/ui/health/boss-health-env.png"
+    },
+    {
+      "type": "image",
       "key": "store-ui",
       "url": "assets/ui/store/store-ui.png"
     },

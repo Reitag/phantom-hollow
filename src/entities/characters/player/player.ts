@@ -25,7 +25,6 @@ export class Player extends Character {
   private panel: PanelService;
   private controls: KeyboardController;
   private spellSystem: SpellSystem;
-  private ui: UiSystem;
   private inventory: InventorySystem;
   private coinKeeper: CoinKeeper;
   private onQuest = false;
@@ -35,7 +34,6 @@ export class Player extends Character {
 
     this.scene = scene;
     this.spellSystem = ServiceLocator.resolve(ServiceKeys.spellSystem);
-    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
     this.controls = ServiceLocator.resolve(ServiceKeys.input);
     this.panel = ServiceLocator.resolve(ServiceKeys.panel);

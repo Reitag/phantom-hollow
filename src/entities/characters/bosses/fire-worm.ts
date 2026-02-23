@@ -28,7 +28,11 @@ export class FireWorm extends Character {
     this.arcadeBody.setOffset((this.width - 30) / 2, this.height - 33);
   }
 
-  update(delta: number): void {
+  public update(delta: number): void {
     this.stateMachine.update(delta);
+  }
+
+  protected onDamaged(): void {
+    this.ui.reduceBossHealth('fireworm', this.stats.health!.current, this.stats.health!.max);
   }
 }

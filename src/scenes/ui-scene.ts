@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 
 import { UiSystem } from '@/systems/ui-system';
 import { UI } from '@/constants/asset-keys';
-import { SPELL_TOOLTIPS } from '@/constants/tooltip-params';
 import { createUiTilemap } from '@/tilemap/tilemap-ui';
 import { Tilemap } from '@/components/map/tilemap';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -46,84 +45,5 @@ export class UiScene extends Phaser.Scene {
 
     const coinCoord = getUiCoords(uiCoords, 'coin-icon');
     this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
-  }
-
-  /*private createSpellIcons(): void {
-    const uiCoords = ServiceLocator.resolve(ServiceKeys.uiCoords);
-
-    const primary = getUiCoords(uiCoords, 'primary');
-    const secondary = getUiCoords(uiCoords, 'secondary');
-    const tertiary = getUiCoords(uiCoords, 'tertiary');
-    const quaternary = getUiCoords(uiCoords, 'quaternary');
-
-    const fireball = this.add
-      .image(primary.x, primary.y, UI.FIRE_BALL_ICON)
-      .setOrigin(0, 0)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.FIREBALL);
-    const blink = this.add
-      .image(secondary.x, secondary.y, UI.BLINK_ICON)
-      .setOrigin(0, 0)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.BLINK);
-    const wind = this.add
-      .image(tertiary.x, tertiary.y, UI.WIND_ICON)
-      .setOrigin(0, 0)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.WIND);
-    const frostbolt = this.add
-      .image(quaternary.x, quaternary.y, UI.FROSTBOLT_ICON)
-      .setOrigin(0, 0)
-      .setInteractive({ useHandCursor: true })
-      .setData('spell', SPELL_TOOLTIPS.FROSTBOLT);
-
-    // Tooltips
-    this.tooltipSpellsInit({ fireball: fireball, blink: blink, wind: wind, frostbolt: frostbolt });
-
-    // Spell labels
-    this.addKeyLabel(fireball, 'E');
-    this.addKeyLabel(blink, 'C');
-    this.addKeyLabel(wind, 'F');
-    this.addKeyLabel(frostbolt, 'R');
-  }*/
-
-  private addKeyLabel(icon: Phaser.GameObjects.Image, keyText: string): void {
-    this.add
-      .text(icon.x + 22, icon.y - 5, keyText, {
-        font: '12px Arial',
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 3,
-      })
-      .setOrigin(0, 0)
-      .setDepth(10)
-      .setAlpha(0.9);
-  }
-
-  private tooltipSpellsInit(spells: {
-    fireball: Phaser.GameObjects.Image;
-    blink: Phaser.GameObjects.Image;
-    wind: Phaser.GameObjects.Image;
-    frostbolt: Phaser.GameObjects.Image;
-  }): void {
-    const { fireball, blink, wind, frostbolt } = spells;
-
-    [fireball, blink, wind, frostbolt].forEach((spell) => {
-      spell.on('pointerover', (pointer: Phaser.Input.Pointer) => {
-        this.scene.scene.game.canvas.style.cursor = 'help';
-        const info = spell.getData('spell');
-        this.ui.showVerticalTooltip(
-          {
-            x: spell.x - 50,
-            y: spell.y - 30,
-            width: 300,
-            fillColor: 0x000000,
-          },
-          info
-        );
-      });
-
-      spell.on('pointerout', this.ui.hideTooltip, this.ui);
-    });
   }
 }

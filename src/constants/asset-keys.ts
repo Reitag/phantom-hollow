@@ -96,6 +96,8 @@ export const UI = {
   CAST_BAR: 'cast-bar',
   CAST_BAR_GREEN: 'cast-bar-green',
   CAST_ENV: 'cast-env',
+  BOSS_HEALTH_BAR: 'boss-health-bar',
+  BOSS_HEALTH_ENV: 'boss-health-env',
   STORE_UI: 'store-ui',
   STORE_UI_CLOSE_BUTTON: 'store-ui-close-button',
   ITEM_CARD: 'item-card',

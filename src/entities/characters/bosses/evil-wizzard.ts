@@ -32,7 +32,11 @@ export class EvilWizzard extends Character {
     this.arcadeBody.setOffset((this.width - 30) / 2, this.height - 53);
   }
 
-  update(delta: number): void {
+  public update(delta: number): void {
     this.stateMachine.update(delta);
+  }
+
+  protected onDamaged(): void {
+    this.ui.reduceBossHealth('evil-wizard', this.stats.health!.current, this.stats.health!.max);
   }
 }

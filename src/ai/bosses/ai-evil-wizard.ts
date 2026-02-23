@@ -8,6 +8,7 @@ import {
 } from '@/constants/object-stats';
 import { SHADOW_BOLT, SHADOW_TRAIL, SUMMON_BAT } from '@/constants/spell-cooldowns';
 import { Character } from '@/base/objects/character';
+import { Health } from '@/components/stats/health';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
@@ -53,8 +54,9 @@ export class AiEvilWizard extends Boss {
     this.aiMutatedBat.update(delta);
 
     this.dreadAura?.update(this.player, delta);
-
     this.updateAggro(delta, EVIL_WIZARD_STATS.ENGAGE_DISTANCE);
+
+    this.bossHealthBar('evil-wizard');
   }
 
   protected finalCall(): void {
@@ -80,6 +82,10 @@ export class AiEvilWizard extends Boss {
     if (currentState !== ENEMY_STATES.PATROL) {
       fsm.changeState(ENEMY_STATES.PATROL, EVIL_WIZARD_STATS.WALK_BOUND);
     }
+  }
+
+  protected restoreHealthBar(health: Health): void {
+    this.ui.reduceBossHealth('evil-wizard', health!.current, health!.max);
   }
 
   protected aggroedBehaviour(): void {

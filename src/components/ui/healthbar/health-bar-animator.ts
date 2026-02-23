@@ -1,11 +1,8 @@
-import { HealthBar } from './health-bar';
+import { BossHealthBar } from './boss-health-bar';
+import { HealthBar } from './player-health-bar';
 
 export class HealthBarAnimator {
-  private healthBar: HealthBar;
-
-  constructor(healthBar: HealthBar) {
-    this.healthBar = healthBar;
-  }
+  constructor(private healthBar: HealthBar | BossHealthBar) {}
 
   public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
     const percentage = this.clamp(currentHealth / maxHealth, 0, 1);
@@ -17,6 +14,21 @@ export class HealthBarAnimator {
     mask.clear();
     mask.fillStyle(0xffffff);
     mask.fillRoundedRect(x, y, width * percentage, height, 1);
+  }
+
+  public reduceBossHealth(currentHealth: number, maxHealth: number): void {
+    const percentage = this.clamp(currentHealth / maxHealth, 0, 1);
+    const { x, y, width, height } = this.healthBar.bar;
+
+    const mask = this.healthBar.getMask();
+    if (!mask) return;
+
+    const visibleWidth = width * percentage;
+    const offsetX = x + (width - visibleWidth);
+
+    mask.clear();
+    mask.fillStyle(0xffffff);
+    mask.fillRoundedRect(offsetX, y, visibleWidth, height, 1);
   }
 
   private clamp(value: number, min: number, max: number): number {

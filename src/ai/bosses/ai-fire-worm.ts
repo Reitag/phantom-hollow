@@ -1,5 +1,6 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
+import { Health } from '@/components/stats/health';
 import { FIRE_WORM_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
 import { ENEMY_STATES } from '@/constants/state-keys';
@@ -39,6 +40,8 @@ export class AiFireWorm extends Boss {
     this.boss.update();
     this.considerLongFight(time);
     this.updateAggro(delta, FIRE_WORM_STATS.ENGAGE_DISTANCE);
+
+    this.bossHealthBar('fireworm');
   }
 
   protected chillBehaviour(): void {
@@ -54,6 +57,11 @@ export class AiFireWorm extends Boss {
       fsm.changeState(ENEMY_STATES.PATROL, FIRE_WORM_STATS.WALK_BOUND);
     }
   }
+
+  protected restoreHealthBar(health: Health): void {
+    this.ui.reduceBossHealth('fireworm', health!.current, health!.max);
+  }
+
   protected aggroedBehaviour(): void {
     this.updateFacingDirection();
 
