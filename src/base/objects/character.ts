@@ -159,7 +159,9 @@ export class Character extends ArcadeSprite {
 
   private playHitEffect(): void {
     this.setTintFill(0xffffff);
-    this.scene.time.delayedCall(100, () => this.clearTint());
+    this.scene.time.delayedCall(100, () => {
+      this.clearTint();
+    });
   }
 
   protected die(): void {

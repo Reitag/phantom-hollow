@@ -28,7 +28,7 @@ export const LIGHTNING_SHIELD = {
 
 export const UNDYING = {
   id: UI.UNDYING_BUFF,
-  duration: 10000,
+  duration: 3000,
   hp_left: 1,
   type: TYPE.buff,
 };
