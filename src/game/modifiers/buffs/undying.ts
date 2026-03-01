@@ -28,8 +28,6 @@ export class Undying implements Modifier {
     this.health.applyDamage = (amount: number) => {
       if (!this.health) return;
 
-      if (this.health.current === UNDYING.hp_left) return;
-
       if (!(this.health.current - amount <= UNDYING.hp_left)) {
         this.originalApplyDamage(amount);
       } else {
@@ -38,11 +36,17 @@ export class Undying implements Modifier {
           this.ui.removeModifierIcon(this.id);
           this.ui.addModifierIcon(this.id, this.duration, this.type);
 
+          //
+          this.scene.cameras.main.flash(150, 255, 0, 0);
+          this.scene.cameras.main.shake(120, 0.01);
+          //
+
           this.scene.time.delayedCall(this.duration, () => {
             if (!this.health) return;
 
             this.health.applyDamage = this.originalApplyDamage;
             this.ui.removeModifierIcon(this.id);
+            target.clearTint();
             this.savedOnExpire();
           });
         }

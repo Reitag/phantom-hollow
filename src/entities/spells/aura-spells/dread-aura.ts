@@ -79,7 +79,7 @@ export class DreadAura extends Spell {
       target.takeDamage(this.causeDamage() * (delta / 1000));
       target.setTint(0x9966ff);
       this.setDebuffIcon(target);
-    } else {
+    } else if (this.ui.checkModifierIcon(UI.DREAD_AURA_DEBUFF)) {
       this.removeDebuffIcon(target);
       target.clearTint();
     }

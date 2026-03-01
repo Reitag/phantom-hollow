@@ -99,6 +99,13 @@ export class UiSystem {
     }
   }
 
+  public checkModifierIcon(key: string): boolean {
+    if (this.modifierIconContainer.findModifierIcon(key)) {
+      return true;
+    }
+    return false;
+  }
+
   public removeModifierIcon(key: string): void {
     this.modifierIconContainer.removeModifierIcon(key);
   }

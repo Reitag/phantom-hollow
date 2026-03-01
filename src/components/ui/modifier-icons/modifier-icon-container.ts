@@ -106,6 +106,10 @@ export class ModifierIconContainer {
     toRemove.forEach((key) => this.removeModifierIcon(key));
   }
 
+  public findModifierIcon(key: string): ModifierContainerConfig | undefined {
+    return this.modifierIcons.find((elem) => elem.icon.name === key);
+  }
+
   private attachTooltip(entry: ModifierContainerConfig): void {
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
 
@@ -127,10 +131,6 @@ export class ModifierIconContainer {
     entry.icon.off('pointerout', ui.hideTooltip, ui);
     entry.icon.removeAllListeners();
     entry.icon.disableInteractive();
-  }
-
-  private findModifierIcon(key: string): ModifierContainerConfig | undefined {
-    return this.modifierIcons.find((elem) => elem.icon.name === key);
   }
 
   private updateUI(type: ModifierType): void {
