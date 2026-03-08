@@ -57,6 +57,16 @@
     },
     {
       "type": "image",
+      "key": "boss-health-bar",
+      "url": "assets/ui/health/boss-health-bar.png"
+    },
+    {
+      "type": "image",
+      "key": "boss-health-env",
+      "url": "assets/ui/health/boss-health-env.png"
+    },
+    {
+      "type": "image",
       "key": "store-ui",
       "url": "assets/ui/store/store-ui.png"
     },
@@ -69,6 +79,26 @@
       "type": "image",
       "key": "item-card",
       "url": "assets/ui/store/item-card.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui",
+      "url": "assets/ui/quest/quest-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui-accept-btn",
+      "url": "assets/ui/quest/quest-ui-accept-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui-decline-btn",
+      "url": "assets/ui/quest/quest-ui-decline-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui-complete-btn",
+      "url": "assets/ui/quest/quest-ui-complete-btn.png"
     },
     {
       "type": "image",
@@ -117,6 +147,11 @@
     },
     {
       "type": "image",
+      "key": "haste-potion-icon",
+      "url": "assets/icons/potions/haste-potion.png"
+    },
+    {
+      "type": "image",
       "key": "soul-stone-icon",
       "url": "assets/icons/stones/soul-stone.png"
     },
@@ -152,8 +187,18 @@
     },
     {
       "type": "image",
+      "key": "haste-buff",
+      "url": "assets/icons/buffs/haste.png"
+    },
+    {
+      "type": "image",
       "key": "concentration-buff",
       "url": "assets/icons/buffs/concentration.png"
+    },
+    {
+      "type": "image",
+      "key": "crystal-renewal-buff",
+      "url": "assets/icons/buffs/crystal-renewal.png"
     },
     {
       "type": "image",

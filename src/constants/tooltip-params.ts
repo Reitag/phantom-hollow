@@ -1,5 +1,6 @@
 import { TooltipContentConfig } from '@/utils/types';
 import {
+  hastePotion,
   healthPotion,
   lightningPotion,
   protectPotion,
@@ -8,12 +9,18 @@ import {
 } from '@/game/items/potions';
 import { soulStone, stoneOfConcentration } from '@/game/items/stones';
 import { firewormFang } from '@/game/items/quests';
-import { DREAD_AURA_STATS, FIRE_BALL_STATS, FROST_BOLT_STATS } from './object-stats';
+import {
+  CRYSTAL_SHRINE_STATS,
+  DREAD_AURA_STATS,
+  FIRE_BALL_STATS,
+  FROST_BOLT_STATS,
+} from './object-stats';
 import { BLINK, FROST_BOLT, WIND } from './spell-cooldowns';
 import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
+  HASTE,
   LIGHTNING_SHIELD,
   PROTECTION,
   SHADOW_VULNERABILITY,
@@ -119,16 +126,16 @@ export const SPELL_TOOLTIPS: {
 } as const;
 
 // Items tooltips
-const potionTitleParams = {
+const commonTitleParams = {
   color: '#ffffff',
 } as const;
 
-const stoneTitleParams = {
+const uncommonTitleParams = {
   //color: '#6fcf97',
   color: '#1be401',
 } as const;
 
-const concentrationStoneTitleParams = {
+const rareTitleParams = {
   //color: '#6795c4',
   color: '#0070dd',
 } as const;
@@ -151,6 +158,7 @@ export const ITEM_TOOLTIPS: {
   SPELL_POTION: TooltipContentConfig;
   LIGHTNING_POTION: TooltipContentConfig;
   UNDYING_POTION: TooltipContentConfig;
+  HASTE_POTION: TooltipContentConfig;
   SOUL_STONE: TooltipContentConfig;
   STONE_OF_CONCENTRATION: TooltipContentConfig;
   FIREWORM_FANG: TooltipContentConfig;
@@ -158,7 +166,7 @@ export const ITEM_TOOLTIPS: {
   HEALTH_POTION: {
     id: healthPotion().iconKey,
     title: {
-      param: potionTitleParams,
+      param: commonTitleParams,
       text: healthPotion().name,
     },
     prop_1: {
@@ -172,7 +180,7 @@ export const ITEM_TOOLTIPS: {
   PROTECTION_POTION: {
     id: protectPotion().iconKey,
     title: {
-      param: potionTitleParams,
+      param: commonTitleParams,
       text: protectPotion().name,
     },
     prop_1: {
@@ -186,7 +194,7 @@ export const ITEM_TOOLTIPS: {
   SPELL_POTION: {
     id: spellPotion().iconKey,
     title: {
-      param: potionTitleParams,
+      param: commonTitleParams,
       text: spellPotion().name,
     },
     prop_1: {
@@ -200,7 +208,7 @@ export const ITEM_TOOLTIPS: {
   LIGHTNING_POTION: {
     id: lightningPotion().iconKey,
     title: {
-      param: potionTitleParams,
+      param: commonTitleParams,
       text: lightningPotion().name,
     },
     prop_1: {
@@ -214,7 +222,7 @@ export const ITEM_TOOLTIPS: {
   UNDYING_POTION: {
     id: undyingPotion().iconKey,
     title: {
-      param: potionTitleParams,
+      param: commonTitleParams,
       text: undyingPotion().name,
     },
     prop_1: {
@@ -225,10 +233,28 @@ export const ITEM_TOOLTIPS: {
       text: undyingPotion().description,
     },
   },
+  HASTE_POTION: {
+    id: hastePotion().iconKey,
+    title: {
+      param: rareTitleParams,
+      text: hastePotion().name,
+    },
+    prop_1: {
+      text: `Unique item`,
+    },
+    prop_2: {
+      param: textParams,
+      text: hastePotion().description,
+    },
+    prop_3: {
+      param: additionTextParams,
+      text: '"The Octius brewed this was his masterpiece."',
+    },
+  },
   SOUL_STONE: {
     id: soulStone().iconKey,
     title: {
-      param: stoneTitleParams,
+      param: uncommonTitleParams,
       text: soulStone().name,
     },
     prop_1: {
@@ -242,7 +268,7 @@ export const ITEM_TOOLTIPS: {
   STONE_OF_CONCENTRATION: {
     id: stoneOfConcentration().iconKey,
     title: {
-      param: concentrationStoneTitleParams,
+      param: rareTitleParams,
       text: stoneOfConcentration().name,
     },
     prop_1: {
@@ -293,7 +319,9 @@ export const MODIFIER_TOOLTIPS: {
   SPELL_POWER: TooltipContentConfig;
   LIGHTNING_SHIELD: TooltipContentConfig;
   UNDYING: TooltipContentConfig;
+  HASTE: TooltipContentConfig;
   DISEASE: TooltipContentConfig;
+  CRYSTAL_RENEWAL: TooltipContentConfig;
   SHADOW_VULNERABILITY: TooltipContentConfig;
   DREAD_AURA: TooltipContentConfig;
 } = {
@@ -355,6 +383,26 @@ export const MODIFIER_TOOLTIPS: {
     },
     prop_1: {
       text: 'Unable to die.',
+    },
+  },
+  HASTE: {
+    id: HASTE.id,
+    title: {
+      param: buffParams,
+      text: 'Haste',
+    },
+    prop_1: {
+      text: 'Speed increased by 15%.',
+    },
+  },
+  CRYSTAL_RENEWAL: {
+    id: CRYSTAL_SHRINE_STATS.KEY_NAME,
+    title: {
+      param: buffParams,
+      text: 'Crystal Renewal',
+    },
+    prop_1: {
+      text: 'Regenerates health while inside the shrine.',
     },
   },
   DISEASE: {

@@ -28,7 +28,9 @@ export class CastBarAnimator {
       ease: 'Linear',
       duration,
       onUpdate: () => {
-        this.castBar.updateMask(this.castBar.progressWidth);
+        if (this.castBar.progressWidth) {
+          this.castBar.updateMask(this.castBar.progressWidth);
+        }
       },
       onComplete: () => {
         this.castBar.setCompletedTexture();

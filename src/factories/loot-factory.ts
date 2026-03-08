@@ -1,4 +1,5 @@
 import {
+  hastePotion,
   healthPotion,
   lightningPotion,
   protectPotion,
@@ -20,4 +21,5 @@ export const LOOT_FACTORY: Record<string, LootFactory> = {
   'soul-stone': soulStone,
   'stone-of-concentration': stoneOfConcentration,
   'fireworm-fang': firewormFang,
+  'haste-potion': hastePotion,
 };

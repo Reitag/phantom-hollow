@@ -12,7 +12,9 @@ export class Undying implements Modifier {
 
   private ui: UiSystem;
   private originalApplyDamage!: (amount: number) => void;
+  private savedOnExpire!: () => void;
   private health!: Health | null;
+  private hasTrigged = false;
 
   constructor(private scene: Phaser.Scene) {
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
@@ -26,11 +28,28 @@ export class Undying implements Modifier {
     this.health.applyDamage = (amount: number) => {
       if (!this.health) return;
 
-      if (this.health.current === UNDYING.hp_left) return;
-
       if (!(this.health.current - amount <= UNDYING.hp_left)) {
         this.originalApplyDamage(amount);
       } else {
+        if (!this.hasTrigged) {
+          this.hasTrigged = true;
+          this.ui.removeModifierIcon(this.id);
+          this.ui.addModifierIcon(this.id, this.duration, this.type);
+
+          //
+          this.scene.cameras.main.flash(150, 255, 0, 0);
+          this.scene.cameras.main.shake(120, 0.01);
+          //
+
+          this.scene.time.delayedCall(this.duration, () => {
+            if (!this.health) return;
+
+            this.health.applyDamage = this.originalApplyDamage;
+            this.ui.removeModifierIcon(this.id);
+            target.clearTint();
+            this.savedOnExpire();
+          });
+        }
         const newValue = this.health.current - UNDYING.hp_left;
         this.originalApplyDamage(newValue);
       }
@@ -43,14 +62,8 @@ export class Undying implements Modifier {
 
     this.apply(target);
 
-    this.ui.addModifierIcon(this.id, this.duration, this.type);
+    this.ui.addModifierIcon(this.id, undefined, this.type);
 
-    this.scene.time.delayedCall(this.duration, () => {
-      if (!this.health) return;
-
-      this.health.applyDamage = this.originalApplyDamage;
-      this.ui.removeModifierIcon(this.id);
-      onExpire();
-    });
+    this.savedOnExpire = onExpire;
   }
 }

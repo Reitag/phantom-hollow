@@ -11,6 +11,7 @@ import { SpriteConfig, Position, Stats } from '@/utils/types';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Casting } from '@/components/stats/casting';
+import { UiSystem } from '@/systems/ui-system';
 
 export interface CharacterConfig extends SpriteConfig {
   facingRight: boolean;
@@ -32,6 +33,7 @@ export class Character extends ArcadeSprite {
   protected isDead = false;
   protected stateMachine: StateMachine;
   protected modifier: ModifierSystem;
+  protected ui: UiSystem;
   protected stats: Stats;
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
@@ -40,6 +42,7 @@ export class Character extends ArcadeSprite {
     this.facingRight = facingRight;
     this.stateMachine = new StateMachine();
     this.modifier = new ModifierSystem(this.scene);
+    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.stats = {
       health: stats.health !== undefined ? new Health(stats.health) : null,
       speed: stats.speed !== undefined ? new Speed(stats.speed) : null,
@@ -156,7 +159,9 @@ export class Character extends ArcadeSprite {
 
   private playHitEffect(): void {
     this.setTintFill(0xffffff);
-    this.scene.time.delayedCall(100, () => this.clearTint());
+    this.scene.time.delayedCall(100, () => {
+      this.clearTint();
+    });
   }
 
   protected die(): void {

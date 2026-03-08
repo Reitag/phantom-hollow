@@ -28,7 +28,7 @@ export const LIGHTNING_SHIELD = {
 
 export const UNDYING = {
   id: UI.UNDYING_BUFF,
-  duration: 10000,
+  duration: 3000,
   hp_left: 1,
   type: TYPE.buff,
 };
@@ -36,6 +36,12 @@ export const UNDYING = {
 export const ARCANE_MIND = {
   id: UI.ARCANE_MIND_BUFF,
   duration: 5000,
+  type: TYPE.buff,
+};
+
+export const HASTE = {
+  id: UI.HASTE_BUFF,
+  effect: 0.15,
   type: TYPE.buff,
 };
 

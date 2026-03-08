@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.14.0] – 2026-03-08
+
+### Added
+
+- Blazeworm's Fang quest
+- Haste Potion and Haste buff effect
+- Visual effect for Dread Aura
+- Styled quest frame and quest text UI
+- Boss Health Bar
+- Crystal Shrine healing area that restores health
+
+### Changed
+
+- Reworked Undying Potion mechanic
+- Updated store sprite
+- Improved quest mark indicator
+- Updated Protection buff icon
+- Rebalanced boss HP and spell power
+
+
 ## [0.13.0] – 2026-02-08
 
 ### Added

@@ -47,6 +47,8 @@ export class ShadowBolt extends Spell {
   }
 
   public applyEffect(target: Character): void {
+    if (target.getDead()) return;
+
     const debuff = target.getModifier();
 
     if (!debuff.isModifierExist(SHADOW_VULNERABILITY.id)) {

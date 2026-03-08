@@ -1,5 +1,5 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
-import { Store } from '@/components/ui/store/store';
+import { Store } from '@/components/ui/boards/store';
 import { STORE_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';

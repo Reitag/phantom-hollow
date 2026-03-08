@@ -183,6 +183,28 @@
                  "width":194,
                  "x":35,
                  "y":10
+                }, 
+                {
+                 "height":6,
+                 "id":21,
+                 "name":"boss-health-bar",
+                 "rotation":0,
+                 "type":"health-ui",
+                 "visible":true,
+                 "width":226,
+                 "x":761,
+                 "y":18
+                }, 
+                {
+                 "height":10,
+                 "id":20,
+                 "name":"boss-health-env",
+                 "rotation":0,
+                 "type":"health-ui",
+                 "visible":true,
+                 "width":230,
+                 "x":759,
+                 "y":16
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -191,7 +213,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":20,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

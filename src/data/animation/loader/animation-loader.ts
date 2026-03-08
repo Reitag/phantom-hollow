@@ -21,6 +21,8 @@ import { shadowTrailAnim } from '../spells/shadow-trail-anim';
 import { bonFireAnim } from '../misc/bon-fire-anim';
 import { alchemistAnim } from '../characters/npc/alchemist-anim';
 import { shiningAnim } from '../misc/shining-anim';
+import { questMarkAnim } from '../misc/quest-mark-anim';
+import { crystalShrineAnim } from '../misc/crystal-shrine-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -61,4 +63,6 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   portalAnim(anims);
   darkEnergyAnim(anims);
   shiningAnim(anims);
+  questMarkAnim(anims);
+  crystalShrineAnim(anims);
 }

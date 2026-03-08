@@ -1,6 +1,12 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { VFX, UI } from '@/constants/asset-keys';
-import { LIGHTNING_SHIELD, PROTECTION, SPELL_POWER, UNDYING } from '@/constants/modifier-stats';
+import {
+  HASTE,
+  LIGHTNING_SHIELD,
+  PROTECTION,
+  SPELL_POWER,
+  UNDYING,
+} from '@/constants/modifier-stats';
 import { InventoryItem } from '@/utils/types';
 import { AttachedVfx } from '@/entities/misc/attached-vfx';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
@@ -120,7 +126,8 @@ export const lightningPotion = (): InventoryItem => ({
 export const undyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
-  description: 'Use: Prevents death for 10 sec, leaving you at 1 Health instead.',
+  description:
+    'Use: Applies a buff that triggers on fatal damage, leaving the character at 1 Health and preventing death for 3 sec. Consumed on activation.',
   iconKey: UI.UNDYING_POTION_ICON,
   maxStack: 3,
   isUnique: false,
@@ -143,6 +150,37 @@ export const undyingPotion = (): InventoryItem => ({
     } else {
       const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
       sandbox.setText('Undying buff is already active');
+      return false;
+    }
+  },
+});
+
+export const hastePotion = (): InventoryItem => ({
+  id: 'haste-potion',
+  name: 'Haste Potion',
+  description: 'Use: Permanetely increases your movement speed at 15%.',
+  iconKey: UI.HASTE_POTION_ICON,
+  maxStack: 1,
+  isUnique: true,
+  use: () => {
+    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+    const modifier = player.getModifier();
+
+    if (!modifier.isModifierExist(HASTE.id)) {
+      modifier.addModifier(HASTE.id);
+      modifier.startModifier(HASTE.id, player);
+
+      new AttachedVfx({
+        scene: player.scene,
+        caster: player,
+        keyName: VFX.HASTE_VFX,
+        animKey: VFX_ANIMATION.HASTE.MAIN,
+      });
+
+      return true;
+    } else {
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+      sandbox.setText('Haste buff is already active');
       return false;
     }
   },

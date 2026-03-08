@@ -2,6 +2,7 @@ import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
+  HASTE,
   LIGHTNING_SHIELD,
   PROTECTION,
   SHADOW_VULNERABILITY,
@@ -10,6 +11,7 @@ import {
 } from '@/constants/modifier-stats';
 import { ArcaneMind } from '@/game/modifiers/buffs/arcane-mind';
 import { Concentration } from '@/game/modifiers/buffs/concentration';
+import { Haste } from '@/game/modifiers/buffs/haste';
 import { Protection } from '@/game/modifiers/buffs/protection';
 import { SetLightning } from '@/game/modifiers/buffs/set-lightning';
 import { SpellIncrease } from '@/game/modifiers/buffs/spell-increase';
@@ -31,6 +33,8 @@ export class ModifierFactory {
         return new Undying(scene);
       case ARCANE_MIND.id:
         return new ArcaneMind(scene);
+      case HASTE.id:
+        return new Haste(scene);
       case CONCENTRATION.id:
         return new Concentration(scene);
       case DISEASE.id:

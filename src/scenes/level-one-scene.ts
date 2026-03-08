@@ -13,9 +13,11 @@ import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
+import { CrystalShrine } from '@/game/interactables/crystal-shrine';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
+import { QuestMark } from '@/entities/misc/quest-mark';
 import { SpellFactory } from '@/factories/spell-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
@@ -49,6 +51,7 @@ export class LevelOneScene extends Phaser.Scene {
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
   private npc!: NPCSpawn;
+  private questMark!: QuestMark;
   private canPlayerGetDamage = true;
   private isGameInitialized = false;
 
@@ -56,16 +59,22 @@ export class LevelOneScene extends Phaser.Scene {
     super('LevelOneScene');
   }
 
+  public get quest(): QuestMark {
+    return this.questMark;
+  }
+
   public create(): void {
     if (this.isGameInitialized) return;
     this.isGameInitialized = true;
 
-    this.physics.world.createDebugGraphic();
+    // Dev
+    if (process.env.NODE_ENV === 'development') {
+      //this.physics.world.createDebugGraphic();
+    }
+    // Dev
+
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
-
-    // Fire worm's loot spawn
-    this.events.once('fire-worm:died', this.onFireWormDied, this);
   }
 
   public update(time: number, delta: number): void {
@@ -77,10 +86,8 @@ export class LevelOneScene extends Phaser.Scene {
     this.updateParallaxBackground();
 
     // Debug
-    if (process.env.NODE_ENV === 'development') {
-      if (this.debugScreen instanceof DebugScreen) {
-        this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
-      }
+    if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
+      this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
     }
     // Debug
   }
@@ -109,6 +116,8 @@ export class LevelOneScene extends Phaser.Scene {
         if (process.env.NODE_ENV === 'development') {
           this.scene.add('DebugScreen', DebugScreen, true);
           this.debugScreen = this.scene.get('DebugScreen');
+          // Debug graphic
+          this.physics.world.createDebugGraphic();
         }
         // Debug
       } else {
@@ -241,6 +250,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.add(new SoulPedestal(this));
     this.interactables.add(new AlchemistQuestTrigger(this));
     this.interactables.add(new LootZone(this));
+    this.interactables.add(new CrystalShrine(this));
   }
 
   private registerCollisions(): void {
@@ -365,6 +375,13 @@ export class LevelOneScene extends Phaser.Scene {
       keyName: MISC.BON_FIRE,
       frame: 0,
     });
+
+    this.questMark = new QuestMark({
+      scene: this,
+      position: { x: result['quest-mark'].x, y: result['quest-mark'].y },
+      keyName: MISC.QUEST_MARK,
+      frame: 0,
+    });
   }
 
   private setupCamera(): void {
@@ -409,12 +426,13 @@ export class LevelOneScene extends Phaser.Scene {
       spell.applyEffect(victim);
       return;
     }
-    spell.applyEffect(victim);
 
     if (spell.causeDamage() > 0) {
       victim.takeDamage(spell.causeDamage(), spell.getCaster());
       spell.destroySpell();
     }
+
+    spell.applyEffect(victim);
   }
 
   private handleWeaponCollision(
@@ -467,7 +485,7 @@ export class LevelOneScene extends Phaser.Scene {
     item.destroy();
   }
 
-  private onFireWormDied(data: { x: number; y: number }): void {
+  public onFireWormDied(data: { x: number; y: number }): void {
     const lootZone = this.interactables.get(LootZone);
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
 

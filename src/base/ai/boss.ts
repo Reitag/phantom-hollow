@@ -1,17 +1,23 @@
 import { Character } from '@/base/objects/character';
+import { Health } from '@/components/stats/health';
 import { DESTROY_TIME } from '@/constants/spawn-properies';
 import { Player } from '@/entities/characters/player/player';
 import { TriggerZone } from '@/game/interactables/trigger-zone';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { UiSystem } from '@/systems/ui-system';
 
 export abstract class Boss {
   protected scene: Phaser.Scene;
+  protected ui: UiSystem;
   protected boss: Character;
   protected player: Player;
   protected triggerZone: TriggerZone | null = null;
   protected triggered = false;
+  protected bossHpVisible = false;
 
   constructor(boss: Character, player: Player) {
     this.boss = boss;
+    this.ui = ServiceLocator.resolve(ServiceKeys.ui);
     this.player = player;
     this.scene = boss.scene;
   }
@@ -34,6 +40,7 @@ export abstract class Boss {
   public removeBoss(): void {
     if (!this.boss.active) return;
 
+    this.ui.hideBossHealthBar();
     this.triggerZone = null;
     this.triggered = false;
     this.boss.once(
@@ -50,6 +57,7 @@ export abstract class Boss {
   protected abstract updateBossState(time: number, delta: number): void;
   protected abstract finalCall(): void;
   protected abstract chillBehaviour(): void;
+  protected abstract restoreHealthBar(health: Health): void;
   protected abstract aggroedBehaviour(): void;
 
   protected updateAggro(delta: number, range: number): void {
@@ -103,12 +111,25 @@ export abstract class Boss {
     }
   }
 
+  protected bossHealthBar(boss: 'fireworm' | 'evil-wizard'): void {
+    if (this.triggered && !this.bossHpVisible) {
+      this.ui.showBossHealthBar(boss);
+      this.bossHpVisible = true;
+    }
+
+    if (!this.triggered && this.bossHpVisible) {
+      this.ui.hideBossHealthBar();
+      this.bossHpVisible = false;
+    }
+  }
+
   private bossRecovery(): void {
     const health = this.boss.getStats().health;
     if (!health) return;
 
     while (health.current !== health.max) {
       health.heal(500);
+      this.restoreHealthBar(health);
     }
   }
 }

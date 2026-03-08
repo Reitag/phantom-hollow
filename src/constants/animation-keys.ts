@@ -26,6 +26,8 @@ export const SPELL_ANIMATION_KEYS = {
 export const VFX_ANIMATION_KEYS = {
   START: 'START',
   MAIN: 'MAIN',
+  MAIN_2: 'MAIN_2',
+  MAIN_3: 'MAIN_3',
   END: 'END',
 };
 
@@ -150,6 +152,9 @@ export const VFX_ANIMATION = {
   ARCANE_MIND: {
     [VFX_ANIMATION_KEYS.MAIN]: 'arcane-mind-vfx-main',
   },
+  HASTE: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'haste-vfx-main',
+  },
   CONCENTRATION: {
     [VFX_ANIMATION_KEYS.MAIN]: 'concentration-vfx-main',
   },
@@ -172,8 +177,16 @@ export const MISC_ANIMATION = {
   BON_FIRE: {
     [VFX_ANIMATION_KEYS.MAIN]: 'bonfire-main',
   },
+  CRYSTAL_SHRINE: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'crystal-shrine-main',
+  },
   SHINING: {
     [VFX_ANIMATION_KEYS.MAIN]: 'shining-main',
+  },
+  QUEST_MARK: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'quest-pending-main',
+    [VFX_ANIMATION_KEYS.MAIN_2]: 'quest-waiting-main',
+    [VFX_ANIMATION_KEYS.MAIN_3]: 'quest-completed-main',
   },
 } as const;
 

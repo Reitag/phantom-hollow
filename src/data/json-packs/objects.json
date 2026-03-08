@@ -12,8 +12,8 @@
     },
     {
       "type": "image",
-      "key": "wagon",
-      "url": "assets/objects/store/wagon.png"
+      "key": "store",
+      "url": "assets/objects/store/store.png"
     },
     {
       "type": "image",

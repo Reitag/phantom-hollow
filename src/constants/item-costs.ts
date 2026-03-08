@@ -6,3 +6,12 @@ export const ITEM_COSTS = {
   UNDYING_POTION: 8,
   SOUL_STONE: 10,
 } as const;
+
+/*export const ITEM_COSTS = {
+  HEALTH_POTION: 0,
+  PROTECTION_POTION: 0,
+  SPELL_POTION: 0,
+  LIGHTNING_POTION: 0,
+  UNDYING_POTION: 0,
+  SOUL_STONE: 0,
+} as const;*/

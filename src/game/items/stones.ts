@@ -32,7 +32,7 @@ export const stoneOfConcentration = (): InventoryItem => ({
   id: 'stone-of-concentration',
   name: 'Stone of Concentration',
   description:
-    'Use: Infuses your staff with pure arcane concentration, permanently reducing the cast time of your spells by 20%',
+    'Use: Enchants your staff with pure arcane concentration, permanently reducing the cast time of your spells by 20%',
   iconKey: UI.STONE_OF_CONCENTRATION_ICON,
   maxStack: 1,
   isUnique: true,

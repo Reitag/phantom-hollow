@@ -5,8 +5,10 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { getUiCoords } from '@/utils/helpers';
 
 export class CastBar {
+  public progressWidth?: number;
+  public bar?: Phaser.GameObjects.Image;
+
   private frame?: Phaser.GameObjects.Image;
-  private bar?: Phaser.GameObjects.Image;
   private maskGraphics?: Phaser.GameObjects.Graphics;
   private mask?: Phaser.Display.Masks.GeometryMask;
 

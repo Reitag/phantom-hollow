@@ -32,7 +32,7 @@ export const FROST_BOLT_STATS = {
 
 export const DREAD_AURA_STATS = {
   KEY_NAME: UI.DREAD_AURA_DEBUFF,
-  DAMAGE: 1,
+  DAMAGE: 5,
   RANGE: 250,
 };
 
@@ -61,6 +61,11 @@ export const ARROW_STATS = {
   HIT: 10,
   SPEED: 400,
   LIFE_TIME: 3000,
+} as const;
+
+export const CRYSTAL_SHRINE_STATS = {
+  KEY_NAME: UI.CRYSTAL_RENEWAL_BUFF,
+  HEAL: 0.5,
 } as const;
 
 export const PLAYER_STATS = {
@@ -121,10 +126,10 @@ export const FIRE_WORM_STATS = {
 } as const;
 
 export const EVIL_WIZARD_STATS = {
-  HEALTH: 2000,
+  HEALTH: 2200,
   WALK_BOUND: 100,
   WALK: 50,
   ENGAGE_DISTANCE: 450,
   CAST: 10,
-  SPELL_POWER: 6,
+  SPELL_POWER: 7,
 } as const;

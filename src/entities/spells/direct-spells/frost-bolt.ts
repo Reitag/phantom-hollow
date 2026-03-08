@@ -52,6 +52,8 @@ export class FrostBolt extends Spell {
   }
 
   public applyEffect(target: Character): void {
+    if (target.getDead()) return;
+
     const fsm = target.getStateMachine();
 
     if (fsm.currentStateName !== SHARED_STATES.FREEZE) {

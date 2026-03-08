@@ -100,10 +100,14 @@ export class ModifierIconContainer {
 
   public removeAllModifierIcons(): void {
     const toRemove = this.modifierIcons
-      .filter((e) => e.icon.name !== UI.CONCENTRATION_BUFF)
+      .filter((e) => e.icon.name !== UI.CONCENTRATION_BUFF && e.icon.name !== UI.HASTE_BUFF)
       .map((e) => e.icon.name);
 
     toRemove.forEach((key) => this.removeModifierIcon(key));
+  }
+
+  public findModifierIcon(key: string): ModifierContainerConfig | undefined {
+    return this.modifierIcons.find((elem) => elem.icon.name === key);
   }
 
   private attachTooltip(entry: ModifierContainerConfig): void {
@@ -127,10 +131,6 @@ export class ModifierIconContainer {
     entry.icon.off('pointerout', ui.hideTooltip, ui);
     entry.icon.removeAllListeners();
     entry.icon.disableInteractive();
-  }
-
-  private findModifierIcon(key: string): ModifierContainerConfig | undefined {
-    return this.modifierIcons.find((elem) => elem.icon.name === key);
   }
 
   private updateUI(type: ModifierType): void {

@@ -32,6 +32,7 @@ export class InventorySystem {
     if (remaining > 0) {
       const emptySlots = this.slots.filter((slot) => slot === null).length;
       const capacityFromEmpty = emptySlots * item.maxStack;
+
       return remaining <= capacityFromEmpty;
     }
 
@@ -39,6 +40,15 @@ export class InventorySystem {
   }
 
   public addItem(item: InventoryItem, quantity = 1): void {
+    // Quest item
+    if (item.id === 'fireworm-fang') {
+      const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+      const scene = player.scene;
+
+      player.isOnQuest = false;
+      scene.events.emit('fireworm-fang:looted');
+    }
+
     for (const slot of this.slots) {
       if (!slot || slot.item.id !== item.id) continue;
 

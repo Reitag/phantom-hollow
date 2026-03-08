@@ -14,6 +14,12 @@
     },
     {
       "type": "spritesheet",
+      "key": "crystal-shrine",
+      "url": "assets/misc/crystal-shrine.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    },
+    {
+      "type": "spritesheet",
       "key": "portal",
       "url": "assets/misc/portal.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
@@ -29,6 +35,12 @@
       "key": "shining",
       "url": "assets/misc/shining.png",
       "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "quest-mark",
+      "url": "assets/misc/quest-mark.png",
+      "frameConfig": { "frameWidth": 20, "frameHeight": 20 }
     }
   ]
 }
