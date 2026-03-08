@@ -63,6 +63,11 @@ export const ARROW_STATS = {
   LIFE_TIME: 3000,
 } as const;
 
+export const CRYSTAL_SHRINE_STATS = {
+  KEY_NAME: UI.CRYSTAL_RENEWAL_BUFF,
+  HEAL: 0.5,
+} as const;
+
 export const PLAYER_STATS = {
   HEALTH: 200,
   //HEALTH: 3000,

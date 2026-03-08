@@ -30,6 +30,7 @@ export const MAPS = {
 export const MISC = {
   SOUL_FIRE: 'soul-fire',
   BON_FIRE: 'bon-fire',
+  CRYSTAL_SHRINE: 'crystal-shrine',
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
   SHINING: 'shining',
@@ -124,6 +125,7 @@ export const UI = {
   ARCANE_MIND_BUFF: 'arcane-mind-buff',
   HASTE_BUFF: 'haste-buff',
   CONCENTRATION_BUFF: 'concentration-buff',
+  CRYSTAL_RENEWAL_BUFF: 'crystal-renewal-buff',
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',

@@ -13,6 +13,7 @@ import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
+import { CrystalShrine } from '@/game/interactables/crystal-shrine';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
@@ -244,6 +245,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.add(new SoulPedestal(this));
     this.interactables.add(new AlchemistQuestTrigger(this));
     this.interactables.add(new LootZone(this));
+    this.interactables.add(new CrystalShrine(this));
   }
 
   private registerCollisions(): void {

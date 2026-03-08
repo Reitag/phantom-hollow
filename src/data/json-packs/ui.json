@@ -197,6 +197,11 @@
     },
     {
       "type": "image",
+      "key": "crystal-renewal-buff",
+      "url": "assets/icons/buffs/crystal-renewal.png"
+    },
+    {
+      "type": "image",
       "key": "disease-debuff",
       "url": "assets/icons/debuffs/disease.png"
     },

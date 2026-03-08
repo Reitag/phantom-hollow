@@ -9,7 +9,12 @@ import {
 } from '@/game/items/potions';
 import { soulStone, stoneOfConcentration } from '@/game/items/stones';
 import { firewormFang } from '@/game/items/quests';
-import { DREAD_AURA_STATS, FIRE_BALL_STATS, FROST_BOLT_STATS } from './object-stats';
+import {
+  CRYSTAL_SHRINE_STATS,
+  DREAD_AURA_STATS,
+  FIRE_BALL_STATS,
+  FROST_BOLT_STATS,
+} from './object-stats';
 import { BLINK, FROST_BOLT, WIND } from './spell-cooldowns';
 import {
   ARCANE_MIND,
@@ -316,6 +321,7 @@ export const MODIFIER_TOOLTIPS: {
   UNDYING: TooltipContentConfig;
   HASTE: TooltipContentConfig;
   DISEASE: TooltipContentConfig;
+  CRYSTAL_RENEWAL: TooltipContentConfig;
   SHADOW_VULNERABILITY: TooltipContentConfig;
   DREAD_AURA: TooltipContentConfig;
 } = {
@@ -387,6 +393,16 @@ export const MODIFIER_TOOLTIPS: {
     },
     prop_1: {
       text: 'Speed increased by 15%.',
+    },
+  },
+  CRYSTAL_RENEWAL: {
+    id: CRYSTAL_SHRINE_STATS.KEY_NAME,
+    title: {
+      param: buffParams,
+      text: 'Crystal Renewal',
+    },
+    prop_1: {
+      text: 'Regenerates health while inside the shrine.',
     },
   },
   DISEASE: {
