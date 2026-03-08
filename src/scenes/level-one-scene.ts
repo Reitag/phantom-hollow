@@ -67,7 +67,12 @@ export class LevelOneScene extends Phaser.Scene {
     if (this.isGameInitialized) return;
     this.isGameInitialized = true;
 
-    this.physics.world.createDebugGraphic();
+    // Dev
+    if (process.env.NODE_ENV === 'development') {
+      //this.physics.world.createDebugGraphic();
+    }
+    // Dev
+
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
   }
@@ -81,10 +86,8 @@ export class LevelOneScene extends Phaser.Scene {
     this.updateParallaxBackground();
 
     // Debug
-    if (process.env.NODE_ENV === 'development') {
-      if (this.debugScreen instanceof DebugScreen) {
-        this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
-      }
+    if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
+      this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
     }
     // Debug
   }
@@ -113,6 +116,8 @@ export class LevelOneScene extends Phaser.Scene {
         if (process.env.NODE_ENV === 'development') {
           this.scene.add('DebugScreen', DebugScreen, true);
           this.debugScreen = this.scene.get('DebugScreen');
+          // Debug graphic
+          this.physics.world.createDebugGraphic();
         }
         // Debug
       } else {
@@ -421,12 +426,13 @@ export class LevelOneScene extends Phaser.Scene {
       spell.applyEffect(victim);
       return;
     }
-    spell.applyEffect(victim);
 
     if (spell.causeDamage() > 0) {
       victim.takeDamage(spell.causeDamage(), spell.getCaster());
       spell.destroySpell();
     }
+
+    spell.applyEffect(victim);
   }
 
   private handleWeaponCollision(

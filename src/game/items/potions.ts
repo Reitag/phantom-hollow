@@ -126,7 +126,8 @@ export const lightningPotion = (): InventoryItem => ({
 export const undyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
-  description: 'Use: Prevents death for 10 sec, leaving you at 1 Health instead.',
+  description:
+    'Use: Applies a buff that triggers on fatal damage, leaving the character at 1 Health and preventing death for 3 sec. Consumed on activation.',
   iconKey: UI.UNDYING_POTION_ICON,
   maxStack: 3,
   isUnique: false,
