@@ -11,7 +11,7 @@ export class Stall extends Interactable {
     super(scene);
     this.createTriggerZones(InteractableNames.stall);
 
-    this.store = ServiceLocator.resolve(ServiceKeys.ui).getStore();
+    this.store = ServiceLocator.resolve(ServiceKeys.ui).getBoard<Store>('store');
   }
 
   protected onEnter(): void {

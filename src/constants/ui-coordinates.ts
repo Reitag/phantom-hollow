@@ -44,6 +44,14 @@ export const QUEST_UI = {
   },
 } as const;
 
+// Letter
+export const LETTER_UI = {
+  CLOSE_BTN: {
+    X: 220,
+    Y: 390,
+  },
+} as const;
+
 // Interact tooltip
 export const INTERACT_TOOLTIP = {
   X: 620,

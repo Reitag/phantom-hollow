@@ -14,6 +14,7 @@ import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
 import { CrystalShrine } from '@/game/interactables/crystal-shrine';
+import { GreetingLetter } from '@/game/interactables/greeting-letter';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
@@ -67,12 +68,6 @@ export class LevelOneScene extends Phaser.Scene {
     if (this.isGameInitialized) return;
     this.isGameInitialized = true;
 
-    // Dev
-    if (process.env.NODE_ENV === 'development') {
-      //this.physics.world.createDebugGraphic();
-    }
-    // Dev
-
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
   }
@@ -87,7 +82,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
-      this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
+      this.debugScreen.setPlayersCoords(this.player.x, this.player.y);
     }
     // Debug
   }
@@ -251,6 +246,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.add(new AlchemistQuestTrigger(this));
     this.interactables.add(new LootZone(this));
     this.interactables.add(new CrystalShrine(this));
+    this.interactables.add(new GreetingLetter(this));
   }
 
   private registerCollisions(): void {

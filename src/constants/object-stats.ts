@@ -131,5 +131,5 @@ export const EVIL_WIZARD_STATS = {
   WALK: 50,
   ENGAGE_DISTANCE: 450,
   CAST: 10,
-  SPELL_POWER: 7,
+  SPELL_POWER: 6,
 } as const;

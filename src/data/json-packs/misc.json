@@ -41,6 +41,11 @@
       "key": "quest-mark",
       "url": "assets/misc/quest-mark.png",
       "frameConfig": { "frameWidth": 20, "frameHeight": 20 }
+    },
+    {
+      "type": "image",
+      "key": "letter",
+      "url": "assets/misc/letter.png"
     }
   ]
 }

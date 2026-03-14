@@ -1,6 +1,6 @@
 import { Board } from '@/base/ui/board';
 import { UI } from '@/constants/asset-keys';
-import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_STYLE } from '@/constants/quest-texts';
+import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_UI } from '@/constants/ui-coordinates';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
@@ -24,14 +24,12 @@ export class Quest extends Board {
   private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
-  ///
   private scrollContainer: Phaser.GameObjects.Container;
   private scrollAreaHeight = 270;
   private currentY = 0;
   private scrollY = 0;
   private maxScroll = 0;
 
-  ///
   private scrollTrack: Phaser.GameObjects.Graphics;
   private scrollThumb: Phaser.GameObjects.Graphics;
   private scrollIndicatorCoords: Rectangle;
@@ -49,7 +47,7 @@ export class Quest extends Board {
     const npcConCoord = this.alignCoords(this.bg, 0, 25);
     const npcNameContainer = this.scene.add
       .container(npcConCoord.x, npcConCoord.y)
-      .add(this.scene.add.text(24, 0, ALCHEMIST_QUEST_TEXT.NAME, QUEST_TEXT_STYLE.NAME));
+      .add(this.scene.add.text(24, 0, ALCHEMIST_QUEST_TEXT.NAME, textStyle(QUEST_TEXT_WIDTH).NAME));
     this.board.add(npcNameContainer);
 
     const conPos = this.alignCoords(this.bg, 25, 60);
@@ -64,7 +62,6 @@ export class Quest extends Board {
     const maskShape = this.scene.add.graphics();
     this.container.add(maskShape);
 
-    //maskShape.fillStyle(0xffffff, 0.4);
     maskShape.fillRect(128, 165, 250, this.scrollAreaHeight);
 
     this.scrollContainer.setMask(maskShape.createGeometryMask());
@@ -90,23 +87,29 @@ export class Quest extends Board {
     this.board.add(this.scrollThumb);
 
     // init content
-    const questTitle = this.createText(ALCHEMIST_QUEST_TEXT.TITLE, QUEST_TEXT_STYLE.TITLE);
+    const questTitle = this.createText(
+      ALCHEMIST_QUEST_TEXT.TITLE,
+      textStyle(QUEST_TEXT_WIDTH).TITLE
+    );
 
-    const questText = this.createText(ALCHEMIST_QUEST_TEXT.PENDING, QUEST_TEXT_STYLE.TEXT);
+    const questText = this.createText(
+      ALCHEMIST_QUEST_TEXT.PENDING,
+      textStyle(QUEST_TEXT_WIDTH).TEXT
+    );
 
     const questObjectivesTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.OBJECTIVES.TITLE,
-      QUEST_TEXT_STYLE.TITLE
+      textStyle(QUEST_TEXT_WIDTH).TITLE
     );
 
     const questObjectives = this.createText(
       ALCHEMIST_QUEST_TEXT.OBJECTIVES.TEXT,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     const questRewardTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.TITLE,
-      QUEST_TEXT_STYLE.TITLE
+      textStyle(QUEST_TEXT_WIDTH).TITLE
     );
 
     const rewardImage = this.scene.add
@@ -115,13 +118,13 @@ export class Quest extends Board {
 
     const rewardItemTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.TITLE,
-      QUEST_TEXT_STYLE.TEXT,
-      { color: QUEST_TEXT_STYLE.REWARD_TITLE.color }
+      textStyle(QUEST_TEXT_WIDTH).TEXT,
+      { color: textStyle(QUEST_TEXT_WIDTH).REWARD_TITLE.color }
     );
 
     const rewardItemDesc = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.DESCRIPTION,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     this.addBlock(questTitle);
@@ -300,17 +303,20 @@ export class Quest extends Board {
     });
     this.currentY = 30;
 
-    const completedText = this.createText(ALCHEMIST_QUEST_TEXT.COMPLETED, QUEST_TEXT_STYLE.TEXT);
+    const completedText = this.createText(
+      ALCHEMIST_QUEST_TEXT.COMPLETED,
+      textStyle(QUEST_TEXT_WIDTH).TEXT
+    );
 
     // quest reward
     const questRewardTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.TITLE,
-      QUEST_TEXT_STYLE.TITLE
+      textStyle(QUEST_TEXT_WIDTH).TITLE
     );
 
     const rewardText = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.COMPLETED_TEXT,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     const rewardImage = this.scene.add
@@ -319,13 +325,13 @@ export class Quest extends Board {
 
     const rewardItemTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.TITLE,
-      QUEST_TEXT_STYLE.TEXT,
-      { color: QUEST_TEXT_STYLE.REWARD_TITLE.color }
+      textStyle(QUEST_TEXT_WIDTH).TEXT,
+      { color: textStyle(QUEST_TEXT_WIDTH).REWARD_TITLE.color }
     );
 
     const rewardItemDesc = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.DESCRIPTION,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     this.addBlock(completedText);

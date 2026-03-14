@@ -102,6 +102,16 @@
     },
     {
       "type": "image",
+      "key": "letter-ui",
+      "url": "assets/ui/letter/letter-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "letter-ui-close-btn",
+      "url": "assets/ui/letter/letter-ui-close-btn.png"
+    },
+    {
+      "type": "image",
       "key": "dialog-ui",
       "url": "assets/ui/dialog/dialog-ui.png"
     },

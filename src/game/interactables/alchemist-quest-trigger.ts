@@ -11,7 +11,7 @@ export class AlchemistQuestTrigger extends Interactable {
     super(scene);
     this.createTriggerZones(InteractableNames['alchemist-quest']);
 
-    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getQuest();
+    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getBoard<Quest>('quest');
   }
 
   protected onEnter(): void {

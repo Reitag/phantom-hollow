@@ -494,3 +494,19 @@ export const LOOT_ZONE_TOOLTIP: TooltipContentConfig = {
     text: ' to Loot the Items',
   },
 } as const;
+
+// Greeting Letter
+export const GREETING_LETTER_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Open the Letter',
+  },
+} as const;

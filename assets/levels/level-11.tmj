@@ -4202,23 +4202,6 @@
                  "width":64,
                  "x":15200,
                  "y":512
-                }, 
-                {
-                 "height":32,
-                 "id":962,
-                 "name":"interactable-spawn",
-                 "properties":[
-                        {
-                         "name":"trigger",
-                         "type":"string",
-                         "value":"letter"
-                        }],
-                 "rotation":0,
-                 "type":"spawn",
-                 "visible":true,
-                 "width":32,
-                 "x":704,
-                 "y":512
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4227,7 +4210,7 @@
          "y":0
         }],
  "nextlayerid":42,
- "nextobjectid":963,
+ "nextobjectid":962,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
