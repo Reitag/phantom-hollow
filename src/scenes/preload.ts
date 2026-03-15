@@ -30,6 +30,6 @@ export class PreloadScene extends Phaser.Scene {
   }
   public create() {
     registerGlobalAnimation(this.anims);
-    this.scene.start('LevelOneScene');
+    this.scene.start('MainMenuScene');
   }
 }

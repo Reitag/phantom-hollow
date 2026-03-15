@@ -5,6 +5,7 @@ import { UiScene } from '@/scenes/ui-scene';
 import { LevelOneScene } from '@/scenes/level-one-scene';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { SCENE_SIZE } from '@/constants/scene-size';
+import { MainMenuScene } from '@/scenes/main-menu';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -23,5 +24,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [PreloadScene, UiScene, LevelOneScene],
+  scene: [PreloadScene, MainMenuScene, UiScene, LevelOneScene],
 };

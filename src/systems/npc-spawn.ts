@@ -29,6 +29,7 @@ export class NPCSpawn {
           spellPower: undefined,
         },
         defense: undefined,
+        casting: false,
         aggro: false,
       },
     }).setDepth(Z_POSITION.NPC);

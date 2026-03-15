@@ -54,7 +54,7 @@ export class LevelOneScene extends Phaser.Scene {
   private npc!: NPCSpawn;
   private questMark!: QuestMark;
   private canPlayerGetDamage = true;
-  private isGameInitialized = false;
+  private isLevelInitialized = false;
 
   constructor() {
     super('LevelOneScene');
@@ -65,11 +65,16 @@ export class LevelOneScene extends Phaser.Scene {
   }
 
   public create(): void {
-    if (this.isGameInitialized) return;
-    this.isGameInitialized = true;
+    if (this.isLevelInitialized) return;
+    this.isLevelInitialized = true;
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
+
+    // Clean Up
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.cleanup();
+    });
   }
 
   public update(time: number, delta: number): void {
@@ -486,5 +491,22 @@ export class LevelOneScene extends Phaser.Scene {
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
 
     lootZone?.createLootZone(zone, [{ id: 'fireworm-fang', amount: 1 }]);
+  }
+
+  private cleanup(): void {
+    // Debug
+    if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
+      this.debugScreen.scene.stop();
+      this.debugScreen.scene.remove('DebugScreen');
+      this.debugScreen = null;
+    }
+    // Debug
+
+    this.time.removeAllEvents();
+
+    this.isLevelInitialized = false;
+
+    ServiceLocator.clear();
+    CollisionService.clearAll();
   }
 }

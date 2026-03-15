@@ -53,7 +53,13 @@ export class PlayerHandler {
       });
 
       dialog.once('cancel', () => {
-        console.log('Canceled operation');
+        this.scene.cameras.main.fadeOut(500);
+
+        this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+          this.scene.scene.stop('UiScene');
+          this.scene.scene.stop('LevelOneScene');
+          this.scene.scene.start('MainMenuScene');
+        });
       });
     }
   }
