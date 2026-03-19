@@ -1,4 +1,6 @@
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { PanelService } from '@/infrastructure/panel-service';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { InventoryItem, InventorySlot } from '@/utils/types';
 
@@ -121,13 +123,28 @@ export class InventorySystem {
     return undefined;
   }
 
+  public loadSlots(slots: (InventorySlot | null)[]) {
+    this.slots = slots;
+    this.updateUI();
+  }
+
   public updateUI(): void {
+    this.saveToData();
+
     this.slots.forEach((slot, index) => {
       if (slot) {
         this.panel.inventoryBar.setIcon(index, slot.item.iconKey, slot.quantity);
       } else {
         this.panel.inventoryBar.removeIcon(index);
       }
+    });
+  }
+
+  private saveToData(): void {
+    SaveService.patch({
+      inventory: this.slots.map((slot) => {
+        return slot ? { id: slot.item.id, quantity: slot.quantity } : null;
+      }),
     });
   }
 }

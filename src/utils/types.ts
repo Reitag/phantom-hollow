@@ -151,3 +151,35 @@ export interface IconDragContext {
   onDrag(icon: Phaser.GameObjects.Image, x: number, y: number): void;
   onDragEnd(icon: Phaser.GameObjects.Image, pointer: Phaser.Input.Pointer): void;
 }
+
+// Save Game
+type InventorySlotHead = {
+  id: string;
+  quantity: number;
+};
+
+export type QuestState = 'pending' | 'waiting' | 'completed' | 'done';
+
+type BossType = 'fire-worm' | 'evil-wizard';
+
+type DroppedLoot = {
+  id: string;
+  x: number;
+  y: number;
+  loot: { id: string; amount: number }[];
+};
+
+export type SaveGame = {
+  scene: string | undefined;
+  spawn: Position | null;
+  inventory: (InventorySlotHead | null)[];
+  health: number | undefined;
+  coins: number;
+  buffs: string[];
+  quests: Record<string, QuestState>;
+  worldState: {
+    openedChest: string[];
+    killedBosses: BossType[];
+    droppedLoot: DroppedLoot[];
+  };
+};

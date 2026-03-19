@@ -5,7 +5,7 @@ import { SHARED_STATES } from '@/constants/state-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { Position } from '@/utils/types';
+import { Position, SaveGame } from '@/utils/types';
 
 export class PlayerHandler {
   private deathHandled = false;
@@ -15,12 +15,21 @@ export class PlayerHandler {
   private y: number;
 
   constructor(private scene: Phaser.Scene) {
-    this.x = PLAYER_SPAWN_POSITION.x;
-    this.y = PLAYER_SPAWN_POSITION.y;
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+
+    let position: Position;
+    if (save && save.spawn) {
+      position = save.spawn;
+    } else {
+      position = PLAYER_SPAWN_POSITION;
+    }
+
+    this.x = position.x;
+    this.y = position.y;
 
     this.player = new Player({
       scene: scene,
-      position: PLAYER_SPAWN_POSITION,
+      position: position,
       keyName: CHARACTERS.PLAYER,
       frame: 0,
       stats: {
@@ -36,6 +45,27 @@ export class PlayerHandler {
       },
       facingRight: true,
     }).setDepth(Z_POSITION.PLAYER);
+
+    if (save && save.health) {
+      const health = this.player.getStats().health;
+      if (!health) throw new Error('Health is missing');
+
+      health.current = save.health;
+
+      const ui = ServiceLocator.resolve(ServiceKeys.ui);
+      ui.reducePlayerHealth(health.current, health.max);
+    }
+
+    if (save && save.buffs.length > 0) {
+      const modifiers = this.player.getModifier();
+      save.buffs.forEach((buff) => {
+        if (!modifiers.isModifierExist(buff)) {
+          console.log(buff);
+          modifiers.addModifier(buff);
+        }
+      });
+    }
+
     ServiceLocator.register(ServiceKeys.playerHandler, this);
   }
 

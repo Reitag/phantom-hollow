@@ -2,12 +2,14 @@ import Phaser from 'phaser';
 
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
+import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-properies';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
@@ -20,6 +22,7 @@ import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
 import { QuestMark } from '@/entities/misc/quest-mark';
 import { SpellFactory } from '@/factories/spell-factory';
+import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
@@ -34,7 +37,7 @@ import { CollisionService, GroupKeys } from '@/infrastructure/collision-service'
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
-import { Position } from '@/utils/types';
+import { Position, SaveGame } from '@/utils/types';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
@@ -64,9 +67,19 @@ export class LevelOneScene extends Phaser.Scene {
     return this.questMark;
   }
 
-  public create(): void {
+  public create(save: SaveGame | undefined): void {
+    if (save && Object.keys(save).length === 0) {
+      save = undefined;
+    }
+    console.log(save);
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
+
+    ServiceLocator.register(ServiceKeys.save, save);
+
+    SaveService.patch({
+      scene: 'LevelOneScene',
+    });
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
@@ -136,12 +149,11 @@ export class LevelOneScene extends Phaser.Scene {
     this.registerSystems();
 
     this.createPlayer();
+    this.createMiscs();
     this.createInteractableObjects();
 
     this.registerCollisions();
     this.createSpawnSystems();
-
-    this.createMiscs();
 
     this.setupCamera();
   }
@@ -238,10 +250,31 @@ export class LevelOneScene extends Phaser.Scene {
     ServiceLocator.register(ServiceKeys.collision, new CollisionService());
   }
 
+  // --- Player ---
   private createPlayer(): void {
     this.playerHandler = new PlayerHandler(this);
     this.player = this.playerHandler.getPlayer();
+
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+
+    if (save) {
+      this.player.getCoinKeeper().addCoins(save.coins);
+      this.uploadInventory(save);
+    }
   }
+
+  private uploadInventory(save: SaveGame): void {
+    if (save.inventory.length > 0) {
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+
+      inventory.loadSlots(
+        save.inventory.map((slot) => {
+          return slot ? { item: LOOT_FACTORY[slot.id](), quantity: slot.quantity } : null;
+        })
+      );
+    }
+  }
+  // --- Player ---
 
   private createInteractableObjects(): void {
     this.interactables = new InteractableKeeper();
@@ -490,7 +523,24 @@ export class LevelOneScene extends Phaser.Scene {
     const lootZone = this.interactables.get(LootZone);
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
 
-    lootZone?.createLootZone(zone, [{ id: 'fireworm-fang', amount: 1 }]);
+    const dropId = crypto.randomUUID();
+
+    SaveService.patch({
+      worldState: {
+        ...SaveService.data.worldState,
+        droppedLoot: [
+          ...SaveService.data.worldState.droppedLoot,
+          {
+            id: dropId,
+            x: data.x,
+            y: data.y,
+            loot: [{ id: 'fireworm-fang', amount: 1 }],
+          },
+        ],
+      },
+    });
+
+    lootZone?.createLootZone(dropId, zone, [{ id: 'fireworm-fang', amount: 1 }]);
   }
 
   private cleanup(): void {
@@ -506,7 +556,8 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.isLevelInitialized = false;
 
+    CollisionService.clear();
+    SaveService.clear();
     ServiceLocator.clear();
-    CollisionService.clearAll();
   }
 }

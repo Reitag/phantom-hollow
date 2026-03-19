@@ -1,9 +1,11 @@
 import { Board } from '@/base/ui/board';
 import { UI } from '@/constants/asset-keys';
 import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_UI } from '@/constants/ui-coordinates';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { LevelOneScene } from '@/scenes/level-one-scene';
 import { Rectangle } from '@/utils/types';
@@ -167,6 +169,29 @@ export class Quest extends Board {
     this.buttons.add(this.declineButton);
   }
 
+  public defineQuestState(): void {
+    const state = SaveService.getQuestState(QUEST_IDS.ALCHEMIST_FIREWORM);
+
+    switch (state) {
+      case 'pending':
+        break;
+
+      case 'waiting':
+        this.acceptQuest();
+        break;
+
+      case 'completed':
+        this.onAcceptedQuest();
+        break;
+
+      case 'done':
+        this.board?.destroy();
+        this.board = null;
+        (this.action as LevelOneScene).quest.destroy();
+        break;
+    }
+  }
+
   public registerQuestEvents(): boolean {
     if (!this.board) return false;
 
@@ -263,6 +288,8 @@ export class Quest extends Board {
       );
       this.action.events.once('fireworm-fang:looted', this.onAcceptedQuest, this);
       (this.action as LevelOneScene).quest.changeMarkToWaiting();
+
+      SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'waiting');
     }
   }
 
@@ -283,6 +310,8 @@ export class Quest extends Board {
       this.board?.destroy();
       this.board = null;
       (this.action as LevelOneScene).quest.destroy();
+
+      SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'done');
     }
   }
 
@@ -347,6 +376,8 @@ export class Quest extends Board {
     this.buttons.add(this.completeButton);
     this.completeButton.setVisible(true);
     (this.action as LevelOneScene).quest.changeMarkToCompleted();
+
+    SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'completed');
   }
 
   private createText(

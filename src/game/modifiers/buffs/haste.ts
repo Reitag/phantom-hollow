@@ -3,6 +3,7 @@ import { HASTE } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
 import { Character } from '@/base/objects/character';
 import { Modifier } from '@/utils/types';
+import { SaveService } from '@/infrastructure/save-service';
 
 export class Haste implements Modifier {
   public id = HASTE.id;
@@ -24,5 +25,9 @@ export class Haste implements Modifier {
     this.apply(target);
 
     this.ui.addModifierIcon(this.id, undefined, this.type);
+
+    SaveService.patch({
+      buffs: [...SaveService.data.buffs, this.id],
+    });
   }
 }

@@ -10,7 +10,6 @@ import { PLAYER_STATES } from '@/constants/state-keys';
 import { CHARACTER_ANIMATION_KEYS, PLAYER_ANIMATION } from '@/constants/animation-keys';
 import { Character, CharacterConfig } from '@/base/objects/character';
 import { SpellSystem } from '@/systems/spell-system';
-import { UiSystem } from '@/systems/ui-system';
 import { InventorySystem } from '@/systems/inventory-system';
 import { CoinKeeper } from '@/game/economy/coin-keeper';
 import { Health } from '@/components/stats/health';
@@ -18,6 +17,7 @@ import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
 import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
+import { SaveService } from '@/infrastructure/save-service';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -125,6 +125,10 @@ export class Player extends Character {
 
   protected override onDamaged(): void {
     this.ui.reducePlayerHealth(this.stats.health!.current, this.stats.health!.max);
+
+    SaveService.patch({
+      health: this.stats.health!.current,
+    });
   }
 
   protected override onDeathStart(): void {
@@ -140,6 +144,10 @@ export class Player extends Character {
     this.stats.health = null;
     this.stats.health = new Health(max);
     this.ui.restorePlayerHealth();
+
+    SaveService.patch({
+      health: max,
+    });
   }
 
   private handleFall(): void {

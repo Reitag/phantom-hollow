@@ -1,6 +1,7 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { MISC } from '@/constants/asset-keys';
 import { SoulFire } from '@/entities/misc/soul-fire';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { soulStone } from '../items/stones';
 
@@ -55,7 +56,15 @@ export class SoulPedestal extends Interactable {
 
     const newSpawn = { x: this.activeZone.x, y: this.activeZone.y };
     playerHandler.setNewResurrectPosition(newSpawn);
+
     inventory.destroySlot(stoneIndex);
+
+    SaveService.patch({
+      spawn: newSpawn,
+      scene: this.scene.scene.key,
+    });
+
+    SaveService.commit();
 
     if (this.soulFire.fire?.active) {
       this.soulFire.fire.destroy();

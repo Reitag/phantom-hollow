@@ -16,6 +16,7 @@ import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
 import { CHARACTERS, VFX } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { SaveService } from '@/infrastructure/save-service';
 import { TriggerZone } from '@/game/interactables/trigger-zone';
 import { AttachedVfx } from '@/entities/misc/attached-vfx';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
@@ -68,6 +69,13 @@ export class AiEvilWizard extends Boss {
         bat.unit.setVelocity(0, 0);
         bat.unit.getArcadeBody().allowGravity = false;
       }
+    });
+
+    SaveService.patch({
+      worldState: {
+        ...SaveService.data.worldState,
+        killedBosses: [...SaveService.data.worldState.killedBosses, 'evil-wizard'],
+      },
     });
 
     if (!this.triggerZone) return;

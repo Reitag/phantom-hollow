@@ -1,4 +1,5 @@
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { SaveService } from '@/infrastructure/save-service';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Health } from '@/components/stats/health';
 import { FIRE_WORM_STATS } from '@/constants/object-stats';
@@ -92,6 +93,15 @@ export class AiFireWorm extends Boss {
     this.scene.events.emit('fire-worm:died', {
       x: this.boss.x,
       y: this.boss.y,
+    });
+
+    const saveGame = SaveService.data;
+
+    SaveService.patch({
+      worldState: {
+        ...SaveService.data.worldState,
+        killedBosses: [...SaveService.data.worldState.killedBosses, 'fire-worm'],
+      },
     });
 
     if (!this.triggerZone) return;

@@ -8,6 +8,7 @@ import { LootSystem } from '@/systems/loot-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { SaveGame } from '@/utils/types';
 import { CollisionService } from './collision-service';
 import { PanelService } from './panel-service';
 
@@ -25,6 +26,7 @@ interface ServiceMap {
   map: Tilemap;
   collision: CollisionService;
   panel: PanelService;
+  save: SaveGame | undefined;
 }
 
 export const ServiceKeys = {
@@ -41,6 +43,7 @@ export const ServiceKeys = {
   map: 'map',
   collision: 'collision',
   panel: 'panel',
+  save: 'save',
 } as const;
 
 export class ServiceLocator {
@@ -52,7 +55,7 @@ export class ServiceLocator {
 
   public static resolve<K extends keyof ServiceMap>(key: K): ServiceMap[K] {
     const service = this.services.get(key);
-    if (!service) {
+    if (!this.services.has(key)) {
       throw new Error(`Service not found: ${String(key)}`);
     }
     return service as ServiceMap[K];

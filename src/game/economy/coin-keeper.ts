@@ -1,3 +1,4 @@
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { UiSystem } from '@/systems/ui-system';
 
@@ -17,6 +18,8 @@ export class CoinKeeper {
     if (amount > 0) {
       this.balance += amount;
       this.ui.increaseCoinCounter(amount);
+
+      this.saveBalanceData();
     }
   }
 
@@ -27,7 +30,15 @@ export class CoinKeeper {
     } else {
       this.balance -= amount;
       this.ui.decreaseCoinCounter(amount);
+
+      this.saveBalanceData();
       return true;
     }
+  }
+
+  private saveBalanceData(): void {
+    SaveService.patch({
+      coins: this.balance,
+    });
   }
 }

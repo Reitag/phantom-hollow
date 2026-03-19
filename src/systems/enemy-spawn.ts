@@ -11,7 +11,7 @@ import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior'
 import { Zombie } from '@/entities/characters/enemies/zombie';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { FireWorm } from '@/entities/characters/bosses/fire-worm';
-import { EnemySpawnData, Position, SpawnPoint } from '@/utils/types';
+import { EnemySpawnData, Position, SaveGame, SpawnPoint } from '@/utils/types';
 import { Z_POSITION } from '@/constants/z-position';
 import { AiArcher } from '@/ai/enemies/ai-archer';
 import { AiSkeletonWarrior } from '@/ai/enemies/ai-skeleton-warrior';
@@ -40,10 +40,11 @@ export class EnemySpawn {
   private aiZombie = new AiZombie(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
   private aiArcher = new AiArcher(ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer());
   private player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
-  private aiFireWorm: AiFireWorm;
-  private aiEvilWizard: AiEvilWizard;
+  private aiFireWorm: AiFireWorm | null = null;
+  private aiEvilWizard: AiEvilWizard | null = null;
 
   constructor(private scene: Phaser.Scene) {
+    const save = ServiceLocator.resolve(ServiceKeys.save);
     const spawns = this.loadEnemySpawnPoints();
     const bossSpawns = this.loadBossesSpawnPoints();
 
@@ -53,63 +54,67 @@ export class EnemySpawn {
       archer: spawns['archer'] || [],
     };
 
-    const evelWizzard = new EvilWizzard({
-      scene: scene,
-      position: bossSpawns[this.spawnBosses['evil-wizzard']],
-      keyName: CHARACTERS.EVIL_WIZARD,
-      frame: 0,
-      facingRight: false,
-      stats: {
-        health: EVIL_WIZARD_STATS.HEALTH,
-        speed: EVIL_WIZARD_STATS.WALK,
-        damage: {
-          meleeAttack: undefined,
-          spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
+    if (!save?.worldState.killedBosses.includes('evil-wizard')) {
+      const evelWizzard = new EvilWizzard({
+        scene: scene,
+        position: bossSpawns[this.spawnBosses['evil-wizzard']],
+        keyName: CHARACTERS.EVIL_WIZARD,
+        frame: 0,
+        facingRight: false,
+        stats: {
+          health: EVIL_WIZARD_STATS.HEALTH,
+          speed: EVIL_WIZARD_STATS.WALK,
+          damage: {
+            meleeAttack: undefined,
+            spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
+          },
+          defense: undefined,
+          casting: true,
+          aggro: true,
         },
-        defense: undefined,
-        casting: true,
-        aggro: true,
-      },
-    }).setDepth(Z_POSITION.ENEMY);
+      }).setDepth(Z_POSITION.ENEMY);
 
-    CollisionService.resolveGroup(GroupKeys.enemy)?.add(evelWizzard, true);
-    this.aiEvilWizard = new AiEvilWizard(
-      evelWizzard,
-      ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
-    );
+      CollisionService.resolveGroup(GroupKeys.enemy)?.add(evelWizzard, true);
+      this.aiEvilWizard = new AiEvilWizard(
+        evelWizzard,
+        ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
+      );
+    }
 
-    const fireWorm = new FireWorm({
-      scene: scene,
-      position: bossSpawns[this.spawnBosses['fire-worm']],
-      keyName: CHARACTERS.FIRE_WORM,
-      frame: 0,
-      facingRight: false,
-      stats: {
-        health: FIRE_WORM_STATS.HEALTH,
-        speed: FIRE_WORM_STATS.WALK,
-        damage: {
-          meleeAttack: undefined,
-          spellPower: FIRE_WORM_STATS.SPELL_POWER,
+    if (!save?.worldState.killedBosses.includes('fire-worm')) {
+      const fireWorm = new FireWorm({
+        scene: scene,
+        position: bossSpawns[this.spawnBosses['fire-worm']],
+        keyName: CHARACTERS.FIRE_WORM,
+        frame: 0,
+        facingRight: false,
+        stats: {
+          health: FIRE_WORM_STATS.HEALTH,
+          speed: FIRE_WORM_STATS.WALK,
+          damage: {
+            meleeAttack: undefined,
+            spellPower: FIRE_WORM_STATS.SPELL_POWER,
+          },
+          defense: undefined,
+          casting: true,
+          aggro: true,
         },
-        defense: undefined,
-        casting: true,
-        aggro: true,
-      },
-    }).setDepth(Z_POSITION.ENEMY);
+      }).setDepth(Z_POSITION.ENEMY);
 
-    CollisionService.resolveGroup(GroupKeys.enemy)?.add(fireWorm, true);
-    this.aiFireWorm = new AiFireWorm(
-      fireWorm,
-      ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
-    );
+      CollisionService.resolveGroup(GroupKeys.enemy)?.add(fireWorm, true);
+      this.aiFireWorm = new AiFireWorm(
+        fireWorm,
+        ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
+      );
+    }
   }
 
   public update(time: number, delta: number): void {
     this.aiSkeletonWarrior.update(delta);
     this.aiZombie.update(delta);
     this.aiArcher.update(delta);
-    this.aiFireWorm.update(time, delta);
-    this.aiEvilWizard.update(time, delta);
+    this.aiFireWorm?.update(time, delta);
+    this.aiEvilWizard?.update(time, delta);
 
     const playerX = Math.round(this.player.x);
 

@@ -7,6 +7,10 @@ export class Health {
     this.total = base;
   }
 
+  public set current(value: number) {
+    this.base = value;
+  }
+
   public get current(): number {
     return this.base;
   }
