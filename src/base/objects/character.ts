@@ -4,6 +4,7 @@ import { MeleeAttack, SpellPower } from '@/components/stats/damage';
 import { Aggro } from '@/components/stats/aggro';
 import { Defense } from '@/components/stats/defense';
 import { SHARED_STATES } from '@/constants/state-keys';
+import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
@@ -114,6 +115,11 @@ export class Character extends ArcadeSprite {
 
   public takeDamage(amount: number, attacker?: Character): void {
     if (this.isDead) return;
+
+    if (this.modifier.isModifierExist(LIGHTNING_SHIELD.id)) {
+      this.scene.events.emit('lightning-shield-damage', amount);
+      return;
+    }
 
     const finalDamage = amount * (this.stats.defense?.multiplier ?? 1);
     this.stats.health?.applyDamage(finalDamage);

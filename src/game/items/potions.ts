@@ -101,8 +101,7 @@ export const lightningPotion = (): InventoryItem => ({
   id: 'lightning-potion',
   name: 'Lightning Potion',
   description:
-    'Use: Surrounds you with a Lightning Shield for 15 sec.\n\n' +
-    'Lightning Shield deals periodic damage to nearby enemies.',
+    'Use: Surrounds you with a Lightning Shield for 15 sec, absorbing incoming damage and dealing periodic damage to nearby enemies. Lasts until fully depleted.',
   iconKey: UI.LIGHTNING_POTION_ICON,
   maxStack: 5,
   isUnique: false,

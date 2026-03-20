@@ -14,6 +14,7 @@ export class SetLightning implements Modifier {
   private ui: UiSystem;
   private spellFactory: SpellFactory;
   private lightningShield: LightningShield | null = null;
+  private timer: Phaser.Time.TimerEvent | undefined = undefined;
 
   constructor(private scene: Phaser.Scene) {
     this.ui = ServiceLocator.resolve(ServiceKeys.ui);
@@ -29,13 +30,25 @@ export class SetLightning implements Modifier {
 
     this.ui.addModifierIcon(this.id, this.duration, this.type);
 
-    this.scene.time.delayedCall(this.duration, () => {
-      if (this.lightningShield && this.lightningShield.active) {
-        this.lightningShield.destroy();
-        this.lightningShield = null;
-        this.ui.removeModifierIcon(this.id);
-      }
-      onExpire();
+    this.scene.events.once('lightning-shield-expired', () => {
+      this.cleanup(onExpire);
     });
+
+    this.timer = this.scene.time.delayedCall(this.duration, () => {
+      this.cleanup(onExpire);
+    });
+  }
+
+  private cleanup(onExpire: () => void): void {
+    if (!this.lightningShield) return;
+
+    this.lightningShield.destroy();
+    this.lightningShield = null;
+
+    this.ui.removeModifierIcon(this.id);
+
+    this.timer?.remove(false);
+
+    onExpire();
   }
 }

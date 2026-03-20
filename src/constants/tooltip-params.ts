@@ -372,7 +372,7 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Lightning Shield',
     },
     prop_1: {
-      text: `Deals periodic damage to nearby enemies.`,
+      text: 'Absorbs incoming damage and deals periodic damage to nearby enemies.',
     },
   },
   UNDYING: {

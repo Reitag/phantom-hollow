@@ -2,10 +2,10 @@ import Phaser from 'phaser';
 
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
-import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-properies';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
@@ -465,6 +465,10 @@ export class LevelOneScene extends Phaser.Scene {
       victim.takeDamage(spell.causeDamage(), spell.getCaster());
       spell.destroySpell();
     }
+
+    const modifier = victim.getModifier();
+
+    if (modifier.isModifierExist(LIGHTNING_SHIELD.id)) return;
 
     spell.applyEffect(victim);
   }
