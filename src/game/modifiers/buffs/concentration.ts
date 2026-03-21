@@ -26,8 +26,11 @@ export class Concentration implements Modifier {
 
     this.ui.addModifierIcon(this.id, undefined, this.type);
 
-    SaveService.patch({
-      buffs: [...SaveService.data.buffs, this.id],
-    });
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+    if (!save?.buffs.includes(this.id)) {
+      SaveService.patch({
+        buffs: [...SaveService.data.buffs, this.id],
+      });
+    }
   }
 }

@@ -95,7 +95,11 @@ export class AiFireWorm extends Boss {
       y: this.boss.y,
     });
 
-    const saveGame = SaveService.data;
+    if (!this.triggerZone) return;
+    // Preventing stack overflow
+
+    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
 
     SaveService.patch({
       worldState: {
@@ -103,10 +107,6 @@ export class AiFireWorm extends Boss {
         killedBosses: [...SaveService.data.worldState.killedBosses, 'fire-worm'],
       },
     });
-
-    if (!this.triggerZone) return;
-    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
-    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
   private updateFacingDirection(): void {

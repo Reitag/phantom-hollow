@@ -181,5 +181,6 @@ export type SaveGame = {
     openedChest: string[];
     killedBosses: BossType[];
     droppedLoot: DroppedLoot[];
+    activePedestal: string | null;
   };
 };

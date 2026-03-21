@@ -71,15 +71,18 @@ export class LevelOneScene extends Phaser.Scene {
     if (save && Object.keys(save).length === 0) {
       save = undefined;
     }
-    console.log(save);
+
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
 
+    SaveService.start();
     ServiceLocator.register(ServiceKeys.save, save);
 
-    SaveService.patch({
-      scene: 'LevelOneScene',
-    });
+    if (!save?.scene) {
+      SaveService.patch({
+        scene: this.scene.key,
+      });
+    }
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
@@ -94,7 +97,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.playerHandler.update(delta);
     this.spawn.update(time, delta);
     this.npc.update();
-    this.interactables.update();
+    this.interactables.update(delta);
 
     this.updateParallaxBackground();
 
@@ -258,7 +261,7 @@ export class LevelOneScene extends Phaser.Scene {
     const save = ServiceLocator.resolve(ServiceKeys.save);
 
     if (save) {
-      this.player.getCoinKeeper().addCoins(save.coins);
+      this.player.getCoinKeeper().addCoins(save.coins, false);
       this.uploadInventory(save);
     }
   }
@@ -267,7 +270,7 @@ export class LevelOneScene extends Phaser.Scene {
     if (save.inventory.length > 0) {
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
-      inventory.loadSlots(
+      inventory.loadDataSlots(
         save.inventory.map((slot) => {
           return slot ? { item: LOOT_FACTORY[slot.id](), quantity: slot.quantity } : null;
         })

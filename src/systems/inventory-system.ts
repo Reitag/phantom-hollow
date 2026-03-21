@@ -62,6 +62,7 @@ export class InventorySystem {
       quantity -= add;
       if (quantity <= 0) {
         this.updateUI();
+        this.saveToData();
         return;
       }
     }
@@ -74,6 +75,7 @@ export class InventorySystem {
 
         if (quantity <= 0) {
           this.updateUI();
+          this.saveToData();
           return;
         }
       }
@@ -91,16 +93,19 @@ export class InventorySystem {
       this.slots[index] = null;
     }
     this.updateUI();
+    this.saveToData();
   }
 
   public swapSlots(from: number, to: number): void {
     [this.slots[from], this.slots[to]] = [this.slots[to], this.slots[from]];
     this.updateUI();
+    this.saveToData();
   }
 
   public destroySlot(index: number): void {
     this.slots[index] = null;
     this.updateUI();
+    this.saveToData();
   }
 
   public getSlots(): (InventorySlot | null)[] {
@@ -123,14 +128,12 @@ export class InventorySystem {
     return undefined;
   }
 
-  public loadSlots(slots: (InventorySlot | null)[]) {
+  public loadDataSlots(slots: (InventorySlot | null)[]) {
     this.slots = slots;
     this.updateUI();
   }
 
   public updateUI(): void {
-    this.saveToData();
-
     this.slots.forEach((slot, index) => {
       if (slot) {
         this.panel.inventoryBar.setIcon(index, slot.item.iconKey, slot.quantity);

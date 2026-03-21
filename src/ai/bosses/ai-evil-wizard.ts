@@ -71,16 +71,18 @@ export class AiEvilWizard extends Boss {
       }
     });
 
+    if (!this.triggerZone) return;
+    // Preventing stack overflow
+
+    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
+    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
+
     SaveService.patch({
       worldState: {
         ...SaveService.data.worldState,
         killedBosses: [...SaveService.data.worldState.killedBosses, 'evil-wizard'],
       },
     });
-
-    if (!this.triggerZone) return;
-    this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
-    this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
 
   protected chillBehaviour(): void {

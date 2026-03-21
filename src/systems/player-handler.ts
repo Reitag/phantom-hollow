@@ -5,7 +5,7 @@ import { SHARED_STATES } from '@/constants/state-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { Position, SaveGame } from '@/utils/types';
+import { Position } from '@/utils/types';
 
 export class PlayerHandler {
   private deathHandled = false;
@@ -60,8 +60,11 @@ export class PlayerHandler {
       const modifiers = this.player.getModifier();
       save.buffs.forEach((buff) => {
         if (!modifiers.isModifierExist(buff)) {
-          console.log(buff);
+          const ui = ServiceLocator.resolve(ServiceKeys.ui);
+
           modifiers.addModifier(buff);
+          modifiers.startModifier(buff, this.player);
+          ui.addModifierIcon(buff, undefined, 'buff');
         }
       });
     }

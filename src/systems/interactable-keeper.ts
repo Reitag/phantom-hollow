@@ -7,9 +7,9 @@ export class InteractableKeeper {
     this.list.push(obj);
   }
 
-  public update(): void {
+  public update(delta?: number | undefined): void {
     for (const obj of this.list) {
-      obj.update();
+      obj.update(delta);
     }
   }
 

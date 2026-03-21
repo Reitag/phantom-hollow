@@ -14,12 +14,14 @@ export class CoinKeeper {
     return this.balance;
   }
 
-  public addCoins(amount: number): void {
+  public addCoins(amount: number, saveToData = true): void {
     if (amount > 0) {
       this.balance += amount;
       this.ui.increaseCoinCounter(amount);
 
-      this.saveBalanceData();
+      if (saveToData) {
+        this.saveBalanceData();
+      }
     }
   }
 

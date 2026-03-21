@@ -16,6 +16,7 @@ interface Loot {
 
 interface LootZoneData {
   id: string;
+  type: 'chest' | 'drop';
   zone: Phaser.GameObjects.Zone;
   chestSprite?: Phaser.GameObjects.Image;
   loot: Loot[];
@@ -48,6 +49,7 @@ export class LootZone extends Interactable {
 
     this.lootZones.push({
       id: 'chest-1',
+      type: 'chest',
       zone: staticLootZones[0] as Phaser.GameObjects.Zone,
       chestSprite: firstLootZone,
       loot: [
@@ -79,6 +81,7 @@ export class LootZone extends Interactable {
 
     this.lootZones.push({
       id: 'chest-2',
+      type: 'chest',
       zone: staticLootZones[1] as Phaser.GameObjects.Zone,
       chestSprite: secondLootZone,
       loot: [{ id: 'spell-potion', amount: 3 }],
@@ -107,6 +110,7 @@ export class LootZone extends Interactable {
 
     this.lootZones.push({
       id: 'chest-3',
+      type: 'chest',
       zone: staticLootZones[2] as Phaser.GameObjects.Zone,
       chestSprite: thirdLootZone,
       loot: [{ id: 'stone-of-concentration', amount: 1 }],
@@ -149,6 +153,7 @@ export class LootZone extends Interactable {
   public createLootZone(id: string, zone: Phaser.GameObjects.Zone, loot: Loot[]): void {
     this.lootZones.push({
       id,
+      type: 'drop',
       zone,
       chestSprite: undefined,
       loot,
@@ -198,25 +203,27 @@ export class LootZone extends Interactable {
     lootZone.vfx = undefined;
     lootZone.loot = [];
 
-    if (lootZone.chestSprite) {
-      lootZone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+    if (lootZone.type === 'chest') {
+      if (lootZone.chestSprite) {
+        lootZone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+      }
+
+      SaveService.patch({
+        worldState: {
+          ...SaveService.data.worldState,
+          openedChest: [...SaveService.data.worldState.openedChest, lootZone.id],
+        },
+      });
     }
 
-    // Chest
-    SaveService.patch({
-      worldState: {
-        ...SaveService.data.worldState,
-        openedChest: [...SaveService.data.worldState.openedChest, lootZone.id],
-      },
-    });
-
-    // Boss loot
-    SaveService.patch({
-      worldState: {
-        ...SaveService.data.worldState,
-        droppedLoot: SaveService.data.worldState.droppedLoot.filter((l) => l.id !== lootZone.id),
-      },
-    });
+    if (lootZone.type === 'drop') {
+      SaveService.patch({
+        worldState: {
+          ...SaveService.data.worldState,
+          droppedLoot: SaveService.data.worldState.droppedLoot.filter((l) => l.id !== lootZone.id),
+        },
+      });
+    }
   }
 
   protected onLeave(): void {

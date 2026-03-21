@@ -126,9 +126,9 @@ export class Player extends Character {
   protected override onDamaged(): void {
     this.ui.reducePlayerHealth(this.stats.health!.current, this.stats.health!.max);
 
-    SaveService.patch({
+    /*SaveService.patch({
       health: this.stats.health!.current,
-    });
+    });*/
   }
 
   protected override onDeathStart(): void {
@@ -145,9 +145,9 @@ export class Player extends Character {
     this.stats.health = new Health(max);
     this.ui.restorePlayerHealth();
 
-    SaveService.patch({
+    /*SaveService.patch({
       health: max,
-    });
+    });*/
   }
 
   private handleFall(): void {

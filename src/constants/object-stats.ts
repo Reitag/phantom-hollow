@@ -65,7 +65,7 @@ export const ARROW_STATS = {
 
 export const CRYSTAL_SHRINE_STATS = {
   KEY_NAME: UI.CRYSTAL_RENEWAL_BUFF,
-  HEAL: 0.5,
+  HEAL: 15,
 } as const;
 
 export const PLAYER_STATS = {

@@ -12,20 +12,31 @@ const DEFAULT_SAVE: SaveGame = {
     openedChest: [],
     killedBosses: [],
     droppedLoot: [],
+    activePedestal: null,
   },
 };
 
 export class SaveService {
-  private static SAVE_KEY = 'game-save';
+  private static timer: ReturnType<typeof setInterval>;
+
+  private static SAVE_KEY = 'phantom-hollow-save-data';
+  private static isDirty = false;
 
   private static currentSave: SaveGame = structuredClone(DEFAULT_SAVE);
 
-  // Access current save object
   static get data(): SaveGame {
     return this.currentSave;
   }
 
-  // Load save from localStorage into memory
+  static start(): void {
+    this.timer = setInterval(() => {
+      if (this.isDirty) {
+        this.commit();
+        this.isDirty = false;
+      }
+    }, 5000);
+  }
+
   static load(): SaveGame {
     const data = localStorage.getItem(this.SAVE_KEY);
 
@@ -34,26 +45,47 @@ export class SaveService {
       return this.currentSave;
     }
 
+    const parsed = JSON.parse(data);
+
     this.currentSave = {
       ...DEFAULT_SAVE,
-      ...JSON.parse(data),
+      ...parsed,
+      worldState: {
+        ...DEFAULT_SAVE.worldState,
+        ...parsed.worldState,
+      },
     };
 
     return this.currentSave;
   }
 
-  // Save memory object to localStorage (checkpoint)
   static commit(): void {
     localStorage.setItem(this.SAVE_KEY, JSON.stringify(this.currentSave));
   }
 
-  // Update fields in memory only
   static patch(data: Partial<SaveGame>): void {
     this.currentSave = {
       ...this.currentSave,
       ...data,
     };
+
+    if (!this.isDirty) {
+      this.isDirty = true;
+    }
   }
+
+  /*static patch(data: Partial<SaveGame>): void {
+    this.currentSave = {
+      ...this.currentSave,
+      ...data,
+      worldState: {
+        ...this.currentSave.worldState,
+        ...data.worldState,
+      },
+    };
+
+    this.isDirty = true;
+  }*/
 
   static setQuestState(questId: string, state: QuestState) {
     const quests = this.currentSave.quests ?? {};
@@ -76,5 +108,6 @@ export class SaveService {
     }
 
     this.currentSave = structuredClone(DEFAULT_SAVE);
+    clearInterval(this.timer);
   }
 }
