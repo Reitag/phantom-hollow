@@ -194,7 +194,9 @@ export class Quest extends Board {
 
   public registerQuestEvents(): boolean {
     if (!this.board) return false;
-
+    this.scene.events.listeners('open-quest').forEach((e) => {
+      console.log(e);
+    });
     if (!this.scene.events.listeners('open-quest').length) {
       this.scene.events.on('open-quest', this.openBoard, this);
       this.scene.events.on('close-quest', this.closeBoard, this);
@@ -302,11 +304,10 @@ export class Quest extends Board {
 
     if (fangIndex === undefined) {
       sandbox.setText('Quest item has not been found');
-    } else if (!inventory.canAdd(reward(), 1)) {
-      sandbox.setText('The inventory is full');
     } else {
-      inventory.addItem(reward(), 1);
       inventory.destroySlot(fangIndex);
+      inventory.addItem(reward(), 1);
+      this.unregisterQuestEvents();
       this.board?.destroy();
       this.board = null;
       (this.action as LevelOneScene).quest.destroy();

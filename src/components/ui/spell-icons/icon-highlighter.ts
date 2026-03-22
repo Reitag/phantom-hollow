@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { Position } from '@/utils/types';
 import { ICONS } from '@/constants/ui';
 

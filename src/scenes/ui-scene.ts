@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { UiSystem } from '@/systems/ui-system';
 import { UI } from '@/constants/asset-keys';
 import { createUiTilemap } from '@/tilemap/tilemap-ui';

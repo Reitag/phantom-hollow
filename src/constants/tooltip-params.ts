@@ -248,7 +248,7 @@ export const ITEM_TOOLTIPS: {
     },
     prop_3: {
       param: additionTextParams,
-      text: '"The Octius brewed this was his masterpiece."',
+      text: '"Octius brewed this before your eyes. He calls it his masterpiece."',
     },
   },
   SOUL_STONE: {

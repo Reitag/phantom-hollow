@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { Tilemap } from '@/components/map/tilemap';
 import { Z_POSITION } from '@/constants/z-position';
 import { MAPS, TILESETS } from '@/constants/asset-keys';

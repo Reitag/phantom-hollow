@@ -1,4 +1,3 @@
-import Phaser from 'phaser';
 import { UI } from '@/constants/asset-keys';
 import { Position } from '@/utils/types';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';

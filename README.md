@@ -1,45 +1,25 @@
 # Phantom Hollow
 
-**Phantom Hollow** is a 2D action RPG built with **Phaser 3** and **TypeScript**.
+An open-world action RPG focused on classic character progression and exploration. Built with Phaser 3 and TypeScript.
 
-The game features real-time combat, collectible items and quest-related mechanics inspired by classic RPGs.
+For the latest updates, see [CHANGELOG.md](./CHANGELOG.md).
 
-For the latest version and changes, see [CHANGELOG.md](./CHANGELOG.md).
+## Features
 
----
+- 4 unique player spells
+- 3 common enemy types and 2 boss encounters
+- 6 potions and 2 magical stones (including rare-tier)
+- 1 active story quest
+- Functional in-game shop
+- Save/Load system
 
-## Getting Started
-
-### 1. Clone the repo
+## Setup
 
 ```bash
+# Clone the repository and enter the project directory
 git clone https://github.com/Reitag/phantom-hollow.git
 cd phantom-hollow
-```
 
-### 2. Clean install dependencies
-
-```bash
+# Install dependencies
 npm ci
 ```
-
-### 3. Start the dev server
-
-```bash
-npm run dev
-```
-
-### 4. Build for production
-
-```bash
-npm run build
-```
-
----
-
-## Built With
-
-- [Phaser 3](https://phaser.io/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Vite](https://vitejs.dev/)
-- [ESLint](https://eslint.org/) + [Prettier](https://prettier.io/)

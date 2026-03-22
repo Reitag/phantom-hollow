@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
@@ -560,8 +558,10 @@ export class LevelOneScene extends Phaser.Scene {
     // Debug
 
     this.time.removeAllEvents();
-
     this.isLevelInitialized = false;
+
+    this.events.off('fire-worm:died');
+    this.events.off('fireworm-fang:looted');
 
     CollisionService.clear();
     SaveService.clear();

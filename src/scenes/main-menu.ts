@@ -18,6 +18,10 @@ export class MainMenuScene extends Phaser.Scene {
       .on('pointerover', () => start.setColor('#333333'))
       .on('pointerout', () => start.setColor('#000000'))
       .on('pointerdown', () => {
+        if (SaveService.hasSave()) {
+          SaveService.clear(true);
+        }
+
         this.scene.stop('MainMenuScene');
         this.scene.start('LevelOneScene');
       });

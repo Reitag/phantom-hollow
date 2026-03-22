@@ -17,7 +17,6 @@ import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
 import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
-import { SaveService } from '@/infrastructure/save-service';
 
 export class Player extends Character {
   public scene: Phaser.Scene;

@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 export class DebugScreen extends Phaser.Scene {
   constructor() {
     super('DebugScreen');
