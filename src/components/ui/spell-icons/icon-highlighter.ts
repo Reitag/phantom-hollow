@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 
-import { INVENTORY_SLOTS } from '@/constants/ui-coordinates';
 import { Position } from '@/utils/types';
 import { ICONS } from '@/constants/ui';
 

@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 
-import { registerGlobalAnimation } from '@/data/animation/loader/animation-loader';
+import { registerGlobalAnimation } from '@/animation/loader/animation-loader';
 
-const packURL = 'src/data/json-packs/';
+const packURL = '/json-packs/';
 
 const packs = [
   { key: 'tilesets-pack', url: `${packURL}tilesets.json` },
