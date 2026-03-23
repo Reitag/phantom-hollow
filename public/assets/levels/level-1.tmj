@@ -5027,8 +5027,39 @@
          "tilewidth":67
         }, 
         {
+         "columns":0,
          "firstgid":215,
-         "source":"objects\/bushes-object.tsx"
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"bushes-object",
+         "spacing":0,
+         "tilecount":3,
+         "tileheight":35,
+         "tiles":[
+                {
+                 "id":3,
+                 "image":"images\/bushes\/Bush-1.png",
+                 "imageheight":35,
+                 "imagewidth":42
+                }, 
+                {
+                 "id":4,
+                 "image":"images\/bushes\/Bush-2.png",
+                 "imageheight":32,
+                 "imagewidth":39
+                }, 
+                {
+                 "id":5,
+                 "image":"images\/bushes\/Bush-3.png",
+                 "imageheight":34,
+                 "imagewidth":40
+                }],
+         "tilewidth":42
         }, 
         {
          "columns":1,

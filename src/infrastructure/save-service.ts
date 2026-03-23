@@ -31,7 +31,7 @@ export class SaveService {
   static start(): void {
     this.timer = setInterval(() => {
       if (this.isDirty) {
-        //this.commit();
+        this.commit();
         this.isDirty = false;
       }
     }, 5000);

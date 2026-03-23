@@ -3,6 +3,7 @@ import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { SCENE_SIZE } from '@/constants/scene-size';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
@@ -159,7 +160,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.setupCamera();
   }
 
-  private createParallaxBackground(): void {
+  /*private createParallaxBackground(): void {
     this.sky = this.add
       .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.SKY_BG)
       .setOrigin(0)
@@ -172,6 +173,22 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.forest = this.add
       .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.FOREST_BG)
+      .setOrigin(0)
+      .setScrollFactor(0);
+  }*/
+  private createParallaxBackground(): void {
+    this.sky = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.SKY_BG)
+      .setOrigin(0)
+      .setScrollFactor(0);
+
+    this.mount = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.MOUNT_BG)
+      .setOrigin(0)
+      .setScrollFactor(0);
+
+    this.forest = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.FOREST_BG)
       .setOrigin(0)
       .setScrollFactor(0);
   }
