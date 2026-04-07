@@ -1,8 +1,9 @@
 import { Board } from '@/base/ui/board';
-import { UI } from '@/constants/asset-keys';
+import { AUDIO, UI } from '@/constants/asset-keys';
 import { GREETING_LETTER_TEXT, LETTER_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LETTER_UI } from '@/constants/ui-coordinates';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type Handlers = {
   onOver: () => void;
@@ -126,6 +127,17 @@ export class Letter extends Board {
       .off('pointerup', handlers.onUp);
 
     this.bundleHandlers.delete(this.closeButton);
+  }
+
+  // Inherited from base class
+  protected openBoard(): void {
+    super.openBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_OPEN);
+  }
+
+  protected closeBoard(): void {
+    super.closeBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_CLOSE);
   }
 
   private addBlock(block: Phaser.GameObjects.Text | Phaser.GameObjects.Image, spacing = 10) {

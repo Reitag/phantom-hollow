@@ -19,12 +19,12 @@ export abstract class Board {
     };
   }
 
-  protected openBoard() {
+  protected openBoard(): void {
     this.board?.setVisible(true);
     this.open = true;
   }
 
-  protected closeBoard() {
+  protected closeBoard(): void {
     this.board?.setVisible(false);
     this.open = false;
   }

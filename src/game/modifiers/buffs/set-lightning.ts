@@ -22,6 +22,7 @@ export class SetLightning implements Modifier {
   }
 
   public apply(target: Character): void {
+    // Sound is creating in Lightning Sheild class as it acts like a spell, not modifier
     this.lightningShield = this.spellFactory.createLightningShield(target);
   }
 

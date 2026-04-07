@@ -1,9 +1,11 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { DISEASE } from '@/constants/modifier-stats';
 import { ENEMY_STATES, SHARED_STATES } from '@/constants/state-keys';
 import { ZOMBIE_STATS } from '@/constants/object-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Zombie } from '@/entities/characters/enemies/zombie';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { StateMachine } from '@/systems/state-machine';
 import { Character } from '@/base/objects/character';
 import { SpawnPoint } from '@/utils/types';
@@ -43,6 +45,7 @@ export class AiZombie extends Enemy {
           ENEMY_STATES.ATTACK,
           this.player,
           [ZOMBIE_STATS.HIT, ZOMBIE_STATS.FRAME_ON_HIT],
+          AUDIO.UNARMED_IMPACT,
           this.diseaseTarget
         );
       }
@@ -62,6 +65,11 @@ export class AiZombie extends Enemy {
       return;
     }
     if (currentState === ENEMY_STATES.CHASE) return;
+
+    const aggro = enemy.getStats().aggro;
+    if (aggro && aggro.meter < 60) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.ZOMBIE_AGGRO);
+    }
 
     fsm.changeState(ENEMY_STATES.CHASE, this.player, ZOMBIE_STATS.CHASE);
   }

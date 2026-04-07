@@ -1,5 +1,5 @@
 import { Board } from '@/base/ui/board';
-import { UI } from '@/constants/asset-keys';
+import { AUDIO, UI } from '@/constants/asset-keys';
 import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
 import { QUEST_IDS } from '@/constants/quest-ids';
 import { SCENE_SIZE } from '@/constants/scene-size';
@@ -276,6 +276,17 @@ export class Quest extends Board {
 
       this.bundleHandlers.delete(button);
     });
+  }
+
+  // Open and close quest frame, inherited from base class
+  protected openBoard(): void {
+    super.openBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_OPEN);
+  }
+
+  protected closeBoard(): void {
+    super.closeBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_CLOSE);
   }
 
   private acceptQuest(): void {

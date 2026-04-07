@@ -5,6 +5,7 @@ import { registerGlobalAnimation } from '@/animation/loader/animation-loader';
 const packURL = '/json-packs/';
 
 const packs = [
+  { key: 'audio-pack', url: `${packURL}audio.json` },
   { key: 'tilesets-pack', url: `${packURL}tilesets.json` },
   { key: 'backgrounds-pack', url: `${packURL}backgrounds.json` },
   { key: 'objects-pack', url: `${packURL}objects.json` },

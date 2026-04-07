@@ -1,6 +1,7 @@
 import { UiSystem } from '@/systems/ui-system';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Tilemap } from '@/components/map/tilemap';
+import { AudioSystem } from '@/systems/audio-system';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellSystem } from '@/systems/spell-system';
@@ -26,6 +27,7 @@ interface ServiceMap {
   map: Tilemap;
   collision: CollisionService;
   panel: PanelService;
+  audio: AudioSystem;
   save: SaveGame | undefined;
 }
 
@@ -43,6 +45,7 @@ export const ServiceKeys = {
   map: 'map',
   collision: 'collision',
   panel: 'panel',
+  audio: 'audio',
   save: 'save',
 } as const;
 

@@ -1,3 +1,4 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { HASTE } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
@@ -18,7 +19,11 @@ export class Haste implements Modifier {
 
   public apply(target: Character): void {
     const stats = target.getStats();
-    stats.speed?.addModifier(this.id, HASTE.effect);
+
+    if (stats.speed) {
+      stats.speed.addModifier(this.id, HASTE.effect);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.HASTE);
+    }
   }
 
   public start(target: Character, onExpire: () => void): void {

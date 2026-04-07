@@ -9,7 +9,7 @@ import { EARTH_SHAKE } from '@/constants/spell-cooldowns';
 import { Player } from '@/entities/characters/player/player';
 import { Z_POSITION } from '@/constants/z-position';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
-import { VFX } from '@/constants/asset-keys';
+import { AUDIO, VFX } from '@/constants/asset-keys';
 import { TriggerZone } from '@/game/interactables/trigger-zone';
 import { Boss } from '../../base/ai/boss';
 
@@ -26,6 +26,7 @@ export class AiFireWorm extends Boss {
 
   private isLongFight = false;
   private startFight: number | undefined = undefined;
+  private audioAggro = false;
 
   constructor(boss: Character, player: Player) {
     super(boss, player);
@@ -51,6 +52,10 @@ export class AiFireWorm extends Boss {
       this.startFight = undefined;
     }
 
+    if (this.audioAggro) {
+      this.audioAggro = false;
+    }
+
     const fsm = this.boss.getStateMachine();
     const currentState = fsm.currentStateName;
 
@@ -64,6 +69,11 @@ export class AiFireWorm extends Boss {
   }
 
   protected aggroedBehaviour(): void {
+    if (this.audioAggro === false) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.FIREWORM_AGGRO);
+      this.audioAggro = true;
+    }
+
     this.updateFacingDirection();
 
     const fsm = this.boss.getStateMachine();
@@ -158,6 +168,7 @@ export class AiFireWorm extends Boss {
       .setDepth(Z_POSITION.SPELL);
 
     earthAnxiety.play(VFX_ANIMATION.EARTH_ANXIETY.MAIN, true);
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.EARTH_SHAKE_LAUNCH);
     earthAnxiety.once(
       Phaser.Animations.Events.ANIMATION_COMPLETE,
       (anim: Phaser.Animations.Animation) => {

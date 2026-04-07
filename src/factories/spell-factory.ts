@@ -8,7 +8,7 @@ import { WindPulse } from '@/entities/spells/effect-spells/wind-pulse';
 import { FrostBolt } from '@/entities/spells/direct-spells/frost-bolt';
 import { ShadowBolt } from '@/entities/spells/direct-spells/shadow-bolt';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
-import { SPELLS } from '@/constants/asset-keys';
+import { AUDIO, SPELLS } from '@/constants/asset-keys';
 import {
   FIRE_BALL_STATS,
   SHADOW_BOLT_STATS,

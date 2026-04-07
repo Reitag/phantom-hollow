@@ -1,5 +1,5 @@
 import { Spell, SpellConfig } from '@/base/objects/spell';
-import { VFX } from '@/constants/asset-keys';
+import { AUDIO, VFX } from '@/constants/asset-keys';
 import { FROST_BOLT_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION, VFX_ANIMATION } from '@/constants/animation-keys';
@@ -38,12 +38,19 @@ export class FrostBolt extends Spell {
       [SPELL_ANIMATION_KEYS.HIT]: SPELLS_ANIMATION.FROST_BOLT.HIT,
     };
 
+    this.audioKeys = {
+      launch: AUDIO.FROSTBOLT_LAUNCH,
+      impact: AUDIO.FROSTBOLT_IMPACT,
+      action: undefined,
+    };
+
     this.arcadeBody.setSize(22, 13);
   }
 
   public cast(): void {
     this.setSpellVelocity();
     this.playMainAnimation();
+    this.playLaunchSound();
 
     this.scene.time.delayedCall(FROST_BOLT_STATS.LIFE_TIME, () => {
       if (!this.active) return;

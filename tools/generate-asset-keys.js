@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const packsDir = path.resolve('src/data/json-packs');
+const packsDir = path.resolve('public/json-packs');
 const outputFile = path.resolve('src/constants/asset-keys.ts');
 
 const packFiles = fs.readdirSync(packsDir).filter((f) => f.endsWith('.json'));
@@ -21,7 +21,7 @@ for (const file of packFiles) {
 }
 
 let output = `// AUTO-GENERATED FILE. Do not edit directly.
-// Generated from src/data/json-packs/*.json\n`;
+// Generated from public/json-packs/*.json\n`;
 
 for (const [group, keys] of Object.entries(assets)) {
   const groupName = group.toUpperCase().replace(/-/g, '_');

@@ -4,7 +4,7 @@ export const SHIFT_SPELL_REGGISTER_HITS = 1000;
 
 export const SPIKE_HIT = 10;
 
-export const SPEAR_HIT = 50;
+export const SPEAR_HIT = 5000;
 
 export const FIRE_BALL_STATS = {
   HIT: 25,

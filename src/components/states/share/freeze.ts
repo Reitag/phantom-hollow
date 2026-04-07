@@ -2,7 +2,8 @@ import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
 import { SHARED_STATES } from '@/constants/state-keys';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
-import { VFX } from '@/constants/asset-keys';
+import { AUDIO, VFX } from '@/constants/asset-keys';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Freeze extends CharacterState {
   private characterKey: string;
@@ -28,6 +29,7 @@ export class Freeze extends CharacterState {
 
     if (anim && frame) {
       this.character.setTexture(this.characterKey, frame.frame.name);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.FREEZE);
     }
 
     this.character.stop();

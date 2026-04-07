@@ -13,7 +13,7 @@ import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
-import { CHARACTERS, VFX } from '@/constants/asset-keys';
+import { AUDIO, CHARACTERS, VFX } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import { SaveService } from '@/infrastructure/save-service';
@@ -209,6 +209,7 @@ export class AiEvilWizard extends Boss {
       animKey: VFX_ANIMATION.EVIL_WIZARD_DISAPPEARS.MAIN,
       isFlipping: true,
     });
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SHADOW_TRAIL_DISAPPEARS);
 
     disappear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       const spell = this.spellFactory.createShadowTrail(this.boss);
@@ -224,6 +225,8 @@ export class AiEvilWizard extends Boss {
           animKey: VFX_ANIMATION.EVIL_WIZARD_APPEARS.MAIN,
           isFlipping: true,
         });
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SHADOW_TRAIL_APPEARS);
+
         appear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
           this.boss.enableBody(undefined, undefined, undefined, undefined, true);
           this.dreadAura = this.createDreadAura();

@@ -2,7 +2,7 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
@@ -27,6 +27,7 @@ import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
+import { AudioSystem } from '@/systems/audio-system';
 import { EnemySpawn } from '@/systems/enemy-spawn';
 import { NPCSpawn } from '@/systems/npc-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
@@ -158,6 +159,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.createSpawnSystems();
 
     this.setupCamera();
+    this.playAmbient();
   }
 
   /*private createParallaxBackground(): void {
@@ -259,6 +261,7 @@ export class LevelOneScene extends Phaser.Scene {
 
   private registerSystems(): void {
     ServiceLocator.register(ServiceKeys.map, this.map);
+    ServiceLocator.register(ServiceKeys.audio, new AudioSystem(this));
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
@@ -460,6 +463,7 @@ export class LevelOneScene extends Phaser.Scene {
   ): void {
     if (spell instanceof Spell) {
       if (tile.properties.collides) {
+        spell.playImpactSound();
         spell.destroySpell();
       }
     }
@@ -481,11 +485,11 @@ export class LevelOneScene extends Phaser.Scene {
 
     if (spell.causeDamage() > 0) {
       victim.takeDamage(spell.causeDamage(), spell.getCaster());
+      spell.playImpactSound();
       spell.destroySpell();
     }
 
     const modifier = victim.getModifier();
-
     if (modifier.isModifierExist(LIGHTNING_SHIELD.id)) return;
 
     spell.applyEffect(victim);
@@ -508,6 +512,7 @@ export class LevelOneScene extends Phaser.Scene {
   ): void {
     if (target instanceof Player && weapon instanceof Arrow) {
       target.takeDamage(ARROW_STATS.HIT);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.ARROW_IMPACT);
       weapon.destroy();
     }
   }
@@ -527,8 +532,9 @@ export class LevelOneScene extends Phaser.Scene {
     if (!tile) return;
 
     if (target instanceof Character) {
-      if (tile.properties.collides) {
+      if (tile.properties.collides && !target.getDead()) {
         target.takeDamage(SPEAR_HIT);
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SPEAR_IMPACT);
       }
     }
   }
@@ -536,6 +542,7 @@ export class LevelOneScene extends Phaser.Scene {
   private handlePickup(character: Phaser.GameObjects.GameObject, item: Item): void {
     if (character instanceof Player && item instanceof Coin) {
       character.getCoinKeeper().addCoins(1);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.COIN_PICK);
     }
 
     item.destroy();
@@ -565,7 +572,15 @@ export class LevelOneScene extends Phaser.Scene {
     lootZone?.createLootZone(dropId, zone, [{ id: 'fireworm-fang', amount: 1 }]);
   }
 
+  private playAmbient(): void {
+    const audio = ServiceLocator.resolve(ServiceKeys.audio);
+    audio.playAmbient(AUDIO.FOREST_AMBIENT);
+  }
+
   private cleanup(): void {
+    const audio = ServiceLocator.resolve(ServiceKeys.audio);
+    audio.stopAmbient(false);
+
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
       this.debugScreen.scene.stop();

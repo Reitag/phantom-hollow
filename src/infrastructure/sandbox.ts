@@ -1,3 +1,4 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Player } from '@/entities/characters/player/player';
 import { UiSystem } from '@/systems/ui-system';
@@ -32,6 +33,7 @@ export class Sandbox {
   public healPlayer(amount: number): void {
     const stats = this.player.getStats();
     stats.health?.heal(amount);
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.HEALING);
     this.ui.reducePlayerHealth(stats.health!.current, stats.health!.max);
   }
 

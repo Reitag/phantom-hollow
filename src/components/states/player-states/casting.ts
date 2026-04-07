@@ -1,7 +1,7 @@
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { SpellPower } from '@/components/stats/damage';
 import { PlayerState } from '@/base/states/player-state';
-import { SPELLS } from '@/constants/asset-keys';
+import { AUDIO, SPELLS } from '@/constants/asset-keys';
 import { PLAYER_STATES } from '@/constants/state-keys';
 import { FIRE_BALL_STATS, FROST_BOLT_STATS } from '@/constants/object-stats';
 import { SpellSystem } from '@/systems/spell-system';
@@ -9,11 +9,13 @@ import { UiSystem } from '@/systems/ui-system';
 import { Player } from '@/entities/characters/player/player';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { ARCANE_MIND } from '@/constants/modifier-stats';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Casting extends PlayerState {
   private isCasting = false;
   private isInstantCasting = false;
   private castTime: number = 1;
+  private sound: Phaser.Sound.BaseSound | null = null;
 
   constructor(
     character: Player,
@@ -103,6 +105,7 @@ export class Casting extends PlayerState {
     ) {
       this.isCasting = false;
       this.character.anims.stop();
+      this.sound?.stop();
       this.ui?.stopCast();
 
       if (this.input?.isLeftDown || this.input?.isRightDown || this.input?.isUpPressed) {
@@ -121,15 +124,18 @@ export class Casting extends PlayerState {
   }
 
   private startCast(duration: number, onComplete: () => void): void {
+    const audioSystem = ServiceLocator.resolve(ServiceKeys.audio);
+
     const animStartCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_START);
     const animMainCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_MAIN);
     const animEndCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_END);
+
+    this.sound = audioSystem.playControlled(AUDIO.CASTING);
 
     this.isCasting = true;
 
     this.ui?.startCast(duration);
     this.playAnimation(animStartCast, true);
-
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animStartCast, () => {
       if (this.isCasting) {
         this.playAnimation(animMainCast, true);
@@ -140,6 +146,7 @@ export class Casting extends PlayerState {
       if (this.isCasting) {
         if (!this.character.getDead()) this.playAnimation(animEndCast);
         onComplete();
+        this.sound?.stop();
 
         this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animEndCast, () => {
           this.isCasting = false;

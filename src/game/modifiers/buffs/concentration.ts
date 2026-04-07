@@ -1,3 +1,4 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { CONCENTRATION } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
@@ -18,7 +19,11 @@ export class Concentration implements Modifier {
 
   public apply(target: Character): void {
     const stats = target.getStats();
-    stats.casting?.addMultiplier(this.id, CONCENTRATION.effect);
+
+    if (stats.casting) {
+      stats.casting.addMultiplier(this.id, CONCENTRATION.effect);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.CONCENTRATION);
+    }
   }
 
   public start(target: Character, onExpire: () => void): void {

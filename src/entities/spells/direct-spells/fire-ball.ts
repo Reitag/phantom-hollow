@@ -1,6 +1,7 @@
 import { Character } from '@/base/objects/character';
 import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
+import { AUDIO } from '@/constants/asset-keys';
 import { FIRE_BALL_STATS } from '@/constants/object-stats';
 
 export class FireBall extends Spell {
@@ -32,12 +33,19 @@ export class FireBall extends Spell {
       [SPELL_ANIMATION_KEYS.HIT]: SPELLS_ANIMATION.FIRE_BALL.HIT,
     };
 
+    this.audioKeys = {
+      launch: AUDIO.FIREBALL_LAUNCH,
+      impact: AUDIO.FIREBALL_IMPACT,
+      action: undefined,
+    };
+
     this.arcadeBody.setSize(22, 13);
   }
 
   public cast(): void {
     this.setSpellVelocity();
     this.playMainAnimation();
+    this.playLaunchSound();
 
     this.scene.time.delayedCall(FIRE_BALL_STATS.LIFE_TIME, () => {
       if (!this.active) return;

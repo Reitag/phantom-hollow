@@ -1,5 +1,5 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
-import { MISC, OBJECTS } from '@/constants/asset-keys';
+import { AUDIO, MISC, OBJECTS } from '@/constants/asset-keys';
 import { LOOT_ZONE_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { Z_POSITION } from '@/constants/z-position';
@@ -206,6 +206,7 @@ export class LootZone extends Interactable {
     if (lootZone.type === 'chest') {
       if (lootZone.chestSprite) {
         lootZone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.CHEST_OPEN);
       }
 
       SaveService.patch({
