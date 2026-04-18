@@ -1,0 +1,214 @@
+{
+  "files": [
+    {
+      "type": "audio",
+      "key": "forest-ambient",
+      "url": "assets/audio/bg/forest_ambient.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "fireball-launch",
+      "url": "assets/audio/spells/fireball/fireball-launch.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "fireball-impact",
+      "url": "assets/audio/spells/fireball/fireball-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "blink-action",
+      "url": "assets/audio/spells/blink/blink-action.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "wind-action",
+      "url": "assets/audio/spells/wind/wind-action.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "frostbolt-launch",
+      "url": "assets/audio/spells/frostbolt/frostbolt-launch.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "frostbolt-impact",
+      "url": "assets/audio/spells/frostbolt/frostbolt-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "lightning-shield-action",
+      "url": "assets/audio/spells/lightning-shield/lightning-shield-action.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "lightning-shield-absorb",
+      "url": "assets/audio/spells/lightning-shield/lightning-shield-absorb.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "earth-shake-launch",
+      "url": "assets/audio/spells/earth-shake/earth-shake-launch.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "earth-shake-impact",
+      "url": "assets/audio/spells/earth-shake/earth-shake-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "shadowbolt-launch",
+      "url": "assets/audio/spells/shadowbolt/shadowbolt-launch.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "shadowbolt-impact",
+      "url": "assets/audio/spells/shadowbolt/shadowbolt-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "shadow-trail-disappears",
+      "url": "assets/audio/spells/shadow-trail/shadow-trail-disappears.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "shadow-trail-appears",
+      "url": "assets/audio/spells/shadow-trail/shadow-trail-appears.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "sword-impact",
+      "url": "assets/audio/attack/sword-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "unarmed-impact",
+      "url": "assets/audio/attack/unarmed-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "arrow-launch",
+      "url": "assets/audio/attack/arrow-launch.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "arrow-impact",
+      "url": "assets/audio/attack/arrow-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "bat-impact",
+      "url": "assets/audio/attack/bat-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "freeze",
+      "url": "assets/audio/effects/freeze.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "protection",
+      "url": "assets/audio/effects/protection.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "healing",
+      "url": "assets/audio/effects/healing.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "undying",
+      "url": "assets/audio/effects/undying.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "spell-power",
+      "url": "assets/audio/effects/spell-power.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "haste",
+      "url": "assets/audio/effects/haste.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "concentration",
+      "url": "assets/audio/effects/concentration.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "casting",
+      "url": "assets/audio/misc/casting.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "coin-pick",
+      "url": "assets/audio/misc/coin-pick.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "coin-buy",
+      "url": "assets/audio/misc/coin-buy.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "board-open",
+      "url": "assets/audio/misc/board-open.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "board-close",
+      "url": "assets/audio/misc/board-close.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "store-open",
+      "url": "assets/audio/misc/store-open.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "store-close",
+      "url": "assets/audio/misc/store-close.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "paper-open",
+      "url": "assets/audio/misc/paper-open.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "paper-close",
+      "url": "assets/audio/misc/paper-close.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "chest-open",
+      "url": "assets/audio/misc/chest-open.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "spear-impact",
+      "url": "assets/audio/misc/spear-impact.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "skeleton-warrior-aggro",
+      "url": "assets/audio/aggro/skeleton-warrior-aggro.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "zombie-aggro",
+      "url": "assets/audio/aggro/zombie-aggro.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "fireworm-aggro",
+      "url": "assets/audio/aggro/fireworm-aggro.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "bat-aggro",
+      "url": "assets/audio/aggro/bat-aggro.mp3"
+    }
+  ]
+}

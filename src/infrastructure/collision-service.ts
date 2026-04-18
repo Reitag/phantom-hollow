@@ -92,7 +92,7 @@ export class CollisionService {
     }
   }
 
-  public static clearAll(): void {
+  public static clear(): void {
     this.destroyAllCollidersForScene();
     this.groups.clear();
     this.layers.clear();

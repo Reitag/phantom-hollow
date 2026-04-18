@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.15.0] – 2026-04-18
+
+### Added
+
+- Main Menu Scene
+- Save progress system
+- Audio system and sound effects
+- Game flow system (Intro Scene, Game Start Scene, Victory Scene, Outro Scene)
+- Greeting letter for main character
+
+### Changed
+
+- Updated quest text
+- Rebalanced boss HP and spell power
+- Reworked Lightning Potion mechanics
+- Changed crystal shrine art
+- Updated background visuals
+- Restructured assets for Vite build
+
+### Fixed
+
+- Save system issues
+- Quest event bugs
+- Background size issue
+- Tilemap export assets
+- Various typos
+
+
 ## [0.14.0] – 2026-03-08
 
 ### Added
@@ -179,6 +207,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sandbox interface, a central gameplay API that lets spells and other game systems safely interact with the player, cooldowns, and UI without hard coupling.
 - Service locator, a global service registry to make accessing managers (UI, cooldowns, spell factory, etc.) easier and more modular.
 
+
 ## [0.7.0] - 2025-08-04
 
 ### Added
@@ -205,6 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Old JavaScript files containing outdated and unreliable code, replaced with cleaner TypeScript implementations.
 
+
 ## [0.6.0] - 2025-08-02
 
 ### Changed
@@ -230,11 +260,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Core state machine implementation.
 - Skeleton enemy now uses the new state machine for cleaner AI logic.
 
+
 ## [0.4.0] - 2025-07-19
 
 ### Added
 
 - Skeleton Warrior enemy with basic AI tools and combat behavior.
+
 
 ## [0.2.0] - 2025-07-17
 
@@ -243,12 +275,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ESLint 9.x and Prettier integration for consistent code style.
 - Initial changelog documentation.
 
+
 ## [0.1.0] - 2025-07-09
 
 ### Changed
 
 - Completed full TypeScript migration
 - Reorganized structure: managers, input, components, reusable UI system
+
 
 ## [Pre-Release] - Prototype Phase (JavaScript, pre-0.1.0)
 

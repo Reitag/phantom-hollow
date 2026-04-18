@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { AnimationMap, SpriteConfig } from '@/utils/types';
 import { isArcadePhysicsBody } from '@/utils/helpers';
 

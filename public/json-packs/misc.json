@@ -1,0 +1,51 @@
+{
+  "files": [
+    {
+      "type": "spritesheet",
+      "key": "soul-fire",
+      "url": "assets/misc/soul-fire.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "bon-fire",
+      "url": "assets/misc/bon-fire.png",
+      "frameConfig": { "frameWidth": 20, "frameHeight": 24 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "crystal-shrine",
+      "url": "assets/misc/crystal-shrine.png",
+      "frameConfig": { "frameWidth": 64, "frameHeight": 64 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "portal",
+      "url": "assets/misc/portal.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "dark-energy",
+      "url": "assets/misc/dark-energy.png",
+      "frameConfig": { "frameWidth": 128, "frameHeight": 128 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "shining",
+      "url": "assets/misc/shining.png",
+      "frameConfig": { "frameWidth": 32, "frameHeight": 32 }
+    },
+    {
+      "type": "spritesheet",
+      "key": "quest-mark",
+      "url": "assets/misc/quest-mark.png",
+      "frameConfig": { "frameWidth": 20, "frameHeight": 20 }
+    },
+    {
+      "type": "image",
+      "key": "letter",
+      "url": "assets/misc/letter.png"
+    }
+  ]
+}

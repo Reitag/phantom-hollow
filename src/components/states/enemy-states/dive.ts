@@ -1,12 +1,15 @@
 import { CharacterState } from '@/base/states/character-state';
 import { Character } from '@/base/objects/character';
+import { AUDIO } from '@/constants/asset-keys';
+import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
-import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Dive extends CharacterState {
   private player: Player | null = null;
   private damage!: number;
+  private isExploded = false;
 
   constructor(character: Character) {
     super(ENEMY_STATES.DIVE, character);
@@ -29,6 +32,8 @@ export class Dive extends CharacterState {
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
     this.playAnimation(animKey);
+
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.BAT_AGGRO);
 
     this.character.scene.time.delayedCall(lifeTime, () => {
       if (!this.character.active) return;
@@ -71,10 +76,16 @@ export class Dive extends CharacterState {
   }
 
   private explode(): void {
+    if (this.isExploded) return;
+    this.isExploded = true;
+
     this.characterSpeed?.setMovementLock(true);
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.DEATH);
     this.playAnimation(animKey);
+
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.BAT_IMPACT);
+
     this.character.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.character.destroy();
     });

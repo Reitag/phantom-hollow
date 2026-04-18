@@ -48,11 +48,14 @@ export class CrystalShrine extends Interactable {
     });
   }
 
-  public override update(): void {
+  public override update(delta?: number): void {
     super.update();
 
     if (this.health && !this.player.getDead()) {
-      this.health.heal(CRYSTAL_SHRINE_STATS.HEAL);
+      const dt = (delta ?? 1000) / 1000;
+
+      this.health.heal(CRYSTAL_SHRINE_STATS.HEAL * dt);
+
       this.ui.reducePlayerHealth(this.health.current, this.health.max);
       this.circle?.setPosition(this.player.x, this.player.y + 6);
     }

@@ -1,3 +1,4 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Health } from '@/components/stats/health';
 import { UNDYING } from '@/constants/modifier-stats';
@@ -24,6 +25,7 @@ export class Undying implements Modifier {
     if (!this.health) return;
 
     this.originalApplyDamage = this.health.applyDamage.bind(this.health);
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.UNDYING);
 
     this.health.applyDamage = (amount: number) => {
       if (!this.health) return;

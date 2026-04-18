@@ -4,7 +4,7 @@ export const SHIFT_SPELL_REGGISTER_HITS = 1000;
 
 export const SPIKE_HIT = 10;
 
-export const SPEAR_HIT = 50;
+export const SPEAR_HIT = 5000;
 
 export const FIRE_BALL_STATS = {
   HIT: 25,
@@ -65,7 +65,7 @@ export const ARROW_STATS = {
 
 export const CRYSTAL_SHRINE_STATS = {
   KEY_NAME: UI.CRYSTAL_RENEWAL_BUFF,
-  HEAL: 0.5,
+  HEAL: 15,
 } as const;
 
 export const PLAYER_STATS = {
@@ -126,10 +126,10 @@ export const FIRE_WORM_STATS = {
 } as const;
 
 export const EVIL_WIZARD_STATS = {
-  HEALTH: 2200,
+  HEALTH: 2500,
   WALK_BOUND: 100,
   WALK: 50,
   ENGAGE_DISTANCE: 450,
   CAST: 10,
-  SPELL_POWER: 7,
+  SPELL_POWER: 6,
 } as const;

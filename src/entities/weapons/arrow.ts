@@ -1,6 +1,8 @@
 import { Character } from '@/base/objects/character';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
+import { AUDIO } from '@/constants/asset-keys';
 import { ARROW_STATS } from '@/constants/object-stats';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SpriteConfig } from '@/utils/types';
 
 export class Arrow extends ArcadeSprite {
@@ -26,5 +28,7 @@ export class Arrow extends ArcadeSprite {
       this.setVelocityY((dy / distance) * speed);
     }
     this.rotation = Math.atan2(dy, dx);
+
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.ARROW_LAUNCH);
   }
 }

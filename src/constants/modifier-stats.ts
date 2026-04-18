@@ -23,6 +23,7 @@ export const SPELL_POWER = {
 export const LIGHTNING_SHIELD = {
   id: UI.LIGHTNING_SHIELD_BUFF,
   duration: 15000,
+  damage_absorb: 200,
   type: TYPE.buff,
 };
 

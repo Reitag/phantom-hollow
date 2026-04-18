@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "types": ["node"],
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]

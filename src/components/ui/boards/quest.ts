@@ -1,9 +1,11 @@
 import { Board } from '@/base/ui/board';
-import { UI } from '@/constants/asset-keys';
-import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_STYLE } from '@/constants/quest-texts';
+import { AUDIO, UI } from '@/constants/asset-keys';
+import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_UI } from '@/constants/ui-coordinates';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { LevelOneScene } from '@/scenes/level-one-scene';
 import { Rectangle } from '@/utils/types';
@@ -24,15 +26,13 @@ export class Quest extends Board {
   private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
-  ///
   private scrollContainer: Phaser.GameObjects.Container;
-  private scrollAreaHeight = 270;
+  private scrollAreaHeight = 280;
   private currentY = 0;
   private scrollY = 0;
   private maxScroll = 0;
 
-  ///
-  private scrollTrack: Phaser.GameObjects.Graphics;
+  //private scrollTrack: Phaser.GameObjects.Graphics;
   private scrollThumb: Phaser.GameObjects.Graphics;
   private scrollIndicatorCoords: Rectangle;
 
@@ -49,7 +49,7 @@ export class Quest extends Board {
     const npcConCoord = this.alignCoords(this.bg, 0, 25);
     const npcNameContainer = this.scene.add
       .container(npcConCoord.x, npcConCoord.y)
-      .add(this.scene.add.text(24, 0, ALCHEMIST_QUEST_TEXT.NAME, QUEST_TEXT_STYLE.NAME));
+      .add(this.scene.add.text(24, 0, ALCHEMIST_QUEST_TEXT.NAME, textStyle(QUEST_TEXT_WIDTH).NAME));
     this.board.add(npcNameContainer);
 
     const conPos = this.alignCoords(this.bg, 25, 60);
@@ -64,49 +64,54 @@ export class Quest extends Board {
     const maskShape = this.scene.add.graphics();
     this.container.add(maskShape);
 
-    //maskShape.fillStyle(0xffffff, 0.4);
-    maskShape.fillRect(128, 165, 250, this.scrollAreaHeight);
+    maskShape.fillRect(98, 165, 300, this.scrollAreaHeight);
 
     this.scrollContainer.setMask(maskShape.createGeometryMask());
 
     // scroll indicator
     this.scrollIndicatorCoords = {
-      x: 124,
+      x: 146,
       y: -159,
       width: 7,
       height: 293.8,
     };
 
-    this.scrollTrack = this.scene.add.graphics();
+    //this.scrollTrack = this.scene.add.graphics();
 
     const { x, y, width, height } = this.scrollIndicatorCoords;
 
-    this.scrollTrack.fillStyle(0x2a1d12, 1);
-    this.scrollTrack.fillRoundedRect(x, y, width, height, 2);
+    //this.scrollTrack.fillStyle(0x2a1d12, 1);
+    //this.scrollTrack.fillRoundedRect(x, y, width, height, 2);
 
     this.scrollThumb = this.scene.add.graphics();
 
-    this.board.add(this.scrollTrack);
+    //this.board.add(this.scrollTrack);
     this.board.add(this.scrollThumb);
 
     // init content
-    const questTitle = this.createText(ALCHEMIST_QUEST_TEXT.TITLE, QUEST_TEXT_STYLE.TITLE);
+    const questTitle = this.createText(
+      ALCHEMIST_QUEST_TEXT.TITLE,
+      textStyle(QUEST_TEXT_WIDTH).TITLE
+    );
 
-    const questText = this.createText(ALCHEMIST_QUEST_TEXT.PENDING, QUEST_TEXT_STYLE.TEXT);
+    const questText = this.createText(
+      ALCHEMIST_QUEST_TEXT.PENDING,
+      textStyle(QUEST_TEXT_WIDTH).TEXT
+    );
 
     const questObjectivesTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.OBJECTIVES.TITLE,
-      QUEST_TEXT_STYLE.TITLE
+      textStyle(QUEST_TEXT_WIDTH).TITLE
     );
 
     const questObjectives = this.createText(
       ALCHEMIST_QUEST_TEXT.OBJECTIVES.TEXT,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     const questRewardTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.TITLE,
-      QUEST_TEXT_STYLE.TITLE
+      textStyle(QUEST_TEXT_WIDTH).TITLE
     );
 
     const rewardImage = this.scene.add
@@ -115,13 +120,13 @@ export class Quest extends Board {
 
     const rewardItemTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.TITLE,
-      QUEST_TEXT_STYLE.TEXT,
-      { color: QUEST_TEXT_STYLE.REWARD_TITLE.color }
+      textStyle(QUEST_TEXT_WIDTH).TEXT,
+      { color: textStyle(QUEST_TEXT_WIDTH).REWARD_TITLE.color }
     );
 
     const rewardItemDesc = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.DESCRIPTION,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     this.addBlock(questTitle);
@@ -164,9 +169,34 @@ export class Quest extends Board {
     this.buttons.add(this.declineButton);
   }
 
+  public defineQuestState(): void {
+    const state = SaveService.getQuestState(QUEST_IDS.ALCHEMIST_FIREWORM);
+
+    switch (state) {
+      case 'pending':
+        break;
+
+      case 'waiting':
+        this.acceptQuest();
+        break;
+
+      case 'completed':
+        this.onAcceptedQuest();
+        break;
+
+      case 'done':
+        this.board?.destroy();
+        this.board = null;
+        (this.action as LevelOneScene).quest.destroy();
+        break;
+    }
+  }
+
   public registerQuestEvents(): boolean {
     if (!this.board) return false;
-
+    /*this.scene.events.listeners('open-quest').forEach((e) => {
+      console.log(e);
+    });*/
     if (!this.scene.events.listeners('open-quest').length) {
       this.scene.events.on('open-quest', this.openBoard, this);
       this.scene.events.on('close-quest', this.closeBoard, this);
@@ -248,6 +278,17 @@ export class Quest extends Board {
     });
   }
 
+  // Open and close quest frame, inherited from base class
+  protected openBoard(): void {
+    super.openBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_OPEN);
+  }
+
+  protected closeBoard(): void {
+    super.closeBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_CLOSE);
+  }
+
   private acceptQuest(): void {
     const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
 
@@ -260,6 +301,8 @@ export class Quest extends Board {
       );
       this.action.events.once('fireworm-fang:looted', this.onAcceptedQuest, this);
       (this.action as LevelOneScene).quest.changeMarkToWaiting();
+
+      SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'waiting');
     }
   }
 
@@ -272,14 +315,15 @@ export class Quest extends Board {
 
     if (fangIndex === undefined) {
       sandbox.setText('Quest item has not been found');
-    } else if (!inventory.canAdd(reward(), 1)) {
-      sandbox.setText('The inventory is full');
     } else {
-      inventory.addItem(reward(), 1);
       inventory.destroySlot(fangIndex);
+      inventory.addItem(reward(), 1);
+      this.unregisterQuestEvents();
       this.board?.destroy();
       this.board = null;
       (this.action as LevelOneScene).quest.destroy();
+
+      SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'done');
     }
   }
 
@@ -300,17 +344,20 @@ export class Quest extends Board {
     });
     this.currentY = 30;
 
-    const completedText = this.createText(ALCHEMIST_QUEST_TEXT.COMPLETED, QUEST_TEXT_STYLE.TEXT);
+    const completedText = this.createText(
+      ALCHEMIST_QUEST_TEXT.COMPLETED,
+      textStyle(QUEST_TEXT_WIDTH).TEXT
+    );
 
     // quest reward
     const questRewardTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.TITLE,
-      QUEST_TEXT_STYLE.TITLE
+      textStyle(QUEST_TEXT_WIDTH).TITLE
     );
 
     const rewardText = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.COMPLETED_TEXT,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     const rewardImage = this.scene.add
@@ -319,13 +366,13 @@ export class Quest extends Board {
 
     const rewardItemTitle = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.TITLE,
-      QUEST_TEXT_STYLE.TEXT,
-      { color: QUEST_TEXT_STYLE.REWARD_TITLE.color }
+      textStyle(QUEST_TEXT_WIDTH).TEXT,
+      { color: textStyle(QUEST_TEXT_WIDTH).REWARD_TITLE.color }
     );
 
     const rewardItemDesc = this.createText(
       ALCHEMIST_QUEST_TEXT.REWARD.ITEM.DESCRIPTION,
-      QUEST_TEXT_STYLE.TEXT
+      textStyle(QUEST_TEXT_WIDTH).TEXT
     );
 
     this.addBlock(completedText);
@@ -341,6 +388,8 @@ export class Quest extends Board {
     this.buttons.add(this.completeButton);
     this.completeButton.setVisible(true);
     (this.action as LevelOneScene).quest.changeMarkToCompleted();
+
+    SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'completed');
   }
 
   private createText(
@@ -364,12 +413,12 @@ export class Quest extends Board {
     this.scrollThumb.clear();
 
     if (this.maxScroll <= 0) {
-      this.scrollTrack.setVisible(false);
+      //this.scrollTrack.setVisible(false);
       this.scrollThumb.setVisible(false);
       return;
     }
 
-    this.scrollTrack.setVisible(true);
+    //this.scrollTrack.setVisible(true);
     this.scrollThumb.setVisible(true);
 
     const visibleRatio = this.scrollAreaHeight / (this.scrollAreaHeight + this.maxScroll);

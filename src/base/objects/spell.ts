@@ -4,8 +4,15 @@ import { SpriteConfig } from '@/utils/types';
 import { SPELL_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { SHIFT_SPELL_REGGISTER_HITS } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
+
+type AudioKeys = {
+  launch: string | undefined;
+  impact: string | undefined;
+  action: string | undefined;
+};
 
 export interface SpellConfig extends SpriteConfig {
   caster: Character;
@@ -21,6 +28,7 @@ export abstract class Spell extends ArcadeSprite {
   protected damage: number | null = null;
   protected speed: number | null = null;
   protected direction: number | null = null;
+  protected audioKeys: AudioKeys;
 
   private hittedEnemies = new Array<Character>();
 
@@ -44,11 +52,38 @@ export abstract class Spell extends ArcadeSprite {
     this.speed = speed || null;
     this.direction = direction || null;
 
+    this.audioKeys = {
+      launch: undefined,
+      impact: undefined,
+      action: undefined,
+    };
+
     this.setDepth(Z_POSITION.SPELL);
   }
 
   public abstract cast(): void;
   public abstract applyEffect(target: Character): void;
+
+  public playLaunchSound(config?: Phaser.Types.Sound.SoundConfig | undefined): void {
+    if (this.audioKeys.launch) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(this.audioKeys.launch, config);
+      this.audioKeys.launch = undefined;
+    }
+  }
+
+  public playImpactSound(config?: Phaser.Types.Sound.SoundConfig | undefined): void {
+    if (this.audioKeys.impact) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(this.audioKeys.impact, config);
+      this.audioKeys.impact = undefined;
+    }
+  }
+
+  public playActionSound(config?: Phaser.Types.Sound.SoundConfig | undefined): void {
+    if (this.audioKeys.action) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(this.audioKeys.action, config);
+      this.audioKeys.action = undefined;
+    }
+  }
 
   public destroySpell(): void {
     if (!this.animations) return;

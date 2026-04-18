@@ -1,4 +1,6 @@
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { PanelService } from '@/infrastructure/panel-service';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { InventoryItem, InventorySlot } from '@/utils/types';
 
@@ -60,6 +62,7 @@ export class InventorySystem {
       quantity -= add;
       if (quantity <= 0) {
         this.updateUI();
+        this.saveToData();
         return;
       }
     }
@@ -72,6 +75,7 @@ export class InventorySystem {
 
         if (quantity <= 0) {
           this.updateUI();
+          this.saveToData();
           return;
         }
       }
@@ -89,16 +93,19 @@ export class InventorySystem {
       this.slots[index] = null;
     }
     this.updateUI();
+    this.saveToData();
   }
 
   public swapSlots(from: number, to: number): void {
     [this.slots[from], this.slots[to]] = [this.slots[to], this.slots[from]];
     this.updateUI();
+    this.saveToData();
   }
 
   public destroySlot(index: number): void {
     this.slots[index] = null;
     this.updateUI();
+    this.saveToData();
   }
 
   public getSlots(): (InventorySlot | null)[] {
@@ -121,6 +128,11 @@ export class InventorySystem {
     return undefined;
   }
 
+  public loadDataSlots(slots: (InventorySlot | null)[]) {
+    this.slots = slots;
+    this.updateUI();
+  }
+
   public updateUI(): void {
     this.slots.forEach((slot, index) => {
       if (slot) {
@@ -128,6 +140,14 @@ export class InventorySystem {
       } else {
         this.panel.inventoryBar.removeIcon(index);
       }
+    });
+  }
+
+  private saveToData(): void {
+    SaveService.patch({
+      inventory: this.slots.map((slot) => {
+        return slot ? { id: slot.item.id, quantity: slot.quantity } : null;
+      }),
     });
   }
 }

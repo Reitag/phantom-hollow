@@ -1,8 +1,9 @@
-import { UI } from '@/constants/asset-keys';
+import { AUDIO, UI } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { STORE_UI } from '@/constants/ui-coordinates';
 import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
 import { Board } from '@/base/ui/board';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type Bundle = {
   item: StoreItem;
@@ -139,6 +140,17 @@ export class Store extends Board {
 
       this.bundleHandlers.delete(bg);
     });
+  }
+
+  // Open and close board, inherited from base class
+  protected openBoard(): void {
+    super.openBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.STORE_OPEN);
+  }
+
+  protected closeBoard(): void {
+    super.closeBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.STORE_CLOSE);
   }
 
   private createStoreItems(): void {

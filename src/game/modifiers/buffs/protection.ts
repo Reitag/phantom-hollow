@@ -1,8 +1,9 @@
-import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { AUDIO } from '@/constants/asset-keys';
 import { PROTECTION } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
 import { Character } from '@/base/objects/character';
 import { Modifier } from '@/utils/types';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class Protection implements Modifier {
   public id = PROTECTION.id;
@@ -17,7 +18,11 @@ export class Protection implements Modifier {
 
   public apply(target: Character): void {
     const stats = target.getStats();
-    stats.defense?.addModifier(this.id, PROTECTION.effect);
+
+    if (stats.defense) {
+      stats.defense.addModifier(this.id, PROTECTION.effect);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PROTECTION);
+    }
   }
 
   public start(target: Character, onExpire: () => void): void {

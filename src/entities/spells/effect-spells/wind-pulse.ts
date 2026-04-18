@@ -7,8 +7,9 @@ import { FireWorm } from '@/entities/characters/bosses/fire-worm';
 import { EvilWizzard } from '@/entities/characters/bosses/evil-wizzard';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
-import { SPELLS } from '@/constants/asset-keys';
+import { AUDIO, SPELLS } from '@/constants/asset-keys';
 import { Player } from '@/entities/characters/player/player';
+import { AudioSystem } from '@/systems/audio-system';
 
 const offsetX = 45;
 
@@ -18,6 +19,8 @@ export class WindPulse {
 
   private leftWave: WindWave;
   private rightWave: WindWave;
+
+  private audioSystem: AudioSystem;
 
   constructor(scene: Phaser.Scene, position: Position, caster: Character) {
     this.leftWave = new WindWave({
@@ -36,11 +39,13 @@ export class WindPulse {
       caster: caster,
       direction: this.rightDirection,
     });
+    this.audioSystem = ServiceLocator.resolve(ServiceKeys.audio);
   }
 
   public castWaves(): void {
     this.leftWave.cast();
     this.rightWave.cast();
+    this.audioSystem.play(AUDIO.WIND_ACTION);
   }
 
   public getWindWaves(): { leftWave: WindWave; rightWave: WindWave } {

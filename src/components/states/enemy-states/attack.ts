@@ -1,11 +1,16 @@
 import { CharacterState } from '@/base/states/character-state';
+import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { Character } from '@/base/objects/character';
 import { CHARACTER_ANIMATION_KEYS } from '@/constants/animation-keys';
+import { ServiceLocator, ServiceKeys } from '@/infrastructure/service-locator';
+import { AudioSystem } from '@/systems/audio-system';
 
 export class Attack extends CharacterState {
   private player: Player | null = null;
+  private audioSystem: AudioSystem | null = null;
+  private audioKey: string | undefined;
   private frameOnHit!: number;
   private damage!: number;
   private additionAbility: (() => void) | undefined = undefined;
@@ -24,14 +29,20 @@ export class Attack extends CharacterState {
     );
     if (!stats || stats.length < 2) throw new Error('Expected numeric array [damage, frameOnHit]');
 
+    const audio = args.find((elem): elem is string => typeof elem === 'string');
+    //if (!audio) throw new Error('Audio not found');
+
     const additionAbility = args.find((elem): elem is () => void => typeof elem === 'function');
     if (additionAbility) this.additionAbility = additionAbility;
 
     const [damage, frameOnHit] = stats;
 
+    this.audioSystem = ServiceLocator.resolve(ServiceKeys.audio);
+
     this.player = player;
     this.frameOnHit = frameOnHit;
     this.damage = damage;
+    this.audioKey = audio;
 
     this.character.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.enableHit, this);
 
@@ -54,6 +65,11 @@ export class Attack extends CharacterState {
 
     if (this.canHit) {
       this.player.takeDamage(this.damage);
+
+      if (this.audioKey && !this.player.getModifier().isModifierExist(LIGHTNING_SHIELD.id)) {
+        this.audioSystem?.play(this.audioKey);
+      }
+
       this.additionAbility?.();
       this.canHit = false;
     }

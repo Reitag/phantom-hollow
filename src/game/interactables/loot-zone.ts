@@ -1,11 +1,12 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
-import { MISC, OBJECTS } from '@/constants/asset-keys';
+import { AUDIO, MISC, OBJECTS } from '@/constants/asset-keys';
 import { LOOT_ZONE_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { Z_POSITION } from '@/constants/z-position';
 import { Shining } from '@/entities/misc/shining';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { SaveService } from '@/infrastructure/save-service';
 import { InventoryItem } from '@/utils/types';
 
 interface Loot {
@@ -14,6 +15,8 @@ interface Loot {
 }
 
 interface LootZoneData {
+  id: string;
+  type: 'chest' | 'drop';
   zone: Phaser.GameObjects.Zone;
   chestSprite?: Phaser.GameObjects.Image;
   loot: Loot[];
@@ -27,6 +30,8 @@ export class LootZone extends Interactable {
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createTriggerZones(InteractableNames['chest']);
+
+    const save = ServiceLocator.resolve(ServiceKeys.save);
 
     // Static loot zone array
     const staticLootZones = this.triggerZones.getChildren();
@@ -43,6 +48,8 @@ export class LootZone extends Interactable {
       .setDepth(Z_POSITION.DECOR);
 
     this.lootZones.push({
+      id: 'chest-1',
+      type: 'chest',
       zone: staticLootZones[0] as Phaser.GameObjects.Zone,
       chestSprite: firstLootZone,
       loot: [
@@ -73,6 +80,8 @@ export class LootZone extends Interactable {
       .setDepth(Z_POSITION.DECOR);
 
     this.lootZones.push({
+      id: 'chest-2',
+      type: 'chest',
       zone: staticLootZones[1] as Phaser.GameObjects.Zone,
       chestSprite: secondLootZone,
       loot: [{ id: 'spell-potion', amount: 3 }],
@@ -100,6 +109,8 @@ export class LootZone extends Interactable {
       .setDepth(Z_POSITION.DECOR);
 
     this.lootZones.push({
+      id: 'chest-3',
+      type: 'chest',
       zone: staticLootZones[2] as Phaser.GameObjects.Zone,
       chestSprite: thirdLootZone,
       loot: [{ id: 'stone-of-concentration', amount: 1 }],
@@ -114,10 +125,35 @@ export class LootZone extends Interactable {
         frame: 0,
       }),
     });
+
+    if (save) {
+      // Chests
+      this.lootZones.forEach((zone) => {
+        if (save.worldState.openedChest.includes(zone.id)) {
+          zone.activated = true;
+          zone.loot = [];
+          zone.vfx?.destroy();
+          zone.vfx = undefined;
+
+          if (zone.chestSprite) {
+            zone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+          }
+        }
+      });
+
+      // Boss loot
+      save.worldState.droppedLoot.forEach((drop) => {
+        const zone = scene.add.zone(drop.x - 14, drop.y + 14, 32, 32).setOrigin(0, 0);
+
+        this.createLootZone(drop.id, zone, drop.loot);
+      });
+    }
   }
 
-  public createLootZone(zone: Phaser.GameObjects.Zone, loot: Loot[]): void {
+  public createLootZone(id: string, zone: Phaser.GameObjects.Zone, loot: Loot[]): void {
     this.lootZones.push({
+      id,
+      type: 'drop',
       zone,
       chestSprite: undefined,
       loot,
@@ -167,8 +203,27 @@ export class LootZone extends Interactable {
     lootZone.vfx = undefined;
     lootZone.loot = [];
 
-    if (lootZone.chestSprite) {
-      lootZone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+    if (lootZone.type === 'chest') {
+      if (lootZone.chestSprite) {
+        lootZone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.CHEST_OPEN);
+      }
+
+      SaveService.patch({
+        worldState: {
+          ...SaveService.data.worldState,
+          openedChest: [...SaveService.data.worldState.openedChest, lootZone.id],
+        },
+      });
+    }
+
+    if (lootZone.type === 'drop') {
+      SaveService.patch({
+        worldState: {
+          ...SaveService.data.worldState,
+          droppedLoot: SaveService.data.worldState.droppedLoot.filter((l) => l.id !== lootZone.id),
+        },
+      });
     }
   }
 

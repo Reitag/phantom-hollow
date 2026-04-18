@@ -1,10 +1,12 @@
+import { Character } from '@/base/objects/character';
+import { AUDIO } from '@/constants/asset-keys';
 import { ENEMIES_ANIMATION } from '@/constants/animation-keys';
 import { SKELETON_WARRIOR_STATS } from '@/constants/object-stats';
 import { ENEMY_STATES, SHARED_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { SkeletonWarrior } from '@/entities/characters/enemies/skeleton-warrior';
 import { StateMachine } from '@/systems/state-machine';
-import { Character } from '@/base/objects/character';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SpawnPoint } from '@/utils/types';
 import { Enemy, EnemyConfig } from '../../base/ai/enemy';
 
@@ -38,10 +40,12 @@ export class AiSkeletonWarrior extends Enemy {
 
     if (x < SKELETON_WARRIOR_STATS.ATTACK_RANGE && y < this.sameYThreshold) {
       if (currentState !== ENEMY_STATES.ATTACK) {
-        fsm.changeState(ENEMY_STATES.ATTACK, this.player, [
-          SKELETON_WARRIOR_STATS.HIT,
-          SKELETON_WARRIOR_STATS.FRAME_ON_HIT,
-        ]);
+        fsm.changeState(
+          ENEMY_STATES.ATTACK,
+          this.player,
+          [SKELETON_WARRIOR_STATS.HIT, SKELETON_WARRIOR_STATS.FRAME_ON_HIT],
+          AUDIO.SWORD_IMPACT
+        );
       }
     }
   }
@@ -65,6 +69,11 @@ export class AiSkeletonWarrior extends Enemy {
       return;
     }
     if (currentState === ENEMY_STATES.CHASE) return;
+
+    const aggro = enemy.getStats().aggro;
+    if (aggro && aggro.meter < 60) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SKELETON_WARRIOR_AGGRO);
+    }
 
     fsm.changeState(ENEMY_STATES.CHASE, this.player, SKELETON_WARRIOR_STATS.CHASE);
   }

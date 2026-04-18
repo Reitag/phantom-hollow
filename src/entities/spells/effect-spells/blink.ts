@@ -1,6 +1,7 @@
 import { Character } from '@/base/objects/character';
 import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
+import { AUDIO } from '@/constants/asset-keys';
 import { BLINK_STATS } from '@/constants/object-stats';
 import { CollisionService } from '@/infrastructure/collision-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -12,6 +13,12 @@ export class Blink extends Spell {
   constructor({ scene, position, keyName, frame, caster, direction }: SpellConfig) {
     super({ scene, position, keyName, frame, caster, direction });
     this.collisions = ServiceLocator.resolve(ServiceKeys.collision);
+
+    this.audioKeys = {
+      launch: undefined,
+      impact: undefined,
+      action: AUDIO.BLINK_ACTION,
+    };
 
     this.animations = {
       [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.BLINK.MAIN,
@@ -28,6 +35,10 @@ export class Blink extends Spell {
       });
 
       this.caster.disableBody(undefined, true);
+
+      this.playActionSound({
+        rate: 0.47,
+      });
 
       this.scene.time.delayedCall(BLINK_STATS.DELAY, () => {
         this.teleportTo(BLINK_STATS.DISTANCE, this.direction as number);

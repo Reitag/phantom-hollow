@@ -1,8 +1,8 @@
 import { BossHealthBar } from './boss-health-bar';
-import { HealthBar } from './player-health-bar';
+import { PlayerHealthBar } from './player-health-bar';
 
 export class HealthBarAnimator {
-  constructor(private healthBar: HealthBar | BossHealthBar) {}
+  constructor(private healthBar: PlayerHealthBar | BossHealthBar) {}
 
   public reducePlayerHealth(currentHealth: number, maxHealth: number): void {
     const percentage = this.clamp(currentHealth / maxHealth, 0, 1);

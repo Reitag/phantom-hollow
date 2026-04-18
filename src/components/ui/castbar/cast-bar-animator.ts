@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { CastBar } from './cast-bar';
 
 export class CastBarAnimator {

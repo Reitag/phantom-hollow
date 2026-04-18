@@ -13,6 +13,7 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { PanelService } from '@/infrastructure/panel-service';
 import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
 import { Quest } from '@/components/ui/boards/quest';
+import { Letter } from '@/components/ui/boards/letter';
 
 export class UiSystem {
   private healthBar: PlayerHealthBar;
@@ -31,8 +32,10 @@ export class UiSystem {
 
   private modifierIconContainer: ModifierIconContainer;
 
-  private store: Store;
-  private quest: Quest;
+  private uiBoards = new Map<string, unknown>();
+
+  //private store: Store;
+  //private quest: Quest;
 
   private coins: Coins;
   private text: Text;
@@ -49,8 +52,12 @@ export class UiSystem {
 
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
 
-    this.store = new Store(uiScene);
-    this.quest = new Quest(uiScene);
+    this.uiBoards.set('store', new Store(uiScene));
+    this.uiBoards.set('quest', new Quest(uiScene));
+    this.uiBoards.set('letter', new Letter(uiScene));
+
+    //this.store = new Store(uiScene);
+    //this.quest = new Quest(uiScene);
 
     this.coins = new Coins(uiScene);
     this.text = new Text(uiScene);
@@ -114,13 +121,17 @@ export class UiSystem {
     this.modifierIconContainer.removeAllModifierIcons();
   }
 
-  public getStore(): Store {
+  public getBoard<T>(key: string): T {
+    return this.uiBoards.get(key) as T;
+  }
+
+  /*public getStore(): Store {
     return this.store;
   }
 
   public getQuest(): Quest {
     return this.quest;
-  }
+  }*/
 
   public increaseCoinCounter(amount: number): void {
     this.coins.increaseCoins(amount);

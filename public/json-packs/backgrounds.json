@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "type": "image",
+      "key": "main-scene-bg",
+      "url": "assets/backgrounds/main-scene/main-scene-bg.png"
+    },
+    {
+      "type": "image",
+      "key": "forest-front-bg",
+      "url": "assets/backgrounds/level-one-scene/forest-front-bg.png"
+    },
+    {
+      "type": "image",
+      "key": "forest-back-bg",
+      "url": "assets/backgrounds/level-one-scene/forest-back-bg.png"
+    },
+    {
+      "type": "image",
+      "key": "mountain-range-bg",
+      "url": "assets/backgrounds/level-one-scene/mountain-range-bg.png"
+    },
+    {
+      "type": "image",
+      "key": "sky-bg",
+      "url": "assets/backgrounds/level-one-scene/sky-bg.png"
+    }
+  ]
+}

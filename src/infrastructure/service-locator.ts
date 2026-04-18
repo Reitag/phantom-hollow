@@ -1,6 +1,7 @@
 import { UiSystem } from '@/systems/ui-system';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Tilemap } from '@/components/map/tilemap';
+import { AudioSystem } from '@/systems/audio-system';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellFactory } from '@/factories/spell-factory';
 import { SpellSystem } from '@/systems/spell-system';
@@ -8,6 +9,7 @@ import { LootSystem } from '@/systems/loot-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
+import { SaveGame } from '@/utils/types';
 import { CollisionService } from './collision-service';
 import { PanelService } from './panel-service';
 
@@ -25,6 +27,8 @@ interface ServiceMap {
   map: Tilemap;
   collision: CollisionService;
   panel: PanelService;
+  audio: AudioSystem;
+  save: SaveGame | undefined;
 }
 
 export const ServiceKeys = {
@@ -41,6 +45,8 @@ export const ServiceKeys = {
   map: 'map',
   collision: 'collision',
   panel: 'panel',
+  audio: 'audio',
+  save: 'save',
 } as const;
 
 export class ServiceLocator {
@@ -52,7 +58,7 @@ export class ServiceLocator {
 
   public static resolve<K extends keyof ServiceMap>(key: K): ServiceMap[K] {
     const service = this.services.get(key);
-    if (!service) {
+    if (!this.services.has(key)) {
       throw new Error(`Service not found: ${String(key)}`);
     }
     return service as ServiceMap[K];

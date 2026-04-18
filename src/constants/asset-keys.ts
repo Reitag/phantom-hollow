@@ -1,9 +1,56 @@
 // AUTO-GENERATED FILE. Do not edit directly.
-// Generated from src/data/json-packs/*.json
+// Generated from public/json-packs/*.json
+
+export const AUDIO = {
+  FOREST_AMBIENT: 'forest-ambient',
+  FIREBALL_LAUNCH: 'fireball-launch',
+  FIREBALL_IMPACT: 'fireball-impact',
+  BLINK_ACTION: 'blink-action',
+  WIND_ACTION: 'wind-action',
+  FROSTBOLT_LAUNCH: 'frostbolt-launch',
+  FROSTBOLT_IMPACT: 'frostbolt-impact',
+  LIGHTNING_SHIELD_ACTION: 'lightning-shield-action',
+  LIGHTNING_SHIELD_ABSORB: 'lightning-shield-absorb',
+  EARTH_SHAKE_LAUNCH: 'earth-shake-launch',
+  EARTH_SHAKE_IMPACT: 'earth-shake-impact',
+  SHADOWBOLT_LAUNCH: 'shadowbolt-launch',
+  SHADOWBOLT_IMPACT: 'shadowbolt-impact',
+  SHADOW_TRAIL_DISAPPEARS: 'shadow-trail-disappears',
+  SHADOW_TRAIL_APPEARS: 'shadow-trail-appears',
+  SWORD_IMPACT: 'sword-impact',
+  UNARMED_IMPACT: 'unarmed-impact',
+  ARROW_LAUNCH: 'arrow-launch',
+  ARROW_IMPACT: 'arrow-impact',
+  BAT_IMPACT: 'bat-impact',
+  FREEZE: 'freeze',
+  PROTECTION: 'protection',
+  HEALING: 'healing',
+  UNDYING: 'undying',
+  SPELL_POWER: 'spell-power',
+  HASTE: 'haste',
+  CONCENTRATION: 'concentration',
+  CASTING: 'casting',
+  COIN_PICK: 'coin-pick',
+  COIN_BUY: 'coin-buy',
+  BOARD_OPEN: 'board-open',
+  BOARD_CLOSE: 'board-close',
+  STORE_OPEN: 'store-open',
+  STORE_CLOSE: 'store-close',
+  PAPER_OPEN: 'paper-open',
+  PAPER_CLOSE: 'paper-close',
+  CHEST_OPEN: 'chest-open',
+  SPEAR_IMPACT: 'spear-impact',
+  SKELETON_WARRIOR_AGGRO: 'skeleton-warrior-aggro',
+  ZOMBIE_AGGRO: 'zombie-aggro',
+  FIREWORM_AGGRO: 'fireworm-aggro',
+  BAT_AGGRO: 'bat-aggro',
+} as const;
 
 export const BACKGROUNDS = {
-  FOREST_BG: 'forest-bg',
-  MOUNT_BG: 'mount-bg',
+  MAIN_SCENE_BG: 'main-scene-bg',
+  FOREST_FRONT_BG: 'forest-front-bg',
+  FOREST_BACK_BG: 'forest-back-bg',
+  MOUNTAIN_RANGE_BG: 'mountain-range-bg',
   SKY_BG: 'sky-bg',
 } as const;
 
@@ -35,6 +82,7 @@ export const MISC = {
   DARK_ENERGY: 'dark-energy',
   SHINING: 'shining',
   QUEST_MARK: 'quest-mark',
+  LETTER: 'letter',
 } as const;
 
 export const OBJECTS = {
@@ -106,9 +154,15 @@ export const UI = {
   QUEST_UI_ACCEPT_BTN: 'quest-ui-accept-btn',
   QUEST_UI_DECLINE_BTN: 'quest-ui-decline-btn',
   QUEST_UI_COMPLETE_BTN: 'quest-ui-complete-btn',
+  LETTER_UI: 'letter-ui',
+  LETTER_UI_CLOSE_BTN: 'letter-ui-close-btn',
   DIALOG_UI: 'dialog-ui',
   DIALOG_UI_BUTTON_YES: 'dialog-ui-button-yes',
   DIALOG_UI_BUTTON_NO: 'dialog-ui-button-no',
+  MENU_UI_START_BTN: 'menu-ui-start-btn',
+  MENU_UI_CONTINUE_BTN: 'menu-ui-continue-btn',
+  MENU_UI_OPTION_BTN: 'menu-ui-option-btn',
+  MENU_UI_CREDITS_BTN: 'menu-ui-credits-btn',
   HEALTH_POTION_ICON: 'health-potion-icon',
   NATURE_POTION_ICON: 'nature-potion-icon',
   PROTECTION_POTION_ICON: 'protection-potion-icon',

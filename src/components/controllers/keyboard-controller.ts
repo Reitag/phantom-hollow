@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import { InputController } from '@/base/input/input-controller';
 import { SLOT_KEYS_CODES } from '@/constants/key-bindings';
 import { KeyBindingsService } from '@/infrastructure/keybinds-service';

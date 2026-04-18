@@ -1,29 +1,33 @@
-import Phaser from 'phaser';
-
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { SCENE_SIZE } from '@/constants/scene-size';
+import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
+import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
 import { CrystalShrine } from '@/game/interactables/crystal-shrine';
+import { GreetingLetter } from '@/game/interactables/greeting-letter';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { BonFire } from '@/entities/misc/bonfire';
 import { QuestMark } from '@/entities/misc/quest-mark';
 import { SpellFactory } from '@/factories/spell-factory';
+import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
+import { AudioSystem } from '@/systems/audio-system';
 import { EnemySpawn } from '@/systems/enemy-spawn';
 import { NPCSpawn } from '@/systems/npc-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
@@ -33,7 +37,7 @@ import { CollisionService, GroupKeys } from '@/infrastructure/collision-service'
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
-import { Position } from '@/utils/types';
+import { Position, SaveGame } from '@/utils/types';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
@@ -41,19 +45,22 @@ import { DebugScreen } from '../../tools/debug-screen.js';
 export class LevelOneScene extends Phaser.Scene {
   private debugScreen: DebugScreen | null = null;
 
+  // Background
+  private sky: Phaser.GameObjects.TileSprite | null = null;
+  private mountainRange: Phaser.GameObjects.TileSprite | null = null;
+  private forestBack: Phaser.GameObjects.TileSprite | null = null;
+  private forestFront: Phaser.GameObjects.TileSprite | null = null;
+
   private player!: Player;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
-  private mount!: Phaser.GameObjects.TileSprite;
-  private forest!: Phaser.GameObjects.TileSprite;
-  private sky!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
   private npc!: NPCSpawn;
   private questMark!: QuestMark;
   private canPlayerGetDamage = true;
-  private isGameInitialized = false;
+  private isLevelInitialized = false;
 
   constructor() {
     super('LevelOneScene');
@@ -63,31 +70,43 @@ export class LevelOneScene extends Phaser.Scene {
     return this.questMark;
   }
 
-  public create(): void {
-    if (this.isGameInitialized) return;
-    this.isGameInitialized = true;
-
-    // Dev
-    if (process.env.NODE_ENV === 'development') {
-      //this.physics.world.createDebugGraphic();
+  public create(save: SaveGame | undefined): void {
+    if (save && Object.keys(save).length === 0) {
+      save = undefined;
     }
-    // Dev
+
+    if (this.isLevelInitialized) return;
+    this.isLevelInitialized = true;
+    /*this.scale.toggleFullscreen();*/
+    SaveService.start();
+    ServiceLocator.register(ServiceKeys.save, save);
+
+    if (!save?.scene) {
+      SaveService.patch({
+        scene: this.scene.key,
+      });
+    }
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
+
+    // Clean Up
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.cleanup();
+    });
   }
 
   public update(time: number, delta: number): void {
     this.playerHandler.update(delta);
     this.spawn.update(time, delta);
     this.npc.update();
-    this.interactables.update();
+    this.interactables.update(delta);
 
     this.updateParallaxBackground();
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
-      this.debugScreen?.setPlayersCoords(this.player.x, this.player.y);
+      this.debugScreen.setPlayersCoords(this.player.x, this.player.y);
     }
     // Debug
   }
@@ -136,36 +155,47 @@ export class LevelOneScene extends Phaser.Scene {
     this.registerSystems();
 
     this.createPlayer();
+    this.createMiscs();
     this.createInteractableObjects();
 
     this.registerCollisions();
     this.createSpawnSystems();
 
-    this.createMiscs();
-
     this.setupCamera();
+    this.playAmbient();
+
+    this.showQuestBoard();
   }
 
   private createParallaxBackground(): void {
     this.sky = this.add
-      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.SKY_BG)
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.SKY_BG)
       .setOrigin(0)
       .setScrollFactor(0);
 
-    this.mount = this.add
-      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.MOUNT_BG)
+    this.mountainRange = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.MOUNTAIN_RANGE_BG)
       .setOrigin(0)
       .setScrollFactor(0);
 
-    this.forest = this.add
-      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.FOREST_BG)
+    this.forestBack = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.FOREST_BACK_BG)
+      .setOrigin(0)
+      .setScrollFactor(0);
+
+    this.forestFront = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.FOREST_FRONT_BG)
       .setOrigin(0)
       .setScrollFactor(0);
   }
 
   private updateParallaxBackground(): void {
-    this.mount.tilePositionX = this.camera.scrollX * 0.2;
-    this.forest.tilePositionX = this.camera.scrollX * 0.5;
+    if (this.mountainRange && this.forestBack && this.forestFront && this.sky) {
+      this.sky.tilePositionX = this.camera.scrollX * 0.1;
+      this.mountainRange.tilePositionX = this.camera.scrollX * 0.2;
+      this.forestBack.tilePositionX = this.camera.scrollX * 0.5;
+      this.forestFront.tilePositionX = this.camera.scrollX * 0.9;
+    }
   }
 
   private createTilemap(): void {
@@ -229,6 +259,7 @@ export class LevelOneScene extends Phaser.Scene {
 
   private registerSystems(): void {
     ServiceLocator.register(ServiceKeys.map, this.map);
+    ServiceLocator.register(ServiceKeys.audio, new AudioSystem(this));
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
@@ -238,10 +269,31 @@ export class LevelOneScene extends Phaser.Scene {
     ServiceLocator.register(ServiceKeys.collision, new CollisionService());
   }
 
+  // --- Player ---
   private createPlayer(): void {
     this.playerHandler = new PlayerHandler(this);
     this.player = this.playerHandler.getPlayer();
+
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+
+    if (save) {
+      this.player.getCoinKeeper().addCoins(save.coins, false);
+      this.uploadInventory(save);
+    }
   }
+
+  private uploadInventory(save: SaveGame): void {
+    if (save.inventory.length > 0) {
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+
+      inventory.loadDataSlots(
+        save.inventory.map((slot) => {
+          return slot ? { item: LOOT_FACTORY[slot.id](), quantity: slot.quantity } : null;
+        })
+      );
+    }
+  }
+  // --- Player ---
 
   private createInteractableObjects(): void {
     this.interactables = new InteractableKeeper();
@@ -251,6 +303,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.add(new AlchemistQuestTrigger(this));
     this.interactables.add(new LootZone(this));
     this.interactables.add(new CrystalShrine(this));
+    this.interactables.add(new GreetingLetter(this));
   }
 
   private registerCollisions(): void {
@@ -408,6 +461,7 @@ export class LevelOneScene extends Phaser.Scene {
   ): void {
     if (spell instanceof Spell) {
       if (tile.properties.collides) {
+        spell.playImpactSound();
         spell.destroySpell();
       }
     }
@@ -429,8 +483,12 @@ export class LevelOneScene extends Phaser.Scene {
 
     if (spell.causeDamage() > 0) {
       victim.takeDamage(spell.causeDamage(), spell.getCaster());
+      spell.playImpactSound();
       spell.destroySpell();
     }
+
+    const modifier = victim.getModifier();
+    if (modifier.isModifierExist(LIGHTNING_SHIELD.id)) return;
 
     spell.applyEffect(victim);
   }
@@ -452,6 +510,7 @@ export class LevelOneScene extends Phaser.Scene {
   ): void {
     if (target instanceof Player && weapon instanceof Arrow) {
       target.takeDamage(ARROW_STATS.HIT);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.ARROW_IMPACT);
       weapon.destroy();
     }
   }
@@ -471,8 +530,9 @@ export class LevelOneScene extends Phaser.Scene {
     if (!tile) return;
 
     if (target instanceof Character) {
-      if (tile.properties.collides) {
+      if (tile.properties.collides && !target.getDead()) {
         target.takeDamage(SPEAR_HIT);
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SPEAR_IMPACT);
       }
     }
   }
@@ -480,15 +540,77 @@ export class LevelOneScene extends Phaser.Scene {
   private handlePickup(character: Phaser.GameObjects.GameObject, item: Item): void {
     if (character instanceof Player && item instanceof Coin) {
       character.getCoinKeeper().addCoins(1);
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.COIN_PICK);
     }
 
     item.destroy();
+  }
+
+  private showQuestBoard(): void {
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+    if (save?.scene) return;
+
+    this.scene.launch('StartGameScene');
+    this.scene.bringToTop('StartGameScene');
   }
 
   public onFireWormDied(data: { x: number; y: number }): void {
     const lootZone = this.interactables.get(LootZone);
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
 
-    lootZone?.createLootZone(zone, [{ id: 'fireworm-fang', amount: 1 }]);
+    const dropId = crypto.randomUUID();
+
+    SaveService.patch({
+      worldState: {
+        ...SaveService.data.worldState,
+        droppedLoot: [
+          ...SaveService.data.worldState.droppedLoot,
+          {
+            id: dropId,
+            x: data.x,
+            y: data.y,
+            loot: [{ id: 'fireworm-fang', amount: 1 }],
+          },
+        ],
+      },
+    });
+
+    lootZone?.createLootZone(dropId, zone, [{ id: 'fireworm-fang', amount: 1 }]);
+  }
+
+  public onEvilWizardDied(): void {
+    this.time.delayedCall(6000, () => {
+      this.scene.launch('VictoryScene');
+      this.scene.bringToTop('VictoryScene');
+    });
+  }
+
+  private playAmbient(): void {
+    const audio = ServiceLocator.resolve(ServiceKeys.audio);
+    audio.playAmbient(AUDIO.FOREST_AMBIENT);
+  }
+
+  private cleanup(): void {
+    const audio = ServiceLocator.resolve(ServiceKeys.audio);
+    audio.stopAmbient(false);
+
+    // Debug
+    if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
+      this.debugScreen.scene.stop();
+      this.debugScreen.scene.remove('DebugScreen');
+      this.debugScreen = null;
+    }
+    // Debug
+
+    this.time.removeAllEvents();
+    this.isLevelInitialized = false;
+
+    this.events.off('fire-worm:died');
+    this.events.off('evil-wizard:died');
+    this.events.off('fireworm-fang:looted');
+
+    CollisionService.clear();
+    SaveService.clear();
+    ServiceLocator.clear();
   }
 }

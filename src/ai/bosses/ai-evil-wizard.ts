@@ -13,12 +13,14 @@ import { ENEMY_STATES } from '@/constants/state-keys';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
-import { CHARACTERS, VFX } from '@/constants/asset-keys';
+import { AUDIO, CHARACTERS, VFX } from '@/constants/asset-keys';
 import { Z_POSITION } from '@/constants/z-position';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { SaveService } from '@/infrastructure/save-service';
 import { TriggerZone } from '@/game/interactables/trigger-zone';
 import { AttachedVfx } from '@/entities/misc/attached-vfx';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
+import { LevelOneScene } from '@/scenes/level-one-scene';
 import { Boss } from '../../base/ai/boss';
 import { AiMutatedBat } from '../enemies/ai-mutated-bat';
 
@@ -43,6 +45,11 @@ export class AiEvilWizard extends Boss {
     this.aiMutatedBat = new AiMutatedBat(this.player);
 
     this.triggerZone = new TriggerZone(this.boss.scene, 'evil-wizard');
+    this.scene.events.once(
+      'evil-wizard:died',
+      (this.scene as LevelOneScene).onEvilWizardDied,
+      this.scene
+    );
     this.scene.events.on(this.triggerZone.triggerEventOn, this.triggerOn, this);
     this.scene.events.on(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
@@ -60,8 +67,12 @@ export class AiEvilWizard extends Boss {
   }
 
   protected finalCall(): void {
-    this.dreadAura?.destroy();
-    this.dreadAura = null;
+    this.scene.events.emit('evil-wizard:died');
+
+    if (this.dreadAura) {
+      this.dreadAura.destroy();
+      this.dreadAura = null;
+    }
 
     this.aiMutatedBat.getEnemies().forEach((bat) => {
       if (bat.unit.active && bat.unit.hasVelocity()) {
@@ -71,8 +82,17 @@ export class AiEvilWizard extends Boss {
     });
 
     if (!this.triggerZone) return;
+    // Preventing stack overflow
+
     this.scene.events.off(this.triggerZone.triggerEventOn, this.triggerOn, this);
     this.scene.events.off(this.triggerZone.triggerEventOff, this.triggerOff, this);
+
+    SaveService.patch({
+      worldState: {
+        ...SaveService.data.worldState,
+        killedBosses: [...SaveService.data.worldState.killedBosses, 'evil-wizard'],
+      },
+    });
   }
 
   protected chillBehaviour(): void {
@@ -199,6 +219,7 @@ export class AiEvilWizard extends Boss {
       animKey: VFX_ANIMATION.EVIL_WIZARD_DISAPPEARS.MAIN,
       isFlipping: true,
     });
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SHADOW_TRAIL_DISAPPEARS);
 
     disappear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       const spell = this.spellFactory.createShadowTrail(this.boss);
@@ -214,6 +235,8 @@ export class AiEvilWizard extends Boss {
           animKey: VFX_ANIMATION.EVIL_WIZARD_APPEARS.MAIN,
           isFlipping: true,
         });
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SHADOW_TRAIL_APPEARS);
+
         appear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
           this.boss.enableBody(undefined, undefined, undefined, undefined, true);
           this.dreadAura = this.createDreadAura();

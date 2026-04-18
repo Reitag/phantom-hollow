@@ -1,3 +1,4 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SPELL_POWER } from '@/constants/modifier-stats';
 import { UiSystem } from '@/systems/ui-system';
@@ -18,7 +19,9 @@ export class SpellIncrease implements Modifier {
 
   public apply(target: Character): void {
     const spellPower = target?.getStats().damage.spellPower as SpellPower;
+
     spellPower.addMultiplier(this.id, SPELL_POWER.effect);
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SPELL_POWER);
   }
 
   public start(target: Character, onExpire: () => void): void {

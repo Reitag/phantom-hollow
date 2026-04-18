@@ -1,10 +1,17 @@
 import Phaser from 'phaser';
 
-import { registerGlobalAnimation } from '@/data/animation/loader/animation-loader';
+import { registerGlobalAnimation } from '@/animation/loader/animation-loader';
 
-const packURL = 'src/data/json-packs/';
+// Packs
+const packURL = '/json-packs/';
+
+// Fonts
+const fontURL = '/assets/fonts/';
+const fontName = 'Volkhov';
+const fontWeight = { regular: '400', bold: '700' } as const;
 
 const packs = [
+  { key: 'audio-pack', url: `${packURL}audio.json` },
   { key: 'tilesets-pack', url: `${packURL}tilesets.json` },
   { key: 'backgrounds-pack', url: `${packURL}backgrounds.json` },
   { key: 'objects-pack', url: `${packURL}objects.json` },
@@ -18,6 +25,19 @@ const packs = [
   { key: 'vfx-pack', url: `${packURL}vfx.json` },
 ];
 
+const fonts = [
+  {
+    name: fontName,
+    url: `${fontURL}Volkhov-Regular.ttf`,
+    weight: fontWeight.regular,
+  },
+  {
+    name: fontName,
+    url: `${fontURL}Volkhov-Bold.ttf`,
+    weight: fontWeight.bold,
+  },
+];
+
 export class PreloadScene extends Phaser.Scene {
   constructor() {
     super('PreloadScene');
@@ -28,8 +48,25 @@ export class PreloadScene extends Phaser.Scene {
       this.load.pack(key, url);
     }
   }
-  public create() {
+
+  /*public create() {
     registerGlobalAnimation(this.anims);
-    this.scene.start('LevelOneScene');
+    this.scene.start('MainMenuScene');
+  }*/
+
+  public async create() {
+    await this.loadFonts();
+
+    registerGlobalAnimation(this.anims);
+    this.scene.start('MainMenuScene');
+  }
+
+  private async loadFonts() {
+    for (const f of fonts) {
+      const font = new FontFace(f.name, `url(${f.url})`, { weight: f.weight });
+
+      await font.load();
+      document.fonts.add(font);
+    }
   }
 }

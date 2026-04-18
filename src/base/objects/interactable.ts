@@ -12,6 +12,7 @@ export const InteractableNames = {
   ['evil-wizard']: 'evil-wizard',
   ['alchemist-quest']: 'alchemist-quest',
   ['shrine']: 'shrine',
+  ['letter']: 'letter',
 } as const;
 
 export abstract class Interactable {
@@ -30,7 +31,7 @@ export abstract class Interactable {
     this.input = ServiceLocator.resolve(ServiceKeys.input);
   }
 
-  public update(): void {
+  public update(delta?: number | undefined): void {
     let inZone = false;
 
     this.triggerZones.children.each((child: Phaser.GameObjects.GameObject) => {

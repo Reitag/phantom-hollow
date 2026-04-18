@@ -248,7 +248,7 @@ export const ITEM_TOOLTIPS: {
     },
     prop_3: {
       param: additionTextParams,
-      text: '"The Octius brewed this was his masterpiece."',
+      text: '"Octius brewed this before your eyes. He calls it his masterpiece."',
     },
   },
   SOUL_STONE: {
@@ -372,7 +372,7 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Lightning Shield',
     },
     prop_1: {
-      text: `Deals periodic damage to nearby enemies.`,
+      text: 'Absorbs incoming damage and deals periodic damage to nearby enemies.',
     },
   },
   UNDYING: {
@@ -492,5 +492,21 @@ export const LOOT_ZONE_TOOLTIP: TooltipContentConfig = {
   prop_3: {
     param: interactTextParams,
     text: ' to Loot the Items',
+  },
+} as const;
+
+// Greeting Letter
+export const GREETING_LETTER_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Open the Letter',
   },
 } as const;
