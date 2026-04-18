@@ -1,9 +1,10 @@
 import { hastePotion } from '@/game/items/potions';
 
 export const LETTER_TEXT_WIDTH = 390;
-export const QUEST_TEXT_WIDTH = 249;
+//export const QUEST_TEXT_WIDTH = 249;
+export const QUEST_TEXT_WIDTH = 299;
 
-const shadow = {
+/*const shadow = {
   offsetX: 0,
   offsetY: 1,
   color: 'rgba(0,0,0,0.6)',
@@ -33,6 +34,40 @@ export const textStyle = (textWidth: number) => {
     },
     REWARD_TITLE: {
       color: '#c9a24d',
+    },
+  };
+};*/
+const shadow = {
+  offsetX: 0,
+  offsetY: 1,
+  color: 'rgba(0,0,0,0.2)',
+  blur: 1,
+  fill: true,
+};
+
+export const textStyle = (textWidth: number) => {
+  return {
+    NAME: {
+      font: '700 18px Cinzel',
+      color: '#4A2318',
+      shadow: { ...shadow, color: 'rgba(0,0,0,0.1)' },
+    },
+    TITLE: {
+      font: '18px EB Garamond',
+      color: '#5D4037',
+      shadow: shadow,
+    },
+    TEXT: {
+      font: '16px EB Garamond',
+      color: '#2A1B12',
+      wordWrap: {
+        width: textWidth,
+      },
+      shadow: { ...shadow, opacity: 0.1 },
+    },
+    REWARD_TITLE: {
+      font: '18px Cinzel',
+      color: '#836F53',
     },
   };
 };

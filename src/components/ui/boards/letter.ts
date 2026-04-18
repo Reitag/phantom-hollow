@@ -42,16 +42,17 @@ export class Letter extends Board {
     this.board.add(this.container);
 
     // Text
-    const letterTitle = this.createText(
+    // (Remove Letter title because it was unnessasery)
+    /*const letterTitle = this.createText(
       GREETING_LETTER_TEXT.TITLE,
       textStyle(LETTER_TEXT_WIDTH).TITLE
-    );
+    );*/
     const letterText = this.createText(
       GREETING_LETTER_TEXT.TEXT,
       textStyle(LETTER_TEXT_WIDTH).TEXT
     );
 
-    this.addBlock(letterTitle);
+    //this.addBlock(letterTitle);
     this.addBlock(letterText);
 
     // Close button

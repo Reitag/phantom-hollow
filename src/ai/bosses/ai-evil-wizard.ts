@@ -20,6 +20,7 @@ import { SaveService } from '@/infrastructure/save-service';
 import { TriggerZone } from '@/game/interactables/trigger-zone';
 import { AttachedVfx } from '@/entities/misc/attached-vfx';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
+import { LevelOneScene } from '@/scenes/level-one-scene';
 import { Boss } from '../../base/ai/boss';
 import { AiMutatedBat } from '../enemies/ai-mutated-bat';
 
@@ -44,6 +45,11 @@ export class AiEvilWizard extends Boss {
     this.aiMutatedBat = new AiMutatedBat(this.player);
 
     this.triggerZone = new TriggerZone(this.boss.scene, 'evil-wizard');
+    this.scene.events.once(
+      'evil-wizard:died',
+      (this.scene as LevelOneScene).onEvilWizardDied,
+      this.scene
+    );
     this.scene.events.on(this.triggerZone.triggerEventOn, this.triggerOn, this);
     this.scene.events.on(this.triggerZone.triggerEventOff, this.triggerOff, this);
   }
@@ -61,8 +67,12 @@ export class AiEvilWizard extends Boss {
   }
 
   protected finalCall(): void {
-    this.dreadAura?.destroy();
-    this.dreadAura = null;
+    this.scene.events.emit('evil-wizard:died');
+
+    if (this.dreadAura) {
+      this.dreadAura.destroy();
+      this.dreadAura = null;
+    }
 
     this.aiMutatedBat.getEnemies().forEach((bat) => {
       if (bat.unit.active && bat.unit.hasVelocity()) {

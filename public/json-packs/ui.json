@@ -127,6 +127,26 @@
     },
     {
       "type": "image",
+      "key": "menu-ui-start-btn",
+      "url": "assets/ui/menu/menu-ui-start-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "menu-ui-continue-btn",
+      "url": "assets/ui/menu/menu-ui-continue-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "menu-ui-option-btn",
+      "url": "assets/ui/menu/menu-ui-option-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "menu-ui-credits-btn",
+      "url": "assets/ui/menu/menu-ui-credits-btn.png"
+    },
+    {
+      "type": "image",
       "key": "health-potion-icon",
       "url": "assets/icons/potions/health-potion.png"
     },

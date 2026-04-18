@@ -45,13 +45,16 @@ import { DebugScreen } from '../../tools/debug-screen.js';
 export class LevelOneScene extends Phaser.Scene {
   private debugScreen: DebugScreen | null = null;
 
+  // Background
+  private sky: Phaser.GameObjects.TileSprite | null = null;
+  private mountainRange: Phaser.GameObjects.TileSprite | null = null;
+  private forestBack: Phaser.GameObjects.TileSprite | null = null;
+  private forestFront: Phaser.GameObjects.TileSprite | null = null;
+
   private player!: Player;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
-  private mount!: Phaser.GameObjects.TileSprite;
-  private forest!: Phaser.GameObjects.TileSprite;
-  private sky!: Phaser.GameObjects.TileSprite;
   private camera!: Phaser.Cameras.Scene2D.Camera;
   private map!: Tilemap;
   private npc!: NPCSpawn;
@@ -74,7 +77,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
-
+    /*this.scale.toggleFullscreen();*/
     SaveService.start();
     ServiceLocator.register(ServiceKeys.save, save);
 
@@ -160,44 +163,39 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.setupCamera();
     this.playAmbient();
+
+    this.showQuestBoard();
   }
 
-  /*private createParallaxBackground(): void {
-    this.sky = this.add
-      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.SKY_BG)
-      .setOrigin(0)
-      .setScrollFactor(0);
-
-    this.mount = this.add
-      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.MOUNT_BG)
-      .setOrigin(0)
-      .setScrollFactor(0);
-
-    this.forest = this.add
-      .tileSprite(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT, BACKGROUNDS.FOREST_BG)
-      .setOrigin(0)
-      .setScrollFactor(0);
-  }*/
   private createParallaxBackground(): void {
     this.sky = this.add
       .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.SKY_BG)
       .setOrigin(0)
       .setScrollFactor(0);
 
-    this.mount = this.add
-      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.MOUNT_BG)
+    this.mountainRange = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.MOUNTAIN_RANGE_BG)
       .setOrigin(0)
       .setScrollFactor(0);
 
-    this.forest = this.add
-      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.FOREST_BG)
+    this.forestBack = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.FOREST_BACK_BG)
+      .setOrigin(0)
+      .setScrollFactor(0);
+
+    this.forestFront = this.add
+      .tileSprite(0, 0, SCENE_SIZE.WIDTH, SCENE_SIZE.HEIGHT, BACKGROUNDS.FOREST_FRONT_BG)
       .setOrigin(0)
       .setScrollFactor(0);
   }
 
   private updateParallaxBackground(): void {
-    this.mount.tilePositionX = this.camera.scrollX * 0.2;
-    this.forest.tilePositionX = this.camera.scrollX * 0.5;
+    if (this.mountainRange && this.forestBack && this.forestFront && this.sky) {
+      this.sky.tilePositionX = this.camera.scrollX * 0.1;
+      this.mountainRange.tilePositionX = this.camera.scrollX * 0.2;
+      this.forestBack.tilePositionX = this.camera.scrollX * 0.5;
+      this.forestFront.tilePositionX = this.camera.scrollX * 0.9;
+    }
   }
 
   private createTilemap(): void {
@@ -548,6 +546,14 @@ export class LevelOneScene extends Phaser.Scene {
     item.destroy();
   }
 
+  private showQuestBoard(): void {
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+    if (save?.scene) return;
+
+    this.scene.launch('StartGameScene');
+    this.scene.bringToTop('StartGameScene');
+  }
+
   public onFireWormDied(data: { x: number; y: number }): void {
     const lootZone = this.interactables.get(LootZone);
     const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
@@ -572,6 +578,13 @@ export class LevelOneScene extends Phaser.Scene {
     lootZone?.createLootZone(dropId, zone, [{ id: 'fireworm-fang', amount: 1 }]);
   }
 
+  public onEvilWizardDied(): void {
+    this.time.delayedCall(6000, () => {
+      this.scene.launch('VictoryScene');
+      this.scene.bringToTop('VictoryScene');
+    });
+  }
+
   private playAmbient(): void {
     const audio = ServiceLocator.resolve(ServiceKeys.audio);
     audio.playAmbient(AUDIO.FOREST_AMBIENT);
@@ -593,6 +606,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.isLevelInitialized = false;
 
     this.events.off('fire-worm:died');
+    this.events.off('evil-wizard:died');
     this.events.off('fireworm-fang:looted');
 
     CollisionService.clear();

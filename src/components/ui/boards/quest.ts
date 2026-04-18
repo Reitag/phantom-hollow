@@ -27,12 +27,12 @@ export class Quest extends Board {
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   private scrollContainer: Phaser.GameObjects.Container;
-  private scrollAreaHeight = 270;
+  private scrollAreaHeight = 280;
   private currentY = 0;
   private scrollY = 0;
   private maxScroll = 0;
 
-  private scrollTrack: Phaser.GameObjects.Graphics;
+  //private scrollTrack: Phaser.GameObjects.Graphics;
   private scrollThumb: Phaser.GameObjects.Graphics;
   private scrollIndicatorCoords: Rectangle;
 
@@ -64,28 +64,28 @@ export class Quest extends Board {
     const maskShape = this.scene.add.graphics();
     this.container.add(maskShape);
 
-    maskShape.fillRect(128, 165, 250, this.scrollAreaHeight);
+    maskShape.fillRect(98, 165, 300, this.scrollAreaHeight);
 
     this.scrollContainer.setMask(maskShape.createGeometryMask());
 
     // scroll indicator
     this.scrollIndicatorCoords = {
-      x: 124,
+      x: 146,
       y: -159,
       width: 7,
       height: 293.8,
     };
 
-    this.scrollTrack = this.scene.add.graphics();
+    //this.scrollTrack = this.scene.add.graphics();
 
     const { x, y, width, height } = this.scrollIndicatorCoords;
 
-    this.scrollTrack.fillStyle(0x2a1d12, 1);
-    this.scrollTrack.fillRoundedRect(x, y, width, height, 2);
+    //this.scrollTrack.fillStyle(0x2a1d12, 1);
+    //this.scrollTrack.fillRoundedRect(x, y, width, height, 2);
 
     this.scrollThumb = this.scene.add.graphics();
 
-    this.board.add(this.scrollTrack);
+    //this.board.add(this.scrollTrack);
     this.board.add(this.scrollThumb);
 
     // init content
@@ -194,9 +194,9 @@ export class Quest extends Board {
 
   public registerQuestEvents(): boolean {
     if (!this.board) return false;
-    this.scene.events.listeners('open-quest').forEach((e) => {
+    /*this.scene.events.listeners('open-quest').forEach((e) => {
       console.log(e);
-    });
+    });*/
     if (!this.scene.events.listeners('open-quest').length) {
       this.scene.events.on('open-quest', this.openBoard, this);
       this.scene.events.on('close-quest', this.closeBoard, this);
@@ -413,12 +413,12 @@ export class Quest extends Board {
     this.scrollThumb.clear();
 
     if (this.maxScroll <= 0) {
-      this.scrollTrack.setVisible(false);
+      //this.scrollTrack.setVisible(false);
       this.scrollThumb.setVisible(false);
       return;
     }
 
-    this.scrollTrack.setVisible(true);
+    //this.scrollTrack.setVisible(true);
     this.scrollThumb.setVisible(true);
 
     const visibleRatio = this.scrollAreaHeight / (this.scrollAreaHeight + this.maxScroll);

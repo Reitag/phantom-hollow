@@ -35,11 +35,11 @@ export const QUEST_UI = {
     Y: 390,
   },
   DECLINE_BTN: {
-    X: 220,
+    X: 270,
     Y: 390,
   },
   COMPLETE_BTN: {
-    X: 149.5,
+    X: 179.5,
     Y: 390,
   },
 } as const;

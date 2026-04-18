@@ -47,8 +47,10 @@ export const AUDIO = {
 } as const;
 
 export const BACKGROUNDS = {
-  FOREST_BG: 'forest-bg',
-  MOUNT_BG: 'mount-bg',
+  MAIN_SCENE_BG: 'main-scene-bg',
+  FOREST_FRONT_BG: 'forest-front-bg',
+  FOREST_BACK_BG: 'forest-back-bg',
+  MOUNTAIN_RANGE_BG: 'mountain-range-bg',
   SKY_BG: 'sky-bg',
 } as const;
 
@@ -157,6 +159,10 @@ export const UI = {
   DIALOG_UI: 'dialog-ui',
   DIALOG_UI_BUTTON_YES: 'dialog-ui-button-yes',
   DIALOG_UI_BUTTON_NO: 'dialog-ui-button-no',
+  MENU_UI_START_BTN: 'menu-ui-start-btn',
+  MENU_UI_CONTINUE_BTN: 'menu-ui-continue-btn',
+  MENU_UI_OPTION_BTN: 'menu-ui-option-btn',
+  MENU_UI_CREDITS_BTN: 'menu-ui-credits-btn',
   HEALTH_POTION_ICON: 'health-potion-icon',
   NATURE_POTION_ICON: 'nature-potion-icon',
   PROTECTION_POTION_ICON: 'protection-potion-icon',
