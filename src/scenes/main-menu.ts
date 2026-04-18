@@ -99,7 +99,7 @@ export class MainMenuScene extends Phaser.Scene {
     });
 
     // Version
-    this.add.text(20, 600, 'Version 0.14.0 In development', {
+    this.add.text(20, 600, 'Version 0.15.1 In development', {
       fontFamily: 'Volkhov',
       fontSize: '16px',
       fontStyle: 'normal',

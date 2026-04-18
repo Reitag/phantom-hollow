@@ -11,7 +11,8 @@ export class Coins {
 
     this.textObject = this.scene.add
       .text(coinCoord.x, coinCoord.y - 3, this.count.toString(), {
-        font: '16px Arial',
+        fontFamily: 'Gadget',
+        fontSize: '16px',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,

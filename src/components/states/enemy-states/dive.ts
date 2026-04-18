@@ -68,7 +68,6 @@ export class Dive extends CharacterState {
   private hitTarget(): void {
     if (!this.player || this.player.getDead()) return;
     if (this.damage === 0) {
-      this.player.takeDamage(this.damage);
       return;
     }
     this.player.takeDamage(this.damage);

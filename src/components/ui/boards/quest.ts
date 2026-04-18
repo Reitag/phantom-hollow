@@ -23,7 +23,6 @@ export class Quest extends Board {
   private declineButton: Phaser.GameObjects.Image;
   private completeButton: Phaser.GameObjects.Image;
   private buttons: Set<Phaser.GameObjects.Image>;
-  private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   private scrollContainer: Phaser.GameObjects.Container;

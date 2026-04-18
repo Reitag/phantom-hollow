@@ -3,15 +3,16 @@ import { Speed } from '@/components/stats/speed';
 import { MeleeAttack, SpellPower } from '@/components/stats/damage';
 import { Aggro } from '@/components/stats/aggro';
 import { Defense } from '@/components/stats/defense';
+import { Casting } from '@/components/stats/casting';
 import { SHARED_STATES } from '@/constants/state-keys';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { Player } from '@/entities/characters/player/player';
+import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ModifierSystem } from '@/systems/modifier-system';
 import { StateMachine } from '@/systems/state-machine';
 import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpriteConfig, Position, Stats } from '@/utils/types';
-import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { Casting } from '@/components/stats/casting';
 import { UiSystem } from '@/systems/ui-system';
 
 export interface CharacterConfig extends SpriteConfig {
@@ -32,6 +33,7 @@ export interface CharacterConfig extends SpriteConfig {
 export class Character extends ArcadeSprite {
   protected facingRight: boolean;
   protected isDead = false;
+  protected lightningShield: LightningShield | null = null;
   protected stateMachine: StateMachine;
   protected modifier: ModifierSystem;
   protected ui: UiSystem;
@@ -113,19 +115,35 @@ export class Character extends ArcadeSprite {
     this.onAliveStart?.();
   }
 
-  public takeDamage(amount: number, attacker?: Character): void {
+  public setLightningShieldFlag(ref: LightningShield, isDelete = false): void {
+    if (isDelete) {
+      this.lightningShield = null;
+      return;
+    }
+    this.lightningShield = ref;
+  }
+
+  public takeDamage(amount: number, attacker?: Character | 'spear'): void {
     if (this.isDead) return;
 
-    if (this.modifier.isModifierExist(LIGHTNING_SHIELD.id)) {
-      this.scene.events.emit('lightning-shield-damage', amount);
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    let remainingDamage = amount;
+
+    if (this.lightningShield) {
+      remainingDamage = this.lightningShield.absorbDamage(amount);
+    }
+
+    if (remainingDamage <= 0) {
+      ui.showDamageDealt('Absorb', this);
       return;
     }
 
-    const finalDamage = amount * (this.stats.defense?.multiplier ?? 1);
+    const finalDamage = remainingDamage * (this.stats.defense?.multiplier ?? 1);
     this.stats.health?.applyDamage(finalDamage);
 
-    const ui = ServiceLocator.resolve(ServiceKeys.ui);
-    ui.showDamageDealt(finalDamage, this);
+    if (attacker !== 'spear') {
+      ui.showDamageDealt(finalDamage, this);
+    }
 
     if (attacker && attacker instanceof Player) {
       this.stats?.aggro?.increase(80);
