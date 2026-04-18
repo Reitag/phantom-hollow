@@ -18,8 +18,8 @@ export class BossHealthBar extends HealthBar {
 
     this.nameText = scene.add
       .text(rightEdge, bottomY, bossName, {
-        fontFamily: 'Arial Black, Gadget, sans-serif',
-        fontStyle: 'normal',
+        fontFamily: 'Volkhov, sans-serif',
+        fontStyle: 'bold',
         fontSize: '22px',
         color: '#f2a619',
         stroke: '#2a1a1a',

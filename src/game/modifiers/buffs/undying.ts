@@ -1,8 +1,9 @@
+import { Character } from '@/base/objects/character';
 import { AUDIO } from '@/constants/asset-keys';
-import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Health } from '@/components/stats/health';
 import { UNDYING } from '@/constants/modifier-stats';
-import { Character } from '@/base/objects/character';
+import { SaveService } from '@/infrastructure/save-service';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { UiSystem } from '@/systems/ui-system';
 import { Modifier } from '@/utils/types';
 
@@ -41,6 +42,11 @@ export class Undying implements Modifier {
           //
           this.scene.cameras.main.flash(150, 255, 0, 0);
           this.scene.cameras.main.shake(120, 0.01);
+
+          SaveService.patch({
+            buffs: SaveService.data.buffs.filter((buffId) => buffId !== this.id),
+          });
+
           //
 
           this.scene.time.delayedCall(this.duration, () => {
@@ -65,7 +71,13 @@ export class Undying implements Modifier {
     this.apply(target);
 
     this.ui.addModifierIcon(this.id, undefined, this.type);
-
     this.savedOnExpire = onExpire;
+
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+    if (!save?.buffs.includes(this.id)) {
+      SaveService.patch({
+        buffs: [...SaveService.data.buffs, this.id],
+      });
+    }
   }
 }

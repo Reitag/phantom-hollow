@@ -530,9 +530,15 @@ export class LevelOneScene extends Phaser.Scene {
     if (!tile) return;
 
     if (target instanceof Character) {
-      if (tile.properties.collides && !target.getDead()) {
-        target.takeDamage(SPEAR_HIT);
+      if (tile.properties.collides && !target.getDead() && this.canPlayerGetDamage) {
+        target.takeDamage(SPEAR_HIT, 'spear');
         ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SPEAR_IMPACT);
+
+        this.canPlayerGetDamage = false;
+
+        this.time.delayedCall(3000, () => {
+          this.canPlayerGetDamage = true;
+        });
       }
     }
   }

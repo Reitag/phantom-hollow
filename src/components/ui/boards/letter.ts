@@ -15,7 +15,6 @@ type Handlers = {
 export class Letter extends Board {
   private bg: Phaser.GameObjects.Image;
   private closeButton: Phaser.GameObjects.Image;
-  private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   private currentY = 0;

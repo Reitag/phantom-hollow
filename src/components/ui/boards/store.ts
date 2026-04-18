@@ -23,7 +23,6 @@ export class Store extends Board {
   private onCloseOut = () => this.onButtonHover(false);
 
   private closeButton: Phaser.GameObjects.Image;
-  private hoverEffect: Phaser.GameObjects.Graphics | null = null;
   private bundles: Bundle[] = [];
   private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 

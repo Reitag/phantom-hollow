@@ -4,6 +4,7 @@ export abstract class Board {
   protected open = false;
   protected board: Phaser.GameObjects.Container | null = null;
   protected container: Phaser.GameObjects.Container | null = null;
+  protected hoverEffect: Phaser.GameObjects.Graphics | null = null;
 
   constructor(public scene: Phaser.Scene) {}
 
@@ -27,5 +28,7 @@ export abstract class Board {
   protected closeBoard(): void {
     this.board?.setVisible(false);
     this.open = false;
+    this.hoverEffect?.destroy();
+    this.hoverEffect = null;
   }
 }
