@@ -2,13 +2,8 @@
   "files": [
     {
       "type": "image",
-      "key": "tree-normal",
-      "url": "assets/objects/trees/tree-normal.png"
-    },
-    {
-      "type": "image",
-      "key": "tree-shadow",
-      "url": "assets/objects/trees/tree-shadow.png"
+      "key": "conifer",
+      "url": "assets/objects/trees/conifer.png"
     },
     {
       "type": "image",
@@ -17,13 +12,13 @@
     },
     {
       "type": "image",
-      "key": "bottles",
-      "url": "assets/objects/decor/bottles.png"
+      "key": "bonfire-off",
+      "url": "assets/objects/decor/bonfire-off.png"
     },
     {
       "type": "image",
-      "key": "bowler",
-      "url": "assets/objects/decor/bowler.png"
+      "key": "bottles",
+      "url": "assets/objects/decor/bottles.png"
     },
     {
       "type": "image",
@@ -54,11 +49,6 @@
       "type": "image",
       "key": "table",
       "url": "assets/objects/decor/table.png"
-    },
-    {
-      "type": "image",
-      "key": "bonfire",
-      "url": "assets/objects/decor/bonfire.png"
     },
     {
       "type": "image",

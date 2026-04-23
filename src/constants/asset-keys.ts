@@ -3,6 +3,7 @@
 
 export const AUDIO = {
   FOREST_AMBIENT: 'forest-ambient',
+  CAVE_AMBIENT: 'cave-ambient',
   FIREBALL_LAUNCH: 'fireball-launch',
   FIREBALL_IMPACT: 'fireball-impact',
   BLINK_ACTION: 'blink-action',
@@ -76,7 +77,8 @@ export const MAPS = {
 
 export const MISC = {
   SOUL_FIRE: 'soul-fire',
-  BON_FIRE: 'bon-fire',
+  BONFIRE: 'bonfire',
+  BOWLER: 'bowler',
   CRYSTAL_SHRINE: 'crystal-shrine',
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
@@ -86,18 +88,16 @@ export const MISC = {
 } as const;
 
 export const OBJECTS = {
-  TREE_NORMAL: 'tree-normal',
-  TREE_SHADOW: 'tree-shadow',
+  CONIFER: 'conifer',
   STORE: 'store',
+  BONFIRE_OFF: 'bonfire-off',
   BOTTLES: 'bottles',
-  BOWLER: 'bowler',
   STATUE_LEFT: 'statue-left',
   STATUE_RIGHT: 'statue-right',
   WOOD: 'wood',
   BOXES: 'boxes',
   APPLE_TABLE: 'apple-table',
   TABLE: 'table',
-  BONFIRE: 'bonfire',
   TENT: 'tent',
   STUMP: 'stump',
   ROCK_1: 'rock-1',

@@ -3,7 +3,12 @@
     {
       "type": "audio",
       "key": "forest-ambient",
-      "url": "assets/audio/bg/forest_ambient.mp3"
+      "url": "assets/audio/bg/forest-ambient.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "cave-ambient",
+      "url": "assets/audio/bg/cave-ambient.mp3"
     },
     {
       "type": "audio",

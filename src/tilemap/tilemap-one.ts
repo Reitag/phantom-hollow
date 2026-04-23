@@ -26,8 +26,7 @@ export const OBJECTLAYER_NAMES = {
   STORE: 'store-layer',
   DECOR: 'decor-layer',
   ROCK: 'rock-layer',
-  TREE_NORMAL: 'tree-normal-layer',
-  TREE_SHADOW: 'tree-shadow-layer',
+  TREE: 'tree-layer',
 } as const;
 
 export function createTilemapOne(scene: Phaser.Scene) {
@@ -152,20 +151,7 @@ export function createTilemapOne(scene: Phaser.Scene) {
       },
     },
     {
-      name: OBJECTLAYER_NAMES.TREE_NORMAL,
-      render: (obj: Phaser.Types.Tilemaps.TiledObject, depth: number) => {
-        const name = obj.name;
-        if (!name) {
-          console.warn('Object missing name for tree-layer:', obj);
-          return;
-        }
-
-        const image = scene.add.image(obj.x ?? 0, obj.y ?? 0, name).setOrigin(0, 1);
-        image.setDepth(depth);
-      },
-    },
-    {
-      name: OBJECTLAYER_NAMES.TREE_SHADOW,
+      name: OBJECTLAYER_NAMES.TREE,
       render: (obj: Phaser.Types.Tilemaps.TiledObject, depth: number) => {
         const name = obj.name;
         if (!name) {
@@ -182,8 +168,7 @@ export function createTilemapOne(scene: Phaser.Scene) {
     [TILELAYER_NAMES.PLATFORM]: Z_POSITION.PLATFORMS,
     [TILELAYER_NAMES.SPIKE]: Z_POSITION.SPIKE,
     [TILELAYER_NAMES.GROUND]: Z_POSITION.GROUND,
-    [OBJECTLAYER_NAMES.TREE_NORMAL]: Z_POSITION.TREES_NORMAL,
-    [OBJECTLAYER_NAMES.TREE_SHADOW]: Z_POSITION.TREES_SHADOW,
+    [OBJECTLAYER_NAMES.TREE]: Z_POSITION.TREES,
     [OBJECTLAYER_NAMES.STORE]: Z_POSITION.STORE,
     [OBJECTLAYER_NAMES.DECOR]: Z_POSITION.DECOR,
     [OBJECTLAYER_NAMES.ROCK]: Z_POSITION.ROCK,

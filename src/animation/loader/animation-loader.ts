@@ -18,7 +18,8 @@ import { lightningShieldAnim } from '../spells/lightning-shield-anim';
 import { vfxAnim } from '../vfx/vfx-anim';
 import { earthShakeAnim } from '../spells/earth-shake-anim';
 import { shadowTrailAnim } from '../spells/shadow-trail-anim';
-import { bonFireAnim } from '../misc/bon-fire-anim';
+import { bonFireAnim } from '../misc/bonfire-anim';
+import { bowlerAnim } from '../misc/bowler-anim';
 import { alchemistAnim } from '../characters/npc/alchemist-anim';
 import { shiningAnim } from '../misc/shining-anim';
 import { questMarkAnim } from '../misc/quest-mark-anim';
@@ -60,6 +61,7 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   // Misc
   soulFireAnim(anims);
   bonFireAnim(anims);
+  bowlerAnim(anims);
   portalAnim(anims);
   darkEnergyAnim(anims);
   shiningAnim(anims);

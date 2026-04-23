@@ -1,30 +1,33 @@
-export type SoundKey = string;
-
 export class AudioSystem {
-  private currentAmbient: Phaser.Sound.BaseSound | undefined = undefined;
+  private currentAmbient: Phaser.Sound.BaseSound | null = null;
+  private currentKey: string | null = null;
 
   constructor(private scene: Phaser.Scene) {}
 
-  public play(key: SoundKey, config?: Phaser.Types.Sound.SoundConfig) {
+  public play(key: string, config?: Phaser.Types.Sound.SoundConfig) {
     this.scene.sound.play(key, config);
   }
 
   public playAmbient(key: string, volume: number = 0.5) {
-    if (this.currentAmbient?.key === key && this.currentAmbient.isPlaying) return;
+    if (this.currentKey === key) return;
+    this.currentKey = key;
 
-    this.stopAmbient();
+    if (this.currentAmbient) {
+      this.currentAmbient.stop();
+      this.currentAmbient.destroy();
+      this.currentAmbient = null;
+    }
 
-    const ambient = this.scene.sound.add(key, { volume: 0 });
-    ambient.play({ loop: true });
-
-    this.scene.tweens.add({
-      targets: ambient,
-      volume,
-      duration: 2000,
-      ease: 'Power2',
-    });
+    const ambient = this.scene.sound.add(key, { volume: volume, loop: true });
+    ambient.play();
 
     this.currentAmbient = ambient;
+
+    /*this.scene.tweens.add({
+      targets: this.currentAmbient,
+      volume: volume,
+      duration: 3000,
+    });*/
   }
 
   public stopAmbient(fade: boolean = true) {
@@ -37,18 +40,18 @@ export class AudioSystem {
         duration: 1000,
         onComplete: () => {
           this.currentAmbient?.stop();
-          this.currentAmbient = undefined;
+          this.currentAmbient = null;
         },
       });
     } else {
       this.currentAmbient.stop();
-      this.currentAmbient = undefined;
+      this.currentAmbient = null;
     }
   }
 
   // Return instance
   public playControlled(
-    key: SoundKey,
+    key: string,
     config?: Phaser.Types.Sound.SoundConfig
   ): Phaser.Sound.BaseSound {
     const sound = this.scene.sound.add(key, config);
@@ -57,7 +60,7 @@ export class AudioSystem {
     return sound;
   }
 
-  public stopAllByKey(key: SoundKey) {
+  public stopAllByKey(key: string) {
     this.scene.sound.stopByKey(key);
   }
 

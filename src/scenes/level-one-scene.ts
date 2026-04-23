@@ -12,13 +12,14 @@ import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
 import { SoulPedestal } from '@/game/interactables/soul-pedestal';
+import { Bonfire } from '@/game/interactables/bonfire';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
 import { CrystalShrine } from '@/game/interactables/crystal-shrine';
 import { GreetingLetter } from '@/game/interactables/greeting-letter';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
-import { BonFire } from '@/entities/misc/bonfire';
+import { Bowler } from '@/entities/misc/bowler';
 import { QuestMark } from '@/entities/misc/quest-mark';
 import { SpellFactory } from '@/factories/spell-factory';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
@@ -42,6 +43,11 @@ import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
 
+type AudioZone = {
+  polygon: Phaser.Geom.Polygon;
+  ambient: string;
+};
+
 export class LevelOneScene extends Phaser.Scene {
   private debugScreen: DebugScreen | null = null;
 
@@ -50,6 +56,12 @@ export class LevelOneScene extends Phaser.Scene {
   private mountainRange: Phaser.GameObjects.TileSprite | null = null;
   private forestBack: Phaser.GameObjects.TileSprite | null = null;
   private forestFront: Phaser.GameObjects.TileSprite | null = null;
+
+  // Ambient
+  private audio: AudioSystem | null = null;
+  private ambientZones: AudioZone[] = [];
+  private currentAmbient: string | null = null;
+  private insideZone: AudioZone | null = null;
 
   private player!: Player;
   private playerHandler!: PlayerHandler;
@@ -103,6 +115,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.update(delta);
 
     this.updateParallaxBackground();
+    this.ambientUpdate();
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
@@ -162,8 +175,8 @@ export class LevelOneScene extends Phaser.Scene {
     this.createSpawnSystems();
 
     this.setupCamera();
-    this.playAmbient();
 
+    this.createAmbientZones();
     this.showQuestBoard();
   }
 
@@ -299,10 +312,11 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables = new InteractableKeeper();
 
     this.interactables.add(new Stall(this));
-    this.interactables.add(new SoulPedestal(this));
+    //this.interactables.add(new SoulPedestal(this));
+    this.interactables.add(new Bonfire(this));
     this.interactables.add(new AlchemistQuestTrigger(this));
     this.interactables.add(new LootZone(this));
-    this.interactables.add(new CrystalShrine(this));
+    //this.interactables.add(new CrystalShrine(this));
     this.interactables.add(new GreetingLetter(this));
   }
 
@@ -422,10 +436,10 @@ export class LevelOneScene extends Phaser.Scene {
       };
     }
 
-    new BonFire({
+    new Bowler({
       scene: this,
-      position: { x: result['bonfire'].x, y: result['bonfire'].y },
-      keyName: MISC.BON_FIRE,
+      position: { x: result['bowler'].x, y: result['bowler'].y },
+      keyName: MISC.BOWLER,
       frame: 0,
     });
 
@@ -591,14 +605,73 @@ export class LevelOneScene extends Phaser.Scene {
     });
   }
 
-  private playAmbient(): void {
-    const audio = ServiceLocator.resolve(ServiceKeys.audio);
-    audio.playAmbient(AUDIO.FOREST_AMBIENT);
+  // Ambient
+  private createAmbientZones(): void {
+    this.audio = ServiceLocator.resolve(ServiceKeys.audio);
+
+    const objectLayer = this.map.getObjectLayer('spawn-layer');
+    if (!objectLayer) return;
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'play-audio') continue;
+
+      const ambient = obj.properties?.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'ambient'
+      )?.value;
+      if (!ambient || !obj.polygon) continue;
+
+      const points = obj.polygon.map((p: Phaser.Types.Math.Vector2Like) => ({
+        x: p.x + (obj.x ?? 0),
+        y: p.y + (obj.y ?? 0),
+      }));
+
+      const polygon = new Phaser.Geom.Polygon(points);
+
+      this.ambientZones.push({
+        polygon,
+        ambient,
+      });
+    }
   }
 
+  private ambientUpdate(): void {
+    for (const zone of this.ambientZones) {
+      if (
+        Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
+        !this.insideZone
+      ) {
+        this.insideZone = zone;
+        break;
+      } else if (
+        !Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
+        this.insideZone
+      ) {
+        this.insideZone = null;
+      }
+    }
+
+    if (this.insideZone && this.currentAmbient !== this.insideZone.ambient) {
+      this.audio?.playAmbient(this.getAmbientKey(this.insideZone.ambient));
+      this.currentAmbient = this.insideZone.ambient;
+    } else if (!this.insideZone && this.currentAmbient !== 'default') {
+      this.audio?.playAmbient(this.getAmbientKey('default'));
+      this.currentAmbient = 'default';
+    }
+  }
+
+  private getAmbientKey(name: string): string {
+    switch (name) {
+      case 'cave':
+        return AUDIO.CAVE_AMBIENT;
+      default:
+        return AUDIO.FOREST_AMBIENT;
+    }
+  }
+  // --Ambient--
+
   private cleanup(): void {
-    const audio = ServiceLocator.resolve(ServiceKeys.audio);
-    audio.stopAmbient(false);
+    this.audio?.stopAmbient(false);
+    this.audio = null;
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
