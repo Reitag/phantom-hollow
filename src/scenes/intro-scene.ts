@@ -50,7 +50,7 @@ And so, here comes the young apprentice of The Guild Of Mages, urgent to protect
 
     // Continue Button
     this.continueButton = this.add
-      .text(width / 2, height - 40, '▶ Continue', {
+      .text(width / 2, height - 40, 'Continue', {
         fontSize: '24px',
         color: '#ffffff',
         backgroundColor: '#222222',

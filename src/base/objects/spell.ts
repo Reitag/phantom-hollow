@@ -2,8 +2,9 @@ import { ArcadeSprite } from '@/base/physics/arcade-sprite';
 import { SpellPower } from '@/components/stats/damage';
 import { SpriteConfig } from '@/utils/types';
 import { SPELL_ANIMATION_KEYS } from '@/constants/animation-keys';
-import { SHIFT_SPELL_REGGISTER_HITS } from '@/constants/object-stats';
+import { CRITICAL_MULTIPLIER, SHIFT_SPELL_REGGISTER_HITS } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
+import { Sandbox } from '@/infrastructure/sandbox';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { playAnimation } from '@/utils/helpers';
 import { Character } from './character';
@@ -11,6 +12,7 @@ import { Character } from './character';
 type AudioKeys = {
   launch: string | undefined;
   impact: string | undefined;
+  critImpact: string | undefined;
   action: string | undefined;
 };
 
@@ -29,8 +31,11 @@ export abstract class Spell extends ArcadeSprite {
   protected speed: number | null = null;
   protected direction: number | null = null;
   protected audioKeys: AudioKeys;
+  protected sandbox: Sandbox;
+  protected relicId: 'fire-relic' | 'frost-relic' | null = null;
 
   private hittedEnemies = new Array<Character>();
+  private criticalHit = false;
 
   constructor({
     scene,
@@ -52,17 +57,28 @@ export abstract class Spell extends ArcadeSprite {
     this.speed = speed || null;
     this.direction = direction || null;
 
+    this.sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+
     this.audioKeys = {
       launch: undefined,
       impact: undefined,
+      critImpact: undefined,
       action: undefined,
     };
 
     this.setDepth(Z_POSITION.SPELL);
   }
 
+  public get isCritical(): boolean {
+    return this.criticalHit;
+  }
+
   public abstract cast(): void;
   public abstract applyEffect(target: Character): void;
+
+  public setCriticalHit(): void {
+    this.criticalHit = true;
+  }
 
   public playLaunchSound(config?: Phaser.Types.Sound.SoundConfig | undefined): void {
     if (this.audioKeys.launch) {
@@ -75,6 +91,13 @@ export abstract class Spell extends ArcadeSprite {
     if (this.audioKeys.impact) {
       ServiceLocator.resolve(ServiceKeys.audio).play(this.audioKeys.impact, config);
       this.audioKeys.impact = undefined;
+    }
+  }
+
+  public playCritImpactSound(config?: Phaser.Types.Sound.SoundConfig | undefined): void {
+    if (this.audioKeys.critImpact) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(this.audioKeys.critImpact, config);
+      this.audioKeys.critImpact = undefined;
     }
   }
 
@@ -113,8 +136,16 @@ export abstract class Spell extends ArcadeSprite {
 
   public causeDamage(): number {
     if (!this.damage) return 0;
-    if (!this.spellPower) return this.damage;
-    return this.damage * this.spellPower.multiplier;
+
+    let finalDamage = this.damage;
+
+    if (this.criticalHit) {
+      finalDamage *= CRITICAL_MULTIPLIER;
+      this.criticalHit = false;
+    }
+
+    if (!this.spellPower) return finalDamage;
+    return finalDamage * this.spellPower.multiplier;
   }
 
   public getCaster(): Character {
@@ -147,5 +178,14 @@ export abstract class Spell extends ArcadeSprite {
         this.setVelocityX(this.speed * this.direction);
       }
     });
+  }
+
+  protected isEnemyHitAtLeastOnce(): boolean {
+    if (this.hittedEnemies.length > 0) {
+      // Overrides this method during the call
+      this.isEnemyHitAtLeastOnce = () => false;
+      return true;
+    }
+    return false;
   }
 }

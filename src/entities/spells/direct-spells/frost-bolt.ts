@@ -1,14 +1,17 @@
 import { Spell, SpellConfig } from '@/base/objects/spell';
-import { AUDIO, VFX } from '@/constants/asset-keys';
+import { AUDIO } from '@/constants/asset-keys';
 import { FROST_BOLT_STATS } from '@/constants/object-stats';
 import { Character } from '@/base/objects/character';
-import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION, VFX_ANIMATION } from '@/constants/animation-keys';
+import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { SHARED_STATES } from '@/constants/state-keys';
-import { ARCANE_MIND } from '@/constants/modifier-stats';
-import { AttachedVfx } from '@/entities/misc/attached-vfx';
+import { FROSTBITE } from '@/constants/modifier-stats';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { Player } from '@/entities/characters/player/player';
+import { FrostBite } from '@/game/modifiers/debuffs/frostbite';
 
 export class FrostBolt extends Spell {
+  private hasRelic = false;
+
   constructor({
     scene,
     position,
@@ -41,10 +44,14 @@ export class FrostBolt extends Spell {
     this.audioKeys = {
       launch: AUDIO.FROSTBOLT_LAUNCH,
       impact: AUDIO.FROSTBOLT_IMPACT,
+      critImpact: undefined,
       action: undefined,
     };
 
+    this.relicId = 'frost-relic';
+
     this.arcadeBody.setSize(22, 13);
+    this.checkRelic();
   }
 
   public cast(): void {
@@ -61,6 +68,18 @@ export class FrostBolt extends Spell {
   public applyEffect(target: Character): void {
     if (target.getDead()) return;
 
+    const debuff = target.getModifier();
+
+    // Does not have the relic
+    if (!this.hasRelic) {
+      if (!debuff.isModifierExist(FROSTBITE.id)) {
+        debuff.addModifier(FROSTBITE.id);
+        debuff.startModifier(FROSTBITE.id, target);
+      }
+
+      return;
+    }
+
     const fsm = target.getStateMachine();
 
     if (fsm.currentStateName !== SHARED_STATES.FREEZE) {
@@ -70,19 +89,24 @@ export class FrostBolt extends Spell {
         const ui = ServiceLocator.resolve(ServiceKeys.ui);
         if (target.active) ui.showDamageDealt('Resist', target);
 
-        const casterModifier = this.caster.getModifier();
-        if (!casterModifier.isModifierExist(ARCANE_MIND.id)) {
-          casterModifier.addModifier(ARCANE_MIND.id);
-          casterModifier.startModifier(ARCANE_MIND.id, this.caster);
+        if (!debuff.isModifierExist(FROSTBITE.id)) {
+          debuff.addModifier(FROSTBITE.id);
 
-          new AttachedVfx({
-            scene: this.scene,
-            caster: this.caster,
-            keyName: VFX.ARCANE_MIND_VFX,
-            animKey: VFX_ANIMATION.ARCANE_MIND.MAIN,
-          });
+          const instance = debuff.getModifier(FROSTBITE.id);
+          (instance as FrostBite).relic = true;
+
+          debuff.startModifier(FROSTBITE.id, target);
         }
       }
+    }
+  }
+
+  private checkRelic(): void {
+    if (!(this.caster instanceof Player)) return;
+    const activeRelic = this.sandbox.findSomeRelic();
+
+    if (activeRelic && activeRelic === this.relicId) {
+      this.hasRelic = true;
     }
   }
 }

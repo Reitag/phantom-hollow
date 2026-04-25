@@ -22,6 +22,11 @@
     },
     {
       "type": "audio",
+      "key": "fireball-crit-impact",
+      "url": "assets/audio/spells/fireball/fireball-crit-impact.mp3"
+    },
+    {
+      "type": "audio",
       "key": "blink-action",
       "url": "assets/audio/spells/blink/blink-action.mp3"
     },

@@ -7,6 +7,7 @@ import {
   spellPotion,
   undyingPotion,
 } from '@/game/items/potions';
+import { fireRelic, frostRelic } from '@/game/items/relics';
 import { soulStone, stoneOfConcentration } from '@/game/items/stones';
 import { firewormFang } from '@/game/items/quests';
 import {
@@ -20,6 +21,7 @@ import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
+  FROSTBITE,
   HASTE,
   LIGHTNING_SHIELD,
   PROTECTION,
@@ -118,9 +120,9 @@ export const SPELL_TOOLTIPS: {
     },
     prop_3: {
       text:
-        'Launches a frozen projectile that deals damage and attempts to freeze the target.\n' +
-        'If the target resists the freeze, it instead applies *Arcane Mind* for 5 sec.\n\n' +
-        '*Arcane Mind* is a buff that makes your next Fireball an instant cast.',
+        'Launches a frozen projectile that deals damage and applies Frostbite for 5 sec.\n\n' +
+        'Frostbite slows the target by 60%.\n' +
+        'If the target cannot be slowed, its damage is reduced by 30% instead.',
     },
   },
 } as const;
@@ -159,6 +161,8 @@ export const ITEM_TOOLTIPS: {
   LIGHTNING_POTION: TooltipContentConfig;
   UNDYING_POTION: TooltipContentConfig;
   HASTE_POTION: TooltipContentConfig;
+  FIRE_RELIC: TooltipContentConfig;
+  FROST_RELIC: TooltipContentConfig;
   SOUL_STONE: TooltipContentConfig;
   STONE_OF_CONCENTRATION: TooltipContentConfig;
   FIREWORM_FANG: TooltipContentConfig;
@@ -222,11 +226,11 @@ export const ITEM_TOOLTIPS: {
   UNDYING_POTION: {
     id: undyingPotion().iconKey,
     title: {
-      param: commonTitleParams,
+      param: uncommonTitleParams,
       text: undyingPotion().name,
     },
     prop_1: {
-      text: `Max: ${undyingPotion().maxStack} items at slot`,
+      text: `Unique item`,
     },
     prop_2: {
       param: textParams,
@@ -249,6 +253,34 @@ export const ITEM_TOOLTIPS: {
     prop_3: {
       param: additionTextParams,
       text: '"Octius brewed this before your eyes. He calls it his masterpiece."',
+    },
+  },
+  FIRE_RELIC: {
+    id: fireRelic().iconKey,
+    title: {
+      param: rareTitleParams,
+      text: fireRelic().name,
+    },
+    prop_1: {
+      text: `Unique item`,
+    },
+    prop_2: {
+      param: textParams,
+      text: fireRelic().description,
+    },
+  },
+  FROST_RELIC: {
+    id: frostRelic().iconKey,
+    title: {
+      param: rareTitleParams,
+      text: frostRelic().name,
+    },
+    prop_1: {
+      text: `Unique item`,
+    },
+    prop_2: {
+      param: textParams,
+      text: frostRelic().description,
     },
   },
   SOUL_STONE: {
@@ -322,6 +354,7 @@ export const MODIFIER_TOOLTIPS: {
   HASTE: TooltipContentConfig;
   DISEASE: TooltipContentConfig;
   CRYSTAL_RENEWAL: TooltipContentConfig;
+  FROSTBITE: TooltipContentConfig;
   SHADOW_VULNERABILITY: TooltipContentConfig;
   DREAD_AURA: TooltipContentConfig;
 } = {
@@ -362,7 +395,7 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Spell Power',
     },
     prop_1: {
-      text: 'Increases damage of all spells and potion effects by 100%.',
+      text: 'Increases damage of all spells and potion effects by 50%.',
     },
   },
   LIGHTNING_SHIELD: {
@@ -413,6 +446,16 @@ export const MODIFIER_TOOLTIPS: {
     },
     prop_1: {
       text: 'Periodically deals damage over time.',
+    },
+  },
+  FROSTBITE: {
+    id: FROSTBITE.id,
+    title: {
+      param: debuffParams,
+      text: 'Frostbite',
+    },
+    prop_1: {
+      text: 'Speed reduced by 60%.',
     },
   },
   SHADOW_VULNERABILITY: {

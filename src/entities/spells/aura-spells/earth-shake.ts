@@ -19,6 +19,7 @@ export class EarthShake extends Spell {
     this.audioKeys = {
       launch: undefined,
       impact: AUDIO.EARTH_SHAKE_IMPACT,
+      critImpact: undefined,
       action: undefined,
     };
 

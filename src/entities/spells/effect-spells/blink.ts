@@ -17,6 +17,7 @@ export class Blink extends Spell {
     this.audioKeys = {
       launch: undefined,
       impact: undefined,
+      critImpact: undefined,
       action: AUDIO.BLINK_ACTION,
     };
 

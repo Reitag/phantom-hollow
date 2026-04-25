@@ -69,48 +69,75 @@ export class Text {
   }
 
   // Damage display
-  public addDamageDisplayOnScreen(amount: number | string, target: Character): void {
+  public addDamageDisplayOnScreen(
+    amount: number | string,
+    target: Character,
+    isCritical: boolean
+  ): void {
     const scene = target.scene;
     const { x, y } = target.getWorldTransformMatrix().transformPoint(0, 0);
     const posX = x;
     const posY = y - 20;
 
     target.setDataEnabled();
-
     const stack = target.getData('damageTextStack') ?? 0;
     target.setData('damageTextStack', stack + 1);
-
     const offsetY = stack * 14;
 
     if (typeof amount === 'number') {
       amount = Phaser.Math.RoundTo(amount, 0);
-
       if (amount === 0) return;
     }
 
+    const fontSize = isCritical ? '24px' : '12px';
+    const color = isCritical ? '#ffcc00' : '#ffffff';
+    const strokeThickness = isCritical ? 3 : 1;
+
     const damageText = scene.add
       .text(posX, posY - offsetY, `${amount}`, {
-        font: '12px Arial',
-        color: '#ffffffff',
+        font: `bold ${fontSize} Arial`,
+        color: color,
         stroke: '#000000',
-        strokeThickness: 1,
+        strokeThickness: strokeThickness,
       })
       .setOrigin(0.5, 0.5)
       .setDepth(Z_POSITION.UI);
 
-    scene.tweens.add({
-      targets: damageText,
-      y: posY - 30 - offsetY,
-      alpha: 0,
-      duration: 2700,
-      ease: 'Sine.easeOut',
-      onComplete: () => {
-        damageText.destroy();
+    if (isCritical) {
+      damageText.setScale(0.5);
+      scene.tweens.add({
+        targets: damageText,
+        scale: 1.3,
+        y: posY - 60 - offsetY,
+        duration: 200,
+        ease: 'Back.easeOut',
+        onComplete: () => {
+          scene.tweens.add({
+            targets: damageText,
+            alpha: 0,
+            y: posY - 100 - offsetY,
+            duration: 1000,
+            delay: 500,
+            onComplete: () => this.cleanupDamageText(damageText, target),
+          });
+        },
+      });
+    } else {
+      scene.tweens.add({
+        targets: damageText,
+        y: posY - 30 - offsetY,
+        alpha: 0,
+        duration: 2700,
+        ease: 'Sine.easeOut',
+        onComplete: () => this.cleanupDamageText(damageText, target),
+      });
+    }
+  }
 
-        const current = target.getData('damageTextStack') ?? 1;
-        target.setData('damageTextStack', Math.max(0, current - 1));
-      },
-    });
+  private cleanupDamageText(text: Phaser.GameObjects.Text, target: Character) {
+    text.destroy();
+    const current = target.getData('damageTextStack') ?? 1;
+    target.setData('damageTextStack', Math.max(0, current - 1));
   }
 
   // Tooltip text

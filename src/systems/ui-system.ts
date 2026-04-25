@@ -163,8 +163,8 @@ export class UiSystem {
     this.text.removeTooltip();
   }
 
-  public showDamageDealt(amount: number | string, target: Character): void {
-    this.text.addDamageDisplayOnScreen(amount, target);
+  public showDamageDealt(amount: number | string, target: Character, isCritical = false): void {
+    this.text.addDamageDisplayOnScreen(amount, target, isCritical);
   }
 
   private createBossHealth(key: string, bossName: string) {

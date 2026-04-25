@@ -182,6 +182,16 @@
     },
     {
       "type": "image",
+      "key": "fire-relic-icon",
+      "url": "assets/icons/relics/fire-relic.png"
+    },
+    {
+      "type": "image",
+      "key": "frost-relic-icon",
+      "url": "assets/icons/relics/frost-relic.png"
+    },
+    {
+      "type": "image",
       "key": "soul-stone-icon",
       "url": "assets/icons/stones/soul-stone.png"
     },
@@ -227,8 +237,23 @@
     },
     {
       "type": "image",
+      "key": "fire-accum-buff",
+      "url": "assets/icons/buffs/fire-accum.png"
+    },
+    {
+      "type": "image",
+      "key": "fire-crit-buff",
+      "url": "assets/icons/buffs/fire-crit.png"
+    },
+    {
+      "type": "image",
       "key": "crystal-renewal-buff",
       "url": "assets/icons/buffs/crystal-renewal.png"
+    },
+    {
+      "type": "image",
+      "key": "frostbite-debuff",
+      "url": "assets/icons/debuffs/frostbite.png"
     },
     {
       "type": "image",

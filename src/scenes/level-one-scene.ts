@@ -4,18 +4,17 @@ import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
-import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { FIRE_CRIT, LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
+import { Z_POSITION } from '@/constants/z-position';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
-import { SoulPedestal } from '@/game/interactables/soul-pedestal';
 import { Bonfire } from '@/game/interactables/bonfire';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
-import { CrystalShrine } from '@/game/interactables/crystal-shrine';
 import { GreetingLetter } from '@/game/interactables/greeting-letter';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
@@ -26,10 +25,12 @@ import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
+import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { AudioSystem } from '@/systems/audio-system';
 import { EnemySpawn } from '@/systems/enemy-spawn';
+import { UiSystem } from '@/systems/ui-system';
 import { NPCSpawn } from '@/systems/npc-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
@@ -39,6 +40,7 @@ import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
 import { Position, SaveGame } from '@/utils/types';
+import { MISC_ANIMATION } from '@/constants/animation-keys';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
@@ -64,6 +66,7 @@ export class LevelOneScene extends Phaser.Scene {
   private insideZone: AudioZone | null = null;
 
   private player!: Player;
+  private ui: UiSystem | null = null;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
@@ -142,6 +145,7 @@ export class LevelOneScene extends Phaser.Scene {
     uiScene.events.once(Phaser.Scenes.Events.CREATE, () => {
       if (uiScene instanceof UiScene) {
         ServiceLocator.register(ServiceKeys.ui, uiScene.getUI());
+        this.ui = uiScene.getUI();
         initWorld();
 
         // Debug
@@ -312,11 +316,9 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables = new InteractableKeeper();
 
     this.interactables.add(new Stall(this));
-    //this.interactables.add(new SoulPedestal(this));
     this.interactables.add(new Bonfire(this));
     this.interactables.add(new AlchemistQuestTrigger(this));
     this.interactables.add(new LootZone(this));
-    //this.interactables.add(new CrystalShrine(this));
     this.interactables.add(new GreetingLetter(this));
   }
 
@@ -449,6 +451,13 @@ export class LevelOneScene extends Phaser.Scene {
       keyName: MISC.QUEST_MARK,
       frame: 0,
     });
+
+    // Temporary
+    this.add
+      .sprite(9312, 480, MISC.CRYSTAL_SHRINE, 0)
+      .setOrigin(0, 0)
+      .setDepth(Z_POSITION.MISC)
+      .play(MISC_ANIMATION.CRYSTAL_SHRINE.MAIN);
   }
 
   private setupCamera(): void {
@@ -496,8 +505,21 @@ export class LevelOneScene extends Phaser.Scene {
     }
 
     if (spell.causeDamage() > 0) {
-      victim.takeDamage(spell.causeDamage(), spell.getCaster());
-      spell.playImpactSound();
+      if (spell instanceof FireBall) {
+        const modifier = spell.getCaster().getModifier();
+        if (modifier.isModifierExist(FIRE_CRIT.id)) {
+          spell.setCriticalHit();
+          modifier.removeModifier(FIRE_CRIT.id);
+          this.ui?.removeModifierIcon(FIRE_CRIT.id);
+        }
+      }
+      if (spell.isCritical) {
+        victim.takeDamage(spell.causeDamage(), spell.getCaster(), true);
+        spell.playCritImpactSound();
+      } else {
+        victim.takeDamage(spell.causeDamage(), spell.getCaster());
+        spell.playImpactSound();
+      }
       spell.destroySpell();
     }
 

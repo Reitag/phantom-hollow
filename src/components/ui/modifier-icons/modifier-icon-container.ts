@@ -11,6 +11,8 @@ type ModifierContainerConfig = {
   icon: Phaser.GameObjects.Image;
   timerText: Phaser.GameObjects.Text | undefined;
   type: ModifierType;
+  stackText: Phaser.GameObjects.Text | undefined;
+  stacks: number;
   onPointerOver?: (pointer: Phaser.Input.Pointer) => void;
 };
 
@@ -26,7 +28,7 @@ export class ModifierIconContainer {
     this.deBuffCoords = getUiCoords(uiCoords, 'debuff');
   }
 
-  public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
+  /*public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     if (this.findModifierIcon(key)) return;
 
     const sameTypeIcons = this.modifierIcons.filter((m) => m.type === type);
@@ -55,9 +57,69 @@ export class ModifierIconContainer {
         )
         .setOrigin(0.5, 0);
     }
+    const stackText = undefined;
+    const stacks = 0;
+    this.modifierIcons.push({ icon, timerText, type, stackText, stacks });
+    this.attachTooltip({ icon, timerText, type, stackText, stacks });
+  }*/
 
-    this.modifierIcons.push({ icon, timerText, type });
-    this.attachTooltip({ icon, timerText, type });
+  public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
+    const existing = this.findModifierIcon(key);
+
+    if (existing) {
+      existing.stacks += 1;
+      if (existing.stackText) {
+        existing.stackText.setText(existing.stacks.toString());
+      } else {
+        existing.stackText = this.scene.add
+          .text(
+            existing.icon.x + MODIFIER_ICONS.SIZE - 3,
+            existing.icon.y + MODIFIER_ICONS.SIZE - 3,
+            existing.stacks.toString(),
+            { font: '14px Arial', color: '#ffffff', stroke: '#000', strokeThickness: 2 }
+          )
+          .setOrigin(1, 1);
+      }
+      return;
+    }
+
+    const sameTypeIcons = this.modifierIcons.filter((m) => m.type === type);
+    const index = sameTypeIcons.length;
+    const posX = this.buffCoords.x + index * (MODIFIER_ICONS.SIZE + MODIFIER_ICONS.PADDING);
+    const posY = type === TYPE.buff ? this.buffCoords.y : this.deBuffCoords.y;
+
+    const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0);
+    icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
+    icon.setInteractive({ useHandCursor: true });
+    icon.name = key;
+
+    let timerText: Phaser.GameObjects.Text | undefined;
+    if (duration) {
+      timerText = this.scene.add
+        .text(
+          posX + MODIFIER_ICONS.SIZE / 2,
+          posY + MODIFIER_ICONS.SIZE / 2 + 16,
+          `${duration / 1000}`,
+          {
+            font: '14px Arial',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 2,
+          }
+        )
+        .setOrigin(0.5, 0);
+    }
+
+    const entry: ModifierContainerConfig = {
+      icon,
+      timerText,
+      type,
+      stackText: undefined,
+      stacks: 1,
+    };
+
+    this.modifierIcons.push(entry);
+    this.attachTooltip(entry);
   }
 
   public startCountdown(key: string, duration: number | undefined): void {
@@ -93,6 +155,7 @@ export class ModifierIconContainer {
 
     entry.icon.destroy();
     entry.timerText?.destroy();
+    entry.stackText?.destroy();
     this.modifierIcons = this.modifierIcons.filter((elem) => elem.icon.name !== key);
 
     this.updateUI(entry.type);
@@ -146,6 +209,11 @@ export class ModifierIconContainer {
       if (m.timerText) {
         m.timerText.x = posX + MODIFIER_ICONS.SIZE / 2;
         m.timerText.y = posY + MODIFIER_ICONS.SIZE / 2 + 16;
+      }
+
+      if (m.stackText) {
+        m.stackText.x = posX + MODIFIER_ICONS.SIZE - 3;
+        m.stackText.y = posY + MODIFIER_ICONS.SIZE - 3;
       }
     });
   }

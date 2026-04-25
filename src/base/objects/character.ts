@@ -5,7 +5,6 @@ import { Aggro } from '@/components/stats/aggro';
 import { Defense } from '@/components/stats/defense';
 import { Casting } from '@/components/stats/casting';
 import { SHARED_STATES } from '@/constants/state-keys';
-import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ModifierSystem } from '@/systems/modifier-system';
@@ -123,7 +122,7 @@ export class Character extends ArcadeSprite {
     this.lightningShield = ref;
   }
 
-  public takeDamage(amount: number, attacker?: Character | 'spear'): void {
+  public takeDamage(amount: number, attacker?: Character | 'spear', isCritical = false): void {
     if (this.isDead) return;
 
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
@@ -142,7 +141,7 @@ export class Character extends ArcadeSprite {
     this.stats.health?.applyDamage(finalDamage);
 
     if (attacker !== 'spear') {
-      ui.showDamageDealt(finalDamage, this);
+      ui.showDamageDealt(finalDamage, this, isCritical);
     }
 
     if (attacker && attacker instanceof Player) {

@@ -17,6 +17,7 @@ import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
 import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
+import { FIRE_CRIT } from '@/constants/modifier-stats';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -133,6 +134,10 @@ export class Player extends Character {
   protected override onDeathStart(): void {
     this.controls.disable();
     this.ui.removeAllModfierIcons();
+    if (this.modifier.isModifierExist(FIRE_CRIT.id)) {
+      this.modifier.removeModifier(FIRE_CRIT.id);
+    }
+    ServiceLocator.resolve(ServiceKeys.sandbox).resetFireStacks();
   }
 
   protected override onAliveStart(): void {

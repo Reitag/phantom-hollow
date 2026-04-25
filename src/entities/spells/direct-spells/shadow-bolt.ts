@@ -37,6 +37,7 @@ export class ShadowBolt extends Spell {
     this.audioKeys = {
       launch: AUDIO.SHADOWBOLT_LAUNCH,
       impact: AUDIO.SHADOWBOLT_IMPACT,
+      critImpact: undefined,
       action: undefined,
     };
 
