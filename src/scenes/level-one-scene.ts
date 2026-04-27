@@ -92,7 +92,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
-    /*this.scale.toggleFullscreen();*/
+
     SaveService.start();
     ServiceLocator.register(ServiceKeys.save, save);
 

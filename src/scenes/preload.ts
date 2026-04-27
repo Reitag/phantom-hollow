@@ -3,10 +3,10 @@ import Phaser from 'phaser';
 import { registerGlobalAnimation } from '@/animation/loader/animation-loader';
 
 // Packs
-const packURL = '/json-packs/';
+const packURL = 'json-packs/';
 
 // Fonts
-const fontURL = '/assets/fonts/';
+const fontURL = 'assets/fonts/';
 const fontName = 'Volkhov';
 const fontWeight = { regular: '400', bold: '700' } as const;
 
@@ -48,11 +48,6 @@ export class PreloadScene extends Phaser.Scene {
       this.load.pack(key, url);
     }
   }
-
-  /*public create() {
-    registerGlobalAnimation(this.anims);
-    this.scene.start('MainMenuScene');
-  }*/
 
   public async create() {
     await this.loadFonts();

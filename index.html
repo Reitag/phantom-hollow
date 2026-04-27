@@ -3,20 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arcade game</title>
+    <title>Phantom Hollow</title>
     <style>
       html,
-      body .container {
-        margin: 0px;
-        height: 100vh;
-        width: 100vw;
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
         overflow: hidden;
-        background: #1d1d1d;
+        background: #000000;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      canvas {
+        width: 100% !important;
+        height: auto !important;
+
+        min-width: 1024px !important;
+        min-height: 640px !important;
+
+        max-width: 1280px !important;
+        max-height: 896px !important;
+
+        outline: 1px solid rgba(100, 100, 100, 0.3);
+        border-radius: 0.5px;
+
+        display: block;
       }
     </style>
   </head>
   <body>
     <div class="container" id="app"></div>
-    <script type="module" src="/src/main/main.ts"></script>
+    <script type="module" src="./src/main/main.ts"></script>
   </body>
 </html>

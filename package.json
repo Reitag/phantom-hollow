@@ -1,18 +1,25 @@
 {
   "name": "phantom-hollow",
+  "author": "Ilya Chernov",
+  "description": "2D ARPG",
   "private": true,
   "version": "0.15.1",
   "type": "module",
+  "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "start": "electron .",
+    "start:build": "electron-builder && node tools/generate-build-name.js",
     "format": "prettier --write .",
     "generate:assets": "node tools/generate-asset-keys.js"
   },
   "devDependencies": {
     "@types/node": "^24.0.8",
+    "electron": "^41.3.0",
+    "electron-builder": "^26.8.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
