@@ -190,6 +190,7 @@ export const UI = {
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
   FIREWORM_FANG_QUEST_ITEM: 'fireworm-fang-quest-item',
+  CRYSTAL_QUEST_ITEM: 'crystal-quest-item',
 } as const;
 
 export const VFX = {

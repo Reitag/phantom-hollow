@@ -13,6 +13,7 @@ export const InteractableNames = {
   ['evil-wizard']: 'evil-wizard',
   ['alchemist-quest']: 'alchemist-quest',
   ['shrine']: 'shrine',
+  ['crystal-shrine-quest']: 'crystal-srine-quest',
   ['letter']: 'letter',
 } as const;
 

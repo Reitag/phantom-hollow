@@ -170,11 +170,15 @@ export class LootZone extends Interactable {
         }
       });
 
-      // Boss loot
+      // Quests loot
       save.worldState.droppedLoot.forEach((drop) => {
-        const zone = scene.add.zone(drop.x - 14, drop.y + 14, 32, 32).setOrigin(0, 0);
-
-        this.createLootZone(drop.id, zone, drop.loot);
+        if (drop.id === 'fireworm-fang-1') {
+          const zone = scene.add.zone(drop.x - 14, drop.y, 32, 32).setOrigin(0, 0);
+          this.createLootZone(drop.id, zone, drop.loot);
+        } else {
+          const zone = scene.add.zone(drop.x, drop.y, 32, 32).setOrigin(0, 0);
+          this.createLootZone(drop.id, zone, drop.loot);
+        }
       });
     }
   }

@@ -12,8 +12,9 @@ import { Text } from '@/components/ui/text/text';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { PanelService } from '@/infrastructure/panel-service';
 import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
-import { Quest } from '@/components/ui/boards/quest';
+import { AlchemistQuest } from '@/components/ui/boards/alchemist-quest';
 import { Letter } from '@/components/ui/boards/letter';
+import { CrystalShrineQuest } from '@/components/ui/boards/crystal-shrine-quest';
 
 export class UiSystem {
   private healthBar: PlayerHealthBar;
@@ -34,9 +35,6 @@ export class UiSystem {
 
   private uiBoards = new Map<string, unknown>();
 
-  //private store: Store;
-  //private quest: Quest;
-
   private coins: Coins;
   private text: Text;
 
@@ -53,11 +51,9 @@ export class UiSystem {
     this.modifierIconContainer = new ModifierIconContainer(uiScene);
 
     this.uiBoards.set('store', new Store(uiScene));
-    this.uiBoards.set('quest', new Quest(uiScene));
+    this.uiBoards.set('alchemist-quest', new AlchemistQuest(uiScene));
+    this.uiBoards.set('crystal-shrine-quest', new CrystalShrineQuest(uiScene));
     this.uiBoards.set('letter', new Letter(uiScene));
-
-    //this.store = new Store(uiScene);
-    //this.quest = new Quest(uiScene);
 
     this.coins = new Coins(uiScene);
     this.text = new Text(uiScene);
@@ -124,14 +120,6 @@ export class UiSystem {
   public getBoard<T>(key: string): T {
     return this.uiBoards.get(key) as T;
   }
-
-  /*public getStore(): Store {
-    return this.store;
-  }
-
-  public getQuest(): Quest {
-    return this.quest;
-  }*/
 
   public increaseCoinCounter(amount: number): void {
     this.coins.increaseCoins(amount);

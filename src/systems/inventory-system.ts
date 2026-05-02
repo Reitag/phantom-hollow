@@ -47,8 +47,14 @@ export class InventorySystem {
       const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
       const scene = player.scene;
 
-      player.isOnQuest = false;
+      player.setQuestStatus(QUEST_IDS.ALCHEMIST_FIREWORM, false);
       scene.events.emit('fireworm-fang:looted');
+    }
+
+    if (item.id === 'arcane-shard') {
+      const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
+      const scene = player.scene;
+      scene.events.emit('crystal-shrine:looted');
     }
 
     for (const slot of this.slots) {

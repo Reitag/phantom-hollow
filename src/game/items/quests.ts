@@ -12,3 +12,15 @@ export const firewormFang = (): InventoryItem => ({
     return false;
   },
 });
+
+export const arcaneShard = (): InventoryItem => ({
+  id: 'arcane-shard',
+  name: 'Arcane Shard',
+  description: '',
+  iconKey: UI.CRYSTAL_QUEST_ITEM,
+  maxStack: 3,
+  isUnique: false,
+  use: () => {
+    return false;
+  },
+});

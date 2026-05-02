@@ -1589,6 +1589,74 @@
                  "y":480
                 }, 
                 {
+                 "height":64,
+                 "id":1086,
+                 "name":"interactable-spawn",
+                 "properties":[
+                        {
+                         "name":"trigger",
+                         "type":"string",
+                         "value":"crystal-srine-quest"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":128,
+                 "x":9280,
+                 "y":480
+                }, 
+                {
+                 "height":32,
+                 "id":1087,
+                 "name":"interactable-spawn",
+                 "properties":[
+                        {
+                         "name":"trigger",
+                         "type":"string",
+                         "value":"crystal-loot"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":32,
+                 "x":9664,
+                 "y":320
+                }, 
+                {
+                 "height":32,
+                 "id":1088,
+                 "name":"interactable-spawn",
+                 "properties":[
+                        {
+                         "name":"trigger",
+                         "type":"string",
+                         "value":"crystal-loot"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":32,
+                 "x":9696,
+                 "y":448
+                }, 
+                {
+                 "height":32,
+                 "id":1089,
+                 "name":"interactable-spawn",
+                 "properties":[
+                        {
+                         "name":"trigger",
+                         "type":"string",
+                         "value":"crystal-loot"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":32,
+                 "x":9760,
+                 "y":512
+                }, 
+                {
                  "height":32,
                  "id":932,
                  "name":"interactable-spawn",
@@ -1725,23 +1793,6 @@
                  "y":480
                 }, 
                 {
-                 "height":64,
-                 "id":1075,
-                 "name":"interactable-spawn",
-                 "properties":[
-                        {
-                         "name":"trigger",
-                         "type":"string",
-                         "value":"crystal-shrine"
-                        }],
-                 "rotation":0,
-                 "type":"spawn",
-                 "visible":true,
-                 "width":64,
-                 "x":9312,
-                 "y":480
-                }, 
-                {
                  "height":32,
                  "id":929,
                  "name":"misc-spawn",
@@ -1766,7 +1817,7 @@
                         {
                          "name":"misc",
                          "type":"string",
-                         "value":"quest-mark"
+                         "value":"alchemist-quest-mark"
                         }],
                  "rotation":0,
                  "type":"spawn",
@@ -1774,6 +1825,40 @@
                  "width":20,
                  "x":5078,
                  "y":480
+                }, 
+                {
+                 "height":64,
+                 "id":1075,
+                 "name":"misc-spawn",
+                 "properties":[
+                        {
+                         "name":"misc",
+                         "type":"string",
+                         "value":"crystal-shrine"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":64,
+                 "x":9312,
+                 "y":480
+                }, 
+                {
+                 "height":20,
+                 "id":1090,
+                 "name":"misc-spawn",
+                 "properties":[
+                        {
+                         "name":"misc",
+                         "type":"string",
+                         "value":"crystal-shrine-quest-mark"
+                        }],
+                 "rotation":0,
+                 "type":"spawn",
+                 "visible":true,
+                 "width":20,
+                 "x":9334,
+                 "y":458
                 }, 
                 {
                  "height":0,
@@ -2880,7 +2965,7 @@
          "y":0
         }],
  "nextlayerid":42,
- "nextobjectid":1086,
+ "nextobjectid":1091,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

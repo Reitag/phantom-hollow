@@ -9,7 +9,7 @@ import {
 } from '@/game/items/potions';
 import { fireRelic, frostRelic } from '@/game/items/relics';
 import { soulStone, stoneOfConcentration } from '@/game/items/stones';
-import { firewormFang } from '@/game/items/quests';
+import { arcaneShard, firewormFang } from '@/game/items/quests';
 import {
   CRYSTAL_SHRINE_STATS,
   DREAD_AURA_STATS,
@@ -166,6 +166,7 @@ export const ITEM_TOOLTIPS: {
   SOUL_STONE: TooltipContentConfig;
   STONE_OF_CONCENTRATION: TooltipContentConfig;
   FIREWORM_FANG: TooltipContentConfig;
+  ARCANE_SHARD: TooltipContentConfig;
 } = {
   HEALTH_POTION: {
     id: healthPotion().iconKey,
@@ -327,6 +328,20 @@ export const ITEM_TOOLTIPS: {
     prop_3: {
       param: additionTextParams,
       text: '"Still warm to the touch. It reeks of sulfur and ash."',
+    },
+  },
+  ARCANE_SHARD: {
+    id: arcaneShard().iconKey,
+    title: {
+      param: questTitleParams,
+      text: arcaneShard().name,
+    },
+    prop_1: {
+      text: 'Quest item',
+    },
+    prop_3: {
+      param: additionTextParams,
+      text: 'A piece of something whole, still echoing its origin.',
     },
   },
 };

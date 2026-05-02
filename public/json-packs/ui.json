@@ -274,6 +274,11 @@
       "type": "image",
       "key": "fireworm-fang-quest-item",
       "url": "assets/icons/quests/fireworm-fang.png"
+    },
+    {
+      "type": "image",
+      "key": "crystal-quest-item",
+      "url": "assets/icons/quests/crystal.png"
     }
   ]
 }

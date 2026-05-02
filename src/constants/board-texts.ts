@@ -1,42 +1,9 @@
 import { hastePotion } from '@/game/items/potions';
+import { stoneOfConcentration } from '@/game/items/stones';
 
 export const LETTER_TEXT_WIDTH = 390;
-//export const QUEST_TEXT_WIDTH = 249;
 export const QUEST_TEXT_WIDTH = 299;
 
-/*const shadow = {
-  offsetX: 0,
-  offsetY: 1,
-  color: 'rgba(0,0,0,0.6)',
-  blur: 2,
-  fill: true,
-};
-
-export const textStyle = (textWidth: number) => {
-  return {
-    NAME: {
-      font: '18px Cinzel',
-      color: '#e6c68a',
-      shadow: shadow,
-    },
-    TITLE: {
-      font: '16px EB Garamond',
-      color: '#d4af6a',
-      shadow: shadow,
-    },
-    TEXT: {
-      font: '14px EB Garamond',
-      color: '#d2c5b0',
-      wordWrap: {
-        width: textWidth,
-      },
-      shadow: shadow,
-    },
-    REWARD_TITLE: {
-      color: '#c9a24d',
-    },
-  };
-};*/
 const shadow = {
   offsetX: 0,
   offsetY: 1,
@@ -87,7 +54,8 @@ Survive, slay, become our pride and joy. Remember, there is more to power than m
 You are learning to wield the energy of life itself - magic - the greatest of powers.`,
 } as const;
 
-// Quest
+// Quests
+/// Alchemist
 export const ALCHEMIST_QUEST_TEXT = {
   NAME: 'Octius, the Wandering Alchemist',
   TITLE: "Blazeworm's Fang",
@@ -114,6 +82,26 @@ Till we meet again!`,
     ITEM: {
       TITLE: `${hastePotion().name}`,
       DESCRIPTION: `${hastePotion().description}`,
+    },
+    COMPLETED_TEXT: 'You will recieve:',
+  },
+} as const;
+
+/// Shrine
+export const CRYSTAL_SHRINE_QUEST_TEXT = {
+  NAME: 'Crystal Shrine',
+  TITLE: 'Some Title',
+  PENDING: `Pending state`,
+  COMPLETED: `Completed state`,
+  OBJECTIVES: {
+    TITLE: 'Objectives',
+    TEXT: 'Recover the three lost Arcane Shards and return them to the Shrine.',
+  },
+  REWARD: {
+    TITLE: 'Reward',
+    ITEM: {
+      TITLE: `${stoneOfConcentration().name}`,
+      DESCRIPTION: `${stoneOfConcentration().description}`,
     },
     COMPLETED_TEXT: 'You will recieve:',
   },

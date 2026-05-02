@@ -1,26 +1,28 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
-import { AlchemistQuest } from '@/components/ui/boards/alchemist-quest';
+import { CrystalShrineQuest } from '@/components/ui/boards/crystal-shrine-quest';
 import { QUEST_IDS } from '@/constants/quest-ids';
 import { QUEST_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
-export class AlchemistQuestTrigger extends Interactable {
-  private quest: AlchemistQuest;
+export class CrystalShrineQuestTrigger extends Interactable {
+  private quest: CrystalShrineQuest;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
-    this.createTriggerZones(InteractableNames['alchemist-quest']);
-    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getBoard<AlchemistQuest>('alchemist-quest');
+    this.createTriggerZones(InteractableNames['crystal-shrine-quest']);
+    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getBoard<CrystalShrineQuest>(
+      'crystal-shrine-quest'
+    );
 
-    this.quest.createQuestMark('alchemist-quest-mark');
-    this.quest.defineQuestState(QUEST_IDS.ALCHEMIST_FIREWORM);
+    this.quest.createQuestMark('crystal-shrine-quest-mark');
+    this.quest.defineQuestState(QUEST_IDS.CRYSTAL);
   }
 
   protected onEnter(): void {
     const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
 
-    if (player.isQuestActive(QUEST_IDS.ALCHEMIST_FIREWORM)) {
+    if (player.isQuestActive(QUEST_IDS.CRYSTAL)) {
       return;
     }
 

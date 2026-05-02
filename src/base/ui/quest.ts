@@ -1,14 +1,12 @@
 import { Board } from '@/base/ui/board';
-import { AUDIO, UI } from '@/constants/asset-keys';
-import { ALCHEMIST_QUEST_TEXT, QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
-import { QUEST_IDS } from '@/constants/quest-ids';
+import { AUDIO, MISC, UI } from '@/constants/asset-keys';
+import { QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_UI } from '@/constants/ui-coordinates';
-import { LOOT_FACTORY } from '@/factories/loot-factory';
+import { QuestMark } from '@/entities/misc/quest-mark';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { LevelOneScene } from '@/scenes/level-one-scene';
-import { Rectangle } from '@/utils/types';
+import { Position, Rectangle } from '@/utils/types';
 
 type Handlers = {
   onOver: () => void;
@@ -17,25 +15,26 @@ type Handlers = {
   onUp: () => void;
 };
 
-export class Quest extends Board {
-  private bg: Phaser.GameObjects.Image;
-  private acceptButton: Phaser.GameObjects.Image;
-  private declineButton: Phaser.GameObjects.Image;
-  private completeButton: Phaser.GameObjects.Image;
-  private buttons: Set<Phaser.GameObjects.Image>;
-  private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
+export abstract class Quest extends Board {
+  protected bg: Phaser.GameObjects.Image;
+  protected acceptButton: Phaser.GameObjects.Image;
+  protected declineButton: Phaser.GameObjects.Image;
+  protected completeButton: Phaser.GameObjects.Image;
+  protected buttons: Set<Phaser.GameObjects.Image>;
+  protected bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
-  private scrollContainer: Phaser.GameObjects.Container;
-  private scrollAreaHeight = 280;
-  private currentY = 0;
-  private scrollY = 0;
-  private maxScroll = 0;
+  protected scrollContainer: Phaser.GameObjects.Container;
+  protected scrollAreaHeight = 280;
+  protected currentY = 0;
+  protected scrollY = 0;
+  protected maxScroll = 0;
 
-  //private scrollTrack: Phaser.GameObjects.Graphics;
-  private scrollThumb: Phaser.GameObjects.Graphics;
-  private scrollIndicatorCoords: Rectangle;
+  protected scrollThumb: Phaser.GameObjects.Graphics;
+  protected scrollIndicatorCoords: Rectangle;
 
-  constructor(scene: Phaser.Scene) {
+  protected questMark: QuestMark | null = null;
+
+  constructor(scene: Phaser.Scene, questGiverName: string) {
     super(scene);
 
     this.board = this.scene.add.container(SCENE_SIZE.WIDTH / 4, SCENE_SIZE.HEIGHT / 2);
@@ -48,7 +47,7 @@ export class Quest extends Board {
     const npcConCoord = this.alignCoords(this.bg, 0, 25);
     const npcNameContainer = this.scene.add
       .container(npcConCoord.x, npcConCoord.y)
-      .add(this.scene.add.text(24, 0, ALCHEMIST_QUEST_TEXT.NAME, textStyle(QUEST_TEXT_WIDTH).NAME));
+      .add(this.scene.add.text(24, 0, questGiverName, textStyle(QUEST_TEXT_WIDTH).NAME));
     this.board.add(npcNameContainer);
 
     const conPos = this.alignCoords(this.bg, 25, 60);
@@ -74,72 +73,10 @@ export class Quest extends Board {
       width: 7,
       height: 293.8,
     };
-
-    //this.scrollTrack = this.scene.add.graphics();
-
     const { x, y, width, height } = this.scrollIndicatorCoords;
 
-    //this.scrollTrack.fillStyle(0x2a1d12, 1);
-    //this.scrollTrack.fillRoundedRect(x, y, width, height, 2);
-
     this.scrollThumb = this.scene.add.graphics();
-
-    //this.board.add(this.scrollTrack);
     this.board.add(this.scrollThumb);
-
-    // init content
-    const questTitle = this.createText(
-      ALCHEMIST_QUEST_TEXT.TITLE,
-      textStyle(QUEST_TEXT_WIDTH).TITLE
-    );
-
-    const questText = this.createText(
-      ALCHEMIST_QUEST_TEXT.PENDING,
-      textStyle(QUEST_TEXT_WIDTH).TEXT
-    );
-
-    const questObjectivesTitle = this.createText(
-      ALCHEMIST_QUEST_TEXT.OBJECTIVES.TITLE,
-      textStyle(QUEST_TEXT_WIDTH).TITLE
-    );
-
-    const questObjectives = this.createText(
-      ALCHEMIST_QUEST_TEXT.OBJECTIVES.TEXT,
-      textStyle(QUEST_TEXT_WIDTH).TEXT
-    );
-
-    const questRewardTitle = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.TITLE,
-      textStyle(QUEST_TEXT_WIDTH).TITLE
-    );
-
-    const rewardImage = this.scene.add
-      .image(0, this.currentY, UI.HASTE_POTION_ICON)
-      .setOrigin(0, 0);
-
-    const rewardItemTitle = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.ITEM.TITLE,
-      textStyle(QUEST_TEXT_WIDTH).TEXT,
-      { color: textStyle(QUEST_TEXT_WIDTH).REWARD_TITLE.color }
-    );
-
-    const rewardItemDesc = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.ITEM.DESCRIPTION,
-      textStyle(QUEST_TEXT_WIDTH).TEXT
-    );
-
-    this.addBlock(questTitle);
-    this.addBlock(questText);
-    this.addBlock(questObjectivesTitle);
-    this.addBlock(questObjectives);
-    this.addBlock(questRewardTitle);
-    this.addBlock(rewardImage);
-    this.addBlock(rewardItemTitle);
-    this.addBlock(rewardItemDesc);
-
-    // recalculate scroll bounds
-    this.maxScroll = Math.max(0, this.currentY - this.scrollAreaHeight);
-    this.updateScrollIndicator();
 
     // Buttons
     const accBtnPos = this.alignCoords(this.bg, QUEST_UI.ACCEPT_BTN.X, QUEST_UI.ACCEPT_BTN.Y);
@@ -168,8 +105,8 @@ export class Quest extends Board {
     this.buttons.add(this.declineButton);
   }
 
-  public defineQuestState(): void {
-    const state = SaveService.getQuestState(QUEST_IDS.ALCHEMIST_FIREWORM);
+  public defineQuestState(questId: string): void {
+    const state = SaveService.getQuestState(questId);
 
     switch (state) {
       case 'pending':
@@ -177,25 +114,56 @@ export class Quest extends Board {
 
       case 'waiting':
         this.acceptQuest();
+        console.log('test');
+        this.questMark?.changeMarkToWaiting();
         break;
 
       case 'completed':
         this.onAcceptedQuest();
+        this.questMark?.changeMarkToCompleted();
         break;
 
       case 'done':
         this.board?.destroy();
         this.board = null;
-        (this.action as LevelOneScene).quest.destroy();
+        this.questMark?.destroy();
+        this.questMark = null;
         break;
     }
   }
 
+  public createQuestMark(miscName: string): void {
+    const result: Record<string, Position> = {};
+    const scene = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer().scene;
+    const map = ServiceLocator.resolve(ServiceKeys.map);
+    const objectLayer = map.getObjectLayer('spawn-layer');
+    if (!objectLayer) throw new Error('Spawn-layer does not resolved');
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'misc-spawn') continue;
+
+      const miscType = obj.properties.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'misc'
+      )?.value;
+
+      if (!miscType) continue;
+      if (!obj.x || !obj.y) continue;
+      result[miscType] = {
+        x: obj.x,
+        y: obj.y,
+      };
+    }
+
+    this.questMark = new QuestMark({
+      scene: scene,
+      position: { x: result[miscName].x, y: result[miscName].y },
+      keyName: MISC.QUEST_MARK,
+      frame: 0,
+    });
+  }
+
   public registerQuestEvents(): boolean {
     if (!this.board) return false;
-    /*this.scene.events.listeners('open-quest').forEach((e) => {
-      console.log(e);
-    });*/
     if (!this.scene.events.listeners('open-quest').length) {
       this.scene.events.on('open-quest', this.openBoard, this);
       this.scene.events.on('close-quest', this.closeBoard, this);
@@ -277,121 +245,11 @@ export class Quest extends Board {
     });
   }
 
-  // Open and close quest frame, inherited from base class
-  protected openBoard(): void {
-    super.openBoard();
-    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_OPEN);
-  }
+  protected abstract acceptQuest(): void;
+  protected abstract onAcceptedQuest(): void;
+  protected abstract completeQuest(): void;
 
-  protected closeBoard(): void {
-    super.closeBoard();
-    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_CLOSE);
-  }
-
-  private acceptQuest(): void {
-    const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
-
-    if (player.isOnQuest === false && !this.action.events.listeners('fire-worm:died').length) {
-      player.isOnQuest = true;
-      this.action.events.once(
-        'fire-worm:died',
-        (this.action as LevelOneScene).onFireWormDied,
-        this.action
-      );
-      this.action.events.once('fireworm-fang:looted', this.onAcceptedQuest, this);
-      (this.action as LevelOneScene).quest.changeMarkToWaiting();
-
-      SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'waiting');
-    }
-  }
-
-  private completeQuest(): void {
-    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
-    const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
-    const reward = LOOT_FACTORY['haste-potion'];
-    const fang = LOOT_FACTORY['fireworm-fang'];
-    const fangIndex = inventory.getItemIndex(fang().id);
-
-    if (fangIndex === undefined) {
-      sandbox.setText('Quest item has not been found');
-    } else {
-      inventory.destroySlot(fangIndex);
-      inventory.addItem(reward(), 1);
-      this.unregisterQuestEvents();
-      this.board?.destroy();
-      this.board = null;
-      (this.action as LevelOneScene).quest.destroy();
-
-      SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'done');
-    }
-  }
-
-  private onAcceptedQuest(): void {
-    // accept button
-    this.buttons.delete(this.acceptButton);
-    this.acceptButton.destroy();
-
-    // decline button
-    this.buttons.delete(this.declineButton);
-    this.declineButton.destroy();
-
-    // change text
-    this.scrollContainer.getAll().forEach((elem, index) => {
-      if (index !== 0) {
-        elem.destroy();
-      }
-    });
-    this.currentY = 30;
-
-    const completedText = this.createText(
-      ALCHEMIST_QUEST_TEXT.COMPLETED,
-      textStyle(QUEST_TEXT_WIDTH).TEXT
-    );
-
-    // quest reward
-    const questRewardTitle = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.TITLE,
-      textStyle(QUEST_TEXT_WIDTH).TITLE
-    );
-
-    const rewardText = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.COMPLETED_TEXT,
-      textStyle(QUEST_TEXT_WIDTH).TEXT
-    );
-
-    const rewardImage = this.scene.add
-      .image(0, this.currentY, UI.HASTE_POTION_ICON)
-      .setOrigin(0, 0);
-
-    const rewardItemTitle = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.ITEM.TITLE,
-      textStyle(QUEST_TEXT_WIDTH).TEXT,
-      { color: textStyle(QUEST_TEXT_WIDTH).REWARD_TITLE.color }
-    );
-
-    const rewardItemDesc = this.createText(
-      ALCHEMIST_QUEST_TEXT.REWARD.ITEM.DESCRIPTION,
-      textStyle(QUEST_TEXT_WIDTH).TEXT
-    );
-
-    this.addBlock(completedText);
-    this.addBlock(questRewardTitle);
-    this.addBlock(rewardText);
-    this.addBlock(rewardImage);
-    this.addBlock(rewardItemTitle);
-    this.addBlock(rewardItemDesc);
-
-    this.maxScroll = Math.max(0, this.currentY - this.scrollAreaHeight);
-    this.updateScrollIndicator();
-
-    this.buttons.add(this.completeButton);
-    this.completeButton.setVisible(true);
-    (this.action as LevelOneScene).quest.changeMarkToCompleted();
-
-    SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'completed');
-  }
-
-  private createText(
+  protected createText(
     content: string,
     style: Phaser.Types.GameObjects.Text.TextStyle,
     extra?: Partial<Phaser.Types.GameObjects.Text.TextStyle>
@@ -402,22 +260,20 @@ export class Quest extends Board {
     });
   }
 
-  private addBlock(block: Phaser.GameObjects.Text | Phaser.GameObjects.Image, spacing = 10) {
+  protected addBlock(block: Phaser.GameObjects.Text | Phaser.GameObjects.Image, spacing = 10) {
     block.y = this.currentY;
     this.currentY += block.height + spacing;
     this.scrollContainer.add(block);
   }
 
-  private updateScrollIndicator() {
+  protected updateScrollIndicator() {
     this.scrollThumb.clear();
 
     if (this.maxScroll <= 0) {
-      //this.scrollTrack.setVisible(false);
       this.scrollThumb.setVisible(false);
       return;
     }
 
-    //this.scrollTrack.setVisible(true);
     this.scrollThumb.setVisible(true);
 
     const visibleRatio = this.scrollAreaHeight / (this.scrollAreaHeight + this.maxScroll);
@@ -460,7 +316,17 @@ export class Quest extends Board {
     this.updateScrollIndicator();
   }
 
-  private get action(): Phaser.Scene {
+  protected openBoard(): void {
+    super.openBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_OPEN);
+  }
+
+  protected closeBoard(): void {
+    super.closeBoard();
+    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_CLOSE);
+  }
+
+  protected get action(): Phaser.Scene {
     const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
     const scene = player.scene;
 
