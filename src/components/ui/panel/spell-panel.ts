@@ -60,6 +60,13 @@ export class SpellPanel extends Panel {
     this.cooldownAnimator.startGlobalCooldown(targets, duration);
   }
 
+  protected triggerTooltip(index: number): void {
+    const icon = this.slots[index].icon;
+    if (icon && this.dragContext.onHover) {
+      this.dragContext.onHover(icon);
+    }
+  }
+
   protected emitSlotRelease(index: number): void {
     const spellId = this.slots[index].icon?.getData('spell');
     if (!spellId) return;

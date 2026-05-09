@@ -87,6 +87,13 @@ export class InventoryPanel extends Panel {
     };
   }
 
+  protected triggerTooltip(index: number): void {
+    const icon = this.slots[index].icon;
+    if (icon && this.dragContext.onHover) {
+      this.dragContext.onHover(icon);
+    }
+  }
+
   protected emitSlotRelease(slotIndex: number): void {
     const itemIndex = this.slots[slotIndex].icon?.getData('index');
     if (itemIndex === undefined) return;

@@ -8,6 +8,7 @@ import { IntroScene } from '@/scenes/intro-scene';
 import { StartGameScene } from '@/scenes/start-game-scene';
 import { VictoryScene } from '@/scenes/victory-scene';
 import { OutroScene } from '@/scenes/outro-scene';
+import { PauseScene } from '@/scenes/pause-scene';
 
 const scale = false;
 
@@ -41,6 +42,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     IntroScene,
     UiScene,
     LevelOneScene,
+    PauseScene,
     StartGameScene,
     VictoryScene,
     OutroScene,

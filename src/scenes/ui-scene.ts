@@ -8,6 +8,7 @@ import { getUiCoords } from '@/utils/helpers';
 export class UiScene extends Phaser.Scene {
   private ui!: UiSystem;
   private uiTilemapCoords!: Tilemap;
+  private pauseBtn!: Phaser.GameObjects.Image;
 
   constructor() {
     super('UiScene');
@@ -21,6 +22,9 @@ export class UiScene extends Phaser.Scene {
 
     // Miscs
     this.createMiscIcons();
+
+    // Clean Up
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
   }
 
   public getUI(): UiSystem {
@@ -43,5 +47,22 @@ export class UiScene extends Phaser.Scene {
 
     const coinCoord = getUiCoords(uiCoords, 'coin-icon');
     this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
+
+    // Pause Button
+    this.pauseBtn = this.add
+      .image(775, 595, UI.PAUSE_BUTTON)
+      .setInteractive({ useHandCursor: true })
+      .setOrigin(0, 0);
+    this.pauseBtn.on('pointerup', this.handlePauseBtn, this);
+  }
+
+  private handlePauseBtn(): void {
+    this.input.setDefaultCursor('default');
+    this.scene.launch('PauseScene').bringToTop('PauseScene');
+  }
+
+  private cleanup(): void {
+    this.pauseBtn.off('pointerup', this.handlePauseBtn, this);
+    this.pauseBtn.destroy();
   }
 }

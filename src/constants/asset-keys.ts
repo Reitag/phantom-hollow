@@ -164,6 +164,7 @@ export const UI = {
   MENU_UI_CONTINUE_BTN: 'menu-ui-continue-btn',
   MENU_UI_OPTION_BTN: 'menu-ui-option-btn',
   MENU_UI_CREDITS_BTN: 'menu-ui-credits-btn',
+  PAUSE_BUTTON: 'pause-button',
   HEALTH_POTION_ICON: 'health-potion-icon',
   NATURE_POTION_ICON: 'nature-potion-icon',
   PROTECTION_POTION_ICON: 'protection-potion-icon',

@@ -147,6 +147,11 @@
     },
     {
       "type": "image",
+      "key": "pause-button",
+      "url": "assets/ui/misc/pause-button.png"
+    },
+    {
+      "type": "image",
       "key": "health-potion-icon",
       "url": "assets/icons/potions/health-potion.png"
     },

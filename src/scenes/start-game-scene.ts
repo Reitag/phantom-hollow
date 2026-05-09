@@ -1,6 +1,5 @@
 export class StartGameScene extends Phaser.Scene {
   private acceptBtn: Phaser.GameObjects.Text | null = null;
-  private exitBtn: Phaser.GameObjects.Text | null = null;
 
   constructor() {
     super('StartGameScene');
@@ -36,40 +35,19 @@ export class StartGameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true });
 
-    this.exitBtn = this.add
-      .text(width / 2, height / 2 + 130, 'EXIT', {
-        fontSize: '20px',
-        color: '#ffffff',
-        backgroundColor: '#662222',
-        padding: { x: 16, y: 8 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
-
     this.acceptBtn.on('pointerdown', this.handleAccept, this);
-    this.exitBtn.on('pointerdown', this.handleExit, this);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
   }
 
   private handleAccept(): void {
-    this.scene.resume('LevelOneScene');
-    this.scene.resume('UiScene');
+    //this.scene.resume('LevelOneScene');
+    //this.scene.resume('UiScene');
     this.scene.stop();
-  }
-
-  private handleExit(): void {
-    this.scene.stop('LevelOneScene');
-    this.scene.stop('UiScene');
-    this.scene.stop();
-    this.scene.start('MainMenuScene');
   }
 
   private cleanup(): void {
     this.acceptBtn?.removeAllListeners();
-    this.exitBtn?.removeAllListeners();
-
     this.acceptBtn?.destroy();
-    this.exitBtn?.destroy();
   }
 }

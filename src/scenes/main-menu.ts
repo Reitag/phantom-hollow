@@ -9,28 +9,16 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   public create(): void {
-    /*this.add.image(0, 0, BACKGROUNDS.MAIN_SCENE_BG).setOrigin(0);*/
     this.cameras.main.setBackgroundColor('#000000');
 
     const save = SaveService.load();
     const hasSave = SaveService.hasSave();
 
     const centerX = this.scale.width / 2;
-    const startY = 380;
+    const startY = 400;
     const gap = 20;
 
-    // Button config
     const buttons = [
-      {
-        key: UI.MENU_UI_START_BTN,
-        action: () => {
-          if (hasSave) {
-            SaveService.clear(true);
-          }
-          this.scene.start('IntroScene');
-        },
-        visible: true,
-      },
       {
         key: UI.MENU_UI_CONTINUE_BTN,
         action: () => {
@@ -40,83 +28,60 @@ export class MainMenuScene extends Phaser.Scene {
         visible: hasSave,
       },
       {
-        key: UI.MENU_UI_OPTION_BTN,
+        key: UI.MENU_UI_START_BTN,
         action: () => {
-          console.log('Options clicked');
-        },
-        visible: true,
-      },
-      {
-        key: UI.MENU_UI_CREDITS_BTN,
-        action: () => {
-          console.log('Credits clicked');
+          if (hasSave) SaveService.clear(true);
+          this.scene.start('IntroScene');
         },
         visible: true,
       },
     ];
 
-    // Render buttons
-    let index = 0;
-
-    buttons.forEach((btn) => {
+    buttons.forEach((btn, index) => {
       if (!btn.visible) return;
-
-      const y = startY + index * (23 + gap); // 32(23) is button height
-
+      const y = startY + index * (23 + gap);
       const button = this.add
         .image(centerX, y, btn.key)
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true });
 
-      const onOver = () => {
-        button.setTint(0xfce2bd);
-      };
+      button.on('pointerover', () => button.setTint(0xfce2bd));
+      button.on('pointerout', () => button.clearTint());
+      button.on('pointerup', () => btn.action());
 
-      const onOut = () => {
-        button.clearTint();
-      };
-
-      const onDown = () => {
-        button.setTint(0x88ff88);
-      };
-
-      const onUp = () => {
-        button.clearTint();
-        btn.action();
-      };
-
-      // attach
-      button
-        .on('pointerover', onOver)
-        .on('pointerout', onOut)
-        .on('pointerdown', onDown)
-        .on('pointerup', onUp);
-
-      // store reference
       this.menuButtons.push(button);
-
-      index++;
     });
+
+    const footerY = this.scale.height - 28;
 
     // Version
-    this.add.text(20, 600, 'Version 0.15.1 In development', {
-      fontFamily: 'Volkhov',
-      fontSize: '16px',
-      fontStyle: 'normal',
-    });
+    this.add
+      .text(28, footerY, `v${this.game.config.gameVersion}`, {
+        fontFamily: 'Volkhov',
+        fontSize: '13px',
+        color: '#6f6f6f',
+      })
+      .setOrigin(0, 1);
 
-    // Clean Up
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.cleanup();
-    });
+    // Credits
+    const creditsText =
+      `Design & Code - Ilya Chernov\n` + `Narrative - Artem Sedov\n` + `Art - Darya "InkMoon"`;
+
+    this.add
+      .text(this.scale.width / 2, footerY, creditsText, {
+        fontFamily: 'Volkhov',
+        fontSize: '13px',
+        color: '#6f6f6f',
+        align: 'center',
+        lineSpacing: 3,
+      })
+      .setOrigin(0.5, 1);
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanup());
   }
 
   private cleanup(): void {
-    this.menuButtons.forEach((button) => {
-      button.removeAllListeners();
-      button.destroy();
-    });
-
+    this.menuButtons.forEach((button) => button.destroy());
     this.menuButtons = [];
   }
 }
