@@ -16,7 +16,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#000000',
   title: 'Phantom hollow',
-  version: '0.15.1',
+  version: '0.16.0',
   render: {
     antialias: true,
     pixelArt: false,
