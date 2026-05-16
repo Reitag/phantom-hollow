@@ -1,6 +1,9 @@
-export class PauseScene extends Phaser.Scene {
-  private resumeBtn: Phaser.GameObjects.Text | null = null;
-  private menuBtn: Phaser.GameObjects.Text | null = null;
+import { BaseScene } from '@/base/scene/base-scene';
+import { UI } from '@/constants/asset-keys';
+
+export class PauseScene extends BaseScene {
+  private resumeBtn: Phaser.GameObjects.Image | null = null;
+  private menuBtn: Phaser.GameObjects.Image | null = null;
 
   constructor() {
     super('PauseScene');
@@ -22,34 +25,22 @@ export class PauseScene extends Phaser.Scene {
     // Title
     this.add
       .text(width / 2, height / 2 - 100, 'PAUSED', {
-        fontSize: '48px',
+        font: 'bold 48px EB Garamond',
         color: '#ffffff',
-        fontStyle: 'bold',
       })
       .setOrigin(0.5);
 
-    const buttonStyle = {
-      fontSize: '24px',
-      color: '#ffffff',
-      backgroundColor: '#333333',
-      padding: { x: 20, y: 10 },
-    };
-
     // Resume
-    this.resumeBtn = this.add
-      .text(width / 2, height / 2, 'Resume', buttonStyle)
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerup', this.handleResume, this);
+    this.resumeBtn = this.createButton(width / 2, height / 2, {
+      key: UI.PAUSE_UI_RESUME_BTN,
+      action: () => this.handleResume(),
+    });
 
     // Menu
-    this.menuBtn = this.add
-      .text(width / 2, height / 2 + 80, 'Back to Main Menu', buttonStyle)
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerup', this.handleBackMainMenu, this);
-
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
+    this.menuBtn = this.createButton(width / 2, height / 2 + 43 /*gap = 20 and button size = 23*/, {
+      key: UI.PAUSE_UI_MAIN_MENU_BTN,
+      action: () => this.handleBackMainMenu(),
+    });
   }
 
   private handleResume(): void {
@@ -65,7 +56,7 @@ export class PauseScene extends Phaser.Scene {
     this.scene.start('MainMenuScene');
   }
 
-  private cleanup(): void {
+  protected cleanup(): void {
     this.resumeBtn?.removeAllListeners();
     this.menuBtn?.removeAllListeners();
 

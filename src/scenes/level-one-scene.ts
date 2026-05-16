@@ -1,3 +1,4 @@
+import { BaseScene } from '@/base/scene/base-scene';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
@@ -41,7 +42,6 @@ import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
 import { Position, SaveGame } from '@/utils/types';
-import { MISC_ANIMATION } from '@/constants/animation-keys';
 import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
@@ -51,7 +51,7 @@ type AudioZone = {
   ambient: string;
 };
 
-export class LevelOneScene extends Phaser.Scene {
+export class LevelOneScene extends BaseScene {
   private debugScreen: DebugScreen | null = null;
 
   // Background
@@ -105,11 +105,6 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
-
-    // Clean Up
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.cleanup();
-    });
   }
 
   public update(time: number, delta: number): void {
@@ -183,7 +178,6 @@ export class LevelOneScene extends Phaser.Scene {
     this.setupCamera();
 
     this.createAmbientZones();
-    this.showQuestBoard();
   }
 
   private createParallaxBackground(): void {
@@ -590,14 +584,6 @@ export class LevelOneScene extends Phaser.Scene {
     item.destroy();
   }
 
-  private showQuestBoard(): void {
-    const save = ServiceLocator.resolve(ServiceKeys.save);
-    if (save?.scene) return;
-
-    this.scene.launch('StartGameScene');
-    this.scene.bringToTop('StartGameScene');
-  }
-
   public onFireWormDied(data: { x: number; y: number }): void {
     this.spawnLoot('fireworm-fang-1', { x: data.x - 14, y: data.y + 14 }, [
       { id: 'fireworm-fang', amount: 1 },
@@ -722,7 +708,7 @@ export class LevelOneScene extends Phaser.Scene {
   }
   // --Ambient--
 
-  private cleanup(): void {
+  protected cleanup(): void {
     this.audio?.stopAmbient(false);
     this.audio = null;
 

@@ -1,5 +1,11 @@
-export class VictoryScene extends Phaser.Scene {
-  private continueBtn: Phaser.GameObjects.Text | null = null;
+import { BaseScene } from '@/base/scene/base-scene';
+import { UI } from '@/constants/asset-keys';
+import { BOARD_TEXT_WIDTH, boardText, END_GAME_TEXT } from '@/constants/board-texts';
+
+export class VictoryScene extends BaseScene {
+  private container: Phaser.GameObjects.Container | null = null;
+  private backGround: Phaser.GameObjects.Shape | null = null;
+  private continueBtn: Phaser.GameObjects.Image | null = null;
 
   constructor() {
     super('VictoryScene');
@@ -11,37 +17,37 @@ export class VictoryScene extends Phaser.Scene {
     this.scene.pause('LevelOneScene');
     this.scene.pause('UiScene');
 
-    this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0).setInteractive();
+    this.backGround = this.add
+      .rectangle(0, 0, width, height, 0x000000, 0.7)
+      .setOrigin(0)
+      .setInteractive();
 
-    this.add
-      .text(width / 2, height / 2 - 60, 'Victory!', {
-        fontSize: '40px',
-        color: '#ffffff',
+    this.container = this.add.container(width / 2, height / 4);
+
+    const style = boardText(BOARD_TEXT_WIDTH);
+
+    const title = this.add
+      .text(0, 0, END_GAME_TEXT.NAME, {
+        ...style.NAME,
       })
       .setOrigin(0.5);
 
-    this.add
-      .text(width / 2, height / 2, 'Sacryth the Duskbringer has been defeated.', {
-        fontSize: '22px',
-        color: '#dddddd',
-        align: 'center',
-        wordWrap: { width: 500 },
+    const line = this.add.graphics();
+    line.lineStyle(2, 0xffffff);
+    line.lineBetween(-150, 20, 150, 20);
+
+    const message = this.add
+      .text(0, 40, END_GAME_TEXT.TEXT, {
+        ...style.TEXT,
       })
       .setOrigin(0.5);
 
-    this.continueBtn = this.add
-      .text(width / 2, height / 2 + 100, 'CONTINUE', {
-        fontSize: '24px',
-        color: '#ffffff',
-        backgroundColor: '#333333',
-        padding: { x: 20, y: 10 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
+    this.continueBtn = this.createButton(width / 2, height * 0.8, {
+      key: UI.MISC_UI_OK_BTN,
+      action: () => this.handleContinue(),
+    });
 
-    this.continueBtn.on('pointerdown', this.handleContinue, this);
-
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
+    this.container.add([title, line, message]);
   }
 
   private handleContinue(): void {
@@ -50,13 +56,18 @@ export class VictoryScene extends Phaser.Scene {
     this.time.delayedCall(1000, () => {
       this.scene.stop('LevelOneScene');
       this.scene.stop('UiScene');
-      this.scene.stop();
+      //this.scene.stop();
       this.scene.start('OutroScene');
     });
   }
 
-  private cleanup(): void {
+  protected cleanup(): void {
+    this.backGround?.destroy();
+    this.backGround = null;
+    this.container?.destroy();
+    this.container = null;
     this.continueBtn?.removeAllListeners();
     this.continueBtn?.destroy();
+    this.continueBtn = null;
   }
 }

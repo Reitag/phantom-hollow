@@ -148,7 +148,27 @@
     {
       "type": "image",
       "key": "pause-button",
-      "url": "assets/ui/misc/pause-button.png"
+      "url": "assets/ui/pause/pause-button.png"
+    },
+    {
+      "type": "image",
+      "key": "pause-ui-resume-btn",
+      "url": "assets/ui/pause/pause-ui-resume-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "pause-ui-main-menu-btn",
+      "url": "assets/ui/pause/pause-ui-main-menu-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "edge-board",
+      "url": "assets/ui/misc/edge-board.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-ok-btn",
+      "url": "assets/ui/misc/misc-ui-ok-btn.png"
     },
     {
       "type": "image",

@@ -1,6 +1,10 @@
-export class OutroScene extends Phaser.Scene {
-  private storyText!: Phaser.GameObjects.Text;
-  private continueButton!: Phaser.GameObjects.Text;
+import { BaseScene } from '@/base/scene/base-scene';
+import { UI } from '@/constants/asset-keys';
+import { OUTRO_TEXT } from '@/constants/board-texts';
+
+export class OutroScene extends BaseScene {
+  private storyText: Phaser.GameObjects.Text | null = null;
+  private menuBtn: Phaser.GameObjects.Image | null = null;
 
   constructor() {
     super('OutroScene');
@@ -11,10 +15,8 @@ export class OutroScene extends Phaser.Scene {
 
     this.cameras.main.setBackgroundColor('#000000');
 
-    const content = 'Thanks for playing';
-
     this.storyText = this.add
-      .text(width / 2, height / 2, content, {
+      .text(width / 2, height / 2, OUTRO_TEXT.TEXT, {
         fontSize: '22px',
         fontFamily: 'Volkhov',
         color: '#ffffff',
@@ -25,37 +27,21 @@ export class OutroScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setShadow(2, 2, '#000000', 4);
 
-    this.continueButton = this.add
-      .text(width / 2, height - 40, 'Back to main menu', {
-        fontSize: '24px',
-        color: '#ffffff',
-        backgroundColor: '#222222',
-        padding: { x: 20, y: 10 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
-
-    this.continueButton.on('pointerover', () => {
-      this.continueButton.setStyle({ backgroundColor: '#444444' });
-    });
-
-    this.continueButton.on('pointerout', () => {
-      this.continueButton.setStyle({ backgroundColor: '#222222' });
-    });
-
-    this.continueButton.on('pointerdown', () => {
-      this.enterToMainMenu();
+    this.menuBtn = this.createButton(width / 2, height - 40, {
+      key: UI.PAUSE_UI_MAIN_MENU_BTN,
+      action: () => this.enterToMainMenu(),
     });
   }
 
   private enterToMainMenu(): void {
-    this.cameras.main.fadeOut(800, 0, 0, 0);
+    this.scene.start('MainMenuScene');
+  }
 
-    this.time.delayedCall(800, () => {
-      this.continueButton.removeAllListeners();
-      this.continueButton.destroy();
-
-      this.scene.start('MainMenuScene');
-    });
+  protected cleanup(): void {
+    this.storyText?.destroy();
+    this.storyText = null;
+    this.menuBtn?.removeAllListeners();
+    this.menuBtn?.destroy();
+    this.menuBtn = null;
   }
 }

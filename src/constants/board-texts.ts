@@ -1,6 +1,7 @@
 import { hastePotion } from '@/game/items/potions';
 import { stoneOfConcentration } from '@/game/items/stones';
 
+export const BOARD_TEXT_WIDTH = 400;
 export const LETTER_TEXT_WIDTH = 390;
 export const QUEST_TEXT_WIDTH = 299;
 
@@ -38,6 +39,65 @@ export const textStyle = (textWidth: number) => {
     },
   };
 };
+
+export const boardText = (textWidth: number) => {
+  return {
+    NAME: {
+      font: '700 24px Cinzel',
+      color: '#ffcc00',
+      align: 'center',
+      shadow: shadow,
+    },
+    TEXT: {
+      font: '20px EB Garamond',
+      color: '#d1d1d1',
+      align: 'center',
+      wordWrap: {
+        width: textWidth,
+      },
+      lineSpacing: 8,
+      shadow: shadow,
+    },
+  };
+};
+
+// Intro text
+export const INTRO_TEXT = {
+  TEXT: `
+Our Kingdom has endured much and many. Past conflicts with threats from beyond the sea teached us courage and magical discipline, paving a way to generations of mages, warriors, craftsmen, and artists.
+
+But any strong will weakens without an exercise. King Ramon Tarenval, heir of a long dinasty, has grown greedy and cowardly, leading our Kingdom to embrace his sickly example and attracting old foes back to our lands.
+
+Embercrest Highlands, a home of tranquility and ancient wisdom, was shaken by sudden arrival of vile Sacryth The Duskbringer and her minions, ready to feast insatiably on the divine energy we keep dear.
+
+Hokki Silverfir, a local chieftain devoted to defend his land and people from the wielders of dark magic, has called all of us to arms in the darkest hour.
+
+If there is chance at defending the peace and inspiring a change of heart at our Kingdom, it lies with those who believe in light, here and now.
+
+And so, here comes the young apprentice of The Guild Of Mages, urgent to protect their home from evil...
+
+~ From "The Book Of Triumps", The Guild Of Mages Holy Library ~
+`,
+} as const;
+
+// Start Game
+export const START_GAME_TEXT = {
+  NAME: 'Hokki Silverfir:',
+  TEXT:
+    'Our lands are in peril. My scouts have confirmed that Sacryth the Duskbringer is the one behind this chaos.\n\n' +
+    'I beg of you — eliminate the warlock.',
+} as const;
+
+// End Game
+export const END_GAME_TEXT = {
+  NAME: 'VICTORY',
+  TEXT: 'Sacryth the Duskbringer has been defeated.',
+} as const;
+
+// Outro text
+export const OUTRO_TEXT = {
+  TEXT: 'Thanks for playing',
+} as const;
 
 // Letter
 export const GREETING_LETTER_TEXT = {

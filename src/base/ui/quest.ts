@@ -1,6 +1,7 @@
 import { Board } from '@/base/ui/board';
 import { AUDIO, MISC, UI } from '@/constants/asset-keys';
 import { QUEST_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
+import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_UI } from '@/constants/ui-coordinates';
 import { QuestMark } from '@/entities/misc/quest-mark';
@@ -73,7 +74,9 @@ export abstract class Quest extends Board {
       width: 7,
       height: 293.8,
     };
-    const { x, y, width, height } = this.scrollIndicatorCoords;
+
+    // Left here just for possible future cases
+    /*const { x, y, width, height } = this.scrollIndicatorCoords;*/
 
     this.scrollThumb = this.scene.add.graphics();
     this.board.add(this.scrollThumb);
@@ -178,22 +181,27 @@ export abstract class Quest extends Board {
       const onOver = () => {
         this.hoverEffect = this.scene.add
           .graphics()
-          .fillStyle(0xfce2bd, 0.2)
+          .fillStyle(BUTTON_HOVERS.POINTEROVER.COLOR, BUTTON_HOVERS.POINTEROVER.ALPHA)
           .fillRoundedRect(pos.x, pos.y, button.width, button.height, 6);
 
         this.board?.add(this.hoverEffect);
       };
 
       const onOut = () => {
-        if (this.hoverEffect) {
-          this.board?.remove(this.hoverEffect);
-          this.hoverEffect.destroy();
-          this.hoverEffect = null;
-        }
+        this.removeHoverEffect();
       };
 
       const onDown = () => {
-        button.setTint(0x88ff88);
+        this.removeHoverEffect();
+
+        this.hoverEffect = this.scene.add.graphics();
+        this.hoverEffect.fillStyle(
+          BUTTON_HOVERS.POINTERDOWN.COLOR,
+          BUTTON_HOVERS.POINTERDOWN.ALPHA
+        );
+        this.hoverEffect.fillRoundedRect(pos.x, pos.y + 1, button.width, button.height, 6);
+
+        this.board?.add(this.hoverEffect);
       };
 
       const onUp = () => {
@@ -202,7 +210,7 @@ export abstract class Quest extends Board {
         } else if (button === this.completeButton) {
           this.completeQuest();
         }
-        button.clearTint();
+        this.removeHoverEffect();
         this.closeBoard();
       };
 

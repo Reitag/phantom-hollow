@@ -1,6 +1,7 @@
 import { Board } from '@/base/ui/board';
 import { AUDIO, UI } from '@/constants/asset-keys';
 import { GREETING_LETTER_TEXT, LETTER_TEXT_WIDTH, textStyle } from '@/constants/board-texts';
+import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LETTER_UI } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -77,26 +78,34 @@ export class Letter extends Board {
     const onOver = () => {
       this.hoverEffect = this.scene.add
         .graphics()
-        .fillStyle(0xfce2bd, 0.2)
+        .fillStyle(BUTTON_HOVERS.POINTEROVER.COLOR, BUTTON_HOVERS.POINTEROVER.ALPHA)
         .fillRoundedRect(pos.x, pos.y, this.closeButton.width, this.closeButton.height, 6);
 
       this.board?.add(this.hoverEffect);
     };
 
     const onOut = () => {
-      if (this.hoverEffect) {
-        this.board?.remove(this.hoverEffect);
-        this.hoverEffect.destroy();
-        this.hoverEffect = null;
-      }
+      this.removeHoverEffect();
     };
 
     const onDown = () => {
-      this.closeButton.setTint(0x88ff88);
+      this.removeHoverEffect();
+
+      this.hoverEffect = this.scene.add.graphics();
+      this.hoverEffect.fillStyle(BUTTON_HOVERS.POINTERDOWN.COLOR, BUTTON_HOVERS.POINTERDOWN.ALPHA);
+      this.hoverEffect.fillRoundedRect(
+        pos.x,
+        pos.y + 1,
+        this.closeButton.width,
+        this.closeButton.height,
+        6
+      );
+
+      this.board?.add(this.hoverEffect);
     };
 
     const onUp = () => {
-      this.closeButton.clearTint();
+      this.removeHoverEffect();
       this.closeBoard();
     };
 
@@ -111,7 +120,7 @@ export class Letter extends Board {
     return true;
   }
 
-  public unregisterLetterEvents() {
+  public unregisterLetterEvents(): void {
     if (!this.board) return;
 
     this.scene.events.off('open-letter', this.openBoard, this);

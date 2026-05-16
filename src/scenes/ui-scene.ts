@@ -4,8 +4,9 @@ import { createUiTilemap } from '@/tilemap/tilemap-ui';
 import { Tilemap } from '@/components/map/tilemap';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { getUiCoords } from '@/utils/helpers';
+import { BaseScene } from '@/base/scene/base-scene';
 
-export class UiScene extends Phaser.Scene {
+export class UiScene extends BaseScene {
   private ui!: UiSystem;
   private uiTilemapCoords!: Tilemap;
   private pauseBtn!: Phaser.GameObjects.Image;
@@ -22,9 +23,6 @@ export class UiScene extends Phaser.Scene {
 
     // Miscs
     this.createMiscIcons();
-
-    // Clean Up
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
   }
 
   public getUI(): UiSystem {
@@ -61,7 +59,7 @@ export class UiScene extends Phaser.Scene {
     this.scene.launch('PauseScene').bringToTop('PauseScene');
   }
 
-  private cleanup(): void {
+  protected cleanup(): void {
     this.pauseBtn.off('pointerup', this.handlePauseBtn, this);
     this.pauseBtn.destroy();
   }

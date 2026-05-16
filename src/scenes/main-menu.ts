@@ -1,7 +1,8 @@
+import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
 import { SaveService } from '@/infrastructure/save-service';
 
-export class MainMenuScene extends Phaser.Scene {
+export class MainMenuScene extends BaseScene {
   private menuButtons: Phaser.GameObjects.Image[] = [];
 
   constructor() {
@@ -39,15 +40,13 @@ export class MainMenuScene extends Phaser.Scene {
 
     buttons.forEach((btn, index) => {
       if (!btn.visible) return;
-      const y = startY + index * (23 + gap);
-      const button = this.add
-        .image(centerX, y, btn.key)
-        .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true });
 
-      button.on('pointerover', () => button.setTint(0xfce2bd));
-      button.on('pointerout', () => button.clearTint());
-      button.on('pointerup', () => btn.action());
+      const y = startY + index * (23 + gap); // 23 size of button
+
+      const button = this.createButton(centerX, y, {
+        key: btn.key,
+        action: btn.action,
+      });
 
       this.menuButtons.push(button);
     });
@@ -76,11 +75,9 @@ export class MainMenuScene extends Phaser.Scene {
         lineSpacing: 3,
       })
       .setOrigin(0.5, 1);
-
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.cleanup());
   }
 
-  private cleanup(): void {
+  protected cleanup(): void {
     this.menuButtons.forEach((button) => button.destroy());
     this.menuButtons = [];
   }
