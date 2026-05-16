@@ -17,6 +17,8 @@ import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
 import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
+import { FIRE_CRIT } from '@/constants/modifier-stats';
+import { QUEST_IDS } from '@/constants/quest-ids';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -26,7 +28,10 @@ export class Player extends Character {
   private spellSystem: SpellSystem;
   private inventory: InventorySystem;
   private coinKeeper: CoinKeeper;
-  private onQuest = false;
+  private questsStatus: Record<string, boolean> = {
+    [QUEST_IDS.ALCHEMIST_FIREWORM]: false,
+    [QUEST_IDS.CRYSTAL]: false,
+  };
 
   constructor({ scene, position, keyName, frame, facingRight, stats }: CharacterConfig) {
     super({ scene, position, keyName, frame, facingRight, stats });
@@ -83,12 +88,12 @@ export class Player extends Character {
     this.stateMachine.changeState(PLAYER_STATES.IDLE);
   }
 
-  public get isOnQuest(): boolean {
-    return this.onQuest;
+  public isQuestActive(id: string): boolean {
+    return this.questsStatus[id];
   }
 
-  public set isOnQuest(value: boolean) {
-    this.onQuest = value;
+  public setQuestStatus(id: string, value: boolean): void {
+    this.questsStatus[id] = value;
   }
 
   public update(delta: number): void {
@@ -133,6 +138,10 @@ export class Player extends Character {
   protected override onDeathStart(): void {
     this.controls.disable();
     this.ui.removeAllModfierIcons();
+    if (this.modifier.isModifierExist(FIRE_CRIT.id)) {
+      this.modifier.removeModifier(FIRE_CRIT.id);
+    }
+    ServiceLocator.resolve(ServiceKeys.sandbox).resetFireStacks();
   }
 
   protected override onAliveStart(): void {

@@ -36,6 +36,7 @@ export abstract class Panel {
   protected iconHighlighter: IconHighlighter;
   protected clickBinder: IconClickBinder;
   protected dragBinder: IconDragBinder;
+  protected pointer: Phaser.Input.Pointer | null = null;
 
   constructor({ scene, slotOffSet, cell }: PanelConfig) {
     this.scene = scene;
@@ -69,8 +70,23 @@ export abstract class Panel {
   }
 
   public update(input: InputController): void {
+    this.pointer = this.scene.input.activePointer;
+
     if (input.isUtilityDown) {
       this.disableSpellInput();
+
+      const hoveredIndex = this.getIndex({ x: this.pointer.x, y: this.pointer.y });
+
+      if (this.pointer.isDown) {
+        const ui = ServiceLocator.resolve(ServiceKeys.ui);
+        ui.hideTooltip();
+        return;
+      }
+
+      if (hoveredIndex !== -1) {
+        this.triggerTooltip(hoveredIndex);
+      }
+
       return;
     }
 
@@ -101,6 +117,7 @@ export abstract class Panel {
   }
 
   protected abstract emitSlotRelease(i: number): void;
+  protected abstract triggerTooltip(index: number): void;
 
   protected clickContext: IconClickContext = {
     onHover: (i) => {

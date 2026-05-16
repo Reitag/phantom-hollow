@@ -3,8 +3,10 @@
 
 export const AUDIO = {
   FOREST_AMBIENT: 'forest-ambient',
+  CAVE_AMBIENT: 'cave-ambient',
   FIREBALL_LAUNCH: 'fireball-launch',
   FIREBALL_IMPACT: 'fireball-impact',
+  FIREBALL_CRIT_IMPACT: 'fireball-crit-impact',
   BLINK_ACTION: 'blink-action',
   WIND_ACTION: 'wind-action',
   FROSTBOLT_LAUNCH: 'frostbolt-launch',
@@ -76,7 +78,8 @@ export const MAPS = {
 
 export const MISC = {
   SOUL_FIRE: 'soul-fire',
-  BON_FIRE: 'bon-fire',
+  BONFIRE: 'bonfire',
+  BOWLER: 'bowler',
   CRYSTAL_SHRINE: 'crystal-shrine',
   PORTAL: 'portal',
   DARK_ENERGY: 'dark-energy',
@@ -86,18 +89,16 @@ export const MISC = {
 } as const;
 
 export const OBJECTS = {
-  TREE_NORMAL: 'tree-normal',
-  TREE_SHADOW: 'tree-shadow',
+  CONIFER: 'conifer',
   STORE: 'store',
+  BONFIRE_OFF: 'bonfire-off',
   BOTTLES: 'bottles',
-  BOWLER: 'bowler',
   STATUE_LEFT: 'statue-left',
   STATUE_RIGHT: 'statue-right',
   WOOD: 'wood',
   BOXES: 'boxes',
   APPLE_TABLE: 'apple-table',
   TABLE: 'table',
-  BONFIRE: 'bonfire',
   TENT: 'tent',
   STUMP: 'stump',
   ROCK_1: 'rock-1',
@@ -163,6 +164,11 @@ export const UI = {
   MENU_UI_CONTINUE_BTN: 'menu-ui-continue-btn',
   MENU_UI_OPTION_BTN: 'menu-ui-option-btn',
   MENU_UI_CREDITS_BTN: 'menu-ui-credits-btn',
+  PAUSE_BUTTON: 'pause-button',
+  PAUSE_UI_RESUME_BTN: 'pause-ui-resume-btn',
+  PAUSE_UI_MAIN_MENU_BTN: 'pause-ui-main-menu-btn',
+  EDGE_BOARD: 'edge-board',
+  MISC_UI_OK_BTN: 'misc-ui-ok-btn',
   HEALTH_POTION_ICON: 'health-potion-icon',
   NATURE_POTION_ICON: 'nature-potion-icon',
   PROTECTION_POTION_ICON: 'protection-potion-icon',
@@ -170,6 +176,8 @@ export const UI = {
   LIGHTNING_POTION_ICON: 'lightning-potion-icon',
   UNDYING_POTION_ICON: 'undying-potion-icon',
   HASTE_POTION_ICON: 'haste-potion-icon',
+  FIRE_RELIC_ICON: 'fire-relic-icon',
+  FROST_RELIC_ICON: 'frost-relic-icon',
   SOUL_STONE_ICON: 'soul-stone-icon',
   STONE_OF_CONCENTRATION_ICON: 'stone-of-concentration-icon',
   PROTECTION_BUFF: 'protection-buff',
@@ -179,11 +187,15 @@ export const UI = {
   ARCANE_MIND_BUFF: 'arcane-mind-buff',
   HASTE_BUFF: 'haste-buff',
   CONCENTRATION_BUFF: 'concentration-buff',
+  FIRE_ACCUM_BUFF: 'fire-accum-buff',
+  FIRE_CRIT_BUFF: 'fire-crit-buff',
   CRYSTAL_RENEWAL_BUFF: 'crystal-renewal-buff',
+  FROSTBITE_DEBUFF: 'frostbite-debuff',
   DISEASE_DEBUFF: 'disease-debuff',
   DREAD_AURA_DEBUFF: 'dread-aura-debuff',
   SHADOW_VULNERABILITY_DEBUFF: 'shadow-vulnerability-debuff',
   FIREWORM_FANG_QUEST_ITEM: 'fireworm-fang-quest-item',
+  CRYSTAL_QUEST_ITEM: 'crystal-quest-item',
 } as const;
 
 export const VFX = {

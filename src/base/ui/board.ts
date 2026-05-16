@@ -31,4 +31,12 @@ export abstract class Board {
     this.hoverEffect?.destroy();
     this.hoverEffect = null;
   }
+
+  protected removeHoverEffect(): void {
+    if (this.hoverEffect) {
+      this.board?.remove(this.hoverEffect);
+      this.hoverEffect.destroy();
+      this.hoverEffect = null;
+    }
+  }
 }

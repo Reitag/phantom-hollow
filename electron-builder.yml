@@ -1,0 +1,14 @@
+appId: com.mygame.phantomhollow
+productName: Phantom Hollow
+directories:
+  output: build_electron
+files:
+  - 'build/**/*'
+  - 'main.js'
+  - 'package.json'
+win:
+  target:
+    - target: dir
+  executableName: 'phantom-hollow'
+  cscLink: null
+  verifyUpdateCodeSignature: false

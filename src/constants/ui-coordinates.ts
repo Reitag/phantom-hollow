@@ -54,8 +54,8 @@ export const LETTER_UI = {
 
 // Interact tooltip
 export const INTERACT_TOOLTIP = {
-  X: 620,
-  Y: 628,
+  X: 765,
+  Y: 580,
   WIDTH: 170,
   FILL_COLOR: 0x000000,
 } as const;

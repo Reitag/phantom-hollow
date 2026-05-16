@@ -2,6 +2,8 @@ import { UI } from './asset-keys';
 
 export const SHIFT_SPELL_REGGISTER_HITS = 1000;
 
+export const CRITICAL_MULTIPLIER = 2;
+
 export const SPIKE_HIT = 10;
 
 export const SPEAR_HIT = 5000;
@@ -20,7 +22,7 @@ export const BLINK_STATS = {
 } as const;
 
 export const WIND_WAVE_STATS = {
-  FORCE: 300,
+  FORCE: 400,
 } as const;
 
 export const FROST_BOLT_STATS = {
@@ -85,7 +87,7 @@ export const SKELETON_WARRIOR_STATS = {
   HIT: 25,
   SAME_Y_THRESHOLD: 10,
   WALK: 60,
-  CHASE: 1.3,
+  CHASE: 1.8,
 } as const;
 
 export const ZOMBIE_STATS = {
@@ -97,7 +99,7 @@ export const ZOMBIE_STATS = {
   HIT: 15,
   SAME_Y_THRESHOLD: 10,
   WALK: 50,
-  CHASE: 1.3,
+  CHASE: 1.8,
 } as const;
 
 export const ARCHER_STATS = {

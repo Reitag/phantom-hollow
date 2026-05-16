@@ -8,20 +8,26 @@ import { IntroScene } from '@/scenes/intro-scene';
 import { StartGameScene } from '@/scenes/start-game-scene';
 import { VictoryScene } from '@/scenes/victory-scene';
 import { OutroScene } from '@/scenes/outro-scene';
+import { PauseScene } from '@/scenes/pause-scene';
 
-const fullScreen = false;
+const scale = false;
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  backgroundColor: '#eeeeee',
+  backgroundColor: '#000000',
   title: 'Phantom hollow',
-  version: '0.15.1',
+  version: '0.16.0',
+  render: {
+    antialias: true,
+    pixelArt: false,
+    roundPixels: true,
+  },
   scale: {
     parent: 'app',
     width: SCENE_SIZE.WIDTH,
     height: SCENE_SIZE.HEIGHT,
-    mode: fullScreen ? Phaser.Scale.FIT : Phaser.Scale.NONE,
-    autoCenter: fullScreen ? Phaser.Scale.CENTER_BOTH : Phaser.Scale.NONE,
+    mode: scale ? Phaser.Scale.FIT : Phaser.Scale.NONE,
+    autoCenter: scale ? Phaser.Scale.CENTER_BOTH : Phaser.Scale.NONE,
   },
   physics: {
     default: 'arcade',
@@ -36,6 +42,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     IntroScene,
     UiScene,
     LevelOneScene,
+    PauseScene,
     StartGameScene,
     VictoryScene,
     OutroScene,

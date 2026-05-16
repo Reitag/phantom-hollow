@@ -23,4 +23,8 @@ export class ModifierSystem {
   public isModifierExist(id: string): boolean {
     return this.modifiers.some((modifier) => modifier.id === id);
   }
+
+  public getModifier(id: string): Modifier | undefined {
+    return this.modifiers.find((modifier) => modifier.id === id);
+  }
 }

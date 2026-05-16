@@ -1,5 +1,6 @@
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_STATS } from '@/constants/object-stats';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-properies';
 import { SHARED_STATES } from '@/constants/state-keys';
 import { Z_POSITION } from '@/constants/z-position';
@@ -67,6 +68,16 @@ export class PlayerHandler {
           ui.addModifierIcon(buff, undefined, 'buff');
         }
       });
+    }
+
+    if (save?.quests) {
+      if (save.quests[QUEST_IDS.ALCHEMIST_FIREWORM] === 'waiting') {
+        this.player.setQuestStatus(QUEST_IDS.ALCHEMIST_FIREWORM, true);
+      }
+
+      if (save.quests[QUEST_IDS.CRYSTAL] === 'waiting') {
+        this.player.setQuestStatus(QUEST_IDS.CRYSTAL, true);
+      }
     }
 
     ServiceLocator.register(ServiceKeys.playerHandler, this);

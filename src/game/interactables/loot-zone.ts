@@ -126,6 +126,35 @@ export class LootZone extends Interactable {
       }),
     });
 
+    // Forth static loot zone
+    const forthLootZone = this.scene.add
+      .image(
+        (staticLootZones[3] as Phaser.GameObjects.Zone).x,
+        (staticLootZones[3] as Phaser.GameObjects.Zone).y,
+        OBJECTS.CHEST_CLOSE,
+        0
+      )
+      .setOrigin(0, 0)
+      .setDepth(Z_POSITION.DECOR);
+
+    this.lootZones.push({
+      id: 'chest-4',
+      type: 'chest',
+      zone: staticLootZones[3] as Phaser.GameObjects.Zone,
+      chestSprite: forthLootZone,
+      loot: [{ id: 'undying-potion', amount: 1 }],
+      activated: false,
+      vfx: new Shining({
+        scene: this.scene,
+        position: {
+          x: (staticLootZones[3] as Phaser.GameObjects.Zone).x,
+          y: (staticLootZones[3] as Phaser.GameObjects.Zone).y,
+        },
+        keyName: MISC.SHINING,
+        frame: 0,
+      }),
+    });
+
     if (save) {
       // Chests
       this.lootZones.forEach((zone) => {
@@ -141,11 +170,15 @@ export class LootZone extends Interactable {
         }
       });
 
-      // Boss loot
+      // Quests loot
       save.worldState.droppedLoot.forEach((drop) => {
-        const zone = scene.add.zone(drop.x - 14, drop.y + 14, 32, 32).setOrigin(0, 0);
-
-        this.createLootZone(drop.id, zone, drop.loot);
+        if (drop.id === 'fireworm-fang-1') {
+          const zone = scene.add.zone(drop.x - 14, drop.y, 32, 32).setOrigin(0, 0);
+          this.createLootZone(drop.id, zone, drop.loot);
+        } else {
+          const zone = scene.add.zone(drop.x, drop.y, 32, 32).setOrigin(0, 0);
+          this.createLootZone(drop.id, zone, drop.loot);
+        }
       });
     }
   }

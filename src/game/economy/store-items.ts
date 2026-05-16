@@ -6,8 +6,8 @@ import {
   spellPotion,
   undyingPotion,
 } from '@/game/items/potions';
-import { soulStone } from '@/game/items/stones';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { fireRelic, frostRelic } from '../items/relics';
 
 export interface StoreItem {
   id: string;
@@ -99,7 +99,7 @@ export const STORE_ITEMS: StoreItem[] = [
       }
     },
   },
-  {
+  /*{
     ...undyingPotion(),
     price: ITEM_COSTS.UNDYING_POTION,
     onBuy: () => {
@@ -118,10 +118,10 @@ export const STORE_ITEMS: StoreItem[] = [
         }
       }
     },
-  },
-  {
+  },*/
+  /*{
     ...soulStone(),
-    price: ITEM_COSTS.SOUL_STONE,
+    price: 10,
     onBuy: () => {
       const stone = soulStone();
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
@@ -143,8 +143,80 @@ export const STORE_ITEMS: StoreItem[] = [
           .getPlayer()
           .getCoinKeeper();
 
-        if (coinKeeper.removeCoins(ITEM_COSTS.SOUL_STONE)) {
+        if (coinKeeper.removeCoins(10)) {
           inventory.addItem(stone, 1);
+        }
+      }
+    },
+  },*/
+  {
+    ...fireRelic(),
+    price: ITEM_COSTS.FIRE_RELIC,
+    onBuy: () => {
+      const relic = fireRelic();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+      const ui = ServiceLocator.resolve(ServiceKeys.ui);
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+
+      if (relic.isUnique) {
+        const alreadyOwned = inventory.getSlots().some((slot) => slot && slot.item.id === relic.id);
+
+        if (alreadyOwned) {
+          ui.addWarningtext('There is only one unique item in inventory');
+          return;
+        }
+      }
+
+      if (sandbox.findSomeRelic()) {
+        ui.addWarningtext('Only one relic can be equiped in the bag');
+        return;
+      }
+
+      if (!inventory.canAdd(relic, 1)) {
+        ui.addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
+
+        if (coinKeeper.removeCoins(ITEM_COSTS.FIRE_RELIC)) {
+          inventory.addItem(relic, 1);
+        }
+      }
+    },
+  },
+  {
+    ...frostRelic(),
+    price: ITEM_COSTS.FROST_RELIC,
+    onBuy: () => {
+      const relic = frostRelic();
+      const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+      const ui = ServiceLocator.resolve(ServiceKeys.ui);
+      const sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
+
+      if (relic.isUnique) {
+        const alreadyOwned = inventory.getSlots().some((slot) => slot && slot.item.id === relic.id);
+
+        if (alreadyOwned) {
+          ui.addWarningtext('There is only one unique item in inventory');
+          return;
+        }
+      }
+
+      if (sandbox.findSomeRelic()) {
+        ui.addWarningtext('Only one relic can be equiped in the bag');
+        return;
+      }
+
+      if (!inventory.canAdd(relic, 1)) {
+        ui.addWarningtext('The inventory is full');
+      } else {
+        const coinKeeper = ServiceLocator.resolve(ServiceKeys.playerHandler)
+          .getPlayer()
+          .getCoinKeeper();
+
+        if (coinKeeper.removeCoins(ITEM_COSTS.FROST_RELIC)) {
+          inventory.addItem(relic, 1);
         }
       }
     },

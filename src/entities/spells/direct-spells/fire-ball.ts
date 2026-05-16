@@ -3,6 +3,8 @@ import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SPELL_ANIMATION_KEYS, SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { AUDIO } from '@/constants/asset-keys';
 import { FIRE_BALL_STATS } from '@/constants/object-stats';
+import { Player } from '@/entities/characters/player/player';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class FireBall extends Spell {
   constructor({
@@ -36,8 +38,11 @@ export class FireBall extends Spell {
     this.audioKeys = {
       launch: AUDIO.FIREBALL_LAUNCH,
       impact: AUDIO.FIREBALL_IMPACT,
+      critImpact: AUDIO.FIREBALL_CRIT_IMPACT,
       action: undefined,
     };
+
+    this.relicId = 'fire-relic';
 
     this.arcadeBody.setSize(22, 13);
   }
@@ -54,4 +59,16 @@ export class FireBall extends Spell {
   }
 
   public applyEffect(target: Character): void {}
+
+  protected override onDestroyStart(): void {
+    if (!(this.caster instanceof Player)) return;
+
+    if (this.isEnemyHitAtLeastOnce()) {
+      const activeRelic = this.sandbox.findSomeRelic();
+
+      if (activeRelic && activeRelic === this.relicId) {
+        ServiceLocator.resolve(ServiceKeys.sandbox).trackFireRelicHit();
+      }
+    }
+  }
 }

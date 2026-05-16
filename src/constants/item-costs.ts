@@ -4,7 +4,8 @@ export const ITEM_COSTS = {
   SPELL_POTION: 5,
   LIGHTNING_POTION: 5,
   UNDYING_POTION: 8,
-  SOUL_STONE: 10,
+  FIRE_RELIC: 20,
+  FROST_RELIC: 20,
 } as const;
 
 /*export const ITEM_COSTS = {
@@ -13,5 +14,6 @@ export const ITEM_COSTS = {
   SPELL_POTION: 0,
   LIGHTNING_POTION: 0,
   UNDYING_POTION: 0,
-  SOUL_STONE: 0,
+  FIRE_RELIC: 0,
+  FROST_RELIC: 0
 } as const;*/

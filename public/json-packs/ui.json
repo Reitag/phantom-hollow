@@ -147,6 +147,31 @@
     },
     {
       "type": "image",
+      "key": "pause-button",
+      "url": "assets/ui/pause/pause-button.png"
+    },
+    {
+      "type": "image",
+      "key": "pause-ui-resume-btn",
+      "url": "assets/ui/pause/pause-ui-resume-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "pause-ui-main-menu-btn",
+      "url": "assets/ui/pause/pause-ui-main-menu-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "edge-board",
+      "url": "assets/ui/misc/edge-board.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-ok-btn",
+      "url": "assets/ui/misc/misc-ui-ok-btn.png"
+    },
+    {
+      "type": "image",
       "key": "health-potion-icon",
       "url": "assets/icons/potions/health-potion.png"
     },
@@ -179,6 +204,16 @@
       "type": "image",
       "key": "haste-potion-icon",
       "url": "assets/icons/potions/haste-potion.png"
+    },
+    {
+      "type": "image",
+      "key": "fire-relic-icon",
+      "url": "assets/icons/relics/fire-relic.png"
+    },
+    {
+      "type": "image",
+      "key": "frost-relic-icon",
+      "url": "assets/icons/relics/frost-relic.png"
     },
     {
       "type": "image",
@@ -227,8 +262,23 @@
     },
     {
       "type": "image",
+      "key": "fire-accum-buff",
+      "url": "assets/icons/buffs/fire-accum.png"
+    },
+    {
+      "type": "image",
+      "key": "fire-crit-buff",
+      "url": "assets/icons/buffs/fire-crit.png"
+    },
+    {
+      "type": "image",
       "key": "crystal-renewal-buff",
       "url": "assets/icons/buffs/crystal-renewal.png"
+    },
+    {
+      "type": "image",
+      "key": "frostbite-debuff",
+      "url": "assets/icons/debuffs/frostbite.png"
     },
     {
       "type": "image",
@@ -249,6 +299,11 @@
       "type": "image",
       "key": "fireworm-fang-quest-item",
       "url": "assets/icons/quests/fireworm-fang.png"
+    },
+    {
+      "type": "image",
+      "key": "crystal-quest-item",
+      "url": "assets/icons/quests/crystal.png"
     }
   ]
 }

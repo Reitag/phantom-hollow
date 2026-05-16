@@ -1,24 +1,26 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
-import { Quest } from '@/components/ui/boards/quest';
+import { AlchemistQuest } from '@/components/ui/boards/alchemist-quest';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { QUEST_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export class AlchemistQuestTrigger extends Interactable {
-  private quest: Quest;
+  private quest: AlchemistQuest;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createTriggerZones(InteractableNames['alchemist-quest']);
-    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getBoard<Quest>('quest');
+    this.quest = ServiceLocator.resolve(ServiceKeys.ui).getBoard<AlchemistQuest>('alchemist-quest');
 
-    this.quest.defineQuestState();
+    this.quest.createQuestMark('alchemist-quest-mark');
+    this.quest.defineQuestState(QUEST_IDS.ALCHEMIST_FIREWORM);
   }
 
   protected onEnter(): void {
     const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
 
-    if (player.isOnQuest) {
+    if (player.isQuestActive(QUEST_IDS.ALCHEMIST_FIREWORM)) {
       return;
     }
 

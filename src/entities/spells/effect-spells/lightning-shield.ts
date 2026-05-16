@@ -17,6 +17,7 @@ export class LightningShield extends Spell {
     this.audioKeys = {
       launch: undefined,
       impact: AUDIO.LIGHTNING_SHIELD_ABSORB,
+      critImpact: undefined,
       action: AUDIO.LIGHTNING_SHIELD_ACTION,
     };
 

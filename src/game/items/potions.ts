@@ -68,7 +68,7 @@ export const protectPotion = (): InventoryItem => ({
 export const spellPotion = (): InventoryItem => ({
   id: 'spell-potion',
   name: 'Spell Potion',
-  description: 'Use: Increases spell power by 100% for 20 sec.',
+  description: 'Use: Increases spell power by 50% for 15 sec.',
   iconKey: UI.SPELL_POTION_ICON,
   maxStack: 5,
   isUnique: false,
@@ -126,10 +126,10 @@ export const undyingPotion = (): InventoryItem => ({
   id: 'undying-potion',
   name: 'Undying Potion',
   description:
-    'Use: Applies a buff that triggers on fatal damage, leaving the character at 1 Health and preventing death for 3 sec. Consumed on activation.',
+    'Use: Applies a buff that triggers on fatal damage, leaving the character at 1 Health and preventing death for 5 sec. Consumed on activation.',
   iconKey: UI.UNDYING_POTION_ICON,
-  maxStack: 3,
-  isUnique: false,
+  maxStack: 1,
+  isUnique: true,
   use: () => {
     const player = ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer();
     const modifier = player.getModifier();

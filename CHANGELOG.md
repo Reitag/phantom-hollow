@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.16.0] – 2026-05-16
+
+### Added
+
+- Bonfire system (respawn and healing)
+- Cave ambient audio
+- Frostbite debuff (applied by Frostbolt)
+- Two new relics
+- Electron and electron-builder for executable distribution
+- Generate-build-name utility for version-based build directory naming
+- Crystal Shrine quest
+- Pause menu
+- Credits on main screen
+
+### Changed
+
+- Map expanded from 17600px to 19200px
+- Frostbolt reworked: now slows targets or reduces their damage by 30% if the they are slow-immune
+- Canvas settings for improved display scaling
+- Update global button styles, quest boards, and game flow screens
+
+### Fixed
+
+- Minor typos in code
+- Tsconfig deprecation issues related to module resolution and paths
+- Tooltip now appears correctly when pressing Shift while already hovering over an icon
+
+### Removed
+
+- Soul pedestal respawn mechanic
+- Crystal shrine healing mechanic
+- Options and credits buttons from main screen
+
+
 ## [0.15.1] – 2026-04-18
 
 ### Fixed

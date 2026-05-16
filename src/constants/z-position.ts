@@ -8,8 +8,7 @@ export const Z_POSITION = {
   MOUNTAINS: 10,
   GRASS: 20,
   /// -objects
-  TREES_SHADOW: 30,
-  TREES_NORMAL: 40,
+  TREES: 40,
   ROCK: 50,
   /// -backgrounds
   CAVE_BACKGROUND: 60,

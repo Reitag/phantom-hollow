@@ -1,34 +1,38 @@
+import { BaseScene } from '@/base/scene/base-scene';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
-import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { FIRE_CRIT, LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Stall } from '@/game/interactables/stall';
-import { SoulPedestal } from '@/game/interactables/soul-pedestal';
+import { Bonfire } from '@/game/interactables/bonfire';
 import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trigger';
+import { CrystalShrineQuestTrigger } from '@/game/interactables/crystal-shrine-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
-import { CrystalShrine } from '@/game/interactables/crystal-shrine';
 import { GreetingLetter } from '@/game/interactables/greeting-letter';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
-import { BonFire } from '@/entities/misc/bonfire';
+import { Bowler } from '@/entities/misc/bowler';
 import { QuestMark } from '@/entities/misc/quest-mark';
 import { SpellFactory } from '@/factories/spell-factory';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
 import { LootSystem } from '@/systems/loot-system';
 import { Coin } from '@/entities/items/coin';
+import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
+import { Shrine } from '@/entities/misc/shrine';
 import { LightningShield } from '@/entities/spells/effect-spells/lightning-shield';
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { AudioSystem } from '@/systems/audio-system';
 import { EnemySpawn } from '@/systems/enemy-spawn';
+import { UiSystem } from '@/systems/ui-system';
 import { NPCSpawn } from '@/systems/npc-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
@@ -42,7 +46,12 @@ import { UiScene } from './ui-scene';
 // @ts-expect-error JS import
 import { DebugScreen } from '../../tools/debug-screen.js';
 
-export class LevelOneScene extends Phaser.Scene {
+type AudioZone = {
+  polygon: Phaser.Geom.Polygon;
+  ambient: string;
+};
+
+export class LevelOneScene extends BaseScene {
   private debugScreen: DebugScreen | null = null;
 
   // Background
@@ -51,7 +60,14 @@ export class LevelOneScene extends Phaser.Scene {
   private forestBack: Phaser.GameObjects.TileSprite | null = null;
   private forestFront: Phaser.GameObjects.TileSprite | null = null;
 
+  // Ambient
+  private audio: AudioSystem | null = null;
+  private ambientZones: AudioZone[] = [];
+  private currentAmbient: string | null = null;
+  private insideZone: AudioZone | null = null;
+
   private player!: Player;
+  private ui: UiSystem | null = null;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
@@ -77,7 +93,7 @@ export class LevelOneScene extends Phaser.Scene {
 
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
-    /*this.scale.toggleFullscreen();*/
+
     SaveService.start();
     ServiceLocator.register(ServiceKeys.save, save);
 
@@ -89,11 +105,6 @@ export class LevelOneScene extends Phaser.Scene {
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
-
-    // Clean Up
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.cleanup();
-    });
   }
 
   public update(time: number, delta: number): void {
@@ -103,6 +114,7 @@ export class LevelOneScene extends Phaser.Scene {
     this.interactables.update(delta);
 
     this.updateParallaxBackground();
+    this.ambientUpdate();
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
@@ -129,6 +141,7 @@ export class LevelOneScene extends Phaser.Scene {
     uiScene.events.once(Phaser.Scenes.Events.CREATE, () => {
       if (uiScene instanceof UiScene) {
         ServiceLocator.register(ServiceKeys.ui, uiScene.getUI());
+        this.ui = uiScene.getUI();
         initWorld();
 
         // Debug
@@ -157,14 +170,14 @@ export class LevelOneScene extends Phaser.Scene {
     this.createPlayer();
     this.createMiscs();
     this.createInteractableObjects();
+    this.uploadInventory();
 
     this.registerCollisions();
     this.createSpawnSystems();
 
     this.setupCamera();
-    this.playAmbient();
 
-    this.showQuestBoard();
+    this.createAmbientZones();
   }
 
   private createParallaxBackground(): void {
@@ -273,21 +286,27 @@ export class LevelOneScene extends Phaser.Scene {
   private createPlayer(): void {
     this.playerHandler = new PlayerHandler(this);
     this.player = this.playerHandler.getPlayer();
-
-    const save = ServiceLocator.resolve(ServiceKeys.save);
-
-    if (save) {
-      this.player.getCoinKeeper().addCoins(save.coins, false);
-      this.uploadInventory(save);
-    }
   }
+  // Comes after:
+  // - this.createMiscs();
+  // - this.createInteractableObjects();
+  private uploadInventory(): void {
+    const save = ServiceLocator.resolve(ServiceKeys.save);
+    if (!save) return;
 
-  private uploadInventory(save: SaveGame): void {
+    this.player.getCoinKeeper().addCoins(save.coins, false);
+
     if (save.inventory.length > 0) {
       const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
       inventory.loadDataSlots(
         save.inventory.map((slot) => {
+          // Need for count used crystal loot zones
+          if (slot?.id === 'arcane-shard') {
+            for (let i = 0; i < slot?.quantity; ++i) {
+              this.events.emit('crystal-shrine:looted');
+            }
+          }
           return slot ? { item: LOOT_FACTORY[slot.id](), quantity: slot.quantity } : null;
         })
       );
@@ -295,14 +314,50 @@ export class LevelOneScene extends Phaser.Scene {
   }
   // --- Player ---
 
+  private createMiscs(): void {
+    const result: Record<string, Position> = {};
+    const map = ServiceLocator.resolve(ServiceKeys.map);
+    const objectLayer = map.getObjectLayer('spawn-layer');
+    if (!objectLayer) throw new Error('Spawn-layer does not resolved');
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'misc-spawn') continue;
+
+      const miscType = obj.properties.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'misc'
+      )?.value;
+
+      if (!miscType) continue;
+      if (!obj.x || !obj.y) continue;
+      result[miscType] = {
+        x: obj.x,
+        y: obj.y,
+      };
+    }
+
+    new Bowler({
+      scene: this,
+      position: { x: result['bowler'].x, y: result['bowler'].y },
+      keyName: MISC.BOWLER,
+      frame: 0,
+    });
+
+    new Shrine({
+      scene: this,
+      position: { x: result['crystal-shrine'].x, y: result['crystal-shrine'].y },
+      keyName: MISC.CRYSTAL_SHRINE,
+      frame: 0,
+    });
+  }
+
   private createInteractableObjects(): void {
     this.interactables = new InteractableKeeper();
 
     this.interactables.add(new Stall(this));
-    this.interactables.add(new SoulPedestal(this));
+    this.interactables.add(new Bonfire(this));
     this.interactables.add(new AlchemistQuestTrigger(this));
+    this.interactables.add(new CrystalShrineQuestTrigger(this));
     this.interactables.add(new LootZone(this));
-    this.interactables.add(new CrystalShrine(this));
     this.interactables.add(new GreetingLetter(this));
   }
 
@@ -401,42 +456,6 @@ export class LevelOneScene extends Phaser.Scene {
     this.npc = new NPCSpawn(this);
   }
 
-  private createMiscs(): void {
-    const result: Record<string, Position> = {};
-    const map = ServiceLocator.resolve(ServiceKeys.map);
-    const objectLayer = map.getObjectLayer('spawn-layer');
-    if (!objectLayer) throw new Error('Spawn-layer does not resolved');
-
-    for (const obj of objectLayer.objects) {
-      if (obj.name !== 'misc-spawn') continue;
-
-      const miscType = obj.properties.find(
-        (p: { name: string; type: string; value: string }) => p.name === 'misc'
-      )?.value;
-
-      if (!miscType) continue;
-      if (!obj.x || !obj.y) continue;
-      result[miscType] = {
-        x: obj.x,
-        y: obj.y,
-      };
-    }
-
-    new BonFire({
-      scene: this,
-      position: { x: result['bonfire'].x, y: result['bonfire'].y },
-      keyName: MISC.BON_FIRE,
-      frame: 0,
-    });
-
-    this.questMark = new QuestMark({
-      scene: this,
-      position: { x: result['quest-mark'].x, y: result['quest-mark'].y },
-      keyName: MISC.QUEST_MARK,
-      frame: 0,
-    });
-  }
-
   private setupCamera(): void {
     this.camera = this.cameras.main;
     this.camera.startFollow(this.player, true, 0.09, 0.09);
@@ -482,8 +501,21 @@ export class LevelOneScene extends Phaser.Scene {
     }
 
     if (spell.causeDamage() > 0) {
-      victim.takeDamage(spell.causeDamage(), spell.getCaster());
-      spell.playImpactSound();
+      if (spell instanceof FireBall) {
+        const modifier = spell.getCaster().getModifier();
+        if (modifier.isModifierExist(FIRE_CRIT.id)) {
+          spell.setCriticalHit();
+          modifier.removeModifier(FIRE_CRIT.id);
+          this.ui?.removeModifierIcon(FIRE_CRIT.id);
+        }
+      }
+      if (spell.isCritical) {
+        victim.takeDamage(spell.causeDamage(), spell.getCaster(), true);
+        spell.playCritImpactSound();
+      } else {
+        victim.takeDamage(spell.causeDamage(), spell.getCaster());
+        spell.playImpactSound();
+      }
       spell.destroySpell();
     }
 
@@ -552,36 +584,10 @@ export class LevelOneScene extends Phaser.Scene {
     item.destroy();
   }
 
-  private showQuestBoard(): void {
-    const save = ServiceLocator.resolve(ServiceKeys.save);
-    if (save?.scene) return;
-
-    this.scene.launch('StartGameScene');
-    this.scene.bringToTop('StartGameScene');
-  }
-
   public onFireWormDied(data: { x: number; y: number }): void {
-    const lootZone = this.interactables.get(LootZone);
-    const zone = this.add.zone(data.x - 14, data.y + 14, 32, 32).setOrigin(0, 0);
-
-    const dropId = crypto.randomUUID();
-
-    SaveService.patch({
-      worldState: {
-        ...SaveService.data.worldState,
-        droppedLoot: [
-          ...SaveService.data.worldState.droppedLoot,
-          {
-            id: dropId,
-            x: data.x,
-            y: data.y,
-            loot: [{ id: 'fireworm-fang', amount: 1 }],
-          },
-        ],
-      },
-    });
-
-    lootZone?.createLootZone(dropId, zone, [{ id: 'fireworm-fang', amount: 1 }]);
+    this.spawnLoot('fireworm-fang-1', { x: data.x - 14, y: data.y + 14 }, [
+      { id: 'fireworm-fang', amount: 1 },
+    ]);
   }
 
   public onEvilWizardDied(): void {
@@ -591,14 +597,120 @@ export class LevelOneScene extends Phaser.Scene {
     });
   }
 
-  private playAmbient(): void {
-    const audio = ServiceLocator.resolve(ServiceKeys.audio);
-    audio.playAmbient(AUDIO.FOREST_AMBIENT);
+  public onCrystalShrineQuestStart(): void {
+    const map = ServiceLocator.resolve(ServiceKeys.map);
+    const objectLayer = map.getObjectLayer('spawn-layer');
+    if (!objectLayer) throw new Error('Spawn-layer does not resolved');
+
+    const crystalZones: Position[] = objectLayer.objects
+      .filter((obj) => obj.name === 'interactable-spawn')
+      .filter((obj) =>
+        obj.properties?.some(
+          (p: { name: string; value: string }) => p.name === 'trigger' && p.value === 'crystal-loot'
+        )
+      )
+      .filter((obj) => obj.x && obj.y)
+      .map((obj) => ({ x: obj.x!, y: obj.y! }));
+
+    crystalZones.forEach((pos, index) => {
+      this.spawnLoot(`crystal-${index + 1}`, pos, [{ id: 'arcane-shard', amount: 1 }]);
+    });
   }
 
-  private cleanup(): void {
-    const audio = ServiceLocator.resolve(ServiceKeys.audio);
-    audio.stopAmbient(false);
+  public spawnLoot(
+    dropId: string,
+    position: { x: number; y: number },
+    loot: { id: string; amount: number }[]
+  ): void {
+    const lootZone = this.interactables.get(LootZone);
+
+    const zone = this.add.zone(position.x, position.y, 32, 32).setOrigin(0, 0);
+
+    SaveService.patch({
+      worldState: {
+        ...SaveService.data.worldState,
+        droppedLoot: [
+          ...SaveService.data.worldState.droppedLoot,
+          {
+            id: dropId,
+            x: position.x,
+            y: position.y,
+            loot,
+          },
+        ],
+      },
+    });
+
+    lootZone?.createLootZone(dropId, zone, loot);
+  }
+
+  // Ambient
+  private createAmbientZones(): void {
+    this.audio = ServiceLocator.resolve(ServiceKeys.audio);
+
+    const objectLayer = this.map.getObjectLayer('spawn-layer');
+    if (!objectLayer) return;
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'play-audio') continue;
+
+      const ambient = obj.properties?.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'ambient'
+      )?.value;
+      if (!ambient || !obj.polygon) continue;
+
+      const points = obj.polygon.map((p: Phaser.Types.Math.Vector2Like) => ({
+        x: p.x + (obj.x ?? 0),
+        y: p.y + (obj.y ?? 0),
+      }));
+
+      const polygon = new Phaser.Geom.Polygon(points);
+
+      this.ambientZones.push({
+        polygon,
+        ambient,
+      });
+    }
+  }
+
+  private ambientUpdate(): void {
+    for (const zone of this.ambientZones) {
+      if (
+        Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
+        !this.insideZone
+      ) {
+        this.insideZone = zone;
+        break;
+      } else if (
+        !Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
+        this.insideZone
+      ) {
+        this.insideZone = null;
+      }
+    }
+
+    if (this.insideZone && this.currentAmbient !== this.insideZone.ambient) {
+      this.audio?.playAmbient(this.getAmbientKey(this.insideZone.ambient));
+      this.currentAmbient = this.insideZone.ambient;
+    } else if (!this.insideZone && this.currentAmbient !== 'default') {
+      this.audio?.playAmbient(this.getAmbientKey('default'));
+      this.currentAmbient = 'default';
+    }
+  }
+
+  private getAmbientKey(name: string): string {
+    switch (name) {
+      case 'cave':
+        return AUDIO.CAVE_AMBIENT;
+      default:
+        return AUDIO.FOREST_AMBIENT;
+    }
+  }
+  // --Ambient--
+
+  protected cleanup(): void {
+    this.audio?.stopAmbient(false);
+    this.audio = null;
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
@@ -611,9 +723,14 @@ export class LevelOneScene extends Phaser.Scene {
     this.time.removeAllEvents();
     this.isLevelInitialized = false;
 
+    // Alchemist quest
     this.events.off('fire-worm:died');
     this.events.off('evil-wizard:died');
     this.events.off('fireworm-fang:looted');
+
+    // Crystal quest
+    this.events.off('crystal-shrine:looted');
+    this.events.off('crystal-shrine:completed');
 
     CollisionService.clear();
     SaveService.clear();

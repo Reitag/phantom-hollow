@@ -15,8 +15,8 @@ export const PROTECTION = {
 
 export const SPELL_POWER = {
   id: UI.SPELL_POWER_BUFF,
-  duration: 20000,
-  effect: 2,
+  duration: 15000,
+  effect: 1.5,
   type: TYPE.buff,
 };
 
@@ -29,7 +29,7 @@ export const LIGHTNING_SHIELD = {
 
 export const UNDYING = {
   id: UI.UNDYING_BUFF,
-  duration: 3000,
+  duration: 5000,
   hp_left: 1,
   type: TYPE.buff,
 };
@@ -40,9 +40,20 @@ export const ARCANE_MIND = {
   type: TYPE.buff,
 };
 
+// Not presented in Modifiers, used in Sandbox instead
+export const FIRE_ACCUM = {
+  id: UI.FIRE_ACCUM_BUFF,
+  type: TYPE.buff,
+};
+
+export const FIRE_CRIT = {
+  id: UI.FIRE_CRIT_BUFF,
+  type: TYPE.buff,
+};
+
 export const HASTE = {
   id: UI.HASTE_BUFF,
-  effect: 0.15,
+  effect: 1.15,
   type: TYPE.buff,
 };
 
@@ -53,6 +64,14 @@ export const CONCENTRATION = {
 };
 
 // Debuffs
+export const FROSTBITE = {
+  id: UI.FROSTBITE_DEBUFF,
+  duration: 5000,
+  speed_effect: 0.4,
+  getDamageEffect: (hasRelic: boolean) => (hasRelic ? 0.5 : 0.7),
+  type: TYPE.debuff,
+};
+
 export const DISEASE = {
   id: UI.DISEASE_DEBUFF,
   duration: 5000,
