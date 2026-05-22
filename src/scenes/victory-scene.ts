@@ -37,7 +37,7 @@ export class VictoryScene extends BaseScene {
     line.lineBetween(-150, 20, 150, 20);
 
     const message = this.add
-      .text(0, 40, END_GAME_TEXT.TEXT, {
+      .text(0, 120, END_GAME_TEXT.TEXT, {
         ...style.TEXT,
       })
       .setOrigin(0.5);

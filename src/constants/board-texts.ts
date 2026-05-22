@@ -1,7 +1,7 @@
 import { hastePotion } from '@/game/items/potions';
 import { stoneOfConcentration } from '@/game/items/stones';
 
-export const BOARD_TEXT_WIDTH = 400;
+export const BOARD_TEXT_WIDTH = 600;
 export const LETTER_TEXT_WIDTH = 390;
 export const QUEST_TEXT_WIDTH = 299;
 
@@ -43,13 +43,13 @@ export const textStyle = (textWidth: number) => {
 export const boardText = (textWidth: number) => {
   return {
     NAME: {
-      font: '700 24px Cinzel',
+      font: '700 22px Cinzel',
       color: '#ffcc00',
       align: 'center',
       shadow: shadow,
     },
     TEXT: {
-      font: '20px EB Garamond',
+      font: '18px EB Garamond',
       color: '#d1d1d1',
       align: 'center',
       wordWrap: {
@@ -64,34 +64,38 @@ export const boardText = (textWidth: number) => {
 // Intro text
 export const INTRO_TEXT = {
   TEXT: `
-Our Kingdom has endured much and many. Past conflicts with threats from beyond the sea teached us courage and magical discipline, paving a way to generations of mages, warriors, craftsmen, and artists.
+  Our Kingdom has endured much, paving a way to generations of mighty mages, warriors, craftsmen, and artists.
 
-But any strong will weakens without an exercise. King Ramon Tarenval, heir of a long dinasty, has grown greedy and cowardly, leading our Kingdom to embrace his sickly example and attracting old foes back to our lands.
+  King Ramon Tarenval, once our pride, has grown old and weary. Word spreads, and old foes are among those who listen.
 
-Embercrest Highlands, a home of tranquility and ancient wisdom, was shaken by sudden arrival of vile Sacryth The Duskbringer and her minions, ready to feast insatiably on the divine energy we keep dear.
+  Beauty of Embercrest Highlands, a province of tranquility and ancient wisdom, is soon tarnished by evil presence.
 
-Hokki Silverfir, a local chieftain devoted to defend his land and people from the wielders of dark magic, has called all of us to arms in the darkest hour.
+  The darkest hour. A call to arms. A young hero emerges. A turning point closes by, before our eyes...
 
-If there is chance at defending the peace and inspiring a change of heart at our Kingdom, it lies with those who believe in light, here and now.
-
-And so, here comes the young apprentice of The Guild Of Mages, urgent to protect their home from evil...
-
-~ From "The Book Of Triumps", The Guild Of Mages Holy Library ~
+  ~ From "The Book Of Triumphs", The Guild Of Mages Holy Library ~
 `,
 } as const;
 
 // Start Game
 export const START_GAME_TEXT = {
-  NAME: 'Hokki Silverfir:',
-  TEXT:
-    'Our lands are in peril. My scouts have confirmed that Sacryth the Duskbringer is the one behind this chaos.\n\n' +
-    'I beg of you — eliminate the warlock.',
+  NAME: 'Hokki Silverfir',
+  TEXT: `I greet you, o' mage! I am Hokki Silverfir, our commune's chieftain.
+
+   It befalls on my duty to employ the help of our bravest in this time of peril.
+
+   Nearby, the ancient Stonedawn Ruins have fallen to a warlock known as Sacryth the Duskbringer.
+
+   She and her undead minions lust for our vibrant lands overflowing with divine energy.
+   
+   Scholar of magick, in you we trust to put an end to her deadly march!`,
 } as const;
 
 // End Game
 export const END_GAME_TEXT = {
   NAME: 'VICTORY',
-  TEXT: 'Sacryth the Duskbringer has been defeated.',
+  TEXT: `You made old Hokki proud! Sacryth the Duskbringer is no more, and Embercrest Highlands could now begin to heal, although the war is far from over...
+
+   It is a joy to us all to witness another hero of our lands emerge, wielding magick as a beacon of light. May that light guide you ever onward, son.`,
 } as const;
 
 // Outro text
@@ -150,9 +154,19 @@ Till we meet again!`,
 /// Shrine
 export const CRYSTAL_SHRINE_QUEST_TEXT = {
   NAME: 'Crystal Shrine',
-  TITLE: 'Some Title',
-  PENDING: `Pending state`,
-  COMPLETED: `Completed state`,
+  TITLE: 'Arcane Crystals',
+  PENDING: `Hear our voice, stranger... You are a vessel of divine energy your kind calls magick, are you not?
+
+Contentrate. Hear our word. Your kind finds itself in another bloodshed. Our kind favors sides.
+
+Prove yourself worthy by bringing arcane crystals back shining. And our favor is yours...`,
+  COMPLETED: `Mignificent. Arcane energy has once again gave life to stone. Crystals too are vessels of magick.
+
+Vessels, be it stone or man, allow us to propagate into your world. Vessels give us eyes and ears.
+
+And there is much to witness for us, up ahead. Another clash of mortals. Gow restless your kind is. A pity.
+
+Contentrate. It helps magick flow through you. You deserve our blessing for that, stranger...`,
   OBJECTIVES: {
     TITLE: 'Objectives',
     TEXT: 'Recover the three lost Arcane Shards and return them to the Shrine.',

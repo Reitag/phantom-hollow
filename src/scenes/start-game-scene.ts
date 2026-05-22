@@ -19,7 +19,7 @@ export class StartGameScene extends BaseScene {
       .setOrigin(0)
       .setInteractive();
 
-    this.container = this.add.container(width / 2, height / 4);
+    this.container = this.add.container(width / 2, 60);
 
     const style = boardText(BOARD_TEXT_WIDTH);
 
@@ -34,12 +34,12 @@ export class StartGameScene extends BaseScene {
     line.lineBetween(-150, 20, 150, 20);
 
     const messageText = this.add
-      .text(0, 100, START_GAME_TEXT.TEXT, {
+      .text(0, 240, START_GAME_TEXT.TEXT, {
         ...style.TEXT,
       })
       .setOrigin(0.5);
 
-    this.acceptBtn = this.createButton(width / 2, height * 0.8, {
+    this.acceptBtn = this.createButton(width / 2, height - 100, {
       key: UI.MISC_UI_OK_BTN,
       action: () => this.handleAccept(),
     });
