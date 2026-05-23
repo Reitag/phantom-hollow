@@ -21,6 +21,7 @@ import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
+  FROST_SKIN,
   FROSTBITE,
   HASTE,
   LIGHTNING_SHIELD,
@@ -122,7 +123,7 @@ export const SPELL_TOOLTIPS: {
       text:
         'Launches a frozen projectile that deals damage and applies Frostbite for 5 sec.\n\n' +
         'Frostbite slows the target by 60%.\n' +
-        'If the target cannot be slowed, its damage is reduced by 30% instead.',
+        'If the target cannot be slowed or frozen, it takes 50% increased damage instead.',
     },
   },
 } as const;
@@ -366,6 +367,7 @@ export const MODIFIER_TOOLTIPS: {
   SPELL_POWER: TooltipContentConfig;
   LIGHTNING_SHIELD: TooltipContentConfig;
   UNDYING: TooltipContentConfig;
+  FROST_SKIN: TooltipContentConfig;
   HASTE: TooltipContentConfig;
   DISEASE: TooltipContentConfig;
   CRYSTAL_RENEWAL: TooltipContentConfig;
@@ -433,6 +435,16 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Unable to die.',
     },
   },
+  FROST_SKIN: {
+    id: FROST_SKIN.id,
+    title: {
+      param: buffParams,
+      text: 'Frost Skin',
+    },
+    prop_1: {
+      text: 'Maximum health increased by 50%.',
+    },
+  },
   HASTE: {
     id: HASTE.id,
     title: {
@@ -473,6 +485,7 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Speed reduced by 60%.',
     },
   },
+
   SHADOW_VULNERABILITY: {
     id: SHADOW_VULNERABILITY.id,
     title: {

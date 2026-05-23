@@ -1,4 +1,5 @@
 import { UI } from './asset-keys';
+import { PLAYER_STATS } from './object-stats';
 
 export const TYPE = {
   buff: 'buff',
@@ -40,6 +41,12 @@ export const ARCANE_MIND = {
   type: TYPE.buff,
 };
 
+export const FROST_SKIN = {
+  id: UI.FROST_SKIN_BUFF,
+  health: PLAYER_STATS.HEALTH * 1.5,
+  type: TYPE.buff,
+};
+
 // Not presented in Modifiers, used in Sandbox instead
 export const FIRE_ACCUM = {
   id: UI.FIRE_ACCUM_BUFF,
@@ -68,6 +75,7 @@ export const FROSTBITE = {
   id: UI.FROSTBITE_DEBUFF,
   duration: 5000,
   speed_effect: 0.4,
+  effect: 1.5,
   getDamageEffect: (hasRelic: boolean) => (hasRelic ? 0.5 : 0.7),
   type: TYPE.debuff,
 };

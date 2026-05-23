@@ -189,6 +189,7 @@ export const UI = {
   CONCENTRATION_BUFF: 'concentration-buff',
   FIRE_ACCUM_BUFF: 'fire-accum-buff',
   FIRE_CRIT_BUFF: 'fire-crit-buff',
+  FROST_SKIN_BUFF: 'frost-skin-buff',
   CRYSTAL_RENEWAL_BUFF: 'crystal-renewal-buff',
   FROSTBITE_DEBUFF: 'frostbite-debuff',
   DISEASE_DEBUFF: 'disease-debuff',

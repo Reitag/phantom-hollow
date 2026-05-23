@@ -163,7 +163,12 @@ export class ModifierIconContainer {
 
   public removeAllModifierIcons(): void {
     const toRemove = this.modifierIcons
-      .filter((e) => e.icon.name !== UI.CONCENTRATION_BUFF && e.icon.name !== UI.HASTE_BUFF)
+      .filter(
+        (e) =>
+          e.icon.name !== UI.CONCENTRATION_BUFF &&
+          e.icon.name !== UI.HASTE_BUFF &&
+          e.icon.name !== UI.FROST_SKIN_BUFF
+      )
       .map((e) => e.icon.name);
 
     toRemove.forEach((key) => this.removeModifierIcon(key));

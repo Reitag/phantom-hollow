@@ -272,6 +272,11 @@
     },
     {
       "type": "image",
+      "key": "frost-skin-buff",
+      "url": "assets/icons/buffs/frost-skin.png"
+    },
+    {
+      "type": "image",
       "key": "crystal-renewal-buff",
       "url": "assets/icons/buffs/crystal-renewal.png"
     },

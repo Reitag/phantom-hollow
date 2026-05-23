@@ -17,8 +17,10 @@ import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
 import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
-import { FIRE_CRIT } from '@/constants/modifier-stats';
+import { FIRE_CRIT, FROST_SKIN } from '@/constants/modifier-stats';
 import { QUEST_IDS } from '@/constants/quest-ids';
+import { frostRelic } from '@/game/items/relics';
+import { PLAYER_STATS } from '@/constants/object-stats';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -101,6 +103,7 @@ export class Player extends Character {
     this.stateMachine.update(delta);
     this.controls.update();
     this.panel.update(this.controls);
+    this.frostRelicEffect();
     this.handleFall();
   }
 
@@ -156,6 +159,22 @@ export class Player extends Character {
     /*SaveService.patch({
       health: max,
     });*/
+  }
+
+  private frostRelicEffect(): void {
+    const relic = this.inventory.getItemIndex(frostRelic().id);
+    if (relic !== undefined && !this.modifier.isModifierExist(FROST_SKIN.id)) {
+      this.modifier.addModifier(FROST_SKIN.id);
+      this.modifier.startModifier(FROST_SKIN.id, this);
+    }
+    if (relic === undefined && this.modifier.isModifierExist(FROST_SKIN.id)) {
+      this.modifier.removeModifier(FROST_SKIN.id);
+      if (this.stats.health) {
+        this.stats.health.current = PLAYER_STATS.HEALTH;
+        this.ui.reducePlayerHealth(this.stats.health.current, this.stats.health.max);
+        this.ui.removeModifierIcon(FROST_SKIN.id);
+      }
+    }
   }
 
   private handleFall(): void {

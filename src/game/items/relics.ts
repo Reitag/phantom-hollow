@@ -7,7 +7,6 @@ export const fireRelic = (): InventoryItem => ({
   description:
     'Equip: Your Fireball grants a charge of Fire Energy.\n' +
     'At 3 charges, your next Fireball critically strikes.',
-
   iconKey: UI.FIRE_RELIC_ICON,
   maxStack: 1,
   isUnique: true,
@@ -21,7 +20,7 @@ export const frostRelic = (): InventoryItem => ({
   name: 'Frost Relic',
   description:
     'Equip: Your Frostbolt now freezes targets for 5 sec.\n' +
-    'If the target cannot be frozen, Frostbite reduces its damage by an additional 20%.',
+    'While this relic is equipped, you gain Frost Skin, increasing maximum Health by 50%.',
   iconKey: UI.FROST_RELIC_ICON,
   maxStack: 1,
   isUnique: true,
