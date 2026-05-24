@@ -189,7 +189,7 @@ export class Store extends Board {
     const pricePos = this.alignCoords(bg, STORE_UI.ITEM_CARD.PRICE.X, STORE_UI.ITEM_CARD.PRICE.Y);
     const textPos = this.alignCoords(bg, STORE_UI.ITEM_CARD.TEXT.X, STORE_UI.ITEM_CARD.TEXT.Y);
 
-    const icon = this.scene.add.image(imgPos.x, imgPos.y, item.iconKey);
+    const icon = this.scene.add.image(imgPos.x + 1, imgPos.y + 1, item.iconKey);
     const name = this.scene.add.text(namePos.x, namePos.y, `${item.name}`, {
       font: '12px Arial',
       color: '##fff2d8',

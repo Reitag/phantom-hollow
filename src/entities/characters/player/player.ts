@@ -16,11 +16,13 @@ import { Health } from '@/components/stats/health';
 import { Duck } from '@/components/states/player-states/duck';
 import { Jump } from '@/components/states/player-states/jump';
 import { Fall } from '@/components/states/player-states/fall';
+import { Sandbox } from '@/infrastructure/sandbox';
 import { SPELL_WARNING_MESSAGES } from '@/constants/warning-messages';
-import { FIRE_CRIT, FROST_SKIN } from '@/constants/modifier-stats';
+import { FIRE_ENERGY, FROST_SKIN } from '@/constants/modifier-stats';
 import { QUEST_IDS } from '@/constants/quest-ids';
-import { frostRelic } from '@/game/items/relics';
+import { fireRelic, frostRelic } from '@/game/items/relics';
 import { PLAYER_STATS } from '@/constants/object-stats';
+import { SpellPower } from '@/components/stats/damage';
 
 export class Player extends Character {
   public scene: Phaser.Scene;
@@ -30,6 +32,7 @@ export class Player extends Character {
   private spellSystem: SpellSystem;
   private inventory: InventorySystem;
   private coinKeeper: CoinKeeper;
+  private sandbox: Sandbox;
   private questsStatus: Record<string, boolean> = {
     [QUEST_IDS.ALCHEMIST_FIREWORM]: false,
     [QUEST_IDS.CRYSTAL]: false,
@@ -43,6 +46,7 @@ export class Player extends Character {
     this.inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
     this.controls = ServiceLocator.resolve(ServiceKeys.input);
     this.panel = ServiceLocator.resolve(ServiceKeys.panel);
+    this.sandbox = ServiceLocator.resolve(ServiceKeys.sandbox);
     this.coinKeeper = new CoinKeeper();
 
     this.animations = {
@@ -104,6 +108,7 @@ export class Player extends Character {
     this.controls.update();
     this.panel.update(this.controls);
     this.frostRelicEffect();
+    this.fireRelicRemoving();
     this.handleFall();
   }
 
@@ -141,8 +146,11 @@ export class Player extends Character {
   protected override onDeathStart(): void {
     this.controls.disable();
     this.ui.removeAllModfierIcons();
-    if (this.modifier.isModifierExist(FIRE_CRIT.id)) {
-      this.modifier.removeModifier(FIRE_CRIT.id);
+    if (this.modifier.isModifierExist(FIRE_ENERGY.id)) {
+      this.modifier.removeModifier(FIRE_ENERGY.id);
+      const spellPower = this.stats.damage.spellPower as SpellPower;
+      if (spellPower.isCriticalStrike) spellPower.allowCriticalStrike = false;
+      if (spellPower.isInstantCast) spellPower.allowInstantCast = false;
     }
     ServiceLocator.resolve(ServiceKeys.sandbox).resetFireStacks();
   }
@@ -174,6 +182,19 @@ export class Player extends Character {
         this.ui.reducePlayerHealth(this.stats.health.current, this.stats.health.max);
         this.ui.removeModifierIcon(FROST_SKIN.id);
       }
+    }
+  }
+
+  private fireRelicRemoving(): void {
+    const relic = this.inventory.getItemIndex(fireRelic().id);
+    if (relic === undefined && this.modifier.isModifierExist(FIRE_ENERGY.id)) {
+      this.modifier.removeModifier(FIRE_ENERGY.id);
+      this.ui.removeModifierIcon(FIRE_ENERGY.id);
+      this.sandbox.resetFireStacks();
+    }
+    if (relic === undefined && this.ui.checkModifierIcon(FIRE_ENERGY.id)) {
+      this.ui.removeModifierIcon(FIRE_ENERGY.id);
+      this.sandbox.resetFireStacks();
     }
   }
 

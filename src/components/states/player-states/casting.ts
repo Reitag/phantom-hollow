@@ -35,7 +35,7 @@ export class Casting extends PlayerState {
         if ((this.character.getStats().damage.spellPower as SpellPower).isInstantCast) {
           this.startInstantCast(() => {
             if (!this.character.getDead()) {
-              this.consumeInstantBuff();
+              /*this.consumeInstantBuff();*/
               this.spellSystem?.castFireball(this.character);
             }
           });

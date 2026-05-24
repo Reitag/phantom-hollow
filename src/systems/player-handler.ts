@@ -65,7 +65,6 @@ export class PlayerHandler {
 
           modifiers.addModifier(buff);
           modifiers.startModifier(buff, this.player);
-          ui.addModifierIcon(buff, undefined, 'buff');
         }
       });
     }

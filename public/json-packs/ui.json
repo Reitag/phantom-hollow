@@ -262,13 +262,8 @@
     },
     {
       "type": "image",
-      "key": "fire-accum-buff",
-      "url": "assets/icons/buffs/fire-accum.png"
-    },
-    {
-      "type": "image",
-      "key": "fire-crit-buff",
-      "url": "assets/icons/buffs/fire-crit.png"
+      "key": "fire-energy-buff",
+      "url": "assets/icons/buffs/fire-energy.png"
     },
     {
       "type": "image",

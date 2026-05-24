@@ -5,9 +5,10 @@ import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
-import { FIRE_CRIT, LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { FIRE_ENERGY, LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
+import { SpellPower } from '@/components/stats/damage';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -501,19 +502,14 @@ export class LevelOneScene extends BaseScene {
     }
 
     if (spell.causeDamage() > 0) {
-      if (spell instanceof FireBall) {
-        const modifier = spell.getCaster().getModifier();
-        if (modifier.isModifierExist(FIRE_CRIT.id)) {
-          spell.setCriticalHit();
-          modifier.removeModifier(FIRE_CRIT.id);
-          this.ui?.removeModifierIcon(FIRE_CRIT.id);
-        }
-      }
-      if (spell.isCritical) {
-        victim.takeDamage(spell.causeDamage(), spell.getCaster(), true);
+      const caster = spell.getCaster();
+      const spellPower = caster.getStats().damage.spellPower as SpellPower;
+
+      if (spell instanceof FireBall && spellPower.isCriticalStrike) {
+        victim.takeDamage(spell.causeDamage(), caster, true);
         spell.playCritImpactSound();
       } else {
-        victim.takeDamage(spell.causeDamage(), spell.getCaster());
+        victim.takeDamage(spell.causeDamage(), caster);
         spell.playImpactSound();
       }
       spell.destroySpell();

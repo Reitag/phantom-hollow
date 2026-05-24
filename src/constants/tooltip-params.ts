@@ -21,6 +21,7 @@ import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
+  FIRE_ENERGY,
   FROST_SKIN,
   FROSTBITE,
   HASTE,
@@ -367,6 +368,7 @@ export const MODIFIER_TOOLTIPS: {
   SPELL_POWER: TooltipContentConfig;
   LIGHTNING_SHIELD: TooltipContentConfig;
   UNDYING: TooltipContentConfig;
+  COMBUSTION: TooltipContentConfig;
   FROST_SKIN: TooltipContentConfig;
   HASTE: TooltipContentConfig;
   DISEASE: TooltipContentConfig;
@@ -435,6 +437,16 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Unable to die.',
     },
   },
+  COMBUSTION: {
+    id: FIRE_ENERGY.id,
+    title: {
+      param: buffParams,
+      text: 'Combustion',
+    },
+    prop_1: {
+      text: 'At 3 charges, Fireball becomes an instant cast and deals a Critical Strike.',
+    },
+  },
   FROST_SKIN: {
     id: FROST_SKIN.id,
     title: {
@@ -442,7 +454,7 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Frost Skin',
     },
     prop_1: {
-      text: 'Maximum health increased by 50%.',
+      text: 'Maximum Health increased by 50%.',
     },
   },
   HASTE: {

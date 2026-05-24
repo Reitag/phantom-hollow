@@ -48,13 +48,8 @@ export const FROST_SKIN = {
 };
 
 // Not presented in Modifiers, used in Sandbox instead
-export const FIRE_ACCUM = {
-  id: UI.FIRE_ACCUM_BUFF,
-  type: TYPE.buff,
-};
-
-export const FIRE_CRIT = {
-  id: UI.FIRE_CRIT_BUFF,
+export const FIRE_ENERGY = {
+  id: UI.FIRE_ENERGY_BUFF,
   type: TYPE.buff,
 };
 

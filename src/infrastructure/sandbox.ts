@@ -1,6 +1,7 @@
+import { SpellPower } from '@/components/stats/damage';
 import { AUDIO } from '@/constants/asset-keys';
 import { GLOBAL } from '@/constants/spell-cooldowns';
-import { FIRE_ACCUM, FIRE_CRIT } from '@/constants/modifier-stats';
+import { FIRE_ENERGY } from '@/constants/modifier-stats';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Player } from '@/entities/characters/player/player';
 import { UiSystem } from '@/systems/ui-system';
@@ -29,6 +30,9 @@ export class Sandbox {
 
   public resetFireStacks() {
     this.fireAccumStacks = 0;
+    const spellPower = this.player.getStats().damage.spellPower as SpellPower;
+    if (spellPower.isCriticalStrike) spellPower.allowCriticalStrike = false;
+    if (spellPower.isInstantCast) spellPower.allowInstantCast = false;
   }
 
   public getPlayerPosition(): PlayerPosition {
@@ -70,28 +74,23 @@ export class Sandbox {
   // Fire relic
   public trackFireRelicHit(): void {
     this.fireAccumStacks++;
+
     if (this.fireAccumStacks > 3) {
       this.resetFireStacks();
       return;
     }
 
+    this.ui.addModifierIcon(FIRE_ENERGY.id, undefined, FIRE_ENERGY.type);
+
     if (this.fireAccumStacks === 3) {
       this.applyCriticalBuff();
-    } else {
-      this.applyStandardBuff();
     }
   }
 
-  private applyStandardBuff(): void {
-    this.ui.addModifierIcon(FIRE_ACCUM.id, undefined, FIRE_ACCUM.type);
-  }
-
   private applyCriticalBuff(): void {
-    this.ui.removeModifierIcon(FIRE_ACCUM.id);
-
     const modifier = this.player.getModifier();
-    modifier.addModifier(FIRE_CRIT.id);
-    modifier.startModifier(FIRE_CRIT.id, this.player);
+    modifier.addModifier(FIRE_ENERGY.id);
+    modifier.startModifier(FIRE_ENERGY.id, this.player);
   }
 
   public setText(text: string): void {
