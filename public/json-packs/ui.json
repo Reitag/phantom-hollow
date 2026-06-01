@@ -152,6 +152,21 @@
     },
     {
       "type": "image",
+      "key": "gear-control",
+      "url": "assets/ui/control/gear.png"
+    },
+    {
+      "type": "image",
+      "key": "cloud-control",
+      "url": "assets/ui/control/cloud.png"
+    },
+    {
+      "type": "image",
+      "key": "trophy-control",
+      "url": "assets/ui/control/trophy.png"
+    },
+    {
+      "type": "image",
       "key": "pause-ui-resume-btn",
       "url": "assets/ui/pause/pause-ui-resume-btn.png"
     },
@@ -169,6 +184,11 @@
       "type": "image",
       "key": "misc-ui-ok-btn",
       "url": "assets/ui/misc/misc-ui-ok-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "info-button",
+      "url": "assets/ui/misc/info-button.png"
     },
     {
       "type": "image",

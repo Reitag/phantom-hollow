@@ -49,7 +49,8 @@ export class IntroScene extends BaseScene {
     this.cameras.main.fadeOut(800, 0, 0, 0);
 
     this.time.delayedCall(800, () => {
-      this.scene.start('StartGameScene');
+      //this.scene.start('StartGameScene');
+      this.scene.start('LevelOneScene');
     });
   }
 

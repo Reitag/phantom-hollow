@@ -9,7 +9,8 @@ import { BaseScene } from '@/base/scene/base-scene';
 export class UiScene extends BaseScene {
   private ui!: UiSystem;
   private uiTilemapCoords!: Tilemap;
-  private pauseBtn!: Phaser.GameObjects.Image;
+  private startMissionBtn: Phaser.GameObjects.Image | null = null;
+  private overlayGraphics: Phaser.GameObjects.Graphics | null = null;
 
   constructor() {
     super('UiScene');
@@ -46,21 +47,56 @@ export class UiScene extends BaseScene {
     const coinCoord = getUiCoords(uiCoords, 'coin-icon');
     this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
 
-    // Pause Button
-    this.pauseBtn = this.add
-      .image(775, 595, UI.PAUSE_BUTTON)
+    // Start mission Button
+    this.startMissionBtn = this.add
+      //.image(500, 500, UI.INFO_BUTTON)
+      .image(720, 595, UI.INFO_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setOrigin(0, 0);
-    this.pauseBtn.on('pointerup', this.handlePauseBtn, this);
+    this.startMissionBtn.on('pointerup', this.handleStartMissionBtn, this);
+
+    // Start mission overlay
+    this.overlayGraphics = this.add.graphics();
+
+    this.overlayGraphics.fillStyle(0xffd700, 1);
+    this.overlayGraphics.fillRoundedRect(
+      this.startMissionBtn.x,
+      this.startMissionBtn.y,
+      this.startMissionBtn.width,
+      this.startMissionBtn.height,
+      3
+    );
+
+    this.overlayGraphics.setAlpha(0);
+
+    this.tweens.add({
+      targets: this.overlayGraphics,
+      alpha: 0.8,
+      duration: 900,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
   }
 
-  private handlePauseBtn(): void {
+  private detachStartMissionBtn(): void {
+    this.startMissionBtn?.off('pointerup', this.handleStartMissionBtn, this);
+    this.startMissionBtn?.destroy();
+    this.startMissionBtn = null;
+  }
+
+  private handleStartMissionBtn(): void {
+    if (this.overlayGraphics) {
+      this.tweens.killTweensOf(this.overlayGraphics);
+      this.overlayGraphics.destroy();
+      this.overlayGraphics = null;
+    }
+    this.detachStartMissionBtn();
     this.input.setDefaultCursor('default');
-    this.scene.launch('PauseScene').bringToTop('PauseScene');
+    this.scene.launch('StartGameScene').bringToTop('StartGameScene');
   }
 
   protected cleanup(): void {
-    this.pauseBtn.off('pointerup', this.handlePauseBtn, this);
-    this.pauseBtn.destroy();
+    this.detachStartMissionBtn();
   }
 }

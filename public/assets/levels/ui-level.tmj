@@ -10,6 +10,39 @@
          "objects":[
                 {
                  "height":36,
+                 "id":24,
+                 "name":"slot-11",
+                 "rotation":0,
+                 "type":"panel-ui",
+                 "visible":true,
+                 "width":36,
+                 "x":131,
+                 "y":594
+                }, 
+                {
+                 "height":36,
+                 "id":23,
+                 "name":"slot-10",
+                 "rotation":0,
+                 "type":"panel-ui",
+                 "visible":true,
+                 "width":36,
+                 "x":83,
+                 "y":594
+                }, 
+                {
+                 "height":36,
+                 "id":22,
+                 "name":"slot-9",
+                 "rotation":0,
+                 "type":"panel-ui",
+                 "visible":true,
+                 "width":36,
+                 "x":35,
+                 "y":594
+                }, 
+                {
+                 "height":36,
                  "id":7,
                  "name":"slot-8",
                  "rotation":0,
@@ -213,7 +246,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":22,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

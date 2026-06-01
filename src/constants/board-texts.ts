@@ -1,7 +1,8 @@
 import { hastePotion } from '@/game/items/potions';
 import { stoneOfConcentration } from '@/game/items/stones';
 
-export const BOARD_TEXT_WIDTH = 600;
+//export const BOARD_TEXT_WIDTH = 600;
+export const BOARD_TEXT_WIDTH = 570;
 export const LETTER_TEXT_WIDTH = 390;
 export const QUEST_TEXT_WIDTH = 299;
 
@@ -51,11 +52,11 @@ export const boardText = (textWidth: number) => {
     TEXT: {
       font: '18px EB Garamond',
       color: '#d1d1d1',
-      align: 'center',
+      align: 'left',
       wordWrap: {
         width: textWidth,
       },
-      lineSpacing: 8,
+      lineSpacing: 4,
       shadow: shadow,
     },
   };
@@ -79,23 +80,23 @@ export const INTRO_TEXT = {
 // Start Game
 export const START_GAME_TEXT = {
   NAME: 'Hokki Silverfir',
-  TEXT: `I greet you, o' mage! I am Hokki Silverfir, our commune's chieftain.
+  TEXT: `I greet you, mage! I am Hokki Silverfir, our commune's chieftain.
 
-   It befalls on my duty to employ the help of our bravest in this time of peril.
+It is my duty to summon our bravest to crush a looming threat in this hour of peril.
 
-   Nearby, the ancient Stonedawn Ruins have fallen to a warlock known as Sacryth the Duskbringer.
+Nearby, the ancient Stonedawn Ruins have fallen to a warlock known as Sacryth the Duskbringer.
 
-   She and her undead minions lust for our vibrant lands overflowing with divine energy.
-   
-   Scholar of magick, in you we trust to put an end to her deadly march!`,
+She and her undead hordes covet the divine energy that flows through our lands.
+
+I charge you to put an end to her deadly march!`,
 } as const;
 
 // End Game
 export const END_GAME_TEXT = {
   NAME: 'VICTORY',
-  TEXT: `You made old Hokki proud! Sacryth the Duskbringer is no more, and Embercrest Highlands could now begin to heal, although the war is far from over...
+  TEXT: `You have done us proud, mage! Sacryth is dead, and Embercrest can finally breathe easy, though I foretell a more menacing storm yet brewing on the horizon. This war has only just begun...
 
-   It is a joy to us all to witness another hero of our lands emerge, wielding magick as a beacon of light. May that light guide you ever onward, son.`,
+It is rare to see a mage fight with a grit equal to that of a sword master. Your magick is indeed a formidable weapon, and we are glad to have it on our side. Keep your guard up on the road ahead!`,
 } as const;
 
 // Outro text
@@ -155,18 +156,16 @@ Till we meet again!`,
 export const CRYSTAL_SHRINE_QUEST_TEXT = {
   NAME: 'Crystal Shrine',
   TITLE: 'Arcane Crystals',
-  PENDING: `Hear our voice, stranger... You are a vessel of divine energy your kind calls magick, are you not?
+  PENDING: `Hear our voice, stranger... You seek to channel the divine power your kind calls magick, do you not?
 
-Contentrate. Hear our word. Your kind finds itself in another bloodshed. Our kind favors sides.
+Your kind finds itself in another bloodshed. Humans are truly creatures of chaos. Yet chaos cannot bend the laws of the arcane.
 
-Prove yourself worthy by bringing arcane crystals back shining. And our favor is yours...`,
-  COMPLETED: `Mignificent. Arcane energy has once again gave life to stone. Crystals too are vessels of magick.
+Prove yourself worthy by bringing shards of the arcane crystals to The Shining. And earn a reward that no fellow human can provide...`,
+  COMPLETED: `Magnificent. The fragments have reunited, and the arcane flow within the stone is aligned in harmony once again.
 
-Vessels, be it stone or man, allow us to propagate into your world. Vessels give us eyes and ears.
+While the clash of mortals again shakes your ever changing world to its core, the principles of magick remain absolute.
 
-And there is much to witness for us, up ahead. Another clash of mortals. Gow restless your kind is. A pity.
-
-Contentrate. It helps magick flow through you. You deserve our blessing for that, stranger...`,
+Thus focus your mind. Let the knowledge guide the divine power through you. You have earned our blessing, stranger...`,
   OBJECTIVES: {
     TITLE: 'Objectives',
     TEXT: 'Recover the three lost Arcane Shards and return them to the Shrine.',

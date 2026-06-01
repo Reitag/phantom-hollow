@@ -84,7 +84,7 @@ export class LootZone extends Interactable {
       type: 'chest',
       zone: staticLootZones[1] as Phaser.GameObjects.Zone,
       chestSprite: secondLootZone,
-      loot: [{ id: 'spell-potion', amount: 3 }],
+      loot: [{ id: 'spell-potion', amount: 2 }],
       activated: false,
       vfx: new Shining({
         scene: this.scene,
@@ -113,7 +113,7 @@ export class LootZone extends Interactable {
       type: 'chest',
       zone: staticLootZones[2] as Phaser.GameObjects.Zone,
       chestSprite: thirdLootZone,
-      loot: [{ id: 'stone-of-concentration', amount: 1 }],
+      loot: [{ id: 'undying-potion', amount: 1 }],
       activated: false,
       vfx: new Shining({
         scene: this.scene,
@@ -142,7 +142,7 @@ export class LootZone extends Interactable {
       type: 'chest',
       zone: staticLootZones[3] as Phaser.GameObjects.Zone,
       chestSprite: forthLootZone,
-      loot: [{ id: 'undying-potion', amount: 1 }],
+      loot: [{ id: 'lightning-potion', amount: 2 }],
       activated: false,
       vfx: new Shining({
         scene: this.scene,

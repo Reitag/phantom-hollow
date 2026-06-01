@@ -62,6 +62,16 @@
     },
     {
       "type": "image",
+      "key": "crystal-white",
+      "url": "assets/objects/decor/crystal-white.png"
+    },
+    {
+      "type": "image",
+      "key": "crystal-red",
+      "url": "assets/objects/decor/crystal-red.png"
+    },
+    {
+      "type": "image",
       "key": "rock-1",
       "url": "assets/objects/rocks/rock-1.png"
     },
