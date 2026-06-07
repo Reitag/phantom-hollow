@@ -1,6 +1,6 @@
 import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
-import { BOARD_TEXT_WIDTH, boardText, END_GAME_TEXT } from '@/constants/board-texts';
+import { QUEST_LOG_WIDTH, textStyle, END_GAME_TEXT } from '@/constants/board-texts';
 
 export class VictoryScene extends BaseScene {
   private container: Phaser.GameObjects.Container | null = null;
@@ -24,7 +24,7 @@ export class VictoryScene extends BaseScene {
 
     this.container = this.add.container(width / 2, height / 4);
 
-    const style = boardText(BOARD_TEXT_WIDTH);
+    const style = textStyle(QUEST_LOG_WIDTH);
 
     const title = this.add
       .text(0, 0, END_GAME_TEXT.NAME, {

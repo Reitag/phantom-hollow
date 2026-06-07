@@ -1,13 +1,18 @@
 import { Panel, PanelConfig } from '@/base/ui/panel';
 import { UI } from '@/constants/asset-keys';
+import { QuestLog } from '../boards/quest-log';
 
 export class ControlPanel extends Panel {
+  private questLog: QuestLog;
+
   constructor({ scene, slotOffSet, cell }: PanelConfig) {
     super({
       scene: scene,
       slotOffSet: slotOffSet,
       cell: cell,
     });
+    this.questLog = new QuestLog(scene);
+
     const controlTextureKeys = [UI.GEAR_CONTROL, UI.CLOUD_CONTROL, UI.TROPHY_CONTROL];
 
     for (let i = 0; i < this.slots.length; i++) {
@@ -65,6 +70,6 @@ export class ControlPanel extends Panel {
   }
 
   private handleQuestsBtn(): void {
-    console.log('Trophey has been opened');
+    this.questLog.toggleQuestLog();
   }
 }

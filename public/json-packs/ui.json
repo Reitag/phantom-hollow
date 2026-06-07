@@ -72,6 +72,21 @@
     },
     {
       "type": "image",
+      "key": "quest-log-ui",
+      "url": "assets/ui/quest-log/quest-log-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "aside-ui",
+      "url": "assets/ui/quest-log/aside-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-log-close-btn-ui",
+      "url": "assets/ui/quest-log/quest-log-close-btn-ui.png"
+    },
+    {
+      "type": "image",
       "key": "store-ui",
       "url": "assets/ui/store/store-ui.png"
     },

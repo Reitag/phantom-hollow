@@ -1,8 +1,7 @@
 import { hastePotion } from '@/game/items/potions';
 import { stoneOfConcentration } from '@/game/items/stones';
 
-//export const BOARD_TEXT_WIDTH = 600;
-export const BOARD_TEXT_WIDTH = 570;
+export const QUEST_LOG_WIDTH = 570;
 export const LETTER_TEXT_WIDTH = 390;
 export const QUEST_TEXT_WIDTH = 299;
 
@@ -41,7 +40,7 @@ export const textStyle = (textWidth: number) => {
   };
 };
 
-export const boardText = (textWidth: number) => {
+export const questLogText = (textWidth: number) => {
   return {
     NAME: {
       font: '700 22px Cinzel',

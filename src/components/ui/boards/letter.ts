@@ -6,17 +6,9 @@ import { SCENE_SIZE } from '@/constants/scene-size';
 import { LETTER_UI } from '@/constants/ui-coordinates';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
-type Handlers = {
-  onOver: () => void;
-  onOut: () => void;
-  onDown: () => void;
-  onUp: () => void;
-};
-
 export class Letter extends Board {
   private bg: Phaser.GameObjects.Image;
   private closeButton: Phaser.GameObjects.Image;
-  private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   private currentY = 0;
 

@@ -2,19 +2,12 @@ import { AUDIO, UI } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { STORE_UI } from '@/constants/ui-coordinates';
 import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
-import { Board } from '@/base/ui/board';
+import { Board, Handlers } from '@/base/ui/board';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type Bundle = {
   item: StoreItem;
   card: Phaser.GameObjects.Container;
-};
-
-type Handlers = {
-  onOver: () => void;
-  onOut: () => void;
-  onDown: () => void;
-  onUp: () => void;
 };
 
 export class Store extends Board {
@@ -24,7 +17,6 @@ export class Store extends Board {
 
   private closeButton: Phaser.GameObjects.Image;
   private bundles: Bundle[] = [];
-  private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   constructor(scene: Phaser.Scene) {
     super(scene);

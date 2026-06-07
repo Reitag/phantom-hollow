@@ -1,6 +1,6 @@
 import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
-import { BOARD_TEXT_WIDTH, boardText, START_GAME_TEXT } from '@/constants/board-texts';
+//import { BOARD_TEXT_WIDTH, boardText, START_GAME_TEXT } from '@/constants/board-texts';
 
 export class StartGameScene extends BaseScene {
   private container: Phaser.GameObjects.Container | null = null;
@@ -23,9 +23,9 @@ export class StartGameScene extends BaseScene {
 
     this.container = this.add.container(width / 2, 60);
 
-    const style = boardText(BOARD_TEXT_WIDTH);
+    //const style = boardText(BOARD_TEXT_WIDTH);
 
-    const nameText = this.add
+    /*const nameText = this.add
       .text(0, startY, START_GAME_TEXT.NAME, {
         ...style.NAME,
       })
@@ -39,23 +39,23 @@ export class StartGameScene extends BaseScene {
       .text(0, startY + 60, START_GAME_TEXT.TEXT, {
         ...style.TEXT,
       })
-      .setOrigin(0.5, 0);
-    const textBounds = messageText.getBounds(); // New here
+      .setOrigin(0.5, 0);*/
+    //const textBounds = messageText.getBounds(); // New here
 
     // Panel
     const paddingY = 60;
     const paddingX = 40;
 
     const panelWidth = 650;
-    const panelHeight = textBounds.height + paddingY * 2 + 80;
+    //const panelHeight = textBounds.height + paddingY * 2 + 80;
 
     const panel = this.add.graphics();
 
     panel.fillStyle(0x000000); // dark background
-    panel.fillRoundedRect(-panelWidth / 2, 0, panelWidth, panelHeight, 16);
+    //panel.fillRoundedRect(-panelWidth / 2, 0, panelWidth, panelHeight, 16);
 
     panel.lineStyle(2, 0xffffff, 0.6); // border
-    panel.strokeRoundedRect(-panelWidth / 2, 0, panelWidth, panelHeight, 16);
+    //panel.strokeRoundedRect(-panelWidth / 2, 0, panelWidth, panelHeight, 16);
 
     //this.container.setY(this.scale.height / 2 - panelHeight / 2);
 
@@ -66,7 +66,7 @@ export class StartGameScene extends BaseScene {
     });
 
     // Button did not add here
-    this.container.add([panel, nameText, line, messageText]);
+    //this.container.add([panel, nameText, line, messageText]);
 
     //this.events.once(Phaser.Scenes.Events.CREATE, this.createLevelOneScene, this);
   }

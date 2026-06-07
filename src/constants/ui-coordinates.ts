@@ -52,6 +52,18 @@ export const LETTER_UI = {
   },
 } as const;
 
+// Letter
+export const QUEST_LOG_UI = {
+  ASIDE: {
+    X: 502,
+    Y: 38,
+  },
+  CLOSE_BTN: {
+    X: 502,
+    Y: 348,
+  },
+} as const;
+
 // Interact tooltip
 export const INTERACT_TOOLTIP = {
   X: 765,

@@ -48,7 +48,7 @@ export class UiScene extends BaseScene {
     this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
 
     // Start mission Button
-    this.startMissionBtn = this.add
+    /*this.startMissionBtn = this.add
       //.image(500, 500, UI.INFO_BUTTON)
       .image(720, 595, UI.INFO_BUTTON)
       .setInteractive({ useHandCursor: true })
@@ -76,7 +76,7 @@ export class UiScene extends BaseScene {
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut',
-    });
+    });*/
   }
 
   private detachStartMissionBtn(): void {
