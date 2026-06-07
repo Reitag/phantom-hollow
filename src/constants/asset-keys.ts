@@ -101,6 +101,8 @@ export const OBJECTS = {
   TABLE: 'table',
   TENT: 'tent',
   STUMP: 'stump',
+  CRYSTAL_WHITE: 'crystal-white',
+  CRYSTAL_RED: 'crystal-red',
   ROCK_1: 'rock-1',
   ROCK_2: 'rock-2',
   ROCK_3: 'rock-3',
@@ -136,6 +138,7 @@ export const TILESETS = {
 
 export const UI = {
   INVENTORY_SLOT: 'inventory-slot',
+  CONTROL_SLOT: 'control-slot',
   FIRE_BALL_ICON: 'fire-ball-icon',
   BLINK_ICON: 'blink-icon',
   WIND_ICON: 'wind-icon',

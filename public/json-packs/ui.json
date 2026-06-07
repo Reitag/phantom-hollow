@@ -7,6 +7,11 @@
     },
     {
       "type": "image",
+      "key": "control-slot",
+      "url": "assets/ui/control-slot.png"
+    },
+    {
+      "type": "image",
       "key": "fire-ball-icon",
       "url": "assets/icons/spells/fire-ball-icon.png"
     },

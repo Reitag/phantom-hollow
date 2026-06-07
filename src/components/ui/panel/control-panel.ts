@@ -16,7 +16,7 @@ export class ControlPanel extends Panel {
       const pos = this.getCellPosition(i);
 
       const iconImage = scene.add
-        .image(pos.x + this.ICON_BORDER, pos.y + this.ICON_BORDER, controlTextureKeys[i])
+        .image(pos.x + 6, pos.y + 6, controlTextureKeys[i])
         .setOrigin(0, 0)
         .setDepth(this.ICON_DEPTH);
 

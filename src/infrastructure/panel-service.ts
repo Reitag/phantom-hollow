@@ -14,7 +14,7 @@ type Panels = {
 const PANEL_LAYOUT = [
   { type: 'spell', key: UI.INVENTORY_SLOT, size: 4 },
   { type: 'inventory', key: UI.INVENTORY_SLOT, size: 4 },
-  { type: 'control', key: UI.INVENTORY_SLOT, size: 3 },
+  { type: 'control', key: UI.CONTROL_SLOT, size: 3 },
 ];
 
 export class PanelService {
