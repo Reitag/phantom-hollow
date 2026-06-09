@@ -10,6 +10,7 @@ import { SHADOW_BOLT, SHADOW_TRAIL, SUMMON_BAT } from '@/constants/spell-cooldow
 import { Character } from '@/base/objects/character';
 import { Health } from '@/components/stats/health';
 import { ENEMY_STATES } from '@/constants/state-keys';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
@@ -45,13 +46,17 @@ export class AiEvilWizard extends Boss {
     this.aiMutatedBat = new AiMutatedBat(this.player);
 
     this.triggerZone = new TriggerZone(this.boss.scene, 'evil-wizard');
-    this.scene.events.once(
-      'evil-wizard:died',
-      (this.scene as LevelOneScene).onEvilWizardDied,
-      this.scene
-    );
+
     this.scene.events.on(this.triggerZone.triggerEventOn, this.triggerOn, this);
     this.scene.events.on(this.triggerZone.triggerEventOff, this.triggerOff, this);
+
+    this.scene.events.once(
+      'evil-wizard:died',
+      () => {
+        (this.scene as LevelOneScene).onEvilWizardDied({ x: this.boss.x, y: this.boss.y });
+      },
+      this.scene
+    );
   }
 
   protected updateBossState(time: number, delta: number): void {

@@ -1,19 +1,22 @@
 import { Board, Handlers } from '@/base/ui/board';
-import { UI } from '@/constants/asset-keys';
-import { QUEST_LOG_WIDTH, textStyle } from '@/constants/board-texts';
+import { AUDIO, UI } from '@/constants/asset-keys';
+import { QUEST_LOG_WIDTH, MAIN_QUEST_TEXT, textStyle } from '@/constants/board-texts';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_LOG_UI } from '@/constants/ui-coordinates';
+import { SaveService } from '@/infrastructure/save-service';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { Position } from '@/utils/types';
 
 export type QuestData = {
-  name: string;
   title: string;
+  name: string;
   description: string;
 };
 
 export type Logtext = {
-  title: Phaser.GameObjects.Text;
+  name: Phaser.GameObjects.Text;
   text: Phaser.GameObjects.Text;
 };
 
@@ -57,15 +60,20 @@ export class QuestLog extends Board {
 
     this.initLogContentText();
 
-    // Test data
-    this.addQuestAside({ name: 'Tt', title: 'Yo', description: 'Slain the beast' });
-    this.addQuestAside({ name: 'Th', title: 'xXx', description: 'Support your local mistress' });
-    this.addQuestAside({ name: 'Jt', title: 'Fatality', description: 'Get over here!' });
+    // Quest
+    if (SaveService.getQuestState(QUEST_IDS.MAIN_QUEST) !== 'done') {
+      this.addQuestAside({
+        title: 'The Last Stand for Embercrest',
+        name: MAIN_QUEST_TEXT.NAME,
+        description: MAIN_QUEST_TEXT.START_TEXT,
+      });
+    }
   }
 
   public toggleQuestLog(): void {
     if (!this.isOpen) {
       this.openBoard();
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_OPEN);
       this.registerQuestLogEvents();
       this.rebuildQuestAsides();
 
@@ -83,6 +91,7 @@ export class QuestLog extends Board {
       }
     } else {
       this.closeBoard();
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.PAPER_CLOSE);
       this.unregisterQuestLogEvents([this.closeButton]);
       this.clearQuestAsidesUI();
     }
@@ -93,6 +102,7 @@ export class QuestLog extends Board {
 
     if (this.isOpen) {
       this.createAsideUIElement(quest, this.asides.length);
+      console.log('inside');
     }
   }
 
@@ -134,17 +144,19 @@ export class QuestLog extends Board {
       .image(baseAsidePos.x, baseAsidePos.y + yOffset, UI.ASIDE_UI)
       .setInteractive({ useHandCursor: true });
 
-    const nameText = this.scene.add.text(aside.x - 40, aside.y - 8, quest.name, {
-      fontFamily: 'Arial',
-      fontSize: '14px',
-      color: '#ffffff',
+    const titleText = this.scene.add.text(aside.x - 43, aside.y - 16, quest.title, {
+      font: '14px EB Garamond',
+      color: '#f0b427',
+      wordWrap: {
+        width: 90,
+      },
     });
 
     this.bundleHandlers.set(aside, this.asideButtonEffect(aside, quest));
 
     this.asides.push(aside);
-    this.asideTexts.push(nameText);
-    this.board?.add([aside, nameText]);
+    this.asideTexts.push(titleText);
+    this.board?.add([aside, titleText]);
   }
 
   private clearQuestAsidesUI(): void {
@@ -232,16 +244,16 @@ export class QuestLog extends Board {
   private initLogContentText(): void {
     this.contentContainer = this.scene.add.container(-255, -160);
 
-    const title = this.scene.add.text(0, 0, '', {
-      ...textStyle(QUEST_LOG_WIDTH).TITLE,
+    const name = this.scene.add.text(0, 0, '', {
+      ...textStyle(QUEST_LOG_WIDTH).NAME,
     });
 
     const text = this.scene.add.text(0, 40, '', {
       ...textStyle(QUEST_LOG_WIDTH).TEXT,
     });
 
-    this.logTextDescription = { title, text };
-    this.contentContainer.add([title, text]);
+    this.logTextDescription = { name, text };
+    this.contentContainer.add([name, text]);
     this.board?.add(this.contentContainer);
   }
 
@@ -274,9 +286,9 @@ export class QuestLog extends Board {
   }
 
   private updateLogDisplay(quest: QuestData): void {
-    this.currentActiveTitle = quest.title;
+    this.currentActiveTitle = quest.name;
     if (this.logTextDescription) {
-      this.logTextDescription.title.setText(quest.title);
+      this.logTextDescription.name.setText(quest.name);
       this.logTextDescription.text.setText(quest.description);
     }
   }
@@ -284,7 +296,7 @@ export class QuestLog extends Board {
   private clearLogDisplay(message: string): void {
     this.currentActiveTitle = '';
     if (this.logTextDescription) {
-      this.logTextDescription.title.setText('');
+      this.logTextDescription.name.setText('');
       this.logTextDescription.text.setText(message);
     }
   }

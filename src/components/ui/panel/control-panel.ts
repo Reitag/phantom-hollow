@@ -1,9 +1,13 @@
 import { Panel, PanelConfig } from '@/base/ui/panel';
 import { UI } from '@/constants/asset-keys';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { SaveService } from '@/infrastructure/save-service';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { QuestLog } from '../boards/quest-log';
 
 export class ControlPanel extends Panel {
-  private questLog: QuestLog;
+  private trophyOverlay: Phaser.GameObjects.Rectangle | null = null;
+  private trophyTween: Phaser.Tweens.Tween | null = null;
 
   constructor({ scene, slotOffSet, cell }: PanelConfig) {
     super({
@@ -11,7 +15,6 @@ export class ControlPanel extends Panel {
       slotOffSet: slotOffSet,
       cell: cell,
     });
-    this.questLog = new QuestLog(scene);
 
     const controlTextureKeys = [UI.GEAR_CONTROL, UI.CLOUD_CONTROL, UI.TROPHY_CONTROL];
 
@@ -30,11 +33,54 @@ export class ControlPanel extends Panel {
       this.clickBinder.bind(iconImage);
 
       this.setupControlBehavior(i, iconImage);
+
+      // For trophy blink
+      if (i === 2) {
+        this.startTrophyOverlayBlink(iconImage);
+      }
     }
   }
 
   protected emitSlotRelease(i: number): void {}
   protected triggerTooltip(index: number): void {}
+
+  private startTrophyOverlayBlink(icon: Phaser.GameObjects.Image): void {
+    const mainQuestState = SaveService.getQuestState(QUEST_IDS.MAIN_QUEST);
+    if (mainQuestState === 'waiting' || mainQuestState === 'completed' || mainQuestState === 'done')
+      return;
+
+    this.trophyOverlay = this.scene.add
+      .rectangle(icon.x, icon.y, icon.displayWidth, icon.displayHeight, 0xffffff)
+      .setOrigin(0, 0)
+      .setDepth(this.ICON_DEPTH + 1)
+      .setAlpha(0);
+
+    this.trophyOverlay.setBlendMode(Phaser.BlendModes.ADD);
+
+    this.trophyTween = this.scene.tweens.add({
+      targets: this.trophyOverlay,
+      alpha: 0.7,
+      duration: 600,
+      yoyo: true,
+      loop: -1,
+      ease: 'Sine.easeInOut',
+    });
+  }
+
+  private stopTrophyOverlayBlink(): void {
+    if (this.trophyTween) {
+      this.trophyTween.stop();
+      this.trophyTween = null;
+    }
+
+    if (this.trophyOverlay) {
+      this.trophyOverlay.destroy();
+      this.trophyOverlay = null;
+
+      // Set waitinf state for main quest
+      SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'waiting');
+    }
+  }
 
   private setupControlBehavior(index: number, icon: Phaser.GameObjects.Image): void {
     icon.setInteractive({ useHandCursor: true });
@@ -54,6 +100,7 @@ export class ControlPanel extends Panel {
           this.handleHelpBtn();
           break;
         case 2:
+          this.stopTrophyOverlayBlink();
           this.handleQuestsBtn();
           break;
       }
@@ -70,6 +117,6 @@ export class ControlPanel extends Panel {
   }
 
   private handleQuestsBtn(): void {
-    this.questLog.toggleQuestLog();
+    ServiceLocator.resolve(ServiceKeys.ui).getBoard<QuestLog>('quest-log').toggleQuestLog();
   }
 }

@@ -1,7 +1,7 @@
 import { hastePotion } from '@/game/items/potions';
 import { stoneOfConcentration } from '@/game/items/stones';
 
-export const QUEST_LOG_WIDTH = 570;
+export const QUEST_LOG_WIDTH = 380;
 export const LETTER_TEXT_WIDTH = 390;
 export const QUEST_TEXT_WIDTH = 299;
 
@@ -76,10 +76,10 @@ export const INTRO_TEXT = {
 `,
 } as const;
 
-// Start Game
-export const START_GAME_TEXT = {
+// Main Quest
+export const MAIN_QUEST_TEXT = {
   NAME: 'Hokki Silverfir',
-  TEXT: `I greet you, mage! I am Hokki Silverfir, our commune's chieftain.
+  START_TEXT: `I greet you, mage! I am Hokki Silverfir, our commune's chieftain.
 
 It is my duty to summon our bravest to crush a looming threat in this hour of peril.
 
@@ -88,12 +88,9 @@ Nearby, the ancient Stonedawn Ruins have fallen to a warlock known as Sacryth th
 She and her undead hordes covet the divine energy that flows through our lands.
 
 I charge you to put an end to her deadly march!`,
-} as const;
-
-// End Game
-export const END_GAME_TEXT = {
-  NAME: 'VICTORY',
-  TEXT: `You have done us proud, mage! Sacryth is dead, and Embercrest can finally breathe easy, though I foretell a more menacing storm yet brewing on the horizon. This war has only just begun...
+  END_TEXT: `You have done us proud, mage!
+  
+Sacryth is dead, and Embercrest can finally breathe easy, though I foretell a more menacing storm yet brewing on the horizon. This war has only just begun...
 
 It is rare to see a mage fight with a grit equal to that of a sword master. Your magick is indeed a formidable weapon, and we are glad to have it on our side. Keep your guard up on the road ahead!`,
 } as const;

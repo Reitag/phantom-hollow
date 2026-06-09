@@ -117,7 +117,6 @@ export abstract class Quest extends Board {
 
       case 'waiting':
         this.acceptQuest();
-        console.log('test');
         this.questMark?.changeMarkToWaiting();
         break;
 

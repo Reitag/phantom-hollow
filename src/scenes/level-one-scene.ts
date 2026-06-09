@@ -5,7 +5,8 @@ import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
-import { FIRE_ENERGY, LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
 import { SpellPower } from '@/components/stats/damage';
@@ -18,6 +19,7 @@ import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trig
 import { CrystalShrineQuestTrigger } from '@/game/interactables/crystal-shrine-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
 import { GreetingLetter } from '@/game/interactables/greeting-letter';
+import { MainQuestTrigger } from '@/game/interactables/main-quest-trigger';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { Bowler } from '@/entities/misc/bowler';
@@ -586,11 +588,13 @@ export class LevelOneScene extends BaseScene {
     ]);
   }
 
-  public onEvilWizardDied(): void {
-    this.time.delayedCall(6000, () => {
+  public onEvilWizardDied(pos: Position): void {
+    /*this.time.delayedCall(6000, () => {
       this.scene.launch('VictoryScene');
       this.scene.bringToTop('VictoryScene');
-    });
+    });*/
+    SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'completed');
+    this.interactables.add(new MainQuestTrigger(this, pos));
   }
 
   public onCrystalShrineQuestStart(): void {
