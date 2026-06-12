@@ -2,9 +2,6 @@ import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
 
 export class PauseScene extends BaseScene {
-  private resumeBtn: Phaser.GameObjects.Image | null = null;
-  private menuBtn: Phaser.GameObjects.Image | null = null;
-
   constructor() {
     super('PauseScene');
   }
@@ -12,35 +9,49 @@ export class PauseScene extends BaseScene {
   public create(): void {
     const { width, height } = this.scale;
 
-    // Pause all scenes
     if (this.scene.isActive('UiScene')) {
       this.scene.pause('UiScene');
     }
     this.scene.pause('LevelOneScene');
     this.sound.pauseAll();
 
-    // Background
     this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0);
 
     // Title
     this.add
-      .text(width / 2, height / 2 - 100, 'PAUSED', {
+      .text(this.menuX, height / 2 - 80, 'PAUSED', {
         font: 'bold 48px EB Garamond',
         color: '#ffffff',
       })
       .setOrigin(0.5);
 
+    let currentY = this.menuStartY;
+
     // Resume
-    this.resumeBtn = this.createButton(width / 2, height / 2, {
+    const resumeBtn = this.createButton(this.menuX, currentY, {
       key: UI.PAUSE_UI_RESUME_BTN,
       action: () => this.handleResume(),
     });
+    this.buttons.push(resumeBtn);
+
+    // Options
+    currentY += this.buttonHeight + this.menuGap;
+    const optionsBtn = this.createButton(this.menuX, currentY, {
+      key: UI.MENU_UI_OPTION_BTN,
+      action: () => {
+        this.scene.sleep();
+        this.scene.launch('OptionsScene', { showDeleteBtn: false });
+      },
+    });
+    this.buttons.push(optionsBtn);
 
     // Menu
-    this.menuBtn = this.createButton(width / 2, height / 2 + 43 /*gap = 20 and button size = 23*/, {
+    currentY += this.buttonHeight + this.menuGap;
+    const menuBtn = this.createButton(this.menuX, currentY, {
       key: UI.PAUSE_UI_MAIN_MENU_BTN,
       action: () => this.handleBackMainMenu(),
     });
+    this.buttons.push(menuBtn);
   }
 
   private handleResume(): void {
@@ -57,10 +68,6 @@ export class PauseScene extends BaseScene {
   }
 
   protected cleanup(): void {
-    this.resumeBtn?.removeAllListeners();
-    this.menuBtn?.removeAllListeners();
-
-    this.resumeBtn?.destroy();
-    this.menuBtn?.destroy();
+    super.cleanup();
   }
 }

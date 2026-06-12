@@ -167,11 +167,6 @@
     },
     {
       "type": "image",
-      "key": "pause-button",
-      "url": "assets/ui/pause/pause-button.png"
-    },
-    {
-      "type": "image",
       "key": "gear-control",
       "url": "assets/ui/control/gear.png"
     },
@@ -209,6 +204,26 @@
       "type": "image",
       "key": "info-button",
       "url": "assets/ui/misc/info-button.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-back-btn",
+      "url": "assets/ui/misc/misc-ui-back-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-plus-btn",
+      "url": "assets/ui/misc/misc-ui-plus-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-minus-btn",
+      "url": "assets/ui/misc/misc-ui-minus-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-dlt-save-data-btn",
+      "url": "assets/ui/misc/misc-ui-dlt-save-data-btn.png"
     },
     {
       "type": "image",

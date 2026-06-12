@@ -1,10 +1,9 @@
 import { BaseScene } from '@/base/scene/base-scene';
+import { Dialog } from '@/components/ui/dialog/dialog';
 import { UI } from '@/constants/asset-keys';
 import { SaveService } from '@/infrastructure/save-service';
 
 export class MainMenuScene extends BaseScene {
-  private menuButtons: Phaser.GameObjects.Image[] = [];
-
   constructor() {
     super('MainMenuScene');
   }
@@ -15,9 +14,7 @@ export class MainMenuScene extends BaseScene {
     const save = SaveService.load();
     const hasSave = SaveService.hasSave();
 
-    const centerX = this.scale.width / 2;
-    const startY = 400;
-    const gap = 20;
+    const centerX = this.menuX;
 
     const buttons = [
       {
@@ -31,8 +28,43 @@ export class MainMenuScene extends BaseScene {
       {
         key: UI.MENU_UI_START_BTN,
         action: () => {
-          if (hasSave) SaveService.clear(true);
-          this.scene.start('IntroScene');
+          if (hasSave) {
+            this.buttons.forEach((button) => {
+              button.disableInteractive();
+            });
+
+            const dialog = new Dialog(this);
+            dialog.setWarningDialog(
+              'Starting a new game will erase your current progress. Do you want to continue?'
+            );
+
+            dialog.once('confirm', () => {
+              SaveService.clear(true);
+              this.scene.start('IntroScene');
+            });
+
+            dialog.once('cancel', () => {
+              this.buttons.forEach((button) => {
+                button.setInteractive();
+              });
+            });
+          }
+        },
+        visible: true,
+      },
+      {
+        key: UI.MENU_UI_OPTION_BTN,
+        action: () => {
+          this.scene.launch('OptionsScene');
+          this.scene.sleep();
+        },
+        visible: true,
+      },
+      {
+        key: UI.MENU_UI_CREDITS_BTN,
+        action: () => {
+          this.scene.launch('CreditsScene');
+          this.scene.sleep();
         },
         visible: true,
       },
@@ -41,14 +73,14 @@ export class MainMenuScene extends BaseScene {
     buttons.forEach((btn, index) => {
       if (!btn.visible) return;
 
-      const y = startY + index * (23 + gap); // 23 size of button
+      const y = this.menuStartY + index * (this.buttonHeight + this.menuGap);
 
       const button = this.createButton(centerX, y, {
         key: btn.key,
         action: btn.action,
       });
 
-      this.menuButtons.push(button);
+      this.buttons.push(button);
     });
 
     const footerY = this.scale.height - 28;
@@ -61,24 +93,9 @@ export class MainMenuScene extends BaseScene {
         color: '#6f6f6f',
       })
       .setOrigin(0, 1);
-
-    // Credits
-    const creditsText =
-      `Design & Code - Ilya Chernov\n` + `Narrative - Artem Sedov\n` + `Art - Darya "InkMoon"`;
-
-    this.add
-      .text(this.scale.width / 2, footerY, creditsText, {
-        fontFamily: 'Volkhov',
-        fontSize: '13px',
-        color: '#6f6f6f',
-        align: 'center',
-        lineSpacing: 3,
-      })
-      .setOrigin(0.5, 1);
   }
 
-  protected cleanup(): void {
-    this.menuButtons.forEach((button) => button.destroy());
-    this.menuButtons = [];
+  public refreshMenu(): void {
+    this.scene.restart();
   }
 }

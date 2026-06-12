@@ -80,18 +80,8 @@ export const WARNING_BOX = {
     WIDTH: 274,
     HEIGHT: 70,
   },
-  YES_BTN: {
-    X: -24,
-    Y: 15,
-    WIDTH: 78,
-    HEIGHT: 14,
-  },
-  NO_BTN: {
-    X: 75,
-    Y: 15,
-    WIDTH: 78,
-    HEIGHT: 14,
-  },
+  BUTTON_OFFSET_Y: 25,
+  BUTTONS_SPACING: 130,
 };
 
 // Warning Text

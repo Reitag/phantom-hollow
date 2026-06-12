@@ -51,6 +51,7 @@ export class PreloadScene extends Phaser.Scene {
 
   public async create() {
     await this.loadFonts();
+    this.sound.setVolume(0.8); // 80% Volume
 
     registerGlobalAnimation(this.anims);
     this.scene.start('MainMenuScene');

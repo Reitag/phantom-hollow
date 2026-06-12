@@ -1,14 +1,31 @@
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 
 export abstract class BaseScene extends Phaser.Scene {
+  protected buttons: Phaser.GameObjects.Image[] = [];
   protected hoverEffect: Phaser.GameObjects.Graphics | null = null;
 
   constructor(key: string) {
     super(key);
   }
 
-  public init() {
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.cleanup, this);
+  protected get menuX(): number {
+    return this.scale.width / 2;
+  }
+
+  protected get menuStartY(): number {
+    return 400;
+  }
+
+  protected get menuGap(): number {
+    return 20;
+  }
+
+  protected get buttonHeight(): number {
+    return 23;
+  }
+
+  protected get backY(): number {
+    return 540;
   }
 
   protected createButton(x: number, y: number, config: { key: string; action: () => void }) {
@@ -17,36 +34,64 @@ export abstract class BaseScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true });
 
-    button.on('pointerover', () => this.drawHover(button, BUTTON_HOVERS.POINTEROVER));
-    button.on('pointerdown', () => this.drawHover(button, BUTTON_HOVERS.POINTERDOWN));
-    button.on('pointerout', () => this.removeHoverEffect());
-    button.on('pointerup', () => {
-      this.removeHoverEffect();
-      config.action();
-    });
+    const handlers = {
+      over: () => this.drawHover(button, BUTTON_HOVERS.POINTEROVER),
+      down: () => this.drawHover(button, BUTTON_HOVERS.POINTERDOWN),
+      out: () => this.removeHoverEffect(),
+      up: () => {
+        this.removeHoverEffect();
+        config.action();
+      },
+    };
+
+    button.setData('hoverHandlers', handlers);
+
+    button.on('pointerover', handlers.over);
+    button.on('pointerdown', handlers.down);
+    button.on('pointerout', handlers.out);
+    button.on('pointerup', handlers.up);
 
     return button;
+  }
+
+  protected removeButtonListeners(button: Phaser.GameObjects.Image): void {
+    const handlers = button.getData('hoverHandlers');
+    if (!handlers) return;
+
+    button.off('pointerover', handlers.over);
+    button.off('pointerdown', handlers.down);
+    button.off('pointerout', handlers.out);
+    button.off('pointerup', handlers.up);
   }
 
   private drawHover(button: Phaser.GameObjects.Image, style: { COLOR: number; ALPHA: number }) {
     this.removeHoverEffect();
 
-    const x = button.x - button.displayWidth / 2;
-    const y = button.y - button.displayHeight / 2;
+    const topLeft = button.getTopLeft();
 
     this.hoverEffect = this.add.graphics();
     this.hoverEffect.fillStyle(style.COLOR, style.ALPHA);
-    this.hoverEffect.fillRoundedRect(x, y, button.displayWidth, button.displayHeight, 4);
-
-    // this.hoverEffect.setDepth(button.depth - 1);
+    this.hoverEffect.fillRoundedRect(
+      topLeft.x,
+      topLeft.y,
+      button.displayWidth,
+      button.displayHeight,
+      4
+    );
   }
-
-  protected abstract cleanup(): void;
 
   protected removeHoverEffect(): void {
     if (this.hoverEffect) {
       this.hoverEffect.destroy();
       this.hoverEffect = null;
     }
+  }
+
+  protected cleanup(): void {
+    this.buttons.forEach((button) => {
+      this.removeButtonListeners(button);
+      button.destroy();
+    });
+    this.buttons = [];
   }
 }
