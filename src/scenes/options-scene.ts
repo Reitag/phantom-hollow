@@ -13,6 +13,7 @@ export class OptionsScene extends BaseScene {
   }
 
   public init(data?: { showDeleteBtn?: boolean }): void {
+    super.init();
     if (data && data.showDeleteBtn !== undefined) {
       this.showDeleteBtn = data.showDeleteBtn;
     }

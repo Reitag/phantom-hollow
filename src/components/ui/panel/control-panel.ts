@@ -83,7 +83,7 @@ export class ControlPanel extends Panel {
   }
 
   private setupControlBehavior(index: number, icon: Phaser.GameObjects.Image): void {
-    icon.setInteractive({ useHandCursor: true });
+    icon.setInteractive();
 
     icon.on('pointerdown', () => this.clickContext.onPress(index));
     icon.on('pointerover', () => this.clickContext.onHover?.(index));

@@ -54,7 +54,7 @@ export class QuestLog extends Board {
 
     this.closeButton = this.scene.add
       .image(closeBtnPos.x, closeBtnPos.y, UI.QUEST_LOG_CLOSE_BTN_UI)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
 
     this.board.add(this.closeButton);
 
@@ -142,7 +142,7 @@ export class QuestLog extends Board {
 
     const aside = this.scene.add
       .image(baseAsidePos.x, baseAsidePos.y + yOffset, UI.ASIDE_UI)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
 
     const titleText = this.scene.add.text(aside.x - 43, aside.y - 16, quest.title, {
       font: '14px EB Garamond',

@@ -43,11 +43,11 @@ export class Dialog extends Phaser.Events.EventEmitter {
 
     this.yesButton = this.scene.add
       .image(yesX, buttonsOffsetY, UI.DIALOG_UI_BUTTON_YES)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
 
     this.noButton = this.scene.add
       .image(noX, buttonsOffsetY, UI.DIALOG_UI_BUTTON_NO)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
 
     this.yesButton.setData('startY', buttonsOffsetY);
     this.noButton.setData('startY', buttonsOffsetY);

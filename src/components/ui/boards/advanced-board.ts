@@ -66,7 +66,7 @@ abstract class AdvancedBoard extends Board {
 
     this.closeButton = this.scene.add
       .image(closeBtnPos.x, closeBtnPos.y, this.closeButtonTexture)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
 
     this.board.add(this.closeButton);
   }

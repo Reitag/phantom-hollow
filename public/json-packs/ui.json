@@ -227,6 +227,11 @@
     },
     {
       "type": "image",
+      "key": "cursor",
+      "url": "assets/ui/misc/cursor.png"
+    },
+    {
+      "type": "image",
       "key": "health-potion-icon",
       "url": "assets/icons/potions/health-potion.png"
     },

@@ -1,3 +1,4 @@
+import { UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 
 export abstract class BaseScene extends Phaser.Scene {
@@ -6,6 +7,14 @@ export abstract class BaseScene extends Phaser.Scene {
 
   constructor(key: string) {
     super(key);
+  }
+
+  public init(): void {
+    // Cursor
+    if (this.textures && this.textures.exists(UI.CURSOR)) {
+      const base64Cursor = this.textures.getBase64(UI.CURSOR);
+      this.input.setDefaultCursor(`url(${base64Cursor}), default`);
+    }
   }
 
   protected get menuX(): number {
@@ -29,10 +38,7 @@ export abstract class BaseScene extends Phaser.Scene {
   }
 
   protected createButton(x: number, y: number, config: { key: string; action: () => void }) {
-    const button = this.add
-      .image(x, y, config.key)
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
+    const button = this.add.image(x, y, config.key).setOrigin(0.5).setInteractive();
 
     const handlers = {
       over: () => this.drawHover(button, BUTTON_HOVERS.POINTEROVER),

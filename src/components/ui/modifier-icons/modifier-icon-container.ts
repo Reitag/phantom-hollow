@@ -38,7 +38,7 @@ export class ModifierIconContainer {
 
     const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0);
     icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
-    icon.setInteractive({ useHandCursor: true });
+    icon.setInteractive();
     icon.name = key;
 
     let timerText: Phaser.GameObjects.Text | undefined;
@@ -90,7 +90,7 @@ export class ModifierIconContainer {
 
     const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0);
     icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
-    icon.setInteractive({ useHandCursor: true });
+    icon.setInteractive();
     icon.name = key;
 
     let timerText: Phaser.GameObjects.Text | undefined;
@@ -228,7 +228,7 @@ export class ModifierIconContainer {
     ui: UiSystem
   ): (pointer: Phaser.Input.Pointer) => void {
     return () => {
-      this.scene.game.canvas.style.cursor = 'help';
+      /*this.scene.game.canvas.style.cursor = 'help';*/
       const keyItem = icon.name;
       const tooltipArray = Object.values(MODIFIER_TOOLTIPS).map(
         ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({

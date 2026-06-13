@@ -51,7 +51,7 @@ export class UiScene extends BaseScene {
     /*this.startMissionBtn = this.add
       //.image(500, 500, UI.INFO_BUTTON)
       .image(720, 595, UI.INFO_BUTTON)
-      .setInteractive({ useHandCursor: true })
+      .setInteractive()
       .setOrigin(0, 0);
     this.startMissionBtn.on('pointerup', this.handleStartMissionBtn, this);
 
