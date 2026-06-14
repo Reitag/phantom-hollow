@@ -103,7 +103,6 @@ export class SpellPanel extends Panel {
       const ui = ServiceLocator.resolve(ServiceKeys.ui);
       ui.hideTooltip();
 
-      this.scene.game.canvas.style.cursor = 'grab';
       icon.setDepth(icon.depth + this.depthGap);
     },
 
@@ -112,8 +111,6 @@ export class SpellPanel extends Panel {
     },
 
     onDragEnd: (icon: Phaser.GameObjects.Image, pointer: Phaser.Input.Pointer) => {
-      this.scene.game.canvas.style.cursor = 'default';
-
       const fromIndex = this.slots.findIndex((s) => s.icon === icon);
       if (fromIndex === -1) return;
 

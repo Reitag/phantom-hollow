@@ -67,10 +67,8 @@ export class LevelOneScene extends BaseScene {
   private audio: AudioSystem | null = null;
   private ambientZones: AudioZone[] = [];
   private currentAmbient: string | null = null;
-  private insideZone: AudioZone | null = null;
 
   private player!: Player;
-  private ui: UiSystem | null = null;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
@@ -144,7 +142,7 @@ export class LevelOneScene extends BaseScene {
     uiScene.events.once(Phaser.Scenes.Events.CREATE, () => {
       if (uiScene instanceof UiScene) {
         ServiceLocator.register(ServiceKeys.ui, uiScene.getUI());
-        this.ui = uiScene.getUI();
+        // this.ui = uiScene.getUI();
         initWorld();
 
         // Debug
@@ -674,27 +672,15 @@ export class LevelOneScene extends BaseScene {
   }
 
   private ambientUpdate(): void {
-    for (const zone of this.ambientZones) {
-      if (
-        Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
-        !this.insideZone
-      ) {
-        this.insideZone = zone;
-        break;
-      } else if (
-        !Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
-        this.insideZone
-      ) {
-        this.insideZone = null;
-      }
-    }
+    const zone = this.ambientZones.find((zone) =>
+      Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y)
+    );
 
-    if (this.insideZone && this.currentAmbient !== this.insideZone.ambient) {
-      this.audio?.playAmbient(this.getAmbientKey(this.insideZone.ambient));
-      this.currentAmbient = this.insideZone.ambient;
-    } else if (!this.insideZone && this.currentAmbient !== 'default') {
-      this.audio?.playAmbient(this.getAmbientKey('default'));
-      this.currentAmbient = 'default';
+    const ambientName = zone?.ambient ?? 'default';
+
+    if (ambientName !== this.currentAmbient) {
+      this.audio?.playAmbient(this.getAmbientKey(ambientName));
+      this.currentAmbient = ambientName;
     }
   }
 
@@ -711,6 +697,7 @@ export class LevelOneScene extends BaseScene {
   protected cleanup(): void {
     this.audio?.stopAmbient(false);
     this.audio = null;
+    this.currentAmbient = null;
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {

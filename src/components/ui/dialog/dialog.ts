@@ -59,6 +59,11 @@ export class Dialog extends Phaser.Events.EventEmitter {
     this.attachButtonEvents(this.noButton, 'cancel');
   }
 
+  public destroy(): void {
+    this.close();
+    super.destroy();
+  }
+
   private attachButtonEvents(btn: Phaser.GameObjects.Image, eventName: 'confirm' | 'cancel'): void {
     const onOver = () => this.handleButtonOver(btn);
     const onOut = () => this.handleButtonOut(btn);

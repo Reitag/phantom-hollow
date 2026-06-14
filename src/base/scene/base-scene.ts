@@ -15,6 +15,10 @@ export abstract class BaseScene extends Phaser.Scene {
       const base64Cursor = this.textures.getBase64(UI.CURSOR);
       this.input.setDefaultCursor(`url(${base64Cursor}), default`);
     }
+
+    this.events.once('shutdown', () => {
+      this.cleanup();
+    });
   }
 
   protected get menuX(): number {

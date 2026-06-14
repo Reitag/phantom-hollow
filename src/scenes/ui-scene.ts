@@ -92,7 +92,6 @@ export class UiScene extends BaseScene {
       this.overlayGraphics = null;
     }
     this.detachStartMissionBtn();
-    this.input.setDefaultCursor('default');
     this.scene.launch('StartGameScene').bringToTop('StartGameScene');
   }
 

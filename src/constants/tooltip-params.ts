@@ -593,3 +593,19 @@ export const GREETING_LETTER_TOOLTIP: TooltipContentConfig = {
     text: ' to Open the Letter',
   },
 } as const;
+
+// Bonfire
+export const BONFIRE_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Set Spawn Point',
+  },
+} as const;

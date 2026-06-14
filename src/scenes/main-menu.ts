@@ -48,6 +48,8 @@ export class MainMenuScene extends BaseScene {
                 button.setInteractive();
               });
             });
+          } else {
+            this.scene.start('IntroScene');
           }
         },
         visible: true,

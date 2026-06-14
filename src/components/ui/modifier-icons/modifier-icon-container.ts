@@ -228,7 +228,6 @@ export class ModifierIconContainer {
     ui: UiSystem
   ): (pointer: Phaser.Input.Pointer) => void {
     return () => {
-      /*this.scene.game.canvas.style.cursor = 'help';*/
       const keyItem = icon.name;
       const tooltipArray = Object.values(MODIFIER_TOOLTIPS).map(
         ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({

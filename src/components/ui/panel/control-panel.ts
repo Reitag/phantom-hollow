@@ -108,7 +108,6 @@ export class ControlPanel extends Panel {
   }
 
   private handlePauseBtn(): void {
-    this.scene.input.setDefaultCursor('default');
     this.scene.scene.launch('PauseScene').bringToTop('PauseScene');
   }
 
