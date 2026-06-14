@@ -502,10 +502,10 @@ export const MODIFIER_TOOLTIPS: {
     id: SHADOW_VULNERABILITY.id,
     title: {
       param: debuffParams,
-      text: 'Shadow Vulnerabilty',
+      text: 'Shadow Vulnerability',
     },
     prop_1: {
-      text: 'Increases all incoming damage by 20%.',
+      text: 'Increases cast time by 70%.',
     },
   },
   DREAD_AURA: {

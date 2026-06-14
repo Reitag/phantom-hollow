@@ -494,6 +494,8 @@ export class LevelOneScene extends BaseScene {
     if (!(victim instanceof Character) || victim.getDead()) return;
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
+    const modifier = victim.getModifier();
+
     spell.registerHit(victim);
     // For nature shield and shadow trail
     if (spell instanceof LightningShield || spell instanceof ShadowTrail) {
@@ -515,7 +517,6 @@ export class LevelOneScene extends BaseScene {
       spell.destroySpell();
     }
 
-    const modifier = victim.getModifier();
     if (modifier.isModifierExist(LIGHTNING_SHIELD.id)) return;
 
     spell.applyEffect(victim);
@@ -587,10 +588,6 @@ export class LevelOneScene extends BaseScene {
   }
 
   public onEvilWizardDied(pos: Position): void {
-    /*this.time.delayedCall(6000, () => {
-      this.scene.launch('VictoryScene');
-      this.scene.bringToTop('VictoryScene');
-    });*/
     SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'completed');
     this.interactables.add(new MainQuestTrigger(this, pos));
   }

@@ -33,7 +33,9 @@ export class Dive extends CharacterState {
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.IDLE);
     this.playAnimation(animKey);
 
-    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.BAT_AGGRO);
+    if (!this.player.getDead()) {
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.BAT_AGGRO);
+    }
 
     this.character.scene.time.delayedCall(lifeTime, () => {
       if (!this.character.active) return;

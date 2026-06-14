@@ -3,6 +3,7 @@ import { Spell, SpellConfig } from '@/base/objects/spell';
 import { SPELLS_ANIMATION } from '@/constants/animation-keys';
 import { AUDIO } from '@/constants/asset-keys';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { DREAD_AURA_STATS } from '@/constants/object-stats';
 import { Player } from '@/entities/characters/player/player';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 

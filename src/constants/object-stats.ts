@@ -9,8 +9,9 @@ export const SPIKE_HIT = 10;
 export const SPEAR_HIT = 5000;
 
 export const FIRE_BALL_STATS = {
-  HIT: 25,
+  //HIT: 25,
   //HIT: 2500,
+  HIT: 300,
   SPEED: 300,
   CAST_TIME: 800,
   LIFE_TIME: 1100,
@@ -119,7 +120,7 @@ export const MUTATED_BAT_STATS = {
 } as const;
 
 export const FIRE_WORM_STATS = {
-  HEALTH: 1000,
+  HEALTH: 1500,
   WALK_BOUND: 100,
   WALK: 7,
   ENGAGE_DISTANCE: 450,
@@ -128,7 +129,7 @@ export const FIRE_WORM_STATS = {
 } as const;
 
 export const EVIL_WIZARD_STATS = {
-  HEALTH: 2500,
+  HEALTH: 3000,
   WALK_BOUND: 100,
   WALK: 50,
   ENGAGE_DISTANCE: 450,

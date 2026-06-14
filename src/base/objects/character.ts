@@ -122,19 +122,25 @@ export class Character extends ArcadeSprite {
     this.lightningShield = ref;
   }
 
-  public takeDamage(amount: number, attacker?: Character | 'spear', isCritical = false): void {
+  public takeDamage(
+    amount: number,
+    attacker?: Character | 'spear' | 'dread-aura',
+    isCritical = false
+  ): void {
     if (this.isDead) return;
 
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
     let remainingDamage = amount;
 
-    if (this.lightningShield) {
-      remainingDamage = this.lightningShield.absorbDamage(amount);
-    }
+    if (attacker !== 'dread-aura') {
+      if (this.lightningShield) {
+        remainingDamage = this.lightningShield.absorbDamage(amount);
+      }
 
-    if (remainingDamage <= 0) {
-      ui.showDamageDealt('Absorb', this);
-      return;
+      if (remainingDamage <= 0) {
+        ui.showDamageDealt('Absorb', this);
+        return;
+      }
     }
 
     const finalDamage = remainingDamage * (this.stats.defense?.multiplier ?? 1);

@@ -10,7 +10,6 @@ import { SHADOW_BOLT, SHADOW_TRAIL, SUMMON_BAT } from '@/constants/spell-cooldow
 import { Character } from '@/base/objects/character';
 import { Health } from '@/components/stats/health';
 import { ENEMY_STATES } from '@/constants/state-keys';
-import { QUEST_IDS } from '@/constants/quest-ids';
 import { Player } from '@/entities/characters/player/player';
 import { DreadAura } from '@/entities/spells/aura-spells/dread-aura';
 import { MutatedBat } from '@/entities/characters/enemies/mutated-bat';
@@ -26,13 +25,13 @@ import { Boss } from '../../base/ai/boss';
 import { AiMutatedBat } from '../enemies/ai-mutated-bat';
 
 export class AiEvilWizard extends Boss {
-  private readonly spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
-  private readonly spellCooldowns: SpellCooldowns;
-  private readonly castShadowBoltHandler: () => void;
+  private spellFactory = ServiceLocator.resolve(ServiceKeys.spellFactory);
+  private spellCooldowns: SpellCooldowns;
+  private castShadowBoltHandler: () => void;
 
-  private readonly aiMutatedBat: AiMutatedBat;
+  private aiMutatedBat: AiMutatedBat;
 
-  private dreadAura: DreadAura | null;
+  private dreadAura: DreadAura | null = null;
   private isBusy = false;
 
   constructor(boss: Character, player: Player) {
@@ -40,8 +39,6 @@ export class AiEvilWizard extends Boss {
 
     this.spellCooldowns = new SpellCooldowns(this.scene);
     this.castShadowBoltHandler = this.castShadowBolt.bind(this);
-
-    this.dreadAura = this.createDreadAura();
 
     this.aiMutatedBat = new AiMutatedBat(this.player);
 
@@ -60,7 +57,7 @@ export class AiEvilWizard extends Boss {
   }
 
   protected updateBossState(time: number, delta: number): void {
-    if (this.isBusy) this.isBusy = false;
+    //if (this.isBusy) this.isBusy = false;
 
     this.boss.update(delta);
     this.aiMutatedBat.update(delta);
@@ -71,7 +68,8 @@ export class AiEvilWizard extends Boss {
     this.bossHealthBar('evil-wizard');
   }
 
-  protected finalCall(): void {
+  protected finalCall(delta: number): void {
+    this.aiMutatedBat.update(delta);
     this.scene.events.emit('evil-wizard:died');
 
     if (this.dreadAura) {
@@ -79,12 +77,12 @@ export class AiEvilWizard extends Boss {
       this.dreadAura = null;
     }
 
-    this.aiMutatedBat.getEnemies().forEach((bat) => {
+    /*this.aiMutatedBat.getEnemies().forEach((bat) => {
       if (bat.unit.active && bat.unit.hasVelocity()) {
         bat.unit.setVelocity(0, 0);
         bat.unit.getArcadeBody().allowGravity = false;
       }
-    });
+    });*/
 
     if (!this.triggerZone) return;
     // Preventing stack overflow
@@ -104,6 +102,15 @@ export class AiEvilWizard extends Boss {
     const fsm = this.boss.getStateMachine();
     const currentState = fsm.currentStateName;
 
+    if (this.dreadAura) {
+      this.dreadAura.destroy();
+      this.dreadAura = null;
+    }
+
+    if (this.isBusy) {
+      this.isBusy = false;
+    }
+
     if (currentState !== ENEMY_STATES.PATROL) {
       fsm.changeState(ENEMY_STATES.PATROL, EVIL_WIZARD_STATS.WALK_BOUND);
     }
@@ -118,6 +125,10 @@ export class AiEvilWizard extends Boss {
 
     const fsm = this.boss.getStateMachine();
     const currentState = fsm.currentStateName;
+
+    if (!this.dreadAura && this.isBusy === false) {
+      this.dreadAura = this.createDreadAura();
+    }
 
     const health = this.boss.getStats()?.health;
     if (!health) return;
@@ -244,7 +255,6 @@ export class AiEvilWizard extends Boss {
 
         appear.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
           this.boss.enableBody(undefined, undefined, undefined, undefined, true);
-          this.dreadAura = this.createDreadAura();
           this.isBusy = false;
         });
       });
@@ -252,6 +262,11 @@ export class AiEvilWizard extends Boss {
   }
 
   private createDreadAura(): DreadAura {
+    if (this.dreadAura) {
+      this.dreadAura.destroy();
+      this.dreadAura = null;
+    }
+
     return new DreadAura(
       {
         scene: this.scene,

@@ -16,6 +16,10 @@ export class EarthShake extends Spell {
       damage,
     });
 
+    this.animations = {
+      [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.EARTH_SHAKE.MAIN,
+    };
+
     this.audioKeys = {
       launch: undefined,
       impact: AUDIO.EARTH_SHAKE_IMPACT,
@@ -23,9 +27,8 @@ export class EarthShake extends Spell {
       action: undefined,
     };
 
-    this.animations = {
-      [SPELL_ANIMATION_KEYS.MAIN]: SPELLS_ANIMATION.EARTH_SHAKE.MAIN,
-    };
+    this.arcadeBody.setSize(40, 30);
+    this.arcadeBody.setOffset(12, 45);
   }
 
   public cast(): void {

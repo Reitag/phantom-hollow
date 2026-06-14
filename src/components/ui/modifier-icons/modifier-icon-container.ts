@@ -1,5 +1,6 @@
 import { UI } from '@/constants/asset-keys';
 import { TYPE } from '@/constants/modifier-stats';
+import { DREAD_AURA_STATS } from '@/constants/object-stats';
 import { MODIFIER_TOOLTIPS } from '@/constants/tooltip-params';
 import { MODIFIER_ICONS } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -65,6 +66,7 @@ export class ModifierIconContainer {
 
   public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     const existing = this.findModifierIcon(key);
+    if (existing && existing.icon.name === DREAD_AURA_STATS.KEY_NAME) return;
 
     if (existing) {
       existing.stacks += 1;

@@ -84,7 +84,7 @@ export const DISEASE = {
 
 export const SHADOW_VULNERABILITY = {
   id: UI.SHADOW_VULNERABILITY_DEBUFF,
-  duration: 20000,
-  effect: 1.1,
+  duration: 10000,
+  effect: 1.7,
   type: TYPE.debuff,
 };

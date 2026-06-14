@@ -76,7 +76,7 @@ export class DreadAura extends Spell {
     const distanceY = target.y - this.y;
 
     if (Math.abs(distanceX) <= this.range && Math.abs(distanceY) <= this.range && this.damage) {
-      target.takeDamage(this.causeDamage() * (delta / 1000));
+      target.takeDamage(this.causeDamage() * (delta / 1000), 'dread-aura');
       target.setTint(0x9966ff);
       this.setDebuffIcon(target);
     } else if (this.ui.checkModifierIcon(UI.DREAD_AURA_DEBUFF)) {
