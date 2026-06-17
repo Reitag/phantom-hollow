@@ -6,6 +6,61 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.0-beta.1] - 2026-06-18
+
+### Added
+
+- Crystal Shrine quest item markers on the world map
+- Narrative texts for the start and end of the game
+- Frost Skin is a new passive buff that increases maximum health by 50% while carring the Frost Relic
+- Instant Fireball cast mechanic upon reaching 3 Combustion stacks
+- Crystal quest item with decor properties
+- Control panel component
+- Quest log system: Main quest now triggered by a flashing icon instead of interrupting gameplay
+- Quest marker over defeated bosses to turn in the final quest manually
+- Post-game free roam to continue playing and completing side missions after the main story ends
+- Options scene accessible from Main and Pause scenes
+- Credits scene accessible from Main scene
+- Custom cursor
+- Smooth crossfading between different ambients
+- Game title on the main menu screen
+- Sign mark asset
+- Game favicon for browser tabs
+
+### Changed
+
+- Refined world map terrain and landscape
+- Increased damage taken by targets by 50% if they are immune to Frostbolt's freeze or slow
+- Frost Relic now focuses on providing the Frost Skin buff rather than reducing enemy damage
+- Replaced placeholders with authentic Frost and Fire relic icons
+- Replaced five outdated icons with more suitable ones
+- Several quest texts
+- Moved main quest's text from forced full-screen pauses into the new clickable Quest Log
+- Customized the game's dialog box
+- Increased Blazeworm HP from 1000 to 1700
+- Increased Sacryth HP from 2500 to 3200
+- Increased Frostbolt's damage from 5 to 15
+- Sacryth's Dread Aura now active during combat
+- Shadow Vulnerability now increases cast time by 70% instead of increasing all incoming damage by 20%
+- Dread Aura's damage now ignores all absorb shield effects
+- Replaced aggro sounds for skeletons and zombies with a randomized sound pool
+- Changed the temporary project name to the official title (Embercrest Rising)
+
+### Fixed
+
+- Various icon-related visual bugs
+- Ambient audio bug when exiting to the main menu
+- Hitbox of Blazeworm's Earth-shake spell
+
+### Removed
+
+- The Frostbite damage reduction effect
+- All gameplay-interrupting text screens during quest transitions
+- Automatic victory screen and forced quit after defeating the boss
+- Default pointer and help cursors on interactive UI elements
+- Letter post-glow effect
+
+
 ## [0.16.0] – 2026-05-16
 
 ### Added
