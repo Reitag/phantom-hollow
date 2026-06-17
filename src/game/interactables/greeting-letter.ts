@@ -1,6 +1,6 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { Sprite } from '@/base/objects/sprite';
-import { Letter } from '@/components/ui/boards/letter';
+import { BOARD_EVENT_NAMES, Letter } from '@/components/ui/boards/advanced-board';
 import { MISC } from '@/constants/asset-keys';
 import { GREETING_LETTER_TOOLTIP } from '@/constants/tooltip-params';
 import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
@@ -29,8 +29,7 @@ export class GreetingLetter extends Interactable {
   }
 
   protected onEnter(): void {
-    if (this.letterBoard.registerLetterEvents()) {
-      this.letter.postFX.addGlow(0xffff00, 2, 0, false);
+    if (this.letterBoard.registerEvents()) {
       this.ui.showHorizontalTooltip(
         {
           x: INTERACT_TOOLTIP.X,
@@ -45,18 +44,17 @@ export class GreetingLetter extends Interactable {
 
   protected onInteract(): void {
     if (!this.letterBoard.isOpen) {
-      this.letterBoard.scene.events.emit('open-letter');
+      this.letterBoard.scene.events.emit(`open-${BOARD_EVENT_NAMES.LETTER}`);
       this.ui.hideTooltip();
     }
   }
 
   protected onLeave(): void {
     if (this.letterBoard.isOpen) {
-      this.letterBoard.scene.events.emit('close-letter');
+      this.letterBoard.scene.events.emit(`close-${BOARD_EVENT_NAMES.LETTER}`);
     }
-    this.letterBoard.unregisterLetterEvents();
+    this.letterBoard.unregisterEvents();
 
-    this.letter.postFX.clear();
     this.ui.hideTooltip();
   }
 }

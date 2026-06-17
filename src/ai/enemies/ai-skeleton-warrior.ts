@@ -72,7 +72,19 @@ export class AiSkeletonWarrior extends Enemy {
 
     const aggro = enemy.getStats().aggro;
     if (aggro && aggro.meter < 60) {
-      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.SKELETON_WARRIOR_AGGRO);
+      const aggroSounds = [
+        AUDIO.ENEMY_AGGRO_1,
+        AUDIO.ENEMY_AGGRO_3,
+        AUDIO.ENEMY_AGGRO_5,
+        AUDIO.ENEMY_AGGRO_7,
+        AUDIO.ENEMY_AGGRO_9,
+      ];
+
+      const randomSoundKey = Phaser.Utils.Array.GetRandom(aggroSounds);
+      ServiceLocator.resolve(ServiceKeys.audio).play(randomSoundKey, {
+        detune: Phaser.Math.Between(-150, 150),
+        volume: Phaser.Math.FloatBetween(0.8, 1.0),
+      });
     }
 
     fsm.changeState(ENEMY_STATES.CHASE, this.player, SKELETON_WARRIOR_STATS.CHASE);

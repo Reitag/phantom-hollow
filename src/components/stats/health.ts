@@ -8,7 +8,15 @@ export class Health {
   }
 
   public set current(value: number) {
-    this.base = value;
+    const percent = this.base / this.total;
+
+    this.total = value;
+
+    this.base = Math.round(this.total * percent);
+
+    if (this.base <= 0 && percent > 0) {
+      this.base = 1;
+    }
   }
 
   public get current(): number {

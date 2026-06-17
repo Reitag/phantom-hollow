@@ -1,5 +1,6 @@
 import { UI } from '@/constants/asset-keys';
 import { TYPE } from '@/constants/modifier-stats';
+import { DREAD_AURA_STATS } from '@/constants/object-stats';
 import { MODIFIER_TOOLTIPS } from '@/constants/tooltip-params';
 import { MODIFIER_ICONS } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -38,7 +39,7 @@ export class ModifierIconContainer {
 
     const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0);
     icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
-    icon.setInteractive({ useHandCursor: true });
+    icon.setInteractive();
     icon.name = key;
 
     let timerText: Phaser.GameObjects.Text | undefined;
@@ -65,6 +66,7 @@ export class ModifierIconContainer {
 
   public addModifierIcon(key: string, duration: number | undefined, type: ModifierType): void {
     const existing = this.findModifierIcon(key);
+    if (existing && existing.icon.name === DREAD_AURA_STATS.KEY_NAME) return;
 
     if (existing) {
       existing.stacks += 1;
@@ -90,7 +92,7 @@ export class ModifierIconContainer {
 
     const icon = this.scene.add.image(posX, posY, key).setOrigin(0, 0);
     icon.setDisplaySize(MODIFIER_ICONS.SIZE, MODIFIER_ICONS.SIZE);
-    icon.setInteractive({ useHandCursor: true });
+    icon.setInteractive();
     icon.name = key;
 
     let timerText: Phaser.GameObjects.Text | undefined;
@@ -163,7 +165,12 @@ export class ModifierIconContainer {
 
   public removeAllModifierIcons(): void {
     const toRemove = this.modifierIcons
-      .filter((e) => e.icon.name !== UI.CONCENTRATION_BUFF && e.icon.name !== UI.HASTE_BUFF)
+      .filter(
+        (e) =>
+          e.icon.name !== UI.CONCENTRATION_BUFF &&
+          e.icon.name !== UI.HASTE_BUFF &&
+          e.icon.name !== UI.FROST_SKIN_BUFF
+      )
       .map((e) => e.icon.name);
 
     toRemove.forEach((key) => this.removeModifierIcon(key));
@@ -223,7 +230,6 @@ export class ModifierIconContainer {
     ui: UiSystem
   ): (pointer: Phaser.Input.Pointer) => void {
     return () => {
-      this.scene.game.canvas.style.cursor = 'help';
       const keyItem = icon.name;
       const tooltipArray = Object.values(MODIFIER_TOOLTIPS).map(
         ({ id, title, prop_1, prop_2, prop_3, prop_4 }) => ({

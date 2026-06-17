@@ -2,7 +2,8 @@ import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
-  FIRE_CRIT,
+  FIRE_ENERGY,
+  FROST_SKIN,
   FROSTBITE,
   HASTE,
   LIGHTNING_SHIELD,
@@ -13,7 +14,8 @@ import {
 } from '@/constants/modifier-stats';
 import { ArcaneMind } from '@/game/modifiers/buffs/arcane-mind';
 import { Concentration } from '@/game/modifiers/buffs/concentration';
-import { FireCrit } from '@/game/modifiers/buffs/fire-crit';
+import { FireEnergy } from '@/game/modifiers/buffs/fire-energy';
+import { FrostSKin } from '@/game/modifiers/buffs/frost-skin';
 import { Haste } from '@/game/modifiers/buffs/haste';
 import { Protection } from '@/game/modifiers/buffs/protection';
 import { SetLightning } from '@/game/modifiers/buffs/set-lightning';
@@ -37,8 +39,10 @@ export class ModifierFactory {
         return new Undying(scene);
       case ARCANE_MIND.id:
         return new ArcaneMind(scene);
-      case FIRE_CRIT.id:
-        return new FireCrit(scene);
+      case FROST_SKIN.id:
+        return new FrostSKin(scene);
+      case FIRE_ENERGY.id:
+        return new FireEnergy(scene);
       case HASTE.id:
         return new Haste(scene);
       case CONCENTRATION.id:

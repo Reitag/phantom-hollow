@@ -21,6 +21,9 @@ import { AiEvilWizard } from '@/ai/bosses/ai-evil-wizard';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
 import { VFX_ANIMATION } from '@/constants/animation-keys';
+import { QUEST_IDS } from '@/constants/quest-ids';
+import { SaveService } from '@/infrastructure/save-service';
+import { LevelOneScene } from '@/scenes/level-one-scene';
 
 type EnemyType = 'skeleton' | 'zombie' | 'archer';
 
@@ -68,7 +71,7 @@ export class EnemySpawn {
             meleeAttack: undefined,
             spellPower: EVIL_WIZARD_STATS.SPELL_POWER,
           },
-          defense: undefined,
+          defense: 1,
           casting: true,
           aggro: true,
         },
@@ -79,6 +82,11 @@ export class EnemySpawn {
         evelWizzard,
         ServiceLocator.resolve(ServiceKeys.playerHandler).getPlayer()
       );
+    } else {
+      // Main Quest
+      if (SaveService.getQuestState(QUEST_IDS.MAIN_QUEST) === 'completed') {
+        (this.scene as LevelOneScene).onEvilWizardDied({ x: 18600, y: 415 });
+      }
     }
 
     if (!save?.worldState.killedBosses.includes('fire-worm')) {
@@ -95,7 +103,7 @@ export class EnemySpawn {
             meleeAttack: undefined,
             spellPower: FIRE_WORM_STATS.SPELL_POWER,
           },
-          defense: undefined,
+          defense: 1,
           casting: true,
           aggro: true,
         },

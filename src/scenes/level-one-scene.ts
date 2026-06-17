@@ -5,9 +5,11 @@ import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
-import { FIRE_CRIT, LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
+import { QUEST_IDS } from '@/constants/quest-ids';
 import { Player } from '@/entities/characters/player/player';
 import { Tilemap } from '@/components/map/tilemap';
+import { SpellPower } from '@/components/stats/damage';
 import { TILELAYER_NAMES, createTilemapOne } from '@/tilemap/tilemap-one';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
@@ -17,10 +19,12 @@ import { AlchemistQuestTrigger } from '@/game/interactables/alchemist-quest-trig
 import { CrystalShrineQuestTrigger } from '@/game/interactables/crystal-shrine-quest-trigger';
 import { LootZone } from '@/game/interactables/loot-zone';
 import { GreetingLetter } from '@/game/interactables/greeting-letter';
+import { MainQuestTrigger } from '@/game/interactables/main-quest-trigger';
 import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { Bowler } from '@/entities/misc/bowler';
 import { QuestMark } from '@/entities/misc/quest-mark';
+import { SignMark } from '@/entities/misc/sign-mark';
 import { SpellFactory } from '@/factories/spell-factory';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
@@ -64,10 +68,8 @@ export class LevelOneScene extends BaseScene {
   private audio: AudioSystem | null = null;
   private ambientZones: AudioZone[] = [];
   private currentAmbient: string | null = null;
-  private insideZone: AudioZone | null = null;
 
   private player!: Player;
-  private ui: UiSystem | null = null;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
   private interactables!: InteractableKeeper;
@@ -87,6 +89,8 @@ export class LevelOneScene extends BaseScene {
   }
 
   public create(save: SaveGame | undefined): void {
+    super.create();
+
     if (save && Object.keys(save).length === 0) {
       save = undefined;
     }
@@ -141,7 +145,7 @@ export class LevelOneScene extends BaseScene {
     uiScene.events.once(Phaser.Scenes.Events.CREATE, () => {
       if (uiScene instanceof UiScene) {
         ServiceLocator.register(ServiceKeys.ui, uiScene.getUI());
-        this.ui = uiScene.getUI();
+        // this.ui = uiScene.getUI();
         initWorld();
 
         // Debug
@@ -335,6 +339,13 @@ export class LevelOneScene extends BaseScene {
       };
     }
 
+    new SignMark({
+      scene: this,
+      position: { x: result['letter-sign-mark'].x, y: result['letter-sign-mark'].y },
+      keyName: MISC.SIGN_MARK,
+      frame: 0,
+    });
+
     new Bowler({
       scene: this,
       position: { x: result['bowler'].x, y: result['bowler'].y },
@@ -493,6 +504,8 @@ export class LevelOneScene extends BaseScene {
     if (!(victim instanceof Character) || victim.getDead()) return;
     if (!(spell instanceof Spell) || spell.hasAlreadyHit(victim)) return;
 
+    const modifier = victim.getModifier();
+
     spell.registerHit(victim);
     // For nature shield and shadow trail
     if (spell instanceof LightningShield || spell instanceof ShadowTrail) {
@@ -501,25 +514,19 @@ export class LevelOneScene extends BaseScene {
     }
 
     if (spell.causeDamage() > 0) {
-      if (spell instanceof FireBall) {
-        const modifier = spell.getCaster().getModifier();
-        if (modifier.isModifierExist(FIRE_CRIT.id)) {
-          spell.setCriticalHit();
-          modifier.removeModifier(FIRE_CRIT.id);
-          this.ui?.removeModifierIcon(FIRE_CRIT.id);
-        }
-      }
-      if (spell.isCritical) {
-        victim.takeDamage(spell.causeDamage(), spell.getCaster(), true);
+      const caster = spell.getCaster();
+      const spellPower = caster.getStats().damage.spellPower as SpellPower;
+
+      if (spell instanceof FireBall && spellPower.isCriticalStrike) {
+        victim.takeDamage(spell.causeDamage(), caster, true);
         spell.playCritImpactSound();
       } else {
-        victim.takeDamage(spell.causeDamage(), spell.getCaster());
+        victim.takeDamage(spell.causeDamage(), caster);
         spell.playImpactSound();
       }
       spell.destroySpell();
     }
 
-    const modifier = victim.getModifier();
     if (modifier.isModifierExist(LIGHTNING_SHIELD.id)) return;
 
     spell.applyEffect(victim);
@@ -590,11 +597,9 @@ export class LevelOneScene extends BaseScene {
     ]);
   }
 
-  public onEvilWizardDied(): void {
-    this.time.delayedCall(6000, () => {
-      this.scene.launch('VictoryScene');
-      this.scene.bringToTop('VictoryScene');
-    });
+  public onEvilWizardDied(pos: Position): void {
+    SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'completed');
+    this.interactables.add(new MainQuestTrigger(this, pos));
   }
 
   public onCrystalShrineQuestStart(): void {
@@ -674,27 +679,15 @@ export class LevelOneScene extends BaseScene {
   }
 
   private ambientUpdate(): void {
-    for (const zone of this.ambientZones) {
-      if (
-        Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
-        !this.insideZone
-      ) {
-        this.insideZone = zone;
-        break;
-      } else if (
-        !Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y) &&
-        this.insideZone
-      ) {
-        this.insideZone = null;
-      }
-    }
+    const zone = this.ambientZones.find((zone) =>
+      Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y)
+    );
 
-    if (this.insideZone && this.currentAmbient !== this.insideZone.ambient) {
-      this.audio?.playAmbient(this.getAmbientKey(this.insideZone.ambient));
-      this.currentAmbient = this.insideZone.ambient;
-    } else if (!this.insideZone && this.currentAmbient !== 'default') {
-      this.audio?.playAmbient(this.getAmbientKey('default'));
-      this.currentAmbient = 'default';
+    const ambientName = zone?.ambient ?? 'default';
+
+    if (ambientName !== this.currentAmbient) {
+      this.audio?.playAmbient(this.getAmbientKey(ambientName));
+      this.currentAmbient = ambientName;
     }
   }
 
@@ -711,6 +704,7 @@ export class LevelOneScene extends BaseScene {
   protected cleanup(): void {
     this.audio?.stopAmbient(false);
     this.audio = null;
+    this.currentAmbient = null;
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {

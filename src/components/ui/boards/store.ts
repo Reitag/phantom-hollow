@@ -2,19 +2,12 @@ import { AUDIO, UI } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { STORE_UI } from '@/constants/ui-coordinates';
 import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
-import { Board } from '@/base/ui/board';
+import { Board, Handlers } from '@/base/ui/board';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type Bundle = {
   item: StoreItem;
   card: Phaser.GameObjects.Container;
-};
-
-type Handlers = {
-  onOver: () => void;
-  onOut: () => void;
-  onDown: () => void;
-  onUp: () => void;
 };
 
 export class Store extends Board {
@@ -24,7 +17,6 @@ export class Store extends Board {
 
   private closeButton: Phaser.GameObjects.Image;
   private bundles: Bundle[] = [];
-  private bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
   constructor(scene: Phaser.Scene) {
     super(scene);
@@ -46,7 +38,7 @@ export class Store extends Board {
     const btnPos = this.alignCoords(bg, STORE_UI.EXIT_BUTTON.X, STORE_UI.EXIT_BUTTON.Y);
     this.closeButton = this.scene.add
       .image(btnPos.x, btnPos.y, UI.STORE_UI_CLOSE_BUTTON)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
 
     this.board.add(this.closeButton);
   }
@@ -179,17 +171,14 @@ export class Store extends Board {
 
   private createItemCard(item: StoreItem, x: number, y: number) {
     const card = this.scene.add.container(x, y);
-    const bg = this.scene.add
-      .image(0, 0, UI.ITEM_CARD)
-      .setName('background')
-      .setInteractive({ useHandCursor: true });
+    const bg = this.scene.add.image(0, 0, UI.ITEM_CARD).setName('background').setInteractive();
 
     const imgPos = this.alignCoords(bg, STORE_UI.ITEM_CARD.ICON.X, STORE_UI.ITEM_CARD.ICON.Y);
     const namePos = this.alignCoords(bg, STORE_UI.ITEM_CARD.NAME.X, STORE_UI.ITEM_CARD.NAME.Y);
     const pricePos = this.alignCoords(bg, STORE_UI.ITEM_CARD.PRICE.X, STORE_UI.ITEM_CARD.PRICE.Y);
     const textPos = this.alignCoords(bg, STORE_UI.ITEM_CARD.TEXT.X, STORE_UI.ITEM_CARD.TEXT.Y);
 
-    const icon = this.scene.add.image(imgPos.x, imgPos.y, item.iconKey);
+    const icon = this.scene.add.image(imgPos.x + 1, imgPos.y + 1, item.iconKey);
     const name = this.scene.add.text(namePos.x, namePos.y, `${item.name}`, {
       font: '12px Arial',
       color: '##fff2d8',

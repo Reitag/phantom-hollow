@@ -96,7 +96,7 @@ export abstract class Interactable {
     }
   }
 
-  private addTriggerZone(rect: Rectangle): void {
+  protected addTriggerZone(rect: Rectangle): void {
     const { x, y, width, height } = rect;
     const zone = this.scene.add.zone(x, y, width, height).setOrigin(0, 0);
 

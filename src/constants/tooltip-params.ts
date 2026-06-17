@@ -21,6 +21,8 @@ import {
   ARCANE_MIND,
   CONCENTRATION,
   DISEASE,
+  FIRE_ENERGY,
+  FROST_SKIN,
   FROSTBITE,
   HASTE,
   LIGHTNING_SHIELD,
@@ -122,7 +124,7 @@ export const SPELL_TOOLTIPS: {
       text:
         'Launches a frozen projectile that deals damage and applies Frostbite for 5 sec.\n\n' +
         'Frostbite slows the target by 60%.\n' +
-        'If the target cannot be slowed, its damage is reduced by 30% instead.',
+        'If the target cannot be slowed or frozen, it takes 50% increased damage instead.',
     },
   },
 } as const;
@@ -366,6 +368,8 @@ export const MODIFIER_TOOLTIPS: {
   SPELL_POWER: TooltipContentConfig;
   LIGHTNING_SHIELD: TooltipContentConfig;
   UNDYING: TooltipContentConfig;
+  COMBUSTION: TooltipContentConfig;
+  FROST_SKIN: TooltipContentConfig;
   HASTE: TooltipContentConfig;
   DISEASE: TooltipContentConfig;
   CRYSTAL_RENEWAL: TooltipContentConfig;
@@ -433,6 +437,26 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Unable to die.',
     },
   },
+  COMBUSTION: {
+    id: FIRE_ENERGY.id,
+    title: {
+      param: buffParams,
+      text: 'Combustion',
+    },
+    prop_1: {
+      text: 'At 3 charges, Fireball becomes an instant cast and deals a Critical Strike.',
+    },
+  },
+  FROST_SKIN: {
+    id: FROST_SKIN.id,
+    title: {
+      param: buffParams,
+      text: 'Frost Skin',
+    },
+    prop_1: {
+      text: 'Maximum Health increased by 50%.',
+    },
+  },
   HASTE: {
     id: HASTE.id,
     title: {
@@ -473,14 +497,15 @@ export const MODIFIER_TOOLTIPS: {
       text: 'Speed reduced by 60%.',
     },
   },
+
   SHADOW_VULNERABILITY: {
     id: SHADOW_VULNERABILITY.id,
     title: {
       param: debuffParams,
-      text: 'Shadow Vulnerabilty',
+      text: 'Shadow Vulnerability',
     },
     prop_1: {
-      text: 'Increases all incoming damage by 20%.',
+      text: 'Increases cast time by 70%.',
     },
   },
   DREAD_AURA: {
@@ -566,5 +591,21 @@ export const GREETING_LETTER_TOOLTIP: TooltipContentConfig = {
   prop_3: {
     param: interactTextParams,
     text: ' to Open the Letter',
+  },
+} as const;
+
+// Bonfire
+export const BONFIRE_TOOLTIP: TooltipContentConfig = {
+  prop_1: {
+    param: interactTextParams,
+    text: 'Press ',
+  },
+  prop_2: {
+    param: qParams,
+    text: "'Q'",
+  },
+  prop_3: {
+    param: interactTextParams,
+    text: ' to Set Spawn Point',
   },
 } as const;

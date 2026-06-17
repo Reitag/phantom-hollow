@@ -6,6 +6,7 @@ import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { LevelOneScene } from '@/scenes/level-one-scene';
+import { QuestLog } from './quest-log';
 
 export class CrystalShrineQuest extends Quest {
   private crystalsLooted = 0;
@@ -92,6 +93,11 @@ export class CrystalShrineQuest extends Quest {
     this.action.events.on('crystal-shrine:looted', this.pickingCrystal, this);
     this.action.events.once('crystal-shrine:completed', this.onAcceptedQuest, this);
     this.questMark?.changeMarkToWaiting();
+    ServiceLocator.resolve(ServiceKeys.ui).getBoard<QuestLog>('quest-log').addQuestAside({
+      title: CRYSTAL_SHRINE_QUEST_TEXT.TITLE,
+      name: CRYSTAL_SHRINE_QUEST_TEXT.NAME,
+      description: CRYSTAL_SHRINE_QUEST_TEXT.PENDING,
+    });
   }
 
   protected onAcceptedQuest(): void {
@@ -184,6 +190,9 @@ export class CrystalShrineQuest extends Quest {
       this.action.events.off('crystal-shrine:completed', this.onAcceptedQuest, this);
 
       SaveService.setQuestState(QUEST_IDS.CRYSTAL, 'done');
+      ServiceLocator.resolve(ServiceKeys.ui)
+        .getBoard<QuestLog>('quest-log')
+        .removeQuestAside(CRYSTAL_SHRINE_QUEST_TEXT.TITLE);
     }
   }
 }

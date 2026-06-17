@@ -47,7 +47,7 @@ export class PlayerHandler {
       facingRight: true,
     }).setDepth(Z_POSITION.PLAYER);
 
-    if (save && save.health) {
+    /*if (save && save.health) {
       const health = this.player.getStats().health;
       if (!health) throw new Error('Health is missing');
 
@@ -55,7 +55,7 @@ export class PlayerHandler {
 
       const ui = ServiceLocator.resolve(ServiceKeys.ui);
       ui.reducePlayerHealth(health.current, health.max);
-    }
+    }*/
 
     if (save && save.buffs.length > 0) {
       const modifiers = this.player.getModifier();
@@ -65,7 +65,6 @@ export class PlayerHandler {
 
           modifiers.addModifier(buff);
           modifiers.startModifier(buff, this.player);
-          ui.addModifierIcon(buff, undefined, 'buff');
         }
       });
     }

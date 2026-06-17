@@ -7,6 +7,11 @@
     },
     {
       "type": "image",
+      "key": "control-slot",
+      "url": "assets/ui/control-slot.png"
+    },
+    {
+      "type": "image",
       "key": "fire-ball-icon",
       "url": "assets/icons/spells/fire-ball-icon.png"
     },
@@ -64,6 +69,21 @@
       "type": "image",
       "key": "boss-health-env",
       "url": "assets/ui/health/boss-health-env.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-log-ui",
+      "url": "assets/ui/quest-log/quest-log-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "aside-ui",
+      "url": "assets/ui/quest-log/aside-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-log-close-btn-ui",
+      "url": "assets/ui/quest-log/quest-log-close-btn-ui.png"
     },
     {
       "type": "image",
@@ -147,8 +167,18 @@
     },
     {
       "type": "image",
-      "key": "pause-button",
-      "url": "assets/ui/pause/pause-button.png"
+      "key": "gear-control",
+      "url": "assets/ui/control/gear.png"
+    },
+    {
+      "type": "image",
+      "key": "cloud-control",
+      "url": "assets/ui/control/cloud.png"
+    },
+    {
+      "type": "image",
+      "key": "trophy-control",
+      "url": "assets/ui/control/trophy.png"
     },
     {
       "type": "image",
@@ -169,6 +199,36 @@
       "type": "image",
       "key": "misc-ui-ok-btn",
       "url": "assets/ui/misc/misc-ui-ok-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "info-button",
+      "url": "assets/ui/misc/info-button.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-back-btn",
+      "url": "assets/ui/misc/misc-ui-back-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-plus-btn",
+      "url": "assets/ui/misc/misc-ui-plus-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-minus-btn",
+      "url": "assets/ui/misc/misc-ui-minus-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-ui-dlt-save-data-btn",
+      "url": "assets/ui/misc/misc-ui-dlt-save-data-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "cursor",
+      "url": "assets/ui/misc/cursor.png"
     },
     {
       "type": "image",
@@ -262,13 +322,13 @@
     },
     {
       "type": "image",
-      "key": "fire-accum-buff",
-      "url": "assets/icons/buffs/fire-accum.png"
+      "key": "fire-energy-buff",
+      "url": "assets/icons/buffs/fire-energy.png"
     },
     {
       "type": "image",
-      "key": "fire-crit-buff",
-      "url": "assets/icons/buffs/fire-crit.png"
+      "key": "frost-skin-buff",
+      "url": "assets/icons/buffs/frost-skin.png"
     },
     {
       "type": "image",

@@ -38,6 +38,7 @@ export class MeleeAttack extends Damage {
 
 export class SpellPower extends Damage {
   private instantCast = false;
+  private criticalStrike = false;
 
   constructor(basePower: number) {
     super(basePower);
@@ -51,7 +52,15 @@ export class SpellPower extends Damage {
     return this.instantCast;
   }
 
+  public get isCriticalStrike(): boolean {
+    return this.criticalStrike;
+  }
+
   public set allowInstantCast(value: boolean) {
     this.instantCast = value;
+  }
+
+  public set allowCriticalStrike(value: boolean) {
+    this.criticalStrike = value;
   }
 }

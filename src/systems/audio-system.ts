@@ -4,34 +4,53 @@ export class AudioSystem {
 
   constructor(private scene: Phaser.Scene) {}
 
-  public play(key: string, config?: Phaser.Types.Sound.SoundConfig) {
+  public play(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
     this.scene.sound.play(key, config);
   }
 
-  public playAmbient(key: string, volume: number = 0.5) {
+  public playAmbient(key: string, volume: number = 1, duration: number = 1500): void {
     if (this.currentKey === key) return;
-    this.currentKey = key;
 
-    if (this.currentAmbient) {
-      this.currentAmbient.stop();
-      this.currentAmbient.destroy();
-      this.currentAmbient = null;
+    const previousAmbient = this.currentAmbient;
+
+    const nextAmbient = this.scene.sound.add(key, {
+      loop: true,
+      volume: 0,
+    });
+
+    nextAmbient.play();
+
+    // New Ambient
+    this.scene.tweens.add({
+      targets: nextAmbient,
+      volume: volume,
+      duration: duration,
+    });
+
+    // Old Ambient
+    if (previousAmbient) {
+      this.scene.tweens.add({
+        targets: previousAmbient,
+        volume: 0,
+        duration: duration,
+        onComplete: () => {
+          previousAmbient.stop();
+          previousAmbient.destroy();
+        },
+      });
     }
 
-    const ambient = this.scene.sound.add(key, { volume: volume, loop: true });
-    ambient.play();
-
-    this.currentAmbient = ambient;
-
-    /*this.scene.tweens.add({
-      targets: this.currentAmbient,
-      volume: volume,
-      duration: 3000,
-    });*/
+    this.currentAmbient = nextAmbient;
+    this.currentKey = key;
   }
 
-  public stopAmbient(fade: boolean = true) {
-    if (!this.currentAmbient) return;
+  public stopAmbient(fade: boolean = true): void {
+    if (!this.currentAmbient) {
+      this.currentKey = null;
+      return;
+    }
+
+    this.currentKey = null;
 
     if (fade) {
       this.scene.tweens.add({
@@ -40,11 +59,13 @@ export class AudioSystem {
         duration: 1000,
         onComplete: () => {
           this.currentAmbient?.stop();
+          this.currentAmbient?.destroy();
           this.currentAmbient = null;
         },
       });
     } else {
       this.currentAmbient.stop();
+      this.currentAmbient?.destroy();
       this.currentAmbient = null;
     }
   }

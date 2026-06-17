@@ -35,6 +35,9 @@ export const Z_POSITION = {
   SPELL: 210,
   VFX: 220,
 
+  // Game title
+  GAME_TITLE: 900,
+
   // UI
   UI: 1000,
 } as const;

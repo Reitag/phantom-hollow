@@ -24,7 +24,7 @@ export abstract class Boss {
 
   public update(time: number, delta: number): void {
     if (this.boss.getDead()) {
-      this.finalCall();
+      this.finalCall(delta);
       this.removeBoss();
       return;
     }
@@ -55,7 +55,7 @@ export abstract class Boss {
   }
 
   protected abstract updateBossState(time: number, delta: number): void;
-  protected abstract finalCall(): void;
+  protected abstract finalCall(delta: number): void;
   protected abstract chillBehaviour(): void;
   protected abstract restoreHealthBar(health: Health): void;
   protected abstract aggroedBehaviour(): void;

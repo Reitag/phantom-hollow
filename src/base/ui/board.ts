@@ -1,10 +1,21 @@
 import { Position } from '@/utils/types';
 
+export type Handlers = {
+  onOver: () => void;
+  onOut: () => void;
+  onDown: () => void;
+  onUp: () => void;
+};
+
 export abstract class Board {
   protected open = false;
   protected board: Phaser.GameObjects.Container | null = null;
   protected container: Phaser.GameObjects.Container | null = null;
   protected hoverEffect: Phaser.GameObjects.Graphics | null = null;
+
+  protected bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
+
+  protected readonly mainQuestTitle = 'The Last Stand of Embercrest';
 
   constructor(public scene: Phaser.Scene) {}
 

@@ -88,13 +88,13 @@ export abstract class Quest extends Board {
 
     this.acceptButton = this.scene.add
       .image(accBtnPos.x, accBtnPos.y, UI.QUEST_UI_ACCEPT_BTN)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
     this.declineButton = this.scene.add
       .image(decBtnPos.x, decBtnPos.y, UI.QUEST_UI_DECLINE_BTN)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive();
     this.completeButton = this.scene.add
       .image(comBtnPos.x, comBtnPos.y, UI.QUEST_UI_COMPLETE_BTN)
-      .setInteractive({ useHandCursor: true })
+      .setInteractive()
       .setVisible(false);
 
     this.board.add(this.acceptButton);
@@ -117,7 +117,6 @@ export abstract class Quest extends Board {
 
       case 'waiting':
         this.acceptQuest();
-        console.log('test');
         this.questMark?.changeMarkToWaiting();
         break;
 

@@ -4,6 +4,7 @@ import { SpriteConfig } from '@/utils/types';
 import { SPELL_ANIMATION_KEYS } from '@/constants/animation-keys';
 import { CRITICAL_MULTIPLIER, SHIFT_SPELL_REGGISTER_HITS } from '@/constants/object-stats';
 import { Z_POSITION } from '@/constants/z-position';
+import { FireBall } from '@/entities/spells/direct-spells/fire-ball';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { playAnimation } from '@/utils/helpers';
@@ -34,7 +35,7 @@ export abstract class Spell extends ArcadeSprite {
   protected sandbox: Sandbox;
   protected relicId: 'fire-relic' | 'frost-relic' | null = null;
 
-  private hittedEnemies = new Array<Character>();
+  protected hittedEnemies = new Array<Character>();
   private criticalHit = false;
 
   constructor({
@@ -139,12 +140,12 @@ export abstract class Spell extends ArcadeSprite {
 
     let finalDamage = this.damage;
 
-    if (this.criticalHit) {
+    if (!this.spellPower) return finalDamage;
+
+    if (this instanceof FireBall && this.spellPower.isCriticalStrike) {
       finalDamage *= CRITICAL_MULTIPLIER;
-      this.criticalHit = false;
     }
 
-    if (!this.spellPower) return finalDamage;
     return finalDamage * this.spellPower.multiplier;
   }
 

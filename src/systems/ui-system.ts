@@ -1,5 +1,6 @@
 import { Character } from '@/base/objects/character';
 import { Dialog } from '@/components/ui/dialog/dialog';
+import { Letter, MainQuest } from '@/components/ui/boards/advanced-board';
 import { ModifierIconContainer } from '@/components/ui/modifier-icons/modifier-icon-container';
 import { PlayerHealthBar } from '@/components/ui/healthbar/player-health-bar';
 import { HealthBarAnimator } from '@/components/ui/healthbar/health-bar-animator';
@@ -13,8 +14,8 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { PanelService } from '@/infrastructure/panel-service';
 import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
 import { AlchemistQuest } from '@/components/ui/boards/alchemist-quest';
-import { Letter } from '@/components/ui/boards/letter';
 import { CrystalShrineQuest } from '@/components/ui/boards/crystal-shrine-quest';
+import { QuestLog } from '@/components/ui/boards/quest-log';
 
 export class UiSystem {
   private healthBar: PlayerHealthBar;
@@ -54,6 +55,8 @@ export class UiSystem {
     this.uiBoards.set('alchemist-quest', new AlchemistQuest(uiScene));
     this.uiBoards.set('crystal-shrine-quest', new CrystalShrineQuest(uiScene));
     this.uiBoards.set('letter', new Letter(uiScene));
+    this.uiBoards.set('quest-log', new QuestLog(uiScene));
+    this.uiBoards.set('main-quest', new MainQuest(uiScene));
 
     this.coins = new Coins(uiScene);
     this.text = new Text(uiScene);

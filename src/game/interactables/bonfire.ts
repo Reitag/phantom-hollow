@@ -1,7 +1,10 @@
 import { Interactable, InteractableNames } from '@/base/objects/interactable';
 import { Health } from '@/components/stats/health';
+import { Dialog } from '@/components/ui/dialog/dialog';
 import { MISC, OBJECTS, UI } from '@/constants/asset-keys';
 import { CRYSTAL_SHRINE_STATS } from '@/constants/object-stats';
+import { BONFIRE_TOOLTIP } from '@/constants/tooltip-params';
+import { INTERACT_TOOLTIP } from '@/constants/ui-coordinates';
 import { Z_POSITION } from '@/constants/z-position';
 import { Campfire } from '@/entities/misc/campfire';
 import { SaveService } from '@/infrastructure/save-service';
@@ -22,6 +25,9 @@ export class Bonfire extends Interactable {
   // Heal effect
   private health: Health | null = null;
   private circle: Phaser.GameObjects.Arc | null = null;
+
+  // Dialog
+  private dialog: Dialog | null = null;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
@@ -64,28 +70,67 @@ export class Bonfire extends Interactable {
 
   protected onEnter(): void {
     const bonfire = this.getCurrentBonfire();
-    if (!bonfire || !bonfire.activated) return;
+    if (!bonfire || !bonfire.activated) {
+      this.ui.showHorizontalTooltip(
+        {
+          x: INTERACT_TOOLTIP.X,
+          y: INTERACT_TOOLTIP.Y,
+          width: INTERACT_TOOLTIP.WIDTH,
+          fillColor: INTERACT_TOOLTIP.FILL_COLOR,
+        },
+        BONFIRE_TOOLTIP
+      );
+      return;
+    }
 
     this.startHealing(bonfire);
   }
 
   protected onInteract(): void {
+    this.ui.hideTooltip();
+
     const bonfire = this.getCurrentBonfire();
     if (!bonfire) return;
 
-    const playerHandler = ServiceLocator.resolve(ServiceKeys.playerHandler);
-    const coinKeeper = playerHandler.getPlayer().getCoinKeeper();
+    const uiScene = this.scene.scene.get('UiScene');
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
-    const cost = 10;
+    this.dialog = new Dialog(uiScene);
 
     // Already active
     if (bonfire.activated) {
-      ui.addWarningtext("You can't set this resurrection point again");
+      ui.addWarningtext("You can't set this Spawn Point again");
       return;
     }
 
+    this.dialog.setWarningDialog('Setting a new spawn point costs 10 coins.');
+
+    this.dialog.once('confirm', () => {
+      this.settingNewSpawnPoint(bonfire);
+    });
+
+    this.dialog.once('cancel', () => {
+      this.destroyDialogBox();
+      return;
+    });
+  }
+
+  protected onLeave(): void {
+    this.ui.hideTooltip();
+    this.stopHealing();
+
+    if (this.dialog) {
+      this.destroyDialogBox();
+    }
+  }
+
+  private settingNewSpawnPoint(bonfire: BonfireData): void {
+    const playerHandler = ServiceLocator.resolve(ServiceKeys.playerHandler);
+    const coinKeeper = playerHandler.getPlayer().getCoinKeeper();
+    const cost = 10;
+
     // Not enough coins
     if (!coinKeeper.removeCoins(cost)) {
+      this.destroyDialogBox();
       return;
     }
 
@@ -121,10 +166,6 @@ export class Bonfire extends Interactable {
         activePedestal: bonfire.id,
       },
     });
-  }
-
-  protected onLeave(): void {
-    this.stopHealing();
   }
 
   private createBonfire(id: string, zone: Phaser.GameObjects.Zone): void {
@@ -182,5 +223,12 @@ export class Bonfire extends Interactable {
   private getCurrentBonfire(): BonfireData | null {
     if (!this.activeZone) return null;
     return this.bonfires.find((bonfire) => bonfire.zone === this.activeZone) ?? null;
+  }
+
+  private destroyDialogBox(): void {
+    if (this.dialog) {
+      this.dialog.destroy();
+      this.dialog = null;
+    }
   }
 }

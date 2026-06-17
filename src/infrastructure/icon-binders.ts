@@ -13,7 +13,7 @@ export class IconClickBinder {
   public set(icon: Phaser.GameObjects.Image, index: number, ctx: IconClickContext): void {
     if (!icon || this.handlers.has(icon)) return;
 
-    icon.setInteractive({ useHandCursor: true });
+    icon.setInteractive();
 
     const over: IconHandler = () => ctx.onHover(index);
     const out: IconHandler = () => ctx.onHoverOut();

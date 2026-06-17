@@ -1,8 +1,9 @@
 import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
-import { BOARD_TEXT_WIDTH, boardText, END_GAME_TEXT } from '@/constants/board-texts';
+//import { QUEST_LOG_WIDTH, textStyle, END_GAME_TEXT } from '@/constants/board-texts';
 
 export class VictoryScene extends BaseScene {
+  // This scene stopped be used
   private container: Phaser.GameObjects.Container | null = null;
   private backGround: Phaser.GameObjects.Shape | null = null;
   private continueBtn: Phaser.GameObjects.Image | null = null;
@@ -24,30 +25,30 @@ export class VictoryScene extends BaseScene {
 
     this.container = this.add.container(width / 2, height / 4);
 
-    const style = boardText(BOARD_TEXT_WIDTH);
+    /*const style = textStyle(QUEST_LOG_WIDTH);
 
     const title = this.add
       .text(0, 0, END_GAME_TEXT.NAME, {
         ...style.NAME,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5);*/
 
     const line = this.add.graphics();
     line.lineStyle(2, 0xffffff);
     line.lineBetween(-150, 20, 150, 20);
 
-    const message = this.add
-      .text(0, 40, END_GAME_TEXT.TEXT, {
+    /*const message = this.add
+      .text(0, 120, END_GAME_TEXT.TEXT, {
         ...style.TEXT,
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5);*/
 
     this.continueBtn = this.createButton(width / 2, height * 0.8, {
       key: UI.MISC_UI_OK_BTN,
       action: () => this.handleContinue(),
     });
 
-    this.container.add([title, line, message]);
+    //this.container.add([title, line, message]);
   }
 
   private handleContinue(): void {

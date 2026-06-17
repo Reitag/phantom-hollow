@@ -191,6 +191,9 @@ export const MISC_ANIMATION = {
     [VFX_ANIMATION_KEYS.MAIN_2]: 'quest-waiting-main',
     [VFX_ANIMATION_KEYS.MAIN_3]: 'quest-completed-main',
   },
+  SIGN_MARK: {
+    [VFX_ANIMATION_KEYS.MAIN]: 'sign-main',
+  },
 } as const;
 
 export const ITEMS_ANIMATION = {

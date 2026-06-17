@@ -99,7 +99,7 @@ export class AiFireWorm extends Boss {
     }
   }
 
-  protected finalCall(): void {
+  protected finalCall(delta: number): void {
     this.scene.events.emit('fire-worm:died', {
       x: this.boss.x,
       y: this.boss.y,

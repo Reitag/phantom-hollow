@@ -6,6 +6,7 @@ import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { LevelOneScene } from '@/scenes/level-one-scene';
+import { QuestLog } from './quest-log';
 
 export class AlchemistQuest extends Quest {
   constructor(scene: Phaser.Scene) {
@@ -88,6 +89,11 @@ export class AlchemistQuest extends Quest {
 
     this.action.events.once('fireworm-fang:looted', this.onAcceptedQuest, this);
     this.questMark?.changeMarkToWaiting();
+    ServiceLocator.resolve(ServiceKeys.ui).getBoard<QuestLog>('quest-log').addQuestAside({
+      title: ALCHEMIST_QUEST_TEXT.TITLE,
+      name: ALCHEMIST_QUEST_TEXT.NAME,
+      description: ALCHEMIST_QUEST_TEXT.PENDING,
+    });
   }
 
   protected completeQuest(): void {
@@ -116,6 +122,9 @@ export class AlchemistQuest extends Quest {
       this.action.events.off('fireworm-fang:looted', this.onAcceptedQuest, this);
 
       SaveService.setQuestState(QUEST_IDS.ALCHEMIST_FIREWORM, 'done');
+      ServiceLocator.resolve(ServiceKeys.ui)
+        .getBoard<QuestLog>('quest-log')
+        .removeQuestAside(ALCHEMIST_QUEST_TEXT.TITLE);
     }
   }
 

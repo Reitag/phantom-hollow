@@ -5,18 +5,18 @@ import { WORLD_PARAMS } from '@/constants/world-params';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { MainMenuScene } from '@/scenes/main-menu';
 import { IntroScene } from '@/scenes/intro-scene';
-import { StartGameScene } from '@/scenes/start-game-scene';
-import { VictoryScene } from '@/scenes/victory-scene';
-import { OutroScene } from '@/scenes/outro-scene';
 import { PauseScene } from '@/scenes/pause-scene';
+import { OptionsScene } from '@/scenes/options-scene';
+import { CreditsScene } from '@/scenes/credits-scene';
 
 const scale = false;
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#000000',
-  title: 'Phantom hollow',
-  version: '0.16.0',
+  title: 'Embercrest Rising',
+  version: '1.0.0-beta.1',
+  disableContextMenu: true,
   render: {
     antialias: true,
     pixelArt: false,
@@ -39,12 +39,11 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   scene: [
     PreloadScene,
     MainMenuScene,
+    OptionsScene,
+    CreditsScene,
     IntroScene,
     UiScene,
     LevelOneScene,
     PauseScene,
-    StartGameScene,
-    VictoryScene,
-    OutroScene,
   ],
 };
