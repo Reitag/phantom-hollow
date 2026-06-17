@@ -7,6 +7,8 @@ export class PauseScene extends BaseScene {
   }
 
   public create(): void {
+    super.create();
+
     const { width, height } = this.scale;
 
     if (this.scene.isActive('UiScene')) {
@@ -18,12 +20,12 @@ export class PauseScene extends BaseScene {
     this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0);
 
     // Title
-    this.add
+    /*this.add
       .text(this.menuX, height / 2 - 80, 'PAUSED', {
         font: 'bold 48px EB Garamond',
         color: '#ffffff',
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5);*/
 
     let currentY = this.menuStartY;
 
@@ -40,7 +42,7 @@ export class PauseScene extends BaseScene {
       key: UI.MENU_UI_OPTION_BTN,
       action: () => {
         this.scene.sleep();
-        this.scene.launch('OptionsScene', { showDeleteBtn: false });
+        this.scene.launch('OptionsScene', { showDeleteBtn: false, fromPause: true });
       },
     });
     this.buttons.push(optionsBtn);

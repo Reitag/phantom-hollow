@@ -15,6 +15,8 @@ export abstract class Board {
 
   protected bundleHandlers = new Map<Phaser.GameObjects.Image, Handlers>();
 
+  protected readonly mainQuestTitle = 'The Last Stand of Embercrest';
+
   constructor(public scene: Phaser.Scene) {}
 
   public get isOpen(): boolean {

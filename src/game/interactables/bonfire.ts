@@ -102,7 +102,7 @@ export class Bonfire extends Interactable {
       return;
     }
 
-    this.dialog.setWarningDialog('Setting new Spawn Point will cost you 10 golds.');
+    this.dialog.setWarningDialog('Setting a new spawn point costs 10 coins.');
 
     this.dialog.once('confirm', () => {
       this.settingNewSpawnPoint(bonfire);

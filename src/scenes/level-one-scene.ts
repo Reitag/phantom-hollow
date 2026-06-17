@@ -24,6 +24,7 @@ import { InventorySystem } from '@/systems/inventory-system';
 import { Arrow } from '@/entities/weapons/arrow';
 import { Bowler } from '@/entities/misc/bowler';
 import { QuestMark } from '@/entities/misc/quest-mark';
+import { SignMark } from '@/entities/misc/sign-mark';
 import { SpellFactory } from '@/factories/spell-factory';
 import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { InteractableKeeper } from '@/systems/interactable-keeper';
@@ -88,6 +89,8 @@ export class LevelOneScene extends BaseScene {
   }
 
   public create(save: SaveGame | undefined): void {
+    super.create();
+
     if (save && Object.keys(save).length === 0) {
       save = undefined;
     }
@@ -335,6 +338,13 @@ export class LevelOneScene extends BaseScene {
         y: obj.y,
       };
     }
+
+    new SignMark({
+      scene: this,
+      position: { x: result['letter-sign-mark'].x, y: result['letter-sign-mark'].y },
+      keyName: MISC.SIGN_MARK,
+      frame: 0,
+    });
 
     new Bowler({
       scene: this,

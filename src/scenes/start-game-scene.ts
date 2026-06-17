@@ -3,6 +3,7 @@ import { UI } from '@/constants/asset-keys';
 //import { BOARD_TEXT_WIDTH, boardText, START_GAME_TEXT } from '@/constants/board-texts';
 
 export class StartGameScene extends BaseScene {
+  // This scene stopped be used
   private container: Phaser.GameObjects.Container | null = null;
   private backGround: Phaser.GameObjects.Shape | null = null;
   private acceptBtn: Phaser.GameObjects.Image | null = null;

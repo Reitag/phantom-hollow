@@ -219,6 +219,56 @@
       "type": "audio",
       "key": "bat-aggro",
       "url": "assets/audio/aggro/bat-aggro.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-1",
+      "url": "assets/audio/aggro/enemy-aggro-1.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-2",
+      "url": "assets/audio/aggro/enemy-aggro-2.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-3",
+      "url": "assets/audio/aggro/enemy-aggro-3.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-4",
+      "url": "assets/audio/aggro/enemy-aggro-4.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-5",
+      "url": "assets/audio/aggro/enemy-aggro-5.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-6",
+      "url": "assets/audio/aggro/enemy-aggro-6.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-7",
+      "url": "assets/audio/aggro/enemy-aggro-7.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-8",
+      "url": "assets/audio/aggro/enemy-aggro-8.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-9",
+      "url": "assets/audio/aggro/enemy-aggro-9.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "enemy-aggro-10",
+      "url": "assets/audio/aggro/enemy-aggro-10.mp3"
     }
   ]
 }

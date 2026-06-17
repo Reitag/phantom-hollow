@@ -46,6 +46,16 @@ export const AUDIO = {
   ZOMBIE_AGGRO: 'zombie-aggro',
   FIREWORM_AGGRO: 'fireworm-aggro',
   BAT_AGGRO: 'bat-aggro',
+  ENEMY_AGGRO_1: 'enemy-aggro-1',
+  ENEMY_AGGRO_2: 'enemy-aggro-2',
+  ENEMY_AGGRO_3: 'enemy-aggro-3',
+  ENEMY_AGGRO_4: 'enemy-aggro-4',
+  ENEMY_AGGRO_5: 'enemy-aggro-5',
+  ENEMY_AGGRO_6: 'enemy-aggro-6',
+  ENEMY_AGGRO_7: 'enemy-aggro-7',
+  ENEMY_AGGRO_8: 'enemy-aggro-8',
+  ENEMY_AGGRO_9: 'enemy-aggro-9',
+  ENEMY_AGGRO_10: 'enemy-aggro-10',
 } as const;
 
 export const BACKGROUNDS = {
@@ -85,7 +95,9 @@ export const MISC = {
   DARK_ENERGY: 'dark-energy',
   SHINING: 'shining',
   QUEST_MARK: 'quest-mark',
+  SIGN_MARK: 'sign-mark',
   LETTER: 'letter',
+  GAME_TITLE: 'game-title',
 } as const;
 
 export const OBJECTS = {

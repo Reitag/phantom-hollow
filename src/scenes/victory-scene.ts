@@ -3,6 +3,7 @@ import { UI } from '@/constants/asset-keys';
 //import { QUEST_LOG_WIDTH, textStyle, END_GAME_TEXT } from '@/constants/board-texts';
 
 export class VictoryScene extends BaseScene {
+  // This scene stopped be used
   private container: Phaser.GameObjects.Container | null = null;
   private backGround: Phaser.GameObjects.Shape | null = null;
   private continueBtn: Phaser.GameObjects.Image | null = null;

@@ -10,10 +10,12 @@ export class CreditsScene extends BaseScene {
   }
 
   public create(): void {
+    super.create();
+
     this.parentScene = this.scene.get('MainMenuScene') as MainMenuScene;
 
     const centerX = this.menuX;
-    let currentY = this.scale.height / 3;
+    let currentY = this.scale.height / 2;
 
     const teamText =
       `Design & Code - Ilya Chernov\n` + `Narrative - Artem Sedov\n` + `Art - Darya "InkMoon"`;
@@ -35,7 +37,7 @@ export class CreditsScene extends BaseScene {
       .lineBetween(centerX - 100, currentY, centerX + 100, currentY);
 
     currentY += 40;
-    const assetsText = `Audio - Kenney.nl\n` + `Additional Assets - Itch.io Creators`;
+    const assetsText = `Additional Assets - Itch.io Creators`;
 
     this.add
       .text(centerX, currentY, assetsText, {

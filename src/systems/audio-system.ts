@@ -4,11 +4,11 @@ export class AudioSystem {
 
   constructor(private scene: Phaser.Scene) {}
 
-  public play(key: string, config?: Phaser.Types.Sound.SoundConfig) {
+  public play(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
     this.scene.sound.play(key, config);
   }
 
-  public playAmbient(key: string, volume: number = 1, duration: number = 1500) {
+  public playAmbient(key: string, volume: number = 1, duration: number = 1500): void {
     if (this.currentKey === key) return;
 
     const previousAmbient = this.currentAmbient;
@@ -44,7 +44,7 @@ export class AudioSystem {
     this.currentKey = key;
   }
 
-  public stopAmbient(fade: boolean = true) {
+  public stopAmbient(fade: boolean = true): void {
     if (!this.currentAmbient) {
       this.currentKey = null;
       return;

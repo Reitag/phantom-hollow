@@ -5,7 +5,7 @@ export const fireRelic = (): InventoryItem => ({
   id: 'fire-relic',
   name: 'Fire Relic',
   description:
-    'Passive: Fireball grants a charge of Combustion.' +
+    'Passive: Fireball grants a charge of Combustion.\n' +
     'At 3 charges, Fireball becomes an instant cast and deals a Critical Strike.\n' +
     'Only one relic can be carried.',
   iconKey: UI.FIRE_RELIC_ICON,
@@ -20,8 +20,8 @@ export const frostRelic = (): InventoryItem => ({
   id: 'frost-relic',
   name: 'Frost Relic',
   description:
-    'Passive: Frostbolt now freezes targets for 5 sec.' +
-    'Maximum Health is increased by 50%.\n' +
+    'Passive: Frostbolt now freezes targets for 5 sec.\n' +
+    'Additionally, maximum Health is increased by 50%.\n' +
     'Only one relic can be carried.',
   iconKey: UI.FROST_RELIC_ICON,
   maxStack: 1,

@@ -111,9 +111,7 @@ export class ControlPanel extends Panel {
     this.scene.scene.launch('PauseScene').bringToTop('PauseScene');
   }
 
-  private handleHelpBtn(): void {
-    console.log('Cloud has been opened');
-  }
+  private handleHelpBtn(): void {}
 
   private handleQuestsBtn(): void {
     ServiceLocator.resolve(ServiceKeys.ui).getBoard<QuestLog>('quest-log').toggleQuestLog();

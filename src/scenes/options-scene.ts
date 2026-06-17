@@ -7,19 +7,32 @@ import { MainMenuScene } from './main-menu';
 export class OptionsScene extends BaseScene {
   private parentScene: MainMenuScene | null = null;
   private showDeleteBtn: boolean = true;
+  private fromPause: boolean = false;
 
   constructor() {
     super('OptionsScene');
   }
 
-  public init(data?: { showDeleteBtn?: boolean }): void {
+  public init(data?: { showDeleteBtn?: boolean; fromPause?: boolean }): void {
     super.init();
     if (data && data.showDeleteBtn !== undefined) {
       this.showDeleteBtn = data.showDeleteBtn;
     }
+
+    if (data && data.fromPause !== undefined) {
+      this.fromPause = data.fromPause;
+    }
   }
 
   public create(): void {
+    super.create();
+
+    const { width, height } = this.scale;
+
+    if (this.fromPause) {
+      this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0);
+    }
+
     this.parentScene = this.scene.get('MainMenuScene') as MainMenuScene;
 
     this.scene.bringToTop();

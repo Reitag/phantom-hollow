@@ -9,6 +9,8 @@ export class MainMenuScene extends BaseScene {
   }
 
   public create(): void {
+    super.create();
+
     this.cameras.main.setBackgroundColor('#000000');
 
     const save = SaveService.load();
@@ -34,9 +36,7 @@ export class MainMenuScene extends BaseScene {
             });
 
             const dialog = new Dialog(this);
-            dialog.setWarningDialog(
-              'Starting a new game will erase your current progress. Do you want to continue?'
-            );
+            dialog.setWarningDialog('Starting a new game overwrites your current save. Continue?');
 
             dialog.once('confirm', () => {
               SaveService.clear(true);

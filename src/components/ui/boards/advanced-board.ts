@@ -215,7 +215,7 @@ export class MainQuest extends AdvancedBoard {
     SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'done');
     ServiceLocator.resolve(ServiceKeys.ui)
       .getBoard<QuestLog>('quest-log')
-      .removeQuestAside('The Last Stand for Embercrest');
+      .removeQuestAside(this.mainQuestTitle);
 
     this.board?.destroy();
     this.board = null;

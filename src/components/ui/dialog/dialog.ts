@@ -15,7 +15,9 @@ export class Dialog extends Phaser.Events.EventEmitter {
 
   public setWarningDialog(text: string): void {
     // Container
-    this.warningDialog = this.scene.add.container(WARNING_BOX.BG.X, WARNING_BOX.BG.Y);
+    this.warningDialog = this.scene.add
+      .container(WARNING_BOX.BG.X, WARNING_BOX.BG.Y)
+      .setDepth(Z_POSITION.UI);
 
     // BG
     const bg = this.scene.add.image(0, 0, UI.DIALOG_UI).setOrigin(0.5, 0.5);

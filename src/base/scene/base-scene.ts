@@ -1,9 +1,11 @@
-import { UI } from '@/constants/asset-keys';
+import { MISC, UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
+import { Z_POSITION } from '@/constants/z-position';
 
 export abstract class BaseScene extends Phaser.Scene {
   protected buttons: Phaser.GameObjects.Image[] = [];
   protected hoverEffect: Phaser.GameObjects.Graphics | null = null;
+  protected gameTitleText: Phaser.GameObjects.Image | null = null;
 
   constructor(key: string) {
     super(key);
@@ -19,6 +21,23 @@ export abstract class BaseScene extends Phaser.Scene {
     this.events.once('shutdown', () => {
       this.cleanup();
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public create(...args: any[]): void {
+    if (this.scene.key !== 'LevelOneScene' && this.scene.key !== 'IntroScene') {
+      this.createGameTitle();
+    }
+  }
+
+  protected createGameTitle(): void {
+    const x = this.scale.width / 2;
+    const y = 150;
+
+    this.gameTitleText = this.add
+      .image(x, y, MISC.GAME_TITLE)
+      .setOrigin(0.5)
+      .setDepth(Z_POSITION.GAME_TITLE);
   }
 
   protected get menuX(): number {

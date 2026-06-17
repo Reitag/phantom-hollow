@@ -24,6 +24,7 @@ import { alchemistAnim } from '../characters/npc/alchemist-anim';
 import { shiningAnim } from '../misc/shining-anim';
 import { questMarkAnim } from '../misc/quest-mark-anim';
 import { crystalShrineAnim } from '../misc/crystal-shrine-anim';
+import { signMarkAnim } from '../misc/sign-mark-anim';
 
 export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManager) {
   // Player
@@ -66,5 +67,6 @@ export function registerGlobalAnimation(anims: Phaser.Animations.AnimationManage
   darkEnergyAnim(anims);
   shiningAnim(anims);
   questMarkAnim(anims);
+  signMarkAnim(anims);
   crystalShrineAnim(anims);
 }

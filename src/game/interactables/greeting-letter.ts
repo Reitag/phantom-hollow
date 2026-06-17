@@ -30,7 +30,6 @@ export class GreetingLetter extends Interactable {
 
   protected onEnter(): void {
     if (this.letterBoard.registerEvents()) {
-      this.letter.postFX.addGlow(0xffff00, 2, 0, false);
       this.ui.showHorizontalTooltip(
         {
           x: INTERACT_TOOLTIP.X,
@@ -56,7 +55,6 @@ export class GreetingLetter extends Interactable {
     }
     this.letterBoard.unregisterEvents();
 
-    this.letter.postFX.clear();
     this.ui.hideTooltip();
   }
 }

@@ -49,9 +49,20 @@
       "frameConfig": { "frameWidth": 20, "frameHeight": 20 }
     },
     {
+      "type": "spritesheet",
+      "key": "sign-mark",
+      "url": "assets/misc/sign-mark.png",
+      "frameConfig": { "frameWidth": 20, "frameHeight": 20 }
+    },
+    {
       "type": "image",
       "key": "letter",
       "url": "assets/misc/letter.png"
+    },
+    {
+      "type": "image",
+      "key": "game-title",
+      "url": "assets/title/game-title.png"
     }
   ]
 }

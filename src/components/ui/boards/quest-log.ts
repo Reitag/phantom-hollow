@@ -63,7 +63,7 @@ export class QuestLog extends Board {
     // Quest
     if (SaveService.getQuestState(QUEST_IDS.MAIN_QUEST) !== 'done') {
       this.addQuestAside({
-        title: 'The Last Stand for Embercrest',
+        title: this.mainQuestTitle,
         name: MAIN_QUEST_TEXT.NAME,
         description: MAIN_QUEST_TEXT.START_TEXT,
       });
