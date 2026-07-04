@@ -102,6 +102,26 @@
     },
     {
       "type": "image",
+      "key": "tutorial-board",
+      "url": "assets/ui/tutorial/tutorial-board.png"
+    },
+    {
+      "type": "image",
+      "key": "tut-controls",
+      "url": "assets/ui/tutorial/tut-controls.png"
+    },
+    {
+      "type": "image",
+      "key": "tut-ui",
+      "url": "assets/ui/tutorial/tut-ui.png"
+    },
+    {
+      "type": "image",
+      "key": "tut-world-elements",
+      "url": "assets/ui/tutorial/tut-world-elements.png"
+    },
+    {
+      "type": "image",
       "key": "quest-ui",
       "url": "assets/ui/quest/quest-ui.png"
     },
@@ -219,6 +239,26 @@
       "type": "image",
       "key": "misc-ui-minus-btn",
       "url": "assets/ui/misc/misc-ui-minus-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-prev-btn",
+      "url": "assets/ui/misc/misc-prev-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-next-btn",
+      "url": "assets/ui/misc/misc-next-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-prev-dis-btn",
+      "url": "assets/ui/misc/misc-prev-dis-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-next-dis-btn",
+      "url": "assets/ui/misc/misc-next-dis-btn.png"
     },
     {
       "type": "image",

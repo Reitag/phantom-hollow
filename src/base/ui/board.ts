@@ -17,7 +17,7 @@ export abstract class Board {
 
   protected readonly mainQuestTitle = 'The Last Stand of Embercrest';
 
-  constructor(public scene: Phaser.Scene) {}
+  constructor(protected scene: Phaser.Scene) {}
 
   public get isOpen(): boolean {
     return this.open;

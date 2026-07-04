@@ -4,6 +4,7 @@ import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SaveService } from '@/infrastructure/save-service';
 import { QUEST_IDS } from '@/constants/quest-ids';
 import { QuestLog } from '../boards/quest-log';
+import { Tutorial } from '../boards/tutorial';
 
 export class ControlPanel extends Panel {
   private trophyOverlay: Phaser.GameObjects.Rectangle | null = null;
@@ -111,7 +112,9 @@ export class ControlPanel extends Panel {
     this.scene.scene.launch('PauseScene').bringToTop('PauseScene');
   }
 
-  private handleHelpBtn(): void {}
+  private handleHelpBtn(): void {
+    ServiceLocator.resolve(ServiceKeys.ui).getBoard<Tutorial>('tutorial').toggleTutorial();
+  }
 
   private handleQuestsBtn(): void {
     ServiceLocator.resolve(ServiceKeys.ui).getBoard<QuestLog>('quest-log').toggleQuestLog();

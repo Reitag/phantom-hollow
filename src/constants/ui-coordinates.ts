@@ -52,7 +52,7 @@ export const LETTER_UI = {
   },
 } as const;
 
-// Letter
+// Quest log
 export const QUEST_LOG_UI = {
   ASIDE: {
     X: 502,
@@ -61,6 +61,22 @@ export const QUEST_LOG_UI = {
   CLOSE_BTN: {
     X: 502,
     Y: 348,
+  },
+} as const;
+
+// Tutorial
+export const TUTORIAL_UI = {
+  PREV_BTN: {
+    X: 251,
+    Y: 464,
+  },
+  CLOSE_BTN: {
+    X: 375,
+    Y: 464,
+  },
+  NEXT_BTN: {
+    X: 494,
+    Y: 464,
   },
 } as const;
 

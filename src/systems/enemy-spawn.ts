@@ -24,12 +24,13 @@ import { VFX_ANIMATION } from '@/constants/animation-keys';
 import { QUEST_IDS } from '@/constants/quest-ids';
 import { SaveService } from '@/infrastructure/save-service';
 import { LevelOneScene } from '@/scenes/level-one-scene';
+import { DESPAWN_DISTANCE, SPAWN_DISTANCE } from '@/constants/spawn-properies';
 
 type EnemyType = 'skeleton' | 'zombie' | 'archer';
 
 export class EnemySpawn {
-  private readonly spawnDistance = 800;
-  private readonly despawnDistance = 900;
+  private readonly spawnDistance = SPAWN_DISTANCE;
+  private readonly despawnDistance = DESPAWN_DISTANCE;
 
   private readonly spawnPositions: Record<EnemyType, SpawnPoint[]>;
   private readonly spawnBosses = {

@@ -16,6 +16,7 @@ import { ModifierType, TooltipFrameConfig, TooltipContentConfig } from '@/utils/
 import { AlchemistQuest } from '@/components/ui/boards/alchemist-quest';
 import { CrystalShrineQuest } from '@/components/ui/boards/crystal-shrine-quest';
 import { QuestLog } from '@/components/ui/boards/quest-log';
+import { Tutorial } from '@/components/ui/boards/tutorial';
 
 export class UiSystem {
   private healthBar: PlayerHealthBar;
@@ -56,6 +57,7 @@ export class UiSystem {
     this.uiBoards.set('crystal-shrine-quest', new CrystalShrineQuest(uiScene));
     this.uiBoards.set('letter', new Letter(uiScene));
     this.uiBoards.set('quest-log', new QuestLog(uiScene));
+    this.uiBoards.set('tutorial', new Tutorial(uiScene));
     this.uiBoards.set('main-quest', new MainQuest(uiScene));
 
     this.coins = new Coins(uiScene);
