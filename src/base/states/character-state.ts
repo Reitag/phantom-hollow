@@ -66,7 +66,6 @@ export abstract class CharacterState implements State {
     if (!speed) return;
 
     this.setVelocityToX(-speed);
-    //this.character.flipCharacterToRight(false);
     this.flipCharacterToRight(false);
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);
@@ -77,7 +76,6 @@ export abstract class CharacterState implements State {
     if (!speed) return;
 
     this.setVelocityToX(speed);
-    //this.character.flipCharacterToRight(true);
     this.flipCharacterToRight(true);
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.MOVE);

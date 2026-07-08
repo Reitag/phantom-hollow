@@ -57,7 +57,7 @@ export class MainMenuScene extends BaseScene {
       {
         key: UI.MENU_UI_OPTION_BTN,
         action: () => {
-          this.scene.launch('OptionsScene');
+          this.scene.launch('OptionsScene', { showDeleteBtn: true, fromPause: false });
           this.scene.sleep();
         },
         visible: true,

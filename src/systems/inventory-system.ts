@@ -114,6 +114,11 @@ export class InventorySystem {
     this.saveToData();
   }
 
+  public destroySlots(): void {
+    //this.slots.length = 0;
+    //this.slots = Array(this.panel.inventoryBar.cellQuantity).fill(null);
+  }
+
   public getSlots(): (InventorySlot | null)[] {
     return [...this.slots];
   }
