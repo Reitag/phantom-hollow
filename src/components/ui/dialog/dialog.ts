@@ -5,9 +5,9 @@ import { Z_POSITION } from '@/constants/z-position';
 
 export class Dialog extends Phaser.Events.EventEmitter {
   private hoverGraphics: Phaser.GameObjects.Graphics | null = null;
-  private warningDialog!: Phaser.GameObjects.Container;
-  private yesButton!: Phaser.GameObjects.Image;
-  private noButton!: Phaser.GameObjects.Image;
+  private warningDialog: Phaser.GameObjects.Container | null = null;
+  private yesButton: Phaser.GameObjects.Image | null = null;
+  private noButton: Phaser.GameObjects.Image | null = null;
 
   constructor(private scene: Phaser.Scene) {
     super();
@@ -106,7 +106,7 @@ export class Dialog extends Phaser.Events.EventEmitter {
       .fillRoundedRect(rectX, rectY, target.width, target.height, cornerRadius)
       .setDepth(Z_POSITION.UI + 30);
 
-    this.warningDialog.add(this.hoverGraphics);
+    this.warningDialog?.add(this.hoverGraphics);
   }
 
   private handleButtonOut(target: Phaser.GameObjects.Image): void {
@@ -136,7 +136,7 @@ export class Dialog extends Phaser.Events.EventEmitter {
 
   private handleButtonUp(target: Phaser.GameObjects.Image, eventName: string): void {
     if (this.hoverGraphics) {
-      this.warningDialog.remove(this.hoverGraphics);
+      this.warningDialog?.remove(this.hoverGraphics);
       this.hoverGraphics.destroy();
       this.hoverGraphics = null;
     }
@@ -146,8 +146,8 @@ export class Dialog extends Phaser.Events.EventEmitter {
   }
 
   private close(): void {
-    this.detachButtonEvents(this.yesButton);
-    this.detachButtonEvents(this.noButton);
-    this.warningDialog.destroy(true);
+    if (this.yesButton) this.detachButtonEvents(this.yesButton);
+    if (this.noButton) this.detachButtonEvents(this.noButton);
+    if (this.warningDialog) this.warningDialog.destroy(true);
   }
 }

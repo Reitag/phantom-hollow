@@ -122,6 +122,7 @@ export const OBJECTS = {
   ROCK_5: 'rock-5',
   ROCK_6: 'rock-6',
   ROCK_7: 'rock-7',
+  ROCK_8: 'rock-8',
   BUSH_1: 'bush-1',
   BUSH_2: 'bush-2',
   BUSH_3: 'bush-3',
