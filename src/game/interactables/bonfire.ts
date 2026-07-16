@@ -46,6 +46,7 @@ export class Bonfire extends Interactable {
 
       if (active) {
         this.activateBonfire(active);
+        this.activeBonfireId = active.id;
       }
     }
   }
@@ -145,6 +146,7 @@ export class Bonfire extends Interactable {
           .setDepth(Z_POSITION.DECOR);
         prev.activated = false;
       }
+      this.activeBonfireId = null;
     }
 
     // Activate new bonfire
@@ -166,6 +168,8 @@ export class Bonfire extends Interactable {
         activePedestal: bonfire.id,
       },
     });
+
+    this.onEnter();
   }
 
   private createBonfire(id: string, zone: Phaser.GameObjects.Zone): void {

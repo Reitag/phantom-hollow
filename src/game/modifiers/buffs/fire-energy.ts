@@ -24,6 +24,5 @@ export class FireEnergy implements Modifier {
 
   public start(target: Character, onExpire: () => void): void {
     this.apply(target);
-    //this.ui.addModifierIcon(this.id, undefined, this.type);
   }
 }

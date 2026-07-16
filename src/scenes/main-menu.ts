@@ -57,7 +57,7 @@ export class MainMenuScene extends BaseScene {
       {
         key: UI.MENU_UI_OPTION_BTN,
         action: () => {
-          this.scene.launch('OptionsScene');
+          this.scene.launch('OptionsScene', { showDeleteBtn: true, fromPause: false });
           this.scene.sleep();
         },
         visible: true,
@@ -84,17 +84,6 @@ export class MainMenuScene extends BaseScene {
 
       this.buttons.push(button);
     });
-
-    const footerY = this.scale.height - 28;
-
-    // Version
-    this.add
-      .text(28, footerY, `v${this.game.config.gameVersion}`, {
-        fontFamily: 'Volkhov',
-        fontSize: '13px',
-        color: '#6f6f6f',
-      })
-      .setOrigin(0, 1);
   }
 
   public refreshMenu(): void {

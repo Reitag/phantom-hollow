@@ -57,8 +57,6 @@ export class AiEvilWizard extends Boss {
   }
 
   protected updateBossState(time: number, delta: number): void {
-    //if (this.isBusy) this.isBusy = false;
-
     this.boss.update(delta);
     this.aiMutatedBat.update(delta);
 

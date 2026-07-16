@@ -18,7 +18,9 @@ export class CreditsScene extends BaseScene {
     let currentY = this.scale.height / 2;
 
     const teamText =
-      `Design & Code - Ilya Chernov\n` + `Narrative - Artem Sedov\n` + `Art - Darya "InkMoon"`;
+      `Design & Code - Ilya "Reitag" Chernov\n` +
+      `Narrative - Artem "sacrificengineer" Sedov\n` +
+      `Art - Darya "InkMoon"`;
 
     this.add
       .text(centerX, currentY, teamText, {

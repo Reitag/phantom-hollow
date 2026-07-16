@@ -107,6 +107,11 @@
     },
     {
       "type": "image",
+      "key": "rock-8",
+      "url": "assets/objects/rocks/rock-8.png"
+    },
+    {
+      "type": "image",
       "key": "bush-1",
       "url": "assets/objects/bushes/Bush-1.png"
     },
