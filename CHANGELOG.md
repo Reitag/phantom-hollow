@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.0-beta.2] - 2026-07-16
+
+### Added
+
+- New Tutorial section
+- Creator nicknames to the credits section
+
+### Changed
+
+- Updated the game logo with the new artwork from the artist
+- Game version is now displayed across all scenes except Intro, UI, and LevelOne
+- Repositioned tooltip frame to the center of the screen
+
+### Fixed
+
+- Bonfire system now works correctly
+- Save data now clears correctly instead of leaving partial progress after restarting the game
+- The "Delete Save Data" button is now correctly displayed in the Options section of the main menu
+
+
 ## [1.0.0-beta.1] - 2026-06-18
 
 ### Added
