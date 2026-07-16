@@ -25,9 +25,13 @@ export abstract class BaseScene extends Phaser.Scene {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public create(...args: any[]): void {
-    if (this.scene.key !== 'LevelOneScene' && this.scene.key !== 'IntroScene') {
-      this.createGameTitle();
-    }
+    const { key } = this.scene;
+
+    const hideTitle = ['LevelOneScene', 'IntroScene'];
+    const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
+
+    if (!hideTitle.includes(key)) this.createGameTitle();
+    if (!hideVersion.includes(key)) this.createVersion();
   }
 
   protected createGameTitle(): void {
@@ -38,6 +42,19 @@ export abstract class BaseScene extends Phaser.Scene {
       .image(x, y, MISC.GAME_TITLE)
       .setOrigin(0.5)
       .setDepth(Z_POSITION.GAME_TITLE);
+  }
+
+  // Version
+  protected createVersion(): void {
+    const footerY = this.scale.height - 28;
+
+    this.add
+      .text(28, footerY, `v${this.game.config.gameVersion}`, {
+        fontFamily: 'Volkhov',
+        fontSize: '13px',
+        color: '#6f6f6f',
+      })
+      .setOrigin(0, 1);
   }
 
   protected get menuX(): number {

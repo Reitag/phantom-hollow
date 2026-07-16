@@ -82,7 +82,7 @@ export const TUTORIAL_UI = {
 
 // Interact tooltip
 export const INTERACT_TOOLTIP = {
-  X: 765,
+  X: 415,
   Y: 580,
   WIDTH: 170,
   FILL_COLOR: 0x000000,
