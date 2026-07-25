@@ -102,7 +102,6 @@ export class QuestLog extends Board {
 
     if (this.isOpen) {
       this.createAsideUIElement(quest, this.asides.length);
-      console.log('inside');
     }
   }
 

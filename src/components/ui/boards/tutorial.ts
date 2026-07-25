@@ -3,6 +3,7 @@ import { UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { TUTORIAL_UI } from '@/constants/ui-coordinates';
+import { SaveService } from '@/infrastructure/save-service';
 import { Position } from '@/utils/types';
 
 export class Tutorial extends Board {
@@ -56,6 +57,13 @@ export class Tutorial extends Board {
 
     // Buttons state
     this.updateButtonStates();
+
+    // Check if the player starts new game
+    if (!SaveService.hasSave()) {
+      this.scene.time.delayedCall(3000, () => {
+        this.toggleTutorial();
+      });
+    }
   }
 
   public toggleTutorial(): void {
