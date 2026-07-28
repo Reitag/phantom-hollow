@@ -98,6 +98,7 @@ export const MISC = {
   SIGN_MARK: 'sign-mark',
   LETTER: 'letter',
   GAME_TITLE: 'game-title',
+  PHASER_PIXEL_MEDIUM_FLAT: 'phaser-pixel-medium-flat',
 } as const;
 
 export const OBJECTS = {
