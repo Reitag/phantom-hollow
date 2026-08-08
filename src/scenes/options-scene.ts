@@ -30,6 +30,11 @@ export class OptionsScene extends BaseScene {
     const { width, height } = this.scale;
 
     if (this.fromPause) {
+      this.backgroundArt?.destroy();
+      this.backgroundArt = null;
+      this.gameVersion?.destroy();
+      this.gameVersion = null;
+
       this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0);
     }
 

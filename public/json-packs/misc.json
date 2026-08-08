@@ -68,6 +68,11 @@
       "type": "image",
       "key": "phaser-pixel-medium-flat",
       "url": "assets/misc/phaser-pixel-medium-flat.png"
+    },
+    {
+      "type": "image",
+      "key": "main-art",
+      "url": "assets/art/main-art.png"
     }
   ]
 }

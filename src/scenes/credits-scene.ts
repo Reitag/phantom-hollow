@@ -15,9 +15,9 @@ export class CreditsScene extends BaseScene {
 
     this.parentScene = this.scene.get('MainMenuScene') as MainMenuScene;
 
-    if (this.gameTitleText) {
+    /*if (this.gameTitleText) {
       this.gameTitleText.setVisible(false);
-    }
+    }*/
 
     const centerX = this.menuX;
 
