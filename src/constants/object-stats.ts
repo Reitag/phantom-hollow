@@ -125,7 +125,7 @@ export const FIRE_WORM_STATS = {
   WALK: 7,
   ENGAGE_DISTANCE: 450,
   CAST: 13,
-  SPELL_POWER: 5,
+  SPELL_POWER: 3,
 } as const;
 
 export const EVIL_WIZARD_STATS = {
@@ -134,5 +134,5 @@ export const EVIL_WIZARD_STATS = {
   WALK: 50,
   ENGAGE_DISTANCE: 450,
   CAST: 10,
-  SPELL_POWER: 6,
+  SPELL_POWER: 4,
 } as const;

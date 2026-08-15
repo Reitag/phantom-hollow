@@ -73,8 +73,6 @@ export class OptionsScene extends BaseScene {
       this.buttons.push(deleteBtn);
     }
 
-    //currentY += this.buttonHeight + this.menuGap;
-
     const backBtn = this.createButton(centerX, this.backY, {
       key: UI.MISC_UI_BACK_BTN,
       action: () => {
@@ -88,12 +86,18 @@ export class OptionsScene extends BaseScene {
   private createAudioControls(x: number, y: number): void {
     let currentVolumePct = Math.round(this.sound.volume * 100);
 
+    let color = '#030303';
+    if (this.fromPause) {
+      color = '#ffffff';
+    }
+
     this.add
       .text(x, y - 40, 'SFX Volume', {
         fontFamily: 'Volkhov',
         fontSize: '16px',
-        color: '#ffffff',
+        color: color,
         align: 'center',
+        fontStyle: 'bold',
       })
       .setOrigin(0.5);
 
@@ -109,8 +113,9 @@ export class OptionsScene extends BaseScene {
       .text(x, y, `${currentVolumePct}%`, {
         fontFamily: 'Volkhov',
         fontSize: '16px',
-        color: '#ffffff',
+        color: color,
         align: 'center',
+        fontStyle: 'bold',
       })
       .setOrigin(0.5);
 

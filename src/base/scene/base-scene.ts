@@ -65,7 +65,7 @@ export abstract class BaseScene extends Phaser.Scene {
       .text(28, footerY, `v${this.game.config.gameVersion}`, {
         fontFamily: 'Volkhov',
         fontSize: '13px',
-        color: '#6f6f6f',
+        color: '#101010',
       })
       .setOrigin(0, 1);
   }

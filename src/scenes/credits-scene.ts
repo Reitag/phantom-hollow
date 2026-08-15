@@ -35,9 +35,10 @@ export class CreditsScene extends BaseScene {
       .text(centerX, currentY, teamText, {
         fontFamily: 'Volkhov',
         fontSize: '12px',
-        color: '#f1f1f1',
+        color: '#030303',
         align: 'center',
         lineSpacing: 6,
+        fontStyle: 'bold',
       })
       .setOrigin(0.5, 0);
 
@@ -57,9 +58,10 @@ export class CreditsScene extends BaseScene {
       .text(centerX, currentY, thirdParty, {
         fontFamily: 'Volkhov',
         fontSize: '12px',
-        color: '#f1f1f1',
+        color: '#030303',
         align: 'center',
         lineSpacing: 6,
+        fontStyle: 'bold',
       })
       .setOrigin(0.5, 0);
 
@@ -69,7 +71,7 @@ export class CreditsScene extends BaseScene {
       .text(centerX, currentY, `Made with`, {
         fontFamily: 'Volkhov',
         fontSize: '12px',
-        color: '#6f6f6f',
+        color: '#101010',
         align: 'center',
       })
       .setOrigin(0.5, 0);
@@ -94,7 +96,7 @@ export class CreditsScene extends BaseScene {
       .text(centerX, this.phaserLogo.y + this.phaserLogo.displayHeight + 6, `v${Phaser.VERSION}`, {
         fontFamily: 'Volkhov',
         fontSize: '11px',
-        color: '#6f6f6f',
+        color: '#101010',
         align: 'center',
       })
       .setOrigin(0.5, 0);

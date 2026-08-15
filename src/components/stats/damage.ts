@@ -21,6 +21,10 @@ export abstract class Damage {
     this.multipliers.delete(id);
   }
 
+  public hasMultiplier(id: string): boolean {
+    return this.multipliers.has(id);
+  }
+
   public clearMultipliers(): void {
     this.multipliers.clear();
   }
