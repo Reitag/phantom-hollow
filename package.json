@@ -3,7 +3,7 @@
   "author": "Ilya Chernov",
   "description": "2D ARPG",
   "private": true,
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "type": "module",
   "main": "main.js",
   "scripts": {
