@@ -36,7 +36,6 @@ import { LightningShield } from '@/entities/spells/effect-spells/lightning-shiel
 import { ShadowTrail } from '@/entities/spells/direct-spells/shadow-trail';
 import { AudioSystem } from '@/systems/audio-system';
 import { EnemySpawn } from '@/systems/enemy-spawn';
-import { UiSystem } from '@/systems/ui-system';
 import { NPCSpawn } from '@/systems/npc-spawn';
 import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
@@ -725,6 +724,9 @@ export class LevelOneScene extends BaseScene {
     // Crystal quest
     this.events.off('crystal-shrine:looted');
     this.events.off('crystal-shrine:completed');
+
+    // Control Panel
+    ServiceLocator.resolve(ServiceKeys.panel).controlBar.removeAllControllPanelListeners();
 
     CollisionService.clear();
     SaveService.clear();

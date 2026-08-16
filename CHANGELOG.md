@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.0-beta.3] - 2026-08-16
+
+### Added
+
+- CREDITS.md file with full documentation of all project technologies and license links
+- Tutorial pop-up trigger when starting a new game
+- Main menu art
+- Loot collection SFX
+
+### Changed
+
+- Updated credits scene with a complete list of third-party asset authors and structured roles
+- Replaced the Vecteezy pixel heart icon asset with a custom redesigned graphic
+- Replaced the flashing quest log with a dedicated button to start the first mission
+- Reduced bosses' spell power
+- Healing SFX
+
+### Fixed
+
+- Game build failure
+- Bonfire tooltip
+
+
 ## [1.0.0-beta.2] - 2026-07-16
 
 ### Added

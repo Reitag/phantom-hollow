@@ -6,9 +6,19 @@ import { QUEST_IDS } from '@/constants/quest-ids';
 import { QuestLog } from '../boards/quest-log';
 import { Tutorial } from '../boards/tutorial';
 
+type ControlListeners = {
+  pointerdown: () => void;
+  pointerover: () => void;
+  pointerout: () => void;
+  pointerup: () => void;
+};
+
 export class ControlPanel extends Panel {
   private trophyOverlay: Phaser.GameObjects.Rectangle | null = null;
   private trophyTween: Phaser.Tweens.Tween | null = null;
+
+  // Listeners
+  private controlListenersMap = new Map<number, ControlListeners>();
 
   constructor({ scene, slotOffSet, cell }: PanelConfig) {
     super({
@@ -37,7 +47,17 @@ export class ControlPanel extends Panel {
 
       // For trophy blink
       if (i === 2) {
-        this.startTrophyOverlayBlink(iconImage);
+        //this.startTrophyOverlayBlink(iconImage);
+      }
+    }
+  }
+
+  public removeAllControllPanelListeners(): void {
+    for (let i = 0; i < this.slots.length; i++) {
+      const icon = this.slots[i].icon;
+
+      if (icon !== undefined) {
+        this.removeControlBehavior(i, icon);
       }
     }
   }
@@ -45,6 +65,7 @@ export class ControlPanel extends Panel {
   protected emitSlotRelease(i: number): void {}
   protected triggerTooltip(index: number): void {}
 
+  // Turned it off due to info button in ui-scene
   private startTrophyOverlayBlink(icon: Phaser.GameObjects.Image): void {
     const mainQuestState = SaveService.getQuestState(QUEST_IDS.MAIN_QUEST);
     if (mainQuestState === 'waiting' || mainQuestState === 'completed' || mainQuestState === 'done')
@@ -68,6 +89,7 @@ export class ControlPanel extends Panel {
     });
   }
 
+  // Turned it off due to info button in ui-scene
   private stopTrophyOverlayBlink(): void {
     if (this.trophyTween) {
       this.trophyTween.stop();
@@ -86,26 +108,47 @@ export class ControlPanel extends Panel {
   private setupControlBehavior(index: number, icon: Phaser.GameObjects.Image): void {
     icon.setInteractive();
 
-    icon.on('pointerdown', () => this.clickContext.onPress(index));
-    icon.on('pointerover', () => this.clickContext.onHover?.(index));
-    icon.on('pointerout', () => this.clickContext.onHoverOut?.());
+    const listeners: ControlListeners = {
+      pointerdown: () => this.clickContext.onPress(index),
+      pointerover: () => this.clickContext.onHover?.(index),
+      pointerout: () => this.clickContext.onHoverOut?.(),
+      pointerup: () => {
+        this.clickContext.onRelease(index);
+        switch (index) {
+          case 0:
+            this.handlePauseBtn();
+            break;
+          case 1:
+            this.handleHelpBtn();
+            break;
+          case 2:
+            // Just turned it ooff due to Icon info in ui-scene
+            //this.stopTrophyOverlayBlink();
+            this.handleQuestsBtn();
+            break;
+        }
+      },
+    };
 
-    icon.on('pointerup', () => {
-      this.clickContext.onRelease(index);
+    icon.on('pointerdown', listeners.pointerdown);
+    icon.on('pointerover', listeners.pointerover);
+    icon.on('pointerout', listeners.pointerout);
+    icon.on('pointerup', listeners.pointerup);
 
-      switch (index) {
-        case 0:
-          this.handlePauseBtn();
-          break;
-        case 1:
-          this.handleHelpBtn();
-          break;
-        case 2:
-          this.stopTrophyOverlayBlink();
-          this.handleQuestsBtn();
-          break;
-      }
-    });
+    this.controlListenersMap.set(index, listeners);
+  }
+
+  private removeControlBehavior(index: number, icon: Phaser.GameObjects.Image): void {
+    const listeners = this.controlListenersMap.get(index);
+
+    if (listeners) {
+      icon.off('pointerdown', listeners.pointerdown);
+      icon.off('pointerover', listeners.pointerover);
+      icon.off('pointerout', listeners.pointerout);
+      icon.off('pointerup', listeners.pointerup);
+
+      this.controlListenersMap.delete(index);
+    }
   }
 
   private handlePauseBtn(): void {

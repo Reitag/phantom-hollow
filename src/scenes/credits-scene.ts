@@ -1,9 +1,10 @@
 import { BaseScene } from '@/base/scene/base-scene';
-import { UI } from '@/constants/asset-keys';
+import { MISC, UI } from '@/constants/asset-keys';
 import { MainMenuScene } from './main-menu';
 
 export class CreditsScene extends BaseScene {
   private parentScene: MainMenuScene | null = null;
+  private phaserLogo: Phaser.GameObjects.Image | null = null;
 
   constructor() {
     super('CreditsScene');
@@ -15,60 +16,87 @@ export class CreditsScene extends BaseScene {
     this.parentScene = this.scene.get('MainMenuScene') as MainMenuScene;
 
     const centerX = this.menuX;
-    let currentY = this.scale.height / 2;
+
+    let currentY = 75;
 
     const teamText =
-      `Design & Code - Ilya "Reitag" Chernov\n` +
-      `Narrative - Artem "sacrificengineer" Sedov\n` +
-      `Art - Darya "InkMoon"`;
+      `GAME DIRECTOR & LEAD PROGRAMMER\n` +
+      `Ilya "Reitag" Chernov\n\n` +
+      `ASSOCIATE PRODUCER, NARRATIVE & QA\n` +
+      `Artem "sacrificengineer" Sedov\n\n` +
+      `LEAD 2D ARTIST & ILLUSTRATOR\n` +
+      `Darya "InkMoon"`;
 
     this.add
       .text(centerX, currentY, teamText, {
         fontFamily: 'Volkhov',
-        fontSize: '14px',
-        color: '#ffffff',
+        fontSize: '12px',
+        color: '#030303',
         align: 'center',
-        lineSpacing: 8,
+        lineSpacing: 6,
+        fontStyle: 'bold',
       })
-      .setOrigin(0.5, 0.5);
+      .setOrigin(0.5, 0);
 
-    currentY += 50;
+    currentY += 185;
+
+    const thirdParty =
+      `THIRD-PARTY ASSETS\n` +
+      `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle\n` +
+      `GandalfHardcore • Ansimuz • Wenrexa • Pixel Explosive • Craftpix\n` +
+      `La Red Games • Dusk Games • Pimen • Jz Pixels • Frostwindz\n` +
+      `greedy_toad • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar,\n` +
+      `Jetrel, Zabin, Hyptosis, Surt, KnoblePersona) • Ivan Petrov & Cyreal\n` +
+      `freesound_community • Dragon Studio • Yodguard • Liecio\n` +
+      `TomMusic • Daniel SoundsGood • Last Day Dreaming`;
+
     this.add
-      .graphics()
-      .lineStyle(1, 0xffffffff, 0.15)
-      .lineBetween(centerX - 100, currentY, centerX + 100, currentY);
-
-    currentY += 40;
-    const assetsText = `Additional Assets - Itch.io Creators`;
-
-    this.add
-      .text(centerX, currentY, assetsText, {
+      .text(centerX, currentY, thirdParty, {
         fontFamily: 'Volkhov',
-        fontSize: '14px',
-        color: '#dddddd',
+        fontSize: '12px',
+        color: '#030303',
         align: 'center',
-        lineSpacing: 4,
+        lineSpacing: 6,
+        fontStyle: 'bold',
       })
-      .setOrigin(0.5, 0.5);
+      .setOrigin(0.5, 0);
 
-    currentY += 50;
-    this.add
-      .graphics()
-      .lineStyle(1, 0xffffffff, 0.15)
-      .lineBetween(centerX - 60, currentY, centerX + 60, currentY);
+    currentY += 190;
 
-    currentY += 40;
-    this.add
-      .text(centerX, currentY, `Built with Phaser v${Phaser.VERSION}`, {
+    const madeWithText = this.add
+      .text(centerX, currentY, `Made with`, {
         fontFamily: 'Volkhov',
-        fontSize: '14px',
-        color: '#ffffff',
+        fontSize: '12px',
+        color: '#101010',
         align: 'center',
       })
-      .setOrigin(0.5)
-      .setAlpha(0.4);
+      .setOrigin(0.5, 0);
 
-    currentY += 70;
+    currentY = madeWithText.y + madeWithText.displayHeight + 10;
+
+    this.phaserLogo = this.add
+      .image(centerX, currentY, MISC.PHASER_PIXEL_MEDIUM_FLAT)
+      .setOrigin(0.5, 0)
+      .setAlpha(0.5)
+      .setInteractive({ useHandCursor: true });
+
+    this.phaserLogo.on('pointerup', () => {
+      const url = 'https://phaser.io';
+      window.open(url, '_blank');
+    });
+
+    this.phaserLogo.on('pointerover', () => this.phaserLogo?.setAlpha(0.9));
+    this.phaserLogo.on('pointerout', () => this.phaserLogo?.setAlpha(0.5));
+
+    this.add
+      .text(centerX, this.phaserLogo.y + this.phaserLogo.displayHeight + 6, `v${Phaser.VERSION}`, {
+        fontFamily: 'Volkhov',
+        fontSize: '11px',
+        color: '#101010',
+        align: 'center',
+      })
+      .setOrigin(0.5, 0);
+
     const backBtn = this.createButton(centerX, 550, {
       key: UI.MISC_UI_BACK_BTN,
       action: () => {
@@ -80,6 +108,10 @@ export class CreditsScene extends BaseScene {
   }
 
   private closeOptions(): void {
+    this.phaserLogo?.disableInteractive();
+    this.phaserLogo?.destroy();
+    this.phaserLogo = null;
+
     this.scene.wake('MainMenuScene');
     this.parentScene?.refreshMenu();
     this.scene.stop();

@@ -5,6 +5,9 @@ import { Tilemap } from '@/components/map/tilemap';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { getUiCoords } from '@/utils/helpers';
 import { BaseScene } from '@/base/scene/base-scene';
+import { SaveService } from '@/infrastructure/save-service';
+import { QuestLog } from '@/components/ui/boards/quest-log';
+import { QUEST_IDS } from '@/constants/quest-ids';
 
 export class UiScene extends BaseScene {
   private ui!: UiSystem;
@@ -48,11 +51,19 @@ export class UiScene extends BaseScene {
     this.add.image(coinCoord.x, coinCoord.y, UI.COIN_UI).setOrigin(0, 0);
 
     // Start mission Button
-    /*this.startMissionBtn = this.add
-      //.image(500, 500, UI.INFO_BUTTON)
-      .image(720, 595, UI.INFO_BUTTON)
+    if (!SaveService.hasSave()) {
+      this.startMission();
+    }
+  }
+
+  private startMission(): void {
+    const x = this.cameras.main.width / 2;
+    const y = this.cameras.main.height * 0.75;
+
+    this.startMissionBtn = this.add
+      .image(x, y, UI.INFO_BUTTON)
       .setInteractive()
-      .setOrigin(0, 0);
+      .setOrigin(0.5, 0.5);
     this.startMissionBtn.on('pointerup', this.handleStartMissionBtn, this);
 
     // Start mission overlay
@@ -60,8 +71,8 @@ export class UiScene extends BaseScene {
 
     this.overlayGraphics.fillStyle(0xffd700, 1);
     this.overlayGraphics.fillRoundedRect(
-      this.startMissionBtn.x,
-      this.startMissionBtn.y,
+      x - 18,
+      y - 18,
       this.startMissionBtn.width,
       this.startMissionBtn.height,
       3
@@ -76,7 +87,7 @@ export class UiScene extends BaseScene {
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut',
-    });*/
+    });
   }
 
   private detachStartMissionBtn(): void {
@@ -92,7 +103,10 @@ export class UiScene extends BaseScene {
       this.overlayGraphics = null;
     }
     this.detachStartMissionBtn();
-    this.scene.launch('StartGameScene').bringToTop('StartGameScene');
+    ServiceLocator.resolve(ServiceKeys.ui).getBoard<QuestLog>('quest-log').toggleQuestLog();
+
+    // Set waiting status for main quest
+    SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'waiting');
   }
 
   protected cleanup(): void {

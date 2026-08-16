@@ -15,7 +15,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   backgroundColor: '#000000',
   title: 'Embercrest Rising',
-  version: '1.0.0-beta.2',
+  version: '1.0.0-beta.3',
   disableContextMenu: true,
   render: {
     antialias: true,

@@ -251,6 +251,8 @@ export class LootZone extends Interactable {
     }
 
     if (lootZone.type === 'drop') {
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.LOOT_COLLECT);
+
       SaveService.patch({
         worldState: {
           ...SaveService.data.worldState,

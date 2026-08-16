@@ -42,6 +42,7 @@ export const AUDIO = {
   PAPER_CLOSE: 'paper-close',
   CHEST_OPEN: 'chest-open',
   SPEAR_IMPACT: 'spear-impact',
+  LOOT_COLLECT: 'loot-collect',
   SKELETON_WARRIOR_AGGRO: 'skeleton-warrior-aggro',
   ZOMBIE_AGGRO: 'zombie-aggro',
   FIREWORM_AGGRO: 'fireworm-aggro',
@@ -98,6 +99,8 @@ export const MISC = {
   SIGN_MARK: 'sign-mark',
   LETTER: 'letter',
   GAME_TITLE: 'game-title',
+  PHASER_PIXEL_MEDIUM_FLAT: 'phaser-pixel-medium-flat',
+  MAIN_ART: 'main-art',
 } as const;
 
 export const OBJECTS = {

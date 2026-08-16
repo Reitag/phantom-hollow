@@ -5,7 +5,9 @@ import { Z_POSITION } from '@/constants/z-position';
 export abstract class BaseScene extends Phaser.Scene {
   protected buttons: Phaser.GameObjects.Image[] = [];
   protected hoverEffect: Phaser.GameObjects.Graphics | null = null;
-  protected gameTitleText: Phaser.GameObjects.Image | null = null;
+  protected gameTitle: Phaser.GameObjects.Image | null = null;
+  protected backgroundArt: Phaser.GameObjects.Image | null = null;
+  protected gameVersion: Phaser.GameObjects.Text | null = null;
 
   constructor(key: string) {
     super(key);
@@ -27,32 +29,43 @@ export abstract class BaseScene extends Phaser.Scene {
   public create(...args: any[]): void {
     const { key } = this.scene;
 
-    const hideTitle = ['LevelOneScene', 'IntroScene'];
+    const hideTitle = ['LevelOneScene', 'IntroScene', 'CreditsScene'];
+    const hideArt = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
     const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
 
     if (!hideTitle.includes(key)) this.createGameTitle();
+    if (!hideArt.includes(key)) this.createBackgroundArt();
     if (!hideVersion.includes(key)) this.createVersion();
   }
 
+  // Title
   protected createGameTitle(): void {
     const x = this.scale.width / 2;
     const y = 150;
 
-    this.gameTitleText = this.add
+    this.gameTitle = this.add
       .image(x, y, MISC.GAME_TITLE)
       .setOrigin(0.5)
       .setDepth(Z_POSITION.GAME_TITLE);
+  }
+
+  // Background art
+  protected createBackgroundArt(): void {
+    this.backgroundArt = this.add
+      .image(this.scale.width / 2, this.scale.height / 2, MISC.MAIN_ART)
+      .setOrigin(0.5)
+      .setDepth(-1);
   }
 
   // Version
   protected createVersion(): void {
     const footerY = this.scale.height - 28;
 
-    this.add
+    this.gameVersion = this.add
       .text(28, footerY, `v${this.game.config.gameVersion}`, {
         fontFamily: 'Volkhov',
         fontSize: '13px',
-        color: '#6f6f6f',
+        color: '#101010',
       })
       .setOrigin(0, 1);
   }
@@ -139,5 +152,12 @@ export abstract class BaseScene extends Phaser.Scene {
       button.destroy();
     });
     this.buttons = [];
+
+    this.gameTitle?.destroy();
+    this.gameTitle = null;
+    this.backgroundArt?.destroy();
+    this.backgroundArt = null;
+    this.gameVersion?.destroy();
+    this.gameVersion = null;
   }
 }

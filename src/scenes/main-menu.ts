@@ -11,8 +11,6 @@ export class MainMenuScene extends BaseScene {
   public create(): void {
     super.create();
 
-    this.cameras.main.setBackgroundColor('#000000');
-
     const save = SaveService.load();
     const hasSave = SaveService.hasSave();
 

@@ -202,6 +202,11 @@
     },
     {
       "type": "audio",
+      "key": "loot-collect",
+      "url": "assets/audio/misc/loot-collect.mp3"
+    },
+    {
+      "type": "audio",
       "key": "skeleton-warrior-aggro",
       "url": "assets/audio/aggro/skeleton-warrior-aggro.mp3"
     },
