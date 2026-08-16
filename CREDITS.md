@@ -1,9 +1,9 @@
 # Game Credits
 
 ## Development Team
-* **Ilya "Reitag" Chernov** - Game Design & Programming
-* **Artem "sacrificengineer" Sedov** - Co-Funding, Narrative & QA
-* **Darya "InkMoon"** - Character Art & Environments
+* **Ilya "Reitag" Chernov** - Game Director & Lead Programmer
+* **Artem "sacrificengineer" Sedov** - Associate Producer, Narrative & QA
+* **Darya "InkMoon"** - Lead 2D Artist & Illustrator
 
 ---
 
@@ -58,6 +58,7 @@
 * ["Free Minerals Pixel Art Icons"](https://craftpix.net/freebies/free-minerals-pixel-art-icons) by Craftpix
 * ["Gems / Coins Free"](https://laredgames.itch.io/gems-coins-free) by La Red Games
 * ["Dusk's Free UI Icons"](https://dusk-games.itch.io/dusk-free-ui-icons) by Dusk Games
+* ["Pixel Keyboard UI Buttons"](https://greedy-toad.itch.io/pixel-keyboard-ui-buttons) by greedy_toad
 
 ---
 
@@ -72,6 +73,7 @@
     * [freesound_community](https://pixabay.com/users/freesound_community-46691455/)
     * [Dragon Studio](https://pixabay.com/ru/users/dragon-studio-38165424/)
     * [Yodguard](https://pixabay.com/ru/users/yodguard-12455005/)
+    * [Liecio](https://pixabay.com/ru/users/liecio-3298866/)
 
 ---
 

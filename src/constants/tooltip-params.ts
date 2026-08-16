@@ -471,10 +471,10 @@ export const MODIFIER_TOOLTIPS: {
     id: CRYSTAL_SHRINE_STATS.KEY_NAME,
     title: {
       param: buffParams,
-      text: 'Crystal Renewal',
+      text: 'Bonfire Warmth',
     },
     prop_1: {
-      text: 'Regenerates health while inside the shrine.',
+      text: 'Regenerates health while standing near the fire.',
     },
   },
   DISEASE: {

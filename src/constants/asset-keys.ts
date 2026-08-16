@@ -42,6 +42,7 @@ export const AUDIO = {
   PAPER_CLOSE: 'paper-close',
   CHEST_OPEN: 'chest-open',
   SPEAR_IMPACT: 'spear-impact',
+  LOOT_COLLECT: 'loot-collect',
   SKELETON_WARRIOR_AGGRO: 'skeleton-warrior-aggro',
   ZOMBIE_AGGRO: 'zombie-aggro',
   FIREWORM_AGGRO: 'fireworm-aggro',

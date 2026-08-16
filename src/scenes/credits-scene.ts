@@ -15,20 +15,16 @@ export class CreditsScene extends BaseScene {
 
     this.parentScene = this.scene.get('MainMenuScene') as MainMenuScene;
 
-    /*if (this.gameTitleText) {
-      this.gameTitleText.setVisible(false);
-    }*/
-
     const centerX = this.menuX;
 
     let currentY = 75;
 
     const teamText =
-      `GAME DESIGN & PROGRAMMING\n` +
+      `GAME DIRECTOR & LEAD PROGRAMMER\n` +
       `Ilya "Reitag" Chernov\n\n` +
-      `CO-FUNDING, NARRATIVE & QA\n` +
+      `ASSOCIATE PRODUCER, NARRATIVE & QA\n` +
       `Artem "sacrificengineer" Sedov\n\n` +
-      `CHARACTER ART & ENVIRONMENTS\n` +
+      `LEAD 2D ARTIST & ILLUSTRATOR\n` +
       `Darya "InkMoon"`;
 
     this.add
@@ -48,11 +44,11 @@ export class CreditsScene extends BaseScene {
       `THIRD-PARTY ASSETS\n` +
       `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle\n` +
       `GandalfHardcore • Ansimuz • Wenrexa • Pixel Explosive • Craftpix\n` +
-      `La Red Games • Dusk Games • Pimen • Jz Pixels\n` +
-      `Frostwindz • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar,\n` +
+      `La Red Games • Dusk Games • Pimen • Jz Pixels • Frostwindz\n` +
+      `greedy_toad • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar,\n` +
       `Jetrel, Zabin, Hyptosis, Surt, KnoblePersona) • Ivan Petrov & Cyreal\n` +
-      `freesound_community • Dragon Studio • Yodguard • TomMusic\n` +
-      `Daniel SoundsGood • Last Day Dreaming`;
+      `freesound_community • Dragon Studio • Yodguard • Liecio\n` +
+      `TomMusic • Daniel SoundsGood • Last Day Dreaming`;
 
     this.add
       .text(centerX, currentY, thirdParty, {
