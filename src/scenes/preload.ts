@@ -12,6 +12,7 @@ const fontWeight = { regular: '400', bold: '700' } as const;
 
 const packs = [
   { key: 'audio-pack', url: `${packURL}audio.json` },
+  { key: 'music-pack', url: `${packURL}music.json` },
   { key: 'tilesets-pack', url: `${packURL}tilesets.json` },
   { key: 'backgrounds-pack', url: `${packURL}backgrounds.json` },
   { key: 'objects-pack', url: `${packURL}objects.json` },
@@ -51,18 +52,22 @@ export class PreloadScene extends Phaser.Scene {
 
   public async create() {
     await this.loadFonts();
-    this.sound.setVolume(0.8); // 80% Volume
+
+    // Default sound volume
+    this.sound.setVolume(1.0);
+    this.game.audioService.music.setVolume(0.4); // 40% Volume
+    this.game.audioService.sfx.setVolume(0.8); // 80% Volume
 
     registerGlobalAnimation(this.anims);
     this.scene.start('MainMenuScene');
   }
 
   private async loadFonts() {
-    for (const f of fonts) {
-      const font = new FontFace(f.name, `url(${f.url})`, { weight: f.weight });
+    for (const font of fonts) {
+      const fontFace = new FontFace(font.name, `url(${font.url})`, { weight: font.weight });
 
-      await font.load();
-      document.fonts.add(font);
+      await fontFace.load();
+      document.fonts.add(fontFace);
     }
   }
 }

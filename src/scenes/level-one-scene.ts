@@ -3,7 +3,7 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC, MUSIC } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { QUEST_IDS } from '@/constants/quest-ids';
@@ -54,6 +54,11 @@ type AudioZone = {
   ambient: string;
 };
 
+type MusicZone = {
+  polygon: Phaser.Geom.Polygon;
+  theme: string;
+};
+
 export class LevelOneScene extends BaseScene {
   private debugScreen: DebugScreen | null = null;
 
@@ -67,6 +72,18 @@ export class LevelOneScene extends BaseScene {
   private audio: AudioSystem | null = null;
   private ambientZones: AudioZone[] = [];
   private currentAmbient: string | null = null;
+
+  // Music
+  /// Keys
+  private musicKeys: string[] = [MUSIC.MUSIC_1, MUSIC.MUSIC_2, MUSIC.MUSIC_3];
+  private lastMusicKey: string = '';
+
+  private musicTimer: Phaser.Time.TimerEvent | null = null;
+  private resumeSceneHandlerBind = this.resumeSceneHandler.bind(this);
+  private musicZones: MusicZone[] = [];
+  private wasInRuinsZone = false;
+  private pauseForRuinsTheme = false;
+  private currentTheme: 'none' | 'default' | 'ruins' = 'none';
 
   private player!: Player;
   private playerHandler!: PlayerHandler;
@@ -106,6 +123,8 @@ export class LevelOneScene extends BaseScene {
       });
     }
 
+    this.events.on('resume', this.resumeSceneHandlerBind);
+
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
   }
@@ -118,6 +137,7 @@ export class LevelOneScene extends BaseScene {
 
     this.updateParallaxBackground();
     this.ambientUpdate();
+    this.ruinsZoneUpdate();
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
@@ -181,6 +201,9 @@ export class LevelOneScene extends BaseScene {
     this.setupCamera();
 
     this.createAmbientZones();
+
+    this.createMusicZones();
+    this.time.delayedCall(15000, () => this.setupMusicLoop(), [], this);
   }
 
   private createParallaxBackground(): void {
@@ -700,10 +723,175 @@ export class LevelOneScene extends BaseScene {
   }
   // --Ambient--
 
+  // Music
+  private createMusicZones(): void {
+    const objectLayer = this.map.getObjectLayer('spawn-layer');
+    if (!objectLayer) return;
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'play-music') continue;
+
+      const theme = obj.properties?.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'theme'
+      )?.value;
+      if (!theme || !obj.polygon) continue;
+
+      const points = obj.polygon.map((p: Phaser.Types.Math.Vector2Like) => ({
+        x: p.x + (obj.x ?? 0),
+        y: p.y + (obj.y ?? 0),
+      }));
+
+      const polygon = new Phaser.Geom.Polygon(points);
+
+      this.musicZones.push({
+        polygon,
+        theme,
+      });
+    }
+  }
+
+  private ruinsZoneUpdate(): void {
+    const isCurrentlyInAnyZone = this.musicZones.some((zone) =>
+      Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y)
+    );
+
+    if (isCurrentlyInAnyZone && !this.wasInRuinsZone) {
+      this.wasInRuinsZone = true;
+
+      if (
+        this.currentTheme === 'none' &&
+        !this.pauseForRuinsTheme &&
+        this.currentAmbient !== 'cave'
+      ) {
+        if (this.musicTimer) {
+          this.musicTimer.destroy();
+          this.musicTimer = null;
+        }
+        this.ruinesTheme();
+      }
+    } else if (!isCurrentlyInAnyZone && this.wasInRuinsZone) {
+      this.wasInRuinsZone = false;
+    }
+  }
+
+  private setupMusicLoop(): void {
+    this.currentTheme = 'default';
+    this.lastMusicKey = MUSIC.MUSIC_1;
+    this.audio?.playBackgroundMusic(MUSIC.MUSIC_1);
+
+    const currentTrack = this.sound.get(MUSIC.MUSIC_1);
+    if (currentTrack) {
+      currentTrack.once('complete', () => this.handleTrackComplete());
+    } else {
+      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+    }
+  }
+
+  private handleTrackComplete(): void {
+    this.currentTheme = 'none';
+
+    if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
+      this.ruinesTheme();
+    } else {
+      const timeDelayed = Phaser.Math.Between(180000, 240000); // 3 - 4 minuts
+      this.musicTimer = this.time.delayedCall(
+        timeDelayed,
+        () => this.defalultMusicLoop(),
+        [],
+        this
+      );
+    }
+  }
+
+  private defalultMusicLoop(): void {
+    this.musicTimer = null;
+
+    if (this.currentAmbient === 'cave') {
+      this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      return;
+    }
+
+    if (this.currentTheme === 'ruins') {
+      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      return;
+    }
+
+    if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
+      this.ruinesTheme();
+      return;
+    }
+
+    const availableKeys = this.musicKeys.filter((key) => key !== this.lastMusicKey);
+    const randomKey = Phaser.Utils.Array.GetRandom(availableKeys);
+    this.lastMusicKey = randomKey;
+
+    this.currentTheme = 'default';
+    this.audio?.playBackgroundMusic(randomKey);
+
+    const currentTrack = this.sound.get(randomKey);
+    if (currentTrack) {
+      currentTrack.once('complete', () => this.handleTrackComplete());
+    } else {
+      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+    }
+  }
+
+  private ruinesTheme(): void {
+    this.currentTheme = 'ruins';
+    this.pauseForRuinsTheme = true;
+
+    this.audio?.playBackgroundMusic(MUSIC.MUSIC_4);
+    const ruinsTheme = this.sound.get(MUSIC.MUSIC_4);
+
+    if (ruinsTheme) {
+      ruinsTheme.once('complete', () => {
+        this.currentTheme = 'none';
+
+        // This is without musicTimer
+        this.time.delayedCall(
+          100000,
+          () => {
+            this.pauseForRuinsTheme = false;
+          },
+          [],
+          this
+        );
+
+        this.handleTrackComplete();
+      });
+    } else {
+      this.pauseForRuinsTheme = false;
+      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+    }
+  }
+  // --Music
+
+  private resumeSceneHandler(): void {
+    const musicVolume = this.game.audioService.musicVolume;
+    const sfxVolume = this.game.audioService.sfxVolume;
+
+    this.game.sound.getAllPlaying().forEach((sound) => {
+      const audio = sound as
+        | Phaser.Sound.NoAudioSound
+        | Phaser.Sound.HTML5AudioSound
+        | Phaser.Sound.WebAudioSound;
+      if (audio.isMusic) {
+        audio.volume = musicVolume;
+        audio.setVolume(musicVolume);
+      } else {
+        audio.setVolume(sfxVolume);
+      }
+    });
+    if (this.currentAmbient !== null) {
+      this.audio?.playAmbient(this.getAmbientKey(this.currentAmbient));
+    }
+  }
+
   protected cleanup(): void {
     this.audio?.stopAmbient(false);
     this.audio = null;
     this.currentAmbient = null;
+    this.events.off('resume', this.resumeSceneHandlerBind);
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {

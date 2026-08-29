@@ -1562,84 +1562,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":1109,
-                 "name":"play-music",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":3,
-                         "y":221
-                        }, 
-                        {
-                         "x":1187,
-                         "y":221
-                        }, 
-                        {
-                         "x":1187,
-                         "y":125
-                        }, 
-                        {
-                         "x":1219,
-                         "y":125
-                        }, 
-                        {
-                         "x":1219,
-                         "y":61
-                        }, 
-                        {
-                         "x":1251,
-                         "y":61
-                        }, 
-                        {
-                         "x":1251,
-                         "y":-35
-                        }, 
-                        {
-                         "x":1283,
-                         "y":-35
-                        }, 
-                        {
-                         "x":1283,
-                         "y":-195
-                        }, 
-                        {
-                         "x":1315,
-                         "y":-195
-                        }, 
-                        {
-                         "x":1315,
-                         "y":-259
-                        }, 
-                        {
-                         "x":1443,
-                         "y":-259
-                        }, 
-                        {
-                         "x":1443,
-                         "y":-323
-                        }, 
-                        {
-                         "x":3,
-                         "y":-323
-                        }],
-                 "properties":[
-                        {
-                         "name":"theme",
-                         "type":"string",
-                         "value":"ruins"
-                        }],
-                 "rotation":0,
-                 "type":"music",
-                 "visible":true,
-                 "width":0,
-                 "x":11517,
-                 "y":355
-                }, 
-                {
-                 "height":0,
                  "id":1073,
                  "name":"play-audio",
                  "polygon":[
@@ -3198,7 +3120,7 @@
          "y":0
         }],
  "nextlayerid":42,
- "nextobjectid":1110,
+ "nextobjectid":1109,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

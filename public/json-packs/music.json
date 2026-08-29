@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "type": "audio",
+      "key": "music-1",
+      "url": "assets/audio/music/music-1.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "music-2",
+      "url": "assets/audio/music/music-2.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "music-3",
+      "url": "assets/audio/music/music-3.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "music-4",
+      "url": "assets/audio/music/music-4.mp3"
+    }
+  ]
+}

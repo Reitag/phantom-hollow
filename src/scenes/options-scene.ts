@@ -43,14 +43,14 @@ export class OptionsScene extends BaseScene {
     this.scene.bringToTop();
 
     const centerX = this.menuX;
-    let currentY = this.menuStartY;
+    let currentY = this.menuStartY - 120;
 
     this.createAudioControls(centerX, currentY);
 
     if (this.showDeleteBtn && SaveService.hasSave()) {
       currentY += this.buttonHeight + this.menuGap * 3;
 
-      const deleteBtn = this.createButton(centerX, currentY, {
+      const deleteBtn = this.createButton(centerX, currentY + 120, {
         key: UI.MISC_UI_DLT_SAVE_DATA_BTN,
         action: () => {
           deleteBtn.disableInteractive();
@@ -84,15 +84,17 @@ export class OptionsScene extends BaseScene {
   }
 
   private createAudioControls(x: number, y: number): void {
-    let currentVolumePct = Math.round(this.sound.volume * 100);
+    let currentMusicVolume = Math.round(this.game.audioService.musicVolume * 100);
+    let currentSFXVolume = Math.round(this.game.audioService.sfxVolume * 100);
 
     let color = '#030303';
     if (this.fromPause) {
       color = '#ffffff';
     }
 
+    // Music
     this.add
-      .text(x, y - 40, 'SFX Volume', {
+      .text(x, y, 'Music Volume', {
         fontFamily: 'Volkhov',
         fontSize: '16px',
         color: color,
@@ -101,16 +103,16 @@ export class OptionsScene extends BaseScene {
       })
       .setOrigin(0.5);
 
-    const minusBtn = this.createButton(x - 60, y, {
+    const minusMusicBtn = this.createButton(x - 60, y + 40, {
       key: UI.MISC_UI_MINUS_BTN,
       action: () => {
-        updateVolume(currentVolumePct - 10);
+        updateMusicVolume(currentMusicVolume - 10);
       },
     });
-    this.buttons.push(minusBtn);
+    this.buttons.push(minusMusicBtn);
 
-    const volumeText = this.add
-      .text(x, y, `${currentVolumePct}%`, {
+    const musicVolumeText = this.add
+      .text(x, y + 40, `${currentMusicVolume}%`, {
         fontFamily: 'Volkhov',
         fontSize: '16px',
         color: color,
@@ -119,20 +121,65 @@ export class OptionsScene extends BaseScene {
       })
       .setOrigin(0.5);
 
-    const plusBtn = this.createButton(x + 60, y, {
+    const plusMusicBtn = this.createButton(x + 60, y + 40, {
       key: UI.MISC_UI_PLUS_BTN,
       action: () => {
-        updateVolume(currentVolumePct + 10);
+        updateMusicVolume(currentMusicVolume + 10);
       },
     });
-    this.buttons.push(plusBtn);
+    this.buttons.push(plusMusicBtn);
 
-    const updateVolume = (newPercent: number) => {
-      currentVolumePct = Phaser.Math.Clamp(newPercent, 0, 100);
-      volumeText.setText(`${currentVolumePct}%`);
+    const updateMusicVolume = (newPercent: number): void => {
+      currentMusicVolume = Phaser.Math.Clamp(newPercent, 0, 100);
+      musicVolumeText.setText(`${currentMusicVolume}%`);
 
-      const phaserVolume = currentVolumePct / 100;
-      this.sound.setVolume(phaserVolume);
+      const volume = currentMusicVolume / 100;
+      this.game.audioService.music.setVolume(volume);
+    };
+
+    // SFX
+    this.add
+      .text(x, y + 100, 'SFX Volume', {
+        fontFamily: 'Volkhov',
+        fontSize: '16px',
+        color: color,
+        align: 'center',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    const minusSfxBtn = this.createButton(x - 60, y + 140, {
+      key: UI.MISC_UI_MINUS_BTN,
+      action: () => {
+        updateSFXVolume(currentSFXVolume - 10);
+      },
+    });
+    this.buttons.push(minusSfxBtn);
+
+    const sfxVolumeText = this.add
+      .text(x, y + 140, `${currentSFXVolume}%`, {
+        fontFamily: 'Volkhov',
+        fontSize: '16px',
+        color: color,
+        align: 'center',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    const plusSfxBtn = this.createButton(x + 60, y + 140, {
+      key: UI.MISC_UI_PLUS_BTN,
+      action: () => {
+        updateSFXVolume(currentSFXVolume + 10);
+      },
+    });
+    this.buttons.push(plusSfxBtn);
+
+    const updateSFXVolume = (newPercent: number): void => {
+      currentSFXVolume = Phaser.Math.Clamp(newPercent, 0, 100);
+      sfxVolumeText.setText(`${currentSFXVolume}%`);
+
+      const volume = currentSFXVolume / 100;
+      this.game.audioService.sfx.setVolume(volume);
     };
   }
 

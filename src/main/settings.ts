@@ -36,6 +36,44 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
+  callbacks: {
+    preBoot: function (game) {
+      game.audioService = {
+        musicVolume: 0,
+        sfxVolume: 0,
+
+        music: {
+          play: (key, config = {}) => {
+            const finalConfig = Object.assign({ volume: game.audioService.musicVolume }, config);
+            const sound = game.sound.add(key, finalConfig);
+
+            sound.isMusic = true;
+            sound.play();
+            sound.once('complete', () => sound.destroy());
+
+            return sound;
+          },
+          setVolume: (volume) => {
+            game.audioService.musicVolume = volume;
+          },
+        },
+
+        sfx: {
+          play: (key, config = {}) => {
+            const finalConfig = Object.assign({ volume: game.audioService.sfxVolume }, config);
+            const sound = game.sound.add(key, finalConfig);
+            sound.play();
+            sound.once('complete', () => sound.destroy());
+
+            return sound;
+          },
+          setVolume: (volume) => {
+            game.audioService.sfxVolume = volume;
+          },
+        },
+      };
+    },
+  },
   scene: [
     PreloadScene,
     MainMenuScene,

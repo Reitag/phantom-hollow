@@ -5,29 +5,48 @@ export class AudioSystem {
   constructor(private scene: Phaser.Scene) {}
 
   public play(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
-    this.scene.sound.play(key, config);
+    this.scene.game.audioService.sfx.play(key, config);
   }
 
-  public playAmbient(key: string, volume: number = 1, duration: number = 1500): void {
-    if (this.currentKey === key) return;
+  public playAmbient(key: string, duration: number = 1500): void {
+    if (this.currentKey === key && this.currentAmbient !== null) return;
 
+    const volume = this.scene.game.audioService.sfxVolume;
     const previousAmbient = this.currentAmbient;
+    this.currentKey = key;
 
-    const nextAmbient = this.scene.sound.add(key, {
-      loop: true,
-      volume: 0,
-    });
+    if (volume === 0) {
+      this.currentAmbient = null;
+      if (previousAmbient) {
+        previousAmbient.stop();
+        previousAmbient.destroy();
+      }
+      return;
+    }
 
-    nextAmbient.play();
+    const nextAmbient = this.scene.sound.add(key, { loop: true });
+    // Explicitly set 0 because Phaser/browser can ignore config volume on play
+    nextAmbient.volume = 0;
 
-    // New Ambient
-    this.scene.tweens.add({
-      targets: nextAmbient,
-      volume: volume,
-      duration: duration,
-    });
+    this.currentAmbient = nextAmbient;
 
-    // Old Ambient
+    const activateNextAmbient = () => {
+      if (volume === 0 || this.currentKey !== key) {
+        nextAmbient.stop();
+        nextAmbient.destroy();
+        if (this.currentKey === key) this.currentAmbient = null;
+        return;
+      }
+
+      nextAmbient.play();
+
+      this.scene.tweens.add({
+        targets: nextAmbient,
+        volume: volume,
+        duration: duration,
+      });
+    };
+
     if (previousAmbient) {
       this.scene.tweens.add({
         targets: previousAmbient,
@@ -36,12 +55,12 @@ export class AudioSystem {
         onComplete: () => {
           previousAmbient.stop();
           previousAmbient.destroy();
+          activateNextAmbient();
         },
       });
+    } else {
+      activateNextAmbient();
     }
-
-    this.currentAmbient = nextAmbient;
-    this.currentKey = key;
   }
 
   public stopAmbient(fade: boolean = true): void {
@@ -70,13 +89,16 @@ export class AudioSystem {
     }
   }
 
+  public playBackgroundMusic(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
+    this.scene.game.audioService.music.play(key, config);
+  }
+
   // Return instance
   public playControlled(
     key: string,
     config?: Phaser.Types.Sound.SoundConfig
   ): Phaser.Sound.BaseSound {
-    const sound = this.scene.sound.add(key, config);
-    sound.play();
+    const sound = this.scene.game.audioService.sfx.play(key, config);
 
     return sound;
   }

@@ -103,6 +103,13 @@ export const MISC = {
   MAIN_ART: 'main-art',
 } as const;
 
+export const MUSIC = {
+  MUSIC_1: 'music-1',
+  MUSIC_2: 'music-2',
+  MUSIC_3: 'music-3',
+  MUSIC_4: 'music-4',
+} as const;
+
 export const OBJECTS = {
   CONIFER: 'conifer',
   STORE: 'store',
