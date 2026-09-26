@@ -43,6 +43,7 @@ export const AUDIO = {
   CHEST_OPEN: 'chest-open',
   SPEAR_IMPACT: 'spear-impact',
   LOOT_COLLECT: 'loot-collect',
+  DEFAULT_CLICK: 'default-click',
   SKELETON_WARRIOR_AGGRO: 'skeleton-warrior-aggro',
   ZOMBIE_AGGRO: 'zombie-aggro',
   FIREWORM_AGGRO: 'fireworm-aggro',

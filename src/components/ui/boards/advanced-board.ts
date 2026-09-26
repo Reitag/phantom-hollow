@@ -108,6 +108,9 @@ abstract class AdvancedBoard extends Board {
         6
       );
 
+      // The Quest class (base/ui/quest) has the same methods. I didn't rewrite them here to save time
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.DEFAULT_CLICK);
+
       this.board?.add(this.hoverEffect);
     };
 

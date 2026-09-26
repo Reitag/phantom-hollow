@@ -19,10 +19,13 @@ export class Haste implements Modifier {
 
   public apply(target: Character): void {
     const stats = target.getStats();
+    // Check if the buff is being restored from a save file (set in player-handler in the Systems directory)
+    const isLoading = this.scene.registry.get('is_loading_save');
 
     if (stats.speed) {
       stats.speed.addModifier(this.id, HASTE.effect);
-      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.HASTE);
+      // Only play the activation sound during active gameplay, not during save loading
+      if (!isLoading) ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.HASTE);
     }
   }
 

@@ -1,3 +1,4 @@
+import { AUDIO } from '@/constants/asset-keys';
 import { ICONS } from '@/constants/ui';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { IconHighlighter } from '@/components/ui/spell-icons/icon-highlighter';
@@ -134,6 +135,7 @@ export abstract class Panel {
       if (player.getDead()) return;
 
       this.iconHighlighter.addSpellHighlight(this.getCellPosition(i));
+      ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.DEFAULT_CLICK);
     },
 
     onRelease: (i) => {

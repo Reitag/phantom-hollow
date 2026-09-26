@@ -58,6 +58,9 @@ export class PlayerHandler {
     }*/
 
     if (save && save.buffs.length > 0) {
+      // Set the global loading flag to prevent buff activation sounds from playing during load
+      this.scene.registry.set('is_loading_save', true);
+
       const modifiers = this.player.getModifier();
       save.buffs.forEach((buff) => {
         if (!modifiers.isModifierExist(buff)) {
@@ -67,6 +70,9 @@ export class PlayerHandler {
           modifiers.startModifier(buff, this.player);
         }
       });
+
+      // Reset the flag immediately after loading to enable audio for normal gameplay activations
+      this.scene.registry.set('is_loading_save', false);
     }
 
     if (save?.quests) {

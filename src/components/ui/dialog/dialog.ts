@@ -1,4 +1,4 @@
-import { UI } from '@/constants/asset-keys';
+import { AUDIO, UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { WARNING_BOX } from '@/constants/ui-coordinates';
 import { Z_POSITION } from '@/constants/z-position';
@@ -131,6 +131,10 @@ export class Dialog extends Phaser.Events.EventEmitter {
       const rectY = startY + 2 - target.height / 2;
 
       this.hoverGraphics.fillRoundedRect(rectX, rectY, target.width, target.height, cornerRadius);
+
+      // Used this fallback solution because ServiceLocator is only available in the core game scene,
+      // while this dialog needs to operate in the Main Menu scene as well.
+      this.scene.game.audioService.sfx.play(AUDIO.DEFAULT_CLICK);
     }
   }
 

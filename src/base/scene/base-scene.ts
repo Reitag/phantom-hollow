@@ -1,6 +1,7 @@
-import { MISC, UI } from '@/constants/asset-keys';
+import { AUDIO, MISC, UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { Z_POSITION } from '@/constants/z-position';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export abstract class BaseScene extends Phaser.Scene {
   protected buttons: Phaser.GameObjects.Image[] = [];
@@ -95,7 +96,11 @@ export abstract class BaseScene extends Phaser.Scene {
 
     const handlers = {
       over: () => this.drawHover(button, BUTTON_HOVERS.POINTEROVER),
-      down: () => this.drawHover(button, BUTTON_HOVERS.POINTERDOWN),
+      down: () => {
+        this.drawHover(button, BUTTON_HOVERS.POINTERDOWN);
+        // Used this fallback solution because ServiceLocator is only available in the core game scene,
+        this.game.audioService.sfx.play(AUDIO.DEFAULT_CLICK);
+      },
       out: () => this.removeHoverEffect(),
       up: () => {
         this.removeHoverEffect();

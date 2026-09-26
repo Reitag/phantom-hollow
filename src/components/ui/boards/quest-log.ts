@@ -7,7 +7,7 @@ import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_LOG_UI } from '@/constants/ui-coordinates';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-import { Position } from '@/utils/types';
+//import { Position } from '@/utils/types';
 
 export type QuestData = {
   title: string;
@@ -213,7 +213,7 @@ export class QuestLog extends Board {
     });
   }
 
-  private createButtonHandlers(target: Phaser.GameObjects.Image, pos: Position): Handlers {
+  /*private createButtonHandlers(target: Phaser.GameObjects.Image, pos: Position): Handlers {
     const createEffect = (color: number, alpha: number, yOffset = 0) => {
       this.removeHoverEffect();
       this.hoverEffect = this.scene.add
@@ -238,7 +238,7 @@ export class QuestLog extends Board {
       .on('pointerout', handlers.onOut)
       .on('pointerdown', handlers.onDown)
       .on('pointerup', handlers.onUp);
-  }
+  }*/
 
   private initLogContentText(): void {
     this.contentContainer = this.scene.add.container(-255, -160);

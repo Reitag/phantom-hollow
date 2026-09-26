@@ -200,6 +200,9 @@ export abstract class Quest extends Board {
         );
         this.hoverEffect.fillRoundedRect(pos.x, pos.y + 1, button.width, button.height, 6);
 
+        // The Advance Board class (components/ui/boards/advanced-boards) has the same methods. I didn't rewrite them here to save time
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.DEFAULT_CLICK);
+
         this.board?.add(this.hoverEffect);
       };
 

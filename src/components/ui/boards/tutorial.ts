@@ -1,10 +1,11 @@
-import { Board, Handlers } from '@/base/ui/board';
-import { UI } from '@/constants/asset-keys';
-import { BUTTON_HOVERS } from '@/constants/button-hovers';
+import { Board /*, Handlers*/ } from '@/base/ui/board';
+import { /*AUDIO,*/ UI } from '@/constants/asset-keys';
+//import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { TUTORIAL_UI } from '@/constants/ui-coordinates';
 import { SaveService } from '@/infrastructure/save-service';
-import { Position } from '@/utils/types';
+//import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+//import { Position } from '@/utils/types';
 
 export class Tutorial extends Board {
   private closeButton: Phaser.GameObjects.Image;
@@ -158,7 +159,7 @@ export class Tutorial extends Board {
     });
   }
 
-  private attachListeners(target: Phaser.GameObjects.Image, handlers: Handlers): void {
+  /*private attachListeners(target: Phaser.GameObjects.Image, handlers: Handlers): void {
     target
       .on('pointerover', handlers.onOver)
       .on('pointerout', handlers.onOut)
@@ -179,9 +180,11 @@ export class Tutorial extends Board {
     return {
       onOver: () => createEffect(BUTTON_HOVERS.POINTEROVER.COLOR, BUTTON_HOVERS.POINTEROVER.ALPHA),
       onOut: () => this.removeHoverEffect(),
-      onDown: () =>
-        createEffect(BUTTON_HOVERS.POINTERDOWN.COLOR, BUTTON_HOVERS.POINTERDOWN.ALPHA, 1),
+      onDown: () => {
+        createEffect(BUTTON_HOVERS.POINTERDOWN.COLOR, BUTTON_HOVERS.POINTERDOWN.ALPHA, 1);
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.DEFAULT_CLICK);
+      },
       onUp: () => {},
     };
-  }
+  }*/
 }

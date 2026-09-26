@@ -2,7 +2,7 @@ import { AUDIO, UI } from '@/constants/asset-keys';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { STORE_UI } from '@/constants/ui-coordinates';
 import { STORE_ITEMS, StoreItem } from '@/game/economy/store-items';
-import { Board, Handlers } from '@/base/ui/board';
+import { Board } from '@/base/ui/board';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 type Bundle = {
@@ -11,7 +11,9 @@ type Bundle = {
 };
 
 export class Store extends Board {
-  private onCloseDown = () => this.closeBoard();
+  private onCloseDown = () => {
+    this.closeBoard();
+  };
   private onCloseOver = () => this.onButtonHover(true);
   private onCloseOut = () => this.onButtonHover(false);
 
@@ -86,6 +88,8 @@ export class Store extends Board {
           .fillStyle(0x877965, 0.2)
           .fillRoundedRect(pos.x, pos.y, bg.width, bg.height, 6);
         card.add(this.hoverEffect);
+
+        ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.DEFAULT_CLICK);
       };
 
       const onUp = () => {

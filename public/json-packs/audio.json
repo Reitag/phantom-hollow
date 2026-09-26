@@ -207,6 +207,11 @@
     },
     {
       "type": "audio",
+      "key": "default-click",
+      "url": "assets/audio/misc/default-click.mp3"
+    },
+    {
+      "type": "audio",
       "key": "skeleton-warrior-aggro",
       "url": "assets/audio/aggro/skeleton-warrior-aggro.mp3"
     },
