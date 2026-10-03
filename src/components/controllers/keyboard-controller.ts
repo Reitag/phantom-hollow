@@ -11,6 +11,7 @@ export class KeyboardController extends InputController {
   private rightKey: Phaser.Input.Keyboard.Key;
   private downKey: Phaser.Input.Keyboard.Key;
   private jumpKey: Phaser.Input.Keyboard.Key;
+  private jumpKeyAdvanced: Phaser.Input.Keyboard.Key;
 
   // Action / Utility
   private actionKey: Phaser.Input.Keyboard.Key;
@@ -29,6 +30,7 @@ export class KeyboardController extends InputController {
     this.rightKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     this.downKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     this.jumpKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this.jumpKeyAdvanced = input.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.slotKeys = SLOT_KEYS_CODES.map(({ code, label }, index) => {
       this.actionSlotLabels[index] = label;
@@ -51,7 +53,9 @@ export class KeyboardController extends InputController {
     this.movement.left = this.leftKey.isDown;
     this.movement.right = this.rightKey.isDown;
     this.movement.down = this.downKey.isDown;
-    this.movement.upPressed = Phaser.Input.Keyboard.JustDown(this.jumpKey);
+    this.movement.upPressed =
+      Phaser.Input.Keyboard.JustDown(this.jumpKey) ||
+      Phaser.Input.Keyboard.JustDown(this.jumpKeyAdvanced);
 
     // Action / Utility
     this.actionDown = Phaser.Input.Keyboard.JustDown(this.actionKey);

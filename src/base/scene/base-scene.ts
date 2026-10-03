@@ -1,7 +1,6 @@
-import { AUDIO, MISC, UI } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC, UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { Z_POSITION } from '@/constants/z-position';
-import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 
 export abstract class BaseScene extends Phaser.Scene {
   protected buttons: Phaser.GameObjects.Image[] = [];
@@ -53,7 +52,7 @@ export abstract class BaseScene extends Phaser.Scene {
   // Background art
   protected createBackgroundArt(): void {
     this.backgroundArt = this.add
-      .image(this.scale.width / 2, this.scale.height / 2, MISC.MAIN_ART)
+      .image(this.scale.width / 2, this.scale.height / 2, BACKGROUNDS.MAIN_SCENE_BG)
       .setOrigin(0.5)
       .setDepth(-1);
   }

@@ -7,7 +7,6 @@ import { SCENE_SIZE } from '@/constants/scene-size';
 import { QUEST_LOG_UI } from '@/constants/ui-coordinates';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
-//import { Position } from '@/utils/types';
 
 export type QuestData = {
   title: string;
@@ -212,33 +211,6 @@ export class QuestLog extends Board {
       this.bundleHandlers.delete(target);
     });
   }
-
-  /*private createButtonHandlers(target: Phaser.GameObjects.Image, pos: Position): Handlers {
-    const createEffect = (color: number, alpha: number, yOffset = 0) => {
-      this.removeHoverEffect();
-      this.hoverEffect = this.scene.add
-        .graphics()
-        .fillStyle(color, alpha)
-        .fillRoundedRect(pos.x, pos.y + yOffset, target.width, target.height, 6);
-      this.board?.add(this.hoverEffect);
-    };
-
-    return {
-      onOver: () => createEffect(BUTTON_HOVERS.POINTEROVER.COLOR, BUTTON_HOVERS.POINTEROVER.ALPHA),
-      onOut: () => this.removeHoverEffect(),
-      onDown: () =>
-        createEffect(BUTTON_HOVERS.POINTERDOWN.COLOR, BUTTON_HOVERS.POINTERDOWN.ALPHA, 1),
-      onUp: () => {},
-    };
-  }
-
-  private attachListeners(target: Phaser.GameObjects.Image, handlers: Handlers): void {
-    target
-      .on('pointerover', handlers.onOver)
-      .on('pointerout', handlers.onOut)
-      .on('pointerdown', handlers.onDown)
-      .on('pointerup', handlers.onUp);
-  }*/
 
   private initLogContentText(): void {
     this.contentContainer = this.scene.add.container(-255, -160);

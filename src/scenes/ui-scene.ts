@@ -8,6 +8,7 @@ import { BaseScene } from '@/base/scene/base-scene';
 import { SaveService } from '@/infrastructure/save-service';
 import { QuestLog } from '@/components/ui/boards/quest-log';
 import { QUEST_IDS } from '@/constants/quest-ids';
+import { START_TUTORIAL_AND_FIRST_MISSION_DELAY } from '@/constants/ui';
 
 export class UiScene extends BaseScene {
   private ui!: UiSystem;
@@ -52,7 +53,9 @@ export class UiScene extends BaseScene {
 
     // Start mission Button
     if (!SaveService.hasSave()) {
-      this.startMission();
+      this.time.delayedCall(START_TUTORIAL_AND_FIRST_MISSION_DELAY, () => {
+        this.startMission();
+      });
     }
   }
 
