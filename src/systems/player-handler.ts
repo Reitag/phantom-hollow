@@ -1,5 +1,6 @@
 import { CHARACTERS } from '@/constants/asset-keys';
 import { PLAYER_STATS } from '@/constants/object-stats';
+import { PENALTY_CONFIG } from '@/constants/penalty-config';
 import { QUEST_IDS } from '@/constants/quest-ids';
 import { PLAYER_SPAWN_POSITION } from '@/constants/spawn-properies';
 import { SHARED_STATES } from '@/constants/state-keys';
@@ -94,6 +95,8 @@ export class PlayerHandler {
     if (this.player.getDead() && !this.deathHandled) {
       this.deathHandled = true;
 
+      this.setPenaltyToPlayer();
+
       const ui = ServiceLocator.resolve(ServiceKeys.ui);
       const dialog = ui.addWarningDialog('Do you want to return to your resurrection point?');
 
@@ -136,6 +139,74 @@ export class PlayerHandler {
       this.deathHandled = false;
 
       this.scene.cameras.main.fadeIn(500, 0, 0, 0);
+    });
+  }
+
+  private setPenaltyToPlayer(): void {
+    const coinKeeper = this.player.getCoinKeeper();
+    const penalty = this.calculateDeathPenalty(coinKeeper.coins);
+    if (penalty === 0) return;
+
+    coinKeeper.implementPenalty(penalty);
+    this.createFloatingPenaltyText(this.player.x, this.player.y, penalty);
+  }
+
+  private calculateDeathPenalty(currentGold: number): number {
+    const safeGold = PENALTY_CONFIG.SAFE_GOLD_LIMIT;
+    if (currentGold <= safeGold) return 0;
+
+    const minGold = PENALTY_CONFIG.MIN_GOLD;
+    const maxGold = PENALTY_CONFIG.MAX_GOLD;
+    const minPercent = PENALTY_CONFIG.MIN_PERCENT;
+    const maxPercent = PENALTY_CONFIG.MAX_PERCENT;
+
+    const clampedGold = Phaser.Math.Clamp(currentGold, minGold, maxGold);
+    const progress = Phaser.Math.Percent(clampedGold, minGold, maxGold);
+    const currentPenaltyPercent = Phaser.Math.Linear(minPercent, maxPercent, progress);
+
+    let penalty = Math.round(currentGold * currentPenaltyPercent);
+
+    if (currentGold - penalty < safeGold) penalty = currentGold - safeGold;
+
+    return penalty;
+  }
+
+  createFloatingPenaltyText(x: number, y: number, amount: number): void {
+    const penaltyText = this.scene.add
+      .text(x, y - 35, `-${amount} Gold`, {
+        fontFamily: 'Arial',
+        fontSize: '24px',
+        color: '#ff3333',
+        stroke: '#000000',
+        strokeThickness: 4,
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5)
+      .setScale(0)
+      .setDepth(Z_POSITION.PLAYER + 1);
+
+    this.scene.tweens.chain({
+      targets: penaltyText,
+      tweens: [
+        {
+          scale: 1,
+          duration: 240,
+          ease: 'Quad.easeOut',
+        },
+        {
+          delay: 6000,
+          duration: 0,
+        },
+        {
+          y: penaltyText.y - 60,
+          alpha: 0,
+          duration: 3000,
+          ease: 'Cubic.easeIn',
+          onComplete: () => {
+            penaltyText.destroy();
+          },
+        },
+      ],
     });
   }
 }

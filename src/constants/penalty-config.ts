@@ -1,0 +1,7 @@
+export const PENALTY_CONFIG = {
+  SAFE_GOLD_LIMIT: 20,
+  MIN_GOLD: 20,
+  MAX_GOLD: 120,
+  MIN_PERCENT: 0.0,
+  MAX_PERCENT: 1.0,
+} as const;

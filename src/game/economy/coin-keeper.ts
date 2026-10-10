@@ -41,6 +41,13 @@ export class CoinKeeper {
     }
   }
 
+  public implementPenalty(amount: number): void {
+    // Zero check in player's handler method setPenaltyToPlayer
+    this.balance -= amount;
+    this.ui.decreaseCoinCounter(amount);
+    this.saveBalanceData();
+  }
+
   private saveBalanceData(): void {
     SaveService.patch({
       coins: this.balance,
