@@ -3,7 +3,8 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { AUDIO, BACKGROUNDS, MISC, MUSIC } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC, MUSIC, OBJECTS } from '@/constants/asset-keys';
+import { Z_POSITION } from '@/constants/z-position';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { QUEST_IDS } from '@/constants/quest-ids';
@@ -624,7 +625,8 @@ export class LevelOneScene extends BaseScene {
     this.interactables.add(new MainQuestTrigger(this, pos));
   }
 
-  public onCrystalShrineQuestStart(): void {
+  // Crystals
+  public getCrystalZones(): Position[] {
     const map = ServiceLocator.resolve(ServiceKeys.map);
     const objectLayer = map.getObjectLayer('spawn-layer');
     if (!objectLayer) throw new Error('Spawn-layer does not resolved');
@@ -639,6 +641,11 @@ export class LevelOneScene extends BaseScene {
       .filter((obj) => obj.x && obj.y)
       .map((obj) => ({ x: obj.x!, y: obj.y! }));
 
+    return crystalZones;
+  }
+
+  public onCrystalShrineQuestStart(): void {
+    const crystalZones = this.getCrystalZones();
     crystalZones.forEach((pos, index) => {
       this.spawnLoot(`crystal-${index + 1}`, pos, [{ id: 'arcane-shard', amount: 1 }]);
     });
@@ -652,7 +659,6 @@ export class LevelOneScene extends BaseScene {
     const lootZone = this.interactables.get(LootZone);
 
     const zone = this.add.zone(position.x, position.y, 32, 32).setOrigin(0, 0);
-
     SaveService.patch({
       worldState: {
         ...SaveService.data.worldState,

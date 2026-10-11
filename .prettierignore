@@ -1,0 +1,10 @@
+electron-builder.yml
+
+node_modules/
+build/
+build-electron/
+dist/
+
+public/
+*.txt
+*.md

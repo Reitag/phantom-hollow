@@ -197,6 +197,7 @@ export const UI = {
   MENU_UI_CONTINUE_BTN: 'menu-ui-continue-btn',
   MENU_UI_OPTION_BTN: 'menu-ui-option-btn',
   MENU_UI_CREDITS_BTN: 'menu-ui-credits-btn',
+  MENU_UI_QUIT_BTN: 'menu-ui-quit-btn',
   GEAR_CONTROL: 'gear-control',
   CLOUD_CONTROL: 'cloud-control',
   TROPHY_CONTROL: 'trophy-control',

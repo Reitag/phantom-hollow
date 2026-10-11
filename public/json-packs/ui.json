@@ -187,6 +187,11 @@
     },
     {
       "type": "image",
+      "key": "menu-ui-quit-btn",
+      "url": "assets/ui/menu/menu-ui-quit-btn.png"
+    },
+    {
+      "type": "image",
       "key": "gear-control",
       "url": "assets/ui/control/gear.png"
     },

@@ -4,7 +4,7 @@ import path from 'path';
 // Read package-json
 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
 
-const outputDir = 'build_electron';
+const outputDir = 'build-electron';
 const oldPath = path.join(outputDir, 'win-unpacked');
 const newPath = path.join(outputDir, `${pkg.name}-${pkg.version}`);
 

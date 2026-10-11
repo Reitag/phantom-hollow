@@ -12,7 +12,7 @@ dist
 dist-ssr
 build
 build-ssr
-build_electron
+build-electron
 *.local
 
 # Editor directories and files

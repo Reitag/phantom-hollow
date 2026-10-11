@@ -1,0 +1,174 @@
+========================================================================
+                              GAME CREDITS
+========================================================================
+
+
+DEVELOPMENT TEAM
+------------------------------------------------------------------------
+* Ilya "Reitag" Chernov           - Game Director & Lead Programmer
+* Artem "sacrificengineer" Sedov  - Associate Producer, Narrative & QA
+* Darya "InkMoon"                 - Lead 2D Artist & Illustrator
+* Petr "PetRUalitY" Brabich       - Original Soundtrack Composer
+
+
+ENGINE & TECHNOLOGIES
+------------------------------------------------------------------------
+* Phaser
+  Created by Richard Davey (Richard Davey / Photon Storm Ltd).
+  Official website: https://phaser.io
+  Distributed under the MIT License (the full text is included below).
+
+
+CHARACTERS & ENEMIES
+------------------------------------------------------------------------
+* "Free Skeleton Sword Man & Zombie Character" by Momonga
+  Source: https://momongaa.itch.io/free-skeleton-sword-man-zombie-character
+
+* "Evil Wizard 3" by LuizMelo
+  Source: https://luizmelo.itch.io/evil-wizard-3
+
+* "Fire Worm" by LuizMelo
+  Source: https://luizmelo.itch.io/fire-worm
+
+* "The Dungeon Pack - Part 1" by Pixfinity
+  Source: https://pixfinity.itch.io/the-dungeon-pack-1
+
+* "Mr. Bowman" by cptfoorman
+  Source: https://cptfoorman.itch.io/mr-bowman
+
+
+TILESETS & ENVIRONMENT
+------------------------------------------------------------------------
+* "Legacy Adventure Pack (Ruins)" by Anokolisa
+  Source: https://anokolisa.itch.io/legacy-adventure-pack-ruins
+
+* "Pixel Art Sidescroller Asset Pack (32x32 Overworld)" by GandalfHardcore
+  Source: https://gandalfhardcore.itch.io/free-pixel-art-sidescroller-asset-pack-32x32-overworld
+
+* "[LPC] Conifers" edited by bluecarrot16
+  Source: https://opengameart.org/content/lpc-conifers
+  License: CC-BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+  Based on original assets by:
+  * b_o (https://opengameart.org/content/pine-tree-tiles)
+  * Lanea Zimmerman (Sharm) (https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles)
+  * Johann Charlot (https://opengameart.org/content/shootem-up-graphic-kit)
+  * Yar (https://opengameart.org/content/isometric-64x64-outside-tileset)
+  * Jetrel, Zabin, Hyptosis, Surt (https://opengameart.org/content/lots-of-trees-and-plants-from-oga-db32-tilesets-pack-1)
+  * KnoblePersona (https://opengameart.org/content/pine-tree-pack)
+
+
+VFX & ANIMATIONS
+------------------------------------------------------------------------
+* "Pixel Magic Sprite Effects" by Foozle
+  Source: https://foozlecc.itch.io/pixel-magic-sprite-effects
+
+* "Gothicvania Magic Pack 9" by Ansimuz
+  Source: https://ansimuz.itch.io/gothicvania-magic-pack-9
+
+* "Ice Spell Effect 01" by Pimen
+  Source: https://pimen.itch.io/ice-spell-effect-01
+
+* "VFX and Effects" by Jz Pixels
+  Source: https://jz-pixels.itch.io/vfx-and-effects
+
+* "Pixel Art VFX (Lightning)" by Frostwindz
+  Source: https://frostwindz.itch.io/pixel-art-skill-animations-lightning
+
+* "Pixel Art VFX (Deathbringer)" by Frostwindz
+  Source: https://frostwindz.itch.io/pixel-art-spells-vfx-deathbringer
+
+* "Pixel Art VFX (Halloween)" by Frostwindz
+  Source: https://frostwindz.itch.io/pixel-art-animations-halloween
+
+* "Pixel Art VFX (Paladin)" by Frostwindz
+  Source: https://frostwindz.itch.io/pixel-art-animations-paladin
+
+
+UI, ICONS & ITEMS
+------------------------------------------------------------------------
+* "Cursors Pack 5 Lightning UI" by Wenrexa
+  Source: https://wenrexa.itch.io/cursors5
+
+* "28 Pixel Art Skill Icon Pack" by Pixel Explosive
+  Source: https://pixelexplosive.itch.io/28-pixel-art-skill-icon-32x32-game-asset-pack
+
+* "12 Pixel Chest Sprites" by Pixel Explosive
+  Source: https://pixelexplosive.itch.io/pixel-art-chest
+
+* "Free Paladin Pixel Art Skill Icons" by Craftpix
+  Source: https://craftpix.net/freebies/free-paladin-pixel-art-skill-icons
+
+* "Magic Runes Pixel Art Icon Pack" by Craftpix
+  Source: https://craftpix.net/product/magic-runes-pixel-art-icon-pack
+
+* "Free Magic Potions Pixel Art Icons" by Craftpix
+  Source: https://craftpix.net/freebies/free-magic-potions-pixel-art-icons
+
+* "Free Minerals Pixel Art Icons" by Craftpix
+  Source: https://craftpix.net/freebies/free-minerals-pixel-art-icons
+
+* "Gems / Coins Free" by La Red Games
+  Source: https://laredgames.itch.io/gems-coins-free
+
+* "Dusk's Free UI Icons" by Dusk Games
+  Source: https://dusk-games.itch.io/dusk-free-ui-icons
+
+* "Pixel Keyboard UI Buttons" by greedy_toad
+  Source: https://greedy-toad.itch.io/pixel-keyboard-ui-buttons
+
+
+AUDIO & SOUND EFFECTS
+------------------------------------------------------------------------
+* "Free Fantasy 200 SFX Pack" by TomMusic
+  Source: https://tommusic.itch.io/free-fantasy-200-sfx-pack
+
+* "Free Frost Mage SFX" by Daniel SoundsGood
+  Source: https://danielsoundsgood.itch.io/free-frost-mage-sfx
+
+* "Elemental Magic: Lightning Attacks" by Last Day Dreaming
+  Source: https://lastdaydreaming.itch.io/elemental-magic-lightning-attacks-audio-assets-collection
+  License: CC BY-ND 4.0 (https://creativecommons.org/licenses/by-nd/4.0/)
+
+* Sound Effects and Audio Elements sourced from Pixabay (https://pixabay.com)
+  License: Pixabay Content License
+  Individual sounds by:
+  * freesound_community (https://pixabay.com/users/freesound_community-46691455/)
+  * Dragon Studio (https://pixabay.com/ru/users/dragon-studio-38165424/)
+  * Yodguard (https://pixabay.com/ru/users/yodguard-12455005/)
+  * Liecio (https://pixabay.com/ru/users/liecio-3298866/)
+  * [SoundReality] (https://pixabay.com/ru/users/soundreality-31074404/)
+
+
+FONTS & TYPOGRAPHY
+------------------------------------------------------------------------
+* "Volkhov" Font Family by Ivan Petrov / Cyreal
+  Source: https://fonts.google.com/specimen/Volkhov
+  License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL)
+
+
+========================================================================
+                        LICENSES & LEGAL NOTICES
+========================================================================
+
+
+PHASER ENGINE LICENSE (MIT LICENSE)
+------------------------------------------------------------------------
+Copyright (c) 2013-2026 Richard Davey, Photon Storm Ltd.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

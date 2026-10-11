@@ -17,7 +17,7 @@ export class CreditsScene extends BaseScene {
 
     const centerX = this.menuX;
 
-    let currentY = 75;
+    let currentY = 55;
 
     const teamText =
       `GAME DIRECTOR & LEAD PROGRAMMER\n` +
@@ -25,7 +25,9 @@ export class CreditsScene extends BaseScene {
       `ASSOCIATE PRODUCER, NARRATIVE & QA\n` +
       `Artem "sacrificengineer" Sedov\n\n` +
       `LEAD 2D ARTIST & ILLUSTRATOR\n` +
-      `Darya "InkMoon"`;
+      `Darya "InkMoon"\n\n` +
+      `ORIGINAL SOUNDTRACK COMPOSER\n` +
+      `Petr "PetRUalitY" Brabich`;
 
     this.add
       .text(centerX, currentY, teamText, {
@@ -38,17 +40,15 @@ export class CreditsScene extends BaseScene {
       })
       .setOrigin(0.5, 0);
 
-    currentY += 185;
+    currentY += 255;
 
     const thirdParty =
       `THIRD-PARTY ASSETS\n` +
-      `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle\n` +
-      `GandalfHardcore • Ansimuz • Wenrexa • Pixel Explosive • Craftpix\n` +
-      `La Red Games • Dusk Games • Pimen • Jz Pixels • Frostwindz\n` +
-      `greedy_toad • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar,\n` +
-      `Jetrel, Zabin, Hyptosis, Surt, KnoblePersona) • Ivan Petrov & Cyreal\n` +
-      `freesound_community • Dragon Studio • Yodguard • Liecio\n` +
-      `TomMusic • Daniel SoundsGood • Last Day Dreaming`;
+      `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle • GandalfHardcore\n` +
+      `Ansimuz • Wenrexa • Pixel Explosive • Craftpix • La Red Games • Dusk Games • Pimen\n` +
+      `Jz Pixels • Frostwindz • greedy_toad • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar,\n` +
+      `Jetrel, Zabin, Hyptosis, Surt, KnoblePersona) • Ivan Petrov & Cyreal • freesound_community\n` +
+      `Dragon Studio • Yodguard • Liecio • SoundReality • TomMusic • Daniel SoundsGood • Last Day Dreaming`;
 
     this.add
       .text(centerX, currentY, thirdParty, {
@@ -61,7 +61,7 @@ export class CreditsScene extends BaseScene {
       })
       .setOrigin(0.5, 0);
 
-    currentY += 190;
+    currentY += 135;
 
     const madeWithText = this.add
       .text(centerX, currentY, `Made with`, {

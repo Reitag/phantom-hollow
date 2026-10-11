@@ -14,6 +14,8 @@ export class MainMenuScene extends BaseScene {
     const save = SaveService.load();
     const hasSave = SaveService.hasSave();
 
+    const isElectron = navigator.userAgent.toLowerCase().includes('electron');
+
     const centerX = this.menuX;
 
     const buttons = [
@@ -67,6 +69,13 @@ export class MainMenuScene extends BaseScene {
           this.scene.sleep();
         },
         visible: true,
+      },
+      {
+        key: UI.MENU_UI_QUIT_BTN,
+        action: () => {
+          window.close();
+        },
+        visible: isElectron,
       },
     ];
 
