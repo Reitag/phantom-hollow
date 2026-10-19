@@ -1,6 +1,11 @@
+import { MUSIC } from '@/constants/asset-keys';
+
 export class AudioSystem {
   private currentAmbient: Phaser.Sound.BaseSound | null = null;
   private currentKey: string | null = null;
+
+  private musicTween: Phaser.Tweens.Tween | null = null;
+  private ambientTween: Phaser.Tweens.Tween | null = null;
 
   constructor(private scene: Phaser.Scene) {}
 
@@ -101,6 +106,102 @@ export class AudioSystem {
     const sound = this.scene.game.audioService.sfx.play(key, config);
 
     return sound;
+  }
+
+  public playImportantSFX(key: string, durationMs: number = 3000): void {
+    const targetMusicVol = this.scene.game.audioService.musicVolume;
+    const targetAmbientVol = this.scene.game.audioService.sfxVolume;
+
+    let activeTrack: Phaser.Sound.BaseSound | null = null;
+    const allMusicKeys = [MUSIC.MUSIC_1, MUSIC.MUSIC_2, MUSIC.MUSIC_3, MUSIC.MUSIC_4];
+
+    for (const musicKey of allMusicKeys) {
+      const track = this.scene.sound.get(musicKey);
+      if (track && track.isPlaying) {
+        activeTrack = track;
+        break;
+      }
+    }
+
+    const isSoundAlive = (
+      sound: Phaser.Sound.BaseSound | null
+    ): sound is Phaser.Sound.BaseSound => {
+      return !!(sound && sound.isPlaying);
+    };
+
+    // --- music handle ---
+    if (activeTrack) {
+      const musicTrack = activeTrack;
+
+      if (this.musicTween) {
+        this.musicTween.remove();
+      }
+
+      this.musicTween = this.scene.tweens.add({
+        targets: musicTrack,
+        volume: targetMusicVol * 0.15, // 15%
+        duration: 150,
+        onUpdate: (tween) => {
+          if (!isSoundAlive(musicTrack)) {
+            tween.remove();
+          }
+        },
+        onComplete: () => {
+          if (isSoundAlive(musicTrack)) {
+            this.musicTween = this.scene.tweens.add({
+              targets: musicTrack,
+              volume: targetMusicVol,
+              duration: durationMs,
+              onUpdate: (tween) => {
+                if (!isSoundAlive(musicTrack)) {
+                  tween.remove();
+                }
+              },
+            });
+          }
+        },
+      });
+    }
+
+    // --- ambient handle ---
+    if (this.currentAmbient) {
+      const ambientTrack = this.currentAmbient;
+
+      if (this.ambientTween) {
+        this.ambientTween.remove();
+      }
+
+      this.ambientTween = this.scene.tweens.add({
+        targets: ambientTrack,
+        volume: targetAmbientVol * 0.05, // 5%
+        duration: 150,
+        onUpdate: (tween) => {
+          if (!isSoundAlive(ambientTrack) || this.currentAmbient !== ambientTrack) {
+            tween.remove();
+          }
+        },
+        onComplete: () => {
+          if (
+            isSoundAlive(ambientTrack) &&
+            this.currentAmbient === ambientTrack &&
+            this.currentKey
+          ) {
+            this.ambientTween = this.scene.tweens.add({
+              targets: ambientTrack,
+              volume: targetAmbientVol,
+              duration: durationMs,
+              onUpdate: (tween) => {
+                if (!isSoundAlive(ambientTrack) || this.currentAmbient !== ambientTrack) {
+                  tween.remove();
+                }
+              },
+            });
+          }
+        },
+      });
+    }
+
+    this.play(key);
   }
 
   public stopAllByKey(key: string) {

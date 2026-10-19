@@ -32,6 +32,8 @@ export abstract class Quest extends Board {
 
   protected scrollThumb: Phaser.GameObjects.Graphics;
   protected scrollIndicatorCoords: Rectangle;
+  protected scrollUpButton: Phaser.GameObjects.Image;
+  protected scrollDownButton: Phaser.GameObjects.Image;
 
   protected questMark: QuestMark | null = null;
 
@@ -70,9 +72,11 @@ export abstract class Quest extends Board {
     // scroll indicator
     this.scrollIndicatorCoords = {
       x: 146,
-      y: -159,
+      //y: -159,
+      y: -135,
       width: 7,
-      height: 293.8,
+      //height: 293.8,
+      height: 246,
     };
 
     // Left here just for possible future cases
@@ -106,6 +110,23 @@ export abstract class Quest extends Board {
 
     this.buttons.add(this.acceptButton);
     this.buttons.add(this.declineButton);
+
+    // Adding Up and Down Buttons
+    const track = this.scrollIndicatorCoords;
+    const arrowSpacing = 16;
+
+    this.scrollUpButton = this.scene.add
+      .image(track.x, track.y - arrowSpacing, UI.QUEST_UI_UP_BTN)
+      .setInteractive();
+
+    this.scrollDownButton = this.scene.add
+      .image(track.x, track.y + track.height + arrowSpacing, UI.QUEST_UI_DOWN_BTN)
+      .setInteractive();
+
+    this.board.add([this.scrollUpButton, this.scrollDownButton]);
+
+    this.buttons.add(this.scrollUpButton);
+    this.buttons.add(this.scrollDownButton);
   }
 
   public defineQuestState(questId: string): void {
@@ -174,6 +195,9 @@ export abstract class Quest extends Board {
     this.bg.on('pointerover', this.bgOn, this);
     this.bg.on('pointerout', this.bgOff, this);
 
+    // Up and Down
+    const scrollStep = 40;
+
     this.buttons.forEach((button) => {
       const pos = this.alignCoords(button, button.x, button.y);
 
@@ -207,9 +231,29 @@ export abstract class Quest extends Board {
       };
 
       const onUp = () => {
-        if (button === this.acceptButton) {
+        if (button === this.scrollUpButton || button === this.scrollDownButton) {
+          if (button === this.scrollUpButton) {
+            this.scrollByAmount(scrollStep);
+          } else {
+            this.scrollByAmount(-scrollStep);
+          }
+
+          this.removeHoverEffect();
+
+          onOver();
+          // Return to avoid closeBoard()
+          return;
+        } else if (button === this.acceptButton) {
+          ServiceLocator.resolve(ServiceKeys.audio).playImportantSFX(
+            AUDIO.QUEST_ACCEPT,
+            2000 - 150 // The length of sfx - 1 sec / 150 is duration of fading away the current audio
+          );
           this.acceptQuest();
         } else if (button === this.completeButton) {
+          ServiceLocator.resolve(ServiceKeys.audio).playImportantSFX(
+            AUDIO.QUEST_COMPLETE,
+            4000 - 150 // The length of sfx - 1 sec / 150 is duration of fading away the current audio
+          );
           this.completeQuest();
         }
         this.removeHoverEffect();
@@ -240,6 +284,10 @@ export abstract class Quest extends Board {
 
     this.bg.off('pointerover', this.bgOn, this);
     this.bg.off('pointerout', this.bgOff, this);
+
+    // Up and Down
+    this.scrollUpButton.off('pointerup');
+    this.scrollDownButton.off('pointerup');
 
     this.buttons.forEach((button) => {
       const handlers = this.bundleHandlers.get(button);
@@ -297,12 +345,11 @@ export abstract class Quest extends Board {
       scrollProgress * (this.scrollIndicatorCoords.height - thumbHeight);
 
     this.scrollThumb.fillStyle(0xfce2bd, 0.8);
-    this.scrollThumb.fillRoundedRect(
+    this.scrollThumb.fillRect(
       this.scrollIndicatorCoords.x,
-      thumbY,
+      Math.floor(thumbY),
       this.scrollIndicatorCoords.width,
-      thumbHeight,
-      2
+      Math.floor(thumbHeight)
     );
   }
 
@@ -312,6 +359,14 @@ export abstract class Quest extends Board {
 
   private bgOff(): void {
     this.scene.input.off('wheel', this.handleScroll, this);
+  }
+
+  private scrollByAmount(amount: number): void {
+    this.scrollY += amount;
+    this.scrollY = Phaser.Math.Clamp(this.scrollY, -this.maxScroll, 0);
+
+    this.scrollContainer.y = this.scrollY;
+    this.updateScrollIndicator();
   }
 
   private handleScroll(

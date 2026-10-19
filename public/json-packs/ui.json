@@ -142,6 +142,16 @@
     },
     {
       "type": "image",
+      "key": "quest-ui-up-btn",
+      "url": "assets/ui/quest/quest-ui-up-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "quest-ui-down-btn",
+      "url": "assets/ui/quest/quest-ui-down-btn.png"
+    },
+    {
+      "type": "image",
       "key": "letter-ui",
       "url": "assets/ui/letter/letter-ui.png"
     },

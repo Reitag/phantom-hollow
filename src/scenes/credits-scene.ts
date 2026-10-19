@@ -44,11 +44,11 @@ export class CreditsScene extends BaseScene {
 
     const thirdParty =
       `THIRD-PARTY ASSETS\n` +
-      `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle • GandalfHardcore\n` +
-      `Ansimuz • Wenrexa • Pixel Explosive • Craftpix • La Red Games • Dusk Games • Pimen\n` +
-      `Jz Pixels • Frostwindz • greedy_toad • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar,\n` +
-      `Jetrel, Zabin, Hyptosis, Surt, KnoblePersona) • Ivan Petrov & Cyreal • freesound_community\n` +
-      `Dragon Studio • Yodguard • Liecio • SoundReality • TomMusic • Daniel SoundsGood • Last Day Dreaming`;
+      `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle • GandalfHardcore • Ansimuz\n` +
+      `Wenrexa • Pixel Explosive • Craftpix • La Red Games • Dusk Games • Pimen • Jz Pixels • Frostwindz\n` +
+      `greedy_toad • bluecarrot16 & LPC (b_o, Sharm, J. Charlot, Yar, Jetrel, Zabin, Hyptosis,\n` +
+      `Surt, KnoblePersona) • Ivan Petrov & Cyreal • freesound_community • Dragon Studio • Yodguard • Liecio\n` +
+      `SoundReality • TomMusic • Daniel SoundsGood • Last Day Dreaming • floraphonic • Tithuh`;
 
     this.add
       .text(centerX, currentY, thirdParty, {
