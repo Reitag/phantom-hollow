@@ -187,7 +187,7 @@ export class Store extends Board {
       font: '12px Arial',
       color: '##fff2d8',
     });
-    const price = this.scene.add.text(pricePos.x, pricePos.y, `${item.price} coins`, {
+    const price = this.scene.add.text(pricePos.x, pricePos.y, `${item.price} Gold`, {
       font: '12px Arial',
       color: '#ffd84d',
     });

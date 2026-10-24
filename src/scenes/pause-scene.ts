@@ -48,8 +48,9 @@ export class PauseScene extends BaseScene {
     this.buttons.push(optionsBtn);
 
     // Menu
+    const specialMenyGap = 40;
     currentY += this.buttonHeight + this.menuGap;
-    const menuBtn = this.createButton(this.menuX, currentY, {
+    const menuBtn = this.createButton(this.menuX, currentY + specialMenyGap, {
       key: UI.PAUSE_UI_MAIN_MENU_BTN,
       action: () => this.handleBackMainMenu(),
     });
