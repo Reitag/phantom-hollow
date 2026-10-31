@@ -42,6 +42,7 @@ import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { ScoreTracker } from '@/systems/score-tracker';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
@@ -95,6 +96,7 @@ export class LevelOneScene extends BaseScene {
   private npc!: NPCSpawn;
   private questMark!: QuestMark;
   private canPlayerGetDamage = true;
+  private isLevelFinished = false;
   private isLevelInitialized = false;
 
   constructor() {
@@ -145,6 +147,11 @@ export class LevelOneScene extends BaseScene {
       this.debugScreen.setPlayersCoords(this.player.x, this.player.y);
     }
     // Debug
+  }
+
+  public toggleLeveFinished(): void {
+    this.isLevelFinished = true;
+    console.log('triggered');
   }
 
   private initKeyboard(): void {
@@ -303,6 +310,7 @@ export class LevelOneScene extends BaseScene {
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
+    ServiceLocator.register(ServiceKeys.scoreTracker, new ScoreTracker());
     ServiceLocator.register(ServiceKeys.spellSystem, new SpellSystem());
     ServiceLocator.register(ServiceKeys.inventorySystem, new InventorySystem());
     ServiceLocator.register(ServiceKeys.lootSystem, new LootSystem(this));
@@ -536,15 +544,17 @@ export class LevelOneScene extends BaseScene {
       return;
     }
 
-    if (spell.causeDamage() > 0) {
+    const calculatedDamage = spell.causeDamage();
+
+    if (calculatedDamage > 0) {
       const caster = spell.getCaster();
       const spellPower = caster.getStats().damage.spellPower as SpellPower;
 
       if (spell instanceof FireBall && spellPower.isCriticalStrike) {
-        victim.takeDamage(spell.causeDamage(), caster, true);
+        victim.takeDamage(calculatedDamage, caster, true);
         spell.playCritImpactSound();
       } else {
-        victim.takeDamage(spell.causeDamage(), caster);
+        victim.takeDamage(calculatedDamage, caster);
         spell.playImpactSound();
       }
       spell.destroySpell();
@@ -924,6 +934,9 @@ export class LevelOneScene extends BaseScene {
 
     CollisionService.clear();
     SaveService.clear();
-    ServiceLocator.clear();
+    if (!this.isLevelFinished) {
+      console.log('triggered2');
+      ServiceLocator.clear();
+    }
   }
 }

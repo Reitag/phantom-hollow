@@ -28,7 +28,7 @@ export class CoinKeeper {
 
   public removeCoins(amount: number): boolean {
     if (amount > this.balance) {
-      this.ui.addWarningtext('Not enough coins');
+      this.ui.addWarningtext('Not enough gold');
       return false;
     } else {
       this.balance -= amount;

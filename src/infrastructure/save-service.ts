@@ -8,6 +8,12 @@ const DEFAULT_SAVE: SaveGame = {
   coins: 0,
   buffs: [],
   quests: {},
+  score: {
+    dmgDone: 0,
+    dmgRecieved: 0,
+    enemiesDefeated: 0,
+    goldEarned: 0,
+  },
   worldState: {
     openedChest: [],
     killedBosses: [],
@@ -50,6 +56,10 @@ export class SaveService {
     this.currentSave = {
       ...DEFAULT_SAVE,
       ...parsed,
+      score: {
+        ...DEFAULT_SAVE.score,
+        ...parsed.score,
+      },
       worldState: {
         ...DEFAULT_SAVE.worldState,
         ...parsed.worldState,

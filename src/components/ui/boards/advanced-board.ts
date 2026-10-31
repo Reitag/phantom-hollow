@@ -12,6 +12,7 @@ import { SCENE_SIZE } from '@/constants/scene-size';
 import { LETTER_UI } from '@/constants/ui-coordinates';
 import { SaveService } from '@/infrastructure/save-service';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
+import { LevelOneScene } from '@/scenes/level-one-scene';
 import { QuestLog } from './quest-log';
 
 interface AdvancedBoardConfig {
@@ -215,6 +216,9 @@ export class MainQuest extends AdvancedBoard {
   }
 
   protected override onButtonPress(): void {
+    // Get LevelOne Scene
+    (this.scene.scene.get('LevelOneScene') as LevelOneScene).toggleLeveFinished();
+
     SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'done');
     ServiceLocator.resolve(ServiceKeys.ui)
       .getBoard<QuestLog>('quest-log')
@@ -222,5 +226,8 @@ export class MainQuest extends AdvancedBoard {
 
     this.board?.destroy();
     this.board = null;
+
+    // Starting End Game Score
+    this.scene.scene.start('EndScoreScene');
   }
 }

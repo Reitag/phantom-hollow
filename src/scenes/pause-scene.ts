@@ -1,5 +1,7 @@
 import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
+import { SaveService } from '@/infrastructure/save-service';
+import { ServiceLocator } from '@/infrastructure/service-locator';
 
 export class PauseScene extends BaseScene {
   constructor() {
@@ -65,6 +67,9 @@ export class PauseScene extends BaseScene {
   }
 
   private handleBackMainMenu(): void {
+    SaveService.clear();
+    ServiceLocator.clear();
+
     this.scene.stop('LevelOneScene');
     this.scene.stop('UiScene');
     this.scene.start('MainMenuScene');

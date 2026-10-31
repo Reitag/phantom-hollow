@@ -29,7 +29,7 @@ export abstract class BaseScene extends Phaser.Scene {
   public create(...args: any[]): void {
     const { key } = this.scene;
 
-    const hideTitle = ['LevelOneScene', 'IntroScene', 'CreditsScene'];
+    const hideTitle = ['LevelOneScene', 'IntroScene', 'CreditsScene', 'EndScoreScene'];
     const hideArt = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
     const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
 
