@@ -10,3 +10,5 @@ export const MODIFIER_ICONS = {
 } as const;
 
 export const INVENTORY_ICON_SIZE = 30 as const;
+
+export const START_TUTORIAL_AND_FIRST_MISSION_DELAY = 1500 as const;

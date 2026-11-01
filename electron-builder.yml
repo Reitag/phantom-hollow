@@ -1,14 +1,32 @@
-appId: com.mygame.phantomhollow
-productName: Phantom Hollow
+appId: com.mygame.embercrestrising
+productName: Embercrest Rising
+
 directories:
-  output: build_electron
+  output: build-electron
+  buildResources: resources
+
 files:
-  - 'build/**/*'
-  - 'main.js'
-  - 'package.json'
+  - "build/**/*"
+  - "main.js"
+  - "package.json"
+  - "favicon.png"
+
+extraFiles:
+  - from: "CREDITS.txt"
+    to: "CREDITS.txt"
+
 win:
   target:
-    - target: dir
-  executableName: 'phantom-hollow'
+    - target: nsis
+  icon: resources/icon.ico
+  executableName: "Embercrest Rising"
   cscLink: null
   verifyUpdateCodeSignature: false
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: false
+  shortcutName: "Embercrest Rising"

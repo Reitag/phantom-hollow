@@ -20,6 +20,8 @@ export class CoinKeeper {
       this.balance += amount;
       this.ui.increaseCoinCounter(amount);
 
+      ServiceLocator.resolve(ServiceKeys.scoreTracker).addGoldEarned(amount);
+
       if (saveToData) {
         this.saveBalanceData();
       }
@@ -28,7 +30,7 @@ export class CoinKeeper {
 
   public removeCoins(amount: number): boolean {
     if (amount > this.balance) {
-      this.ui.addWarningtext('Not enough coins');
+      this.ui.addWarningtext('Not enough gold');
       return false;
     } else {
       this.balance -= amount;
@@ -39,6 +41,13 @@ export class CoinKeeper {
       this.saveBalanceData();
       return true;
     }
+  }
+
+  public implementPenalty(amount: number): void {
+    // Zero check in player's handler method setPenaltyToPlayer
+    this.balance -= amount;
+    this.ui.decreaseCoinCounter(amount);
+    this.saveBalanceData();
   }
 
   private saveBalanceData(): void {

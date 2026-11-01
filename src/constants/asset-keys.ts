@@ -43,6 +43,9 @@ export const AUDIO = {
   CHEST_OPEN: 'chest-open',
   SPEAR_IMPACT: 'spear-impact',
   LOOT_COLLECT: 'loot-collect',
+  DEFAULT_CLICK: 'default-click',
+  QUEST_ACCEPT: 'quest-accept',
+  QUEST_COMPLETE: 'quest-complete',
   SKELETON_WARRIOR_AGGRO: 'skeleton-warrior-aggro',
   ZOMBIE_AGGRO: 'zombie-aggro',
   FIREWORM_AGGRO: 'fireworm-aggro',
@@ -100,7 +103,13 @@ export const MISC = {
   LETTER: 'letter',
   GAME_TITLE: 'game-title',
   PHASER_PIXEL_MEDIUM_FLAT: 'phaser-pixel-medium-flat',
-  MAIN_ART: 'main-art',
+} as const;
+
+export const MUSIC = {
+  MUSIC_1: 'music-1',
+  MUSIC_2: 'music-2',
+  MUSIC_3: 'music-3',
+  MUSIC_4: 'music-4',
 } as const;
 
 export const OBJECTS = {
@@ -181,6 +190,8 @@ export const UI = {
   QUEST_UI_ACCEPT_BTN: 'quest-ui-accept-btn',
   QUEST_UI_DECLINE_BTN: 'quest-ui-decline-btn',
   QUEST_UI_COMPLETE_BTN: 'quest-ui-complete-btn',
+  QUEST_UI_UP_BTN: 'quest-ui-up-btn',
+  QUEST_UI_DOWN_BTN: 'quest-ui-down-btn',
   LETTER_UI: 'letter-ui',
   LETTER_UI_CLOSE_BTN: 'letter-ui-close-btn',
   DIALOG_UI: 'dialog-ui',
@@ -190,6 +201,7 @@ export const UI = {
   MENU_UI_CONTINUE_BTN: 'menu-ui-continue-btn',
   MENU_UI_OPTION_BTN: 'menu-ui-option-btn',
   MENU_UI_CREDITS_BTN: 'menu-ui-credits-btn',
+  MENU_UI_QUIT_BTN: 'menu-ui-quit-btn',
   GEAR_CONTROL: 'gear-control',
   CLOUD_CONTROL: 'cloud-control',
   TROPHY_CONTROL: 'trophy-control',

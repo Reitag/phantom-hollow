@@ -3,7 +3,8 @@ import { KeyboardController } from '@/components/controllers/keyboard-controller
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
-import { AUDIO, BACKGROUNDS, MISC } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC, MUSIC, OBJECTS } from '@/constants/asset-keys';
+import { Z_POSITION } from '@/constants/z-position';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { QUEST_IDS } from '@/constants/quest-ids';
@@ -41,6 +42,7 @@ import { PlayerHandler } from '@/systems/player-handler';
 import { SpellSystem } from '@/systems/spell-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { CollisionService, GroupKeys } from '@/infrastructure/collision-service';
+import { ScoreTracker } from '@/systems/score-tracker';
 import { SpellCooldowns } from '@/components/modules/spell-cooldowns';
 import { Character } from '@/base/objects/character';
 import { Spell } from '@/base/objects/spell';
@@ -52,6 +54,11 @@ import { DebugScreen } from '../../tools/debug-screen.js';
 type AudioZone = {
   polygon: Phaser.Geom.Polygon;
   ambient: string;
+};
+
+type MusicZone = {
+  polygon: Phaser.Geom.Polygon;
+  theme: string;
 };
 
 export class LevelOneScene extends BaseScene {
@@ -68,6 +75,18 @@ export class LevelOneScene extends BaseScene {
   private ambientZones: AudioZone[] = [];
   private currentAmbient: string | null = null;
 
+  // Music
+  /// Keys
+  private musicKeys: string[] = [MUSIC.MUSIC_1, MUSIC.MUSIC_2, MUSIC.MUSIC_3];
+  private lastMusicKey: string = '';
+
+  private musicTimer: Phaser.Time.TimerEvent | null = null;
+  private resumeSceneHandlerBind = this.resumeSceneHandler.bind(this);
+  private musicZones: MusicZone[] = [];
+  private wasInRuinsZone = false;
+  private pauseForRuinsTheme = false;
+  private currentTheme: 'none' | 'default' | 'ruins' = 'none';
+
   private player!: Player;
   private playerHandler!: PlayerHandler;
   private spawn!: EnemySpawn;
@@ -77,6 +96,7 @@ export class LevelOneScene extends BaseScene {
   private npc!: NPCSpawn;
   private questMark!: QuestMark;
   private canPlayerGetDamage = true;
+  private isLevelFinished = false;
   private isLevelInitialized = false;
 
   constructor() {
@@ -97,6 +117,8 @@ export class LevelOneScene extends BaseScene {
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
 
+    if (this.isLevelFinished) this.isLevelFinished = false;
+
     SaveService.start();
     ServiceLocator.register(ServiceKeys.save, save);
 
@@ -105,6 +127,8 @@ export class LevelOneScene extends BaseScene {
         scene: this.scene.key,
       });
     }
+
+    this.events.on('resume', this.resumeSceneHandlerBind);
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
@@ -118,12 +142,17 @@ export class LevelOneScene extends BaseScene {
 
     this.updateParallaxBackground();
     this.ambientUpdate();
+    this.ruinsZoneUpdate();
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
       this.debugScreen.setPlayersCoords(this.player.x, this.player.y);
     }
     // Debug
+  }
+
+  public toggleLeveFinished(): void {
+    this.isLevelFinished = true;
   }
 
   private initKeyboard(): void {
@@ -181,6 +210,9 @@ export class LevelOneScene extends BaseScene {
     this.setupCamera();
 
     this.createAmbientZones();
+
+    this.createMusicZones();
+    this.time.delayedCall(15000, () => this.setupMusicLoop(), [], this);
   }
 
   private createParallaxBackground(): void {
@@ -279,6 +311,7 @@ export class LevelOneScene extends BaseScene {
     ServiceLocator.register(ServiceKeys.cooldowns, new SpellCooldowns(this));
     ServiceLocator.register(ServiceKeys.spellFactory, new SpellFactory(this));
     ServiceLocator.register(ServiceKeys.sandbox, new Sandbox());
+    ServiceLocator.register(ServiceKeys.scoreTracker, new ScoreTracker());
     ServiceLocator.register(ServiceKeys.spellSystem, new SpellSystem());
     ServiceLocator.register(ServiceKeys.inventorySystem, new InventorySystem());
     ServiceLocator.register(ServiceKeys.lootSystem, new LootSystem(this));
@@ -512,15 +545,17 @@ export class LevelOneScene extends BaseScene {
       return;
     }
 
-    if (spell.causeDamage() > 0) {
+    const calculatedDamage = spell.causeDamage();
+
+    if (calculatedDamage > 0) {
       const caster = spell.getCaster();
       const spellPower = caster.getStats().damage.spellPower as SpellPower;
 
       if (spell instanceof FireBall && spellPower.isCriticalStrike) {
-        victim.takeDamage(spell.causeDamage(), caster, true);
+        victim.takeDamage(calculatedDamage, caster, true);
         spell.playCritImpactSound();
       } else {
-        victim.takeDamage(spell.causeDamage(), caster);
+        victim.takeDamage(calculatedDamage, caster);
         spell.playImpactSound();
       }
       spell.destroySpell();
@@ -601,7 +636,8 @@ export class LevelOneScene extends BaseScene {
     this.interactables.add(new MainQuestTrigger(this, pos));
   }
 
-  public onCrystalShrineQuestStart(): void {
+  // Crystals
+  public getCrystalZones(): Position[] {
     const map = ServiceLocator.resolve(ServiceKeys.map);
     const objectLayer = map.getObjectLayer('spawn-layer');
     if (!objectLayer) throw new Error('Spawn-layer does not resolved');
@@ -616,6 +652,11 @@ export class LevelOneScene extends BaseScene {
       .filter((obj) => obj.x && obj.y)
       .map((obj) => ({ x: obj.x!, y: obj.y! }));
 
+    return crystalZones;
+  }
+
+  public onCrystalShrineQuestStart(): void {
+    const crystalZones = this.getCrystalZones();
     crystalZones.forEach((pos, index) => {
       this.spawnLoot(`crystal-${index + 1}`, pos, [{ id: 'arcane-shard', amount: 1 }]);
     });
@@ -629,7 +670,6 @@ export class LevelOneScene extends BaseScene {
     const lootZone = this.interactables.get(LootZone);
 
     const zone = this.add.zone(position.x, position.y, 32, 32).setOrigin(0, 0);
-
     SaveService.patch({
       worldState: {
         ...SaveService.data.worldState,
@@ -700,10 +740,183 @@ export class LevelOneScene extends BaseScene {
   }
   // --Ambient--
 
+  // Music
+  private clearMusicTimer(): void {
+    if (this.musicTimer) {
+      this.musicTimer.destroy();
+      this.musicTimer = null;
+    }
+  }
+
+  private createMusicZones(): void {
+    const objectLayer = this.map.getObjectLayer('spawn-layer');
+    if (!objectLayer) return;
+
+    for (const obj of objectLayer.objects) {
+      if (obj.name !== 'play-music') continue;
+
+      const theme = obj.properties?.find(
+        (p: { name: string; type: string; value: string }) => p.name === 'theme'
+      )?.value;
+      if (!theme || !obj.polygon) continue;
+
+      const points = obj.polygon.map((p: Phaser.Types.Math.Vector2Like) => ({
+        x: p.x + (obj.x ?? 0),
+        y: p.y + (obj.y ?? 0),
+      }));
+
+      const polygon = new Phaser.Geom.Polygon(points);
+
+      this.musicZones.push({
+        polygon,
+        theme,
+      });
+    }
+  }
+
+  private ruinsZoneUpdate(): void {
+    const isCurrentlyInAnyZone = this.musicZones.some((zone) =>
+      Phaser.Geom.Polygon.Contains(zone.polygon, this.player.x, this.player.y)
+    );
+
+    if (isCurrentlyInAnyZone && !this.wasInRuinsZone) {
+      this.wasInRuinsZone = true;
+
+      if (
+        this.currentTheme === 'none' &&
+        !this.pauseForRuinsTheme &&
+        this.currentAmbient !== 'cave'
+      ) {
+        /*if (this.musicTimer) {
+          this.musicTimer.destroy();
+          this.musicTimer = null;
+        }*/
+        this.clearMusicTimer();
+        this.ruinsTheme();
+      }
+    } else if (!isCurrentlyInAnyZone && this.wasInRuinsZone) {
+      this.wasInRuinsZone = false;
+    }
+  }
+
+  private setupMusicLoop(): void {
+    this.currentTheme = 'default';
+    this.lastMusicKey = MUSIC.MUSIC_1;
+    this.audio?.playBackgroundMusic(MUSIC.MUSIC_1);
+
+    const currentTrack = this.sound.get(MUSIC.MUSIC_1);
+    if (currentTrack) {
+      currentTrack.off('complete'); // For delete old listeners
+      currentTrack.once('complete', () => this.handleTrackComplete());
+    } else {
+      this.clearMusicTimer();
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
+    }
+  }
+
+  private handleTrackComplete(): void {
+    this.currentTheme = 'none';
+
+    if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
+      this.ruinsTheme();
+    } else {
+      const timeDelayed = Phaser.Math.Between(144000, 162000); // 2.4 - 2.7 minutes
+      this.clearMusicTimer();
+      this.musicTimer = this.time.delayedCall(timeDelayed, () => this.defaultMusicLoop(), [], this);
+    }
+  }
+
+  private defaultMusicLoop(): void {
+    this.clearMusicTimer();
+
+    if (this.currentAmbient === 'cave') {
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
+      return;
+    }
+
+    if (this.currentTheme === 'ruins') {
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
+      return;
+    }
+
+    if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
+      this.ruinsTheme();
+      return;
+    }
+
+    const availableKeys = this.musicKeys.filter((key) => key !== this.lastMusicKey);
+    const randomKey = Phaser.Utils.Array.GetRandom(availableKeys);
+    this.lastMusicKey = randomKey;
+
+    this.currentTheme = 'default';
+    this.audio?.playBackgroundMusic(randomKey);
+
+    const currentTrack = this.sound.get(randomKey);
+    if (currentTrack) {
+      currentTrack.off('complete'); // Avoid leaks
+      currentTrack.once('complete', () => this.handleTrackComplete());
+    } else {
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
+    }
+  }
+
+  private ruinsTheme(): void {
+    this.currentTheme = 'ruins';
+    this.pauseForRuinsTheme = true;
+    this.audio?.playBackgroundMusic(MUSIC.MUSIC_4);
+
+    const ruinsTheme = this.sound.get(MUSIC.MUSIC_4);
+    if (ruinsTheme) {
+      ruinsTheme.off('complete'); // Avoid leaks
+      ruinsTheme.once('complete', () => {
+        this.currentTheme = 'none';
+
+        // This is without musicTimer
+        this.time.delayedCall(
+          100000,
+          () => {
+            this.pauseForRuinsTheme = false;
+          },
+          [],
+          this
+        );
+
+        this.handleTrackComplete();
+      });
+    } else {
+      this.pauseForRuinsTheme = false;
+      this.clearMusicTimer();
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
+    }
+  }
+  // --Music
+
+  private resumeSceneHandler(): void {
+    const musicVolume = this.game.audioService.musicVolume;
+    const sfxVolume = this.game.audioService.sfxVolume;
+
+    this.game.sound.getAllPlaying().forEach((sound) => {
+      const audio = sound as
+        | Phaser.Sound.NoAudioSound
+        | Phaser.Sound.HTML5AudioSound
+        | Phaser.Sound.WebAudioSound;
+      if (audio.isMusic) {
+        audio.volume = musicVolume;
+        audio.setVolume(musicVolume);
+      } else {
+        audio.setVolume(sfxVolume);
+      }
+    });
+    if (this.currentAmbient !== null) {
+      this.audio?.playAmbient(this.getAmbientKey(this.currentAmbient));
+    }
+  }
+
   protected cleanup(): void {
     this.audio?.stopAmbient(false);
     this.audio = null;
     this.currentAmbient = null;
+    this.events.off('resume', this.resumeSceneHandlerBind);
 
     // Debug
     if (this.debugScreen && this.debugScreen instanceof DebugScreen) {
@@ -729,7 +942,9 @@ export class LevelOneScene extends BaseScene {
     ServiceLocator.resolve(ServiceKeys.panel).controlBar.removeAllControllPanelListeners();
 
     CollisionService.clear();
-    SaveService.clear();
-    ServiceLocator.clear();
+    if (!this.isLevelFinished) {
+      SaveService.clear();
+      ServiceLocator.clear();
+    }
   }
 }

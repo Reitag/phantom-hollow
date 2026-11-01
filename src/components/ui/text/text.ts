@@ -3,6 +3,8 @@ import { SCENE_SIZE } from '@/constants/scene-size';
 import { baseStyle } from '@/constants/tooltip-params';
 import { WARNING_TEXT } from '@/constants/ui-coordinates';
 import { Z_POSITION } from '@/constants/z-position';
+import { Player } from '@/entities/characters/player/player';
+import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { TooltipFrameConfig, TooltipContentConfig } from '@/utils/types';
 
 enum TooltipLayout {
@@ -87,6 +89,14 @@ export class Text {
     if (typeof amount === 'number') {
       amount = Phaser.Math.RoundTo(amount, 0);
       if (amount === 0) return;
+
+      const scoreTracker = ServiceLocator.resolve(ServiceKeys.scoreTracker);
+
+      if (target instanceof Player) {
+        scoreTracker.addDmgRecieved(amount);
+      } else {
+        scoreTracker.addDmgDone(amount);
+      }
     }
 
     const fontSize = isCritical ? '24px' : '12px';

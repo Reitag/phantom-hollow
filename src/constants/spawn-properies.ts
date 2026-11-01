@@ -8,6 +8,6 @@ export const PLAYER_SPAWN_POSITION = { x: 540, y: 520 }; // start
 export const SPAWN_DISTANCE = 800;
 export const DESPAWN_DISTANCE = 900;
 
-// Enemy's destriy and respawn time
+// Enemy's destroy and respawn time
 export const DESTROY_TIME = 20_000;
 export const RESPAWN_TIME = 250_000;

@@ -73,13 +73,12 @@ export class AiZombie extends Enemy {
         AUDIO.ENEMY_AGGRO_4,
         AUDIO.ENEMY_AGGRO_6,
         AUDIO.ENEMY_AGGRO_8,
-        AUDIO.ENEMY_AGGRO_10,
+        /*AUDIO.ENEMY_AGGRO_10,*/
       ];
 
       const randomSoundKey = Phaser.Utils.Array.GetRandom(aggroSounds);
       ServiceLocator.resolve(ServiceKeys.audio).play(randomSoundKey, {
         detune: Phaser.Math.Between(-150, 150),
-        volume: Phaser.Math.FloatBetween(0.8, 1.0),
       });
     }
 

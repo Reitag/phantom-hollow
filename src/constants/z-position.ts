@@ -40,4 +40,5 @@ export const Z_POSITION = {
 
   // UI
   UI: 1000,
+  TUTORIAL_BOARD: 1100,
 } as const;

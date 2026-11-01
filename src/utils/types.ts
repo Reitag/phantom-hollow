@@ -169,6 +169,13 @@ type DroppedLoot = {
   loot: { id: string; amount: number }[];
 };
 
+export type ScoreData = {
+  dmgDone: number;
+  dmgRecieved: number;
+  enemiesDefeated: number;
+  goldEarned: number;
+};
+
 export type SaveGame = {
   scene: string | undefined;
   spawn: Position | null;
@@ -177,6 +184,7 @@ export type SaveGame = {
   coins: number;
   buffs: string[];
   quests: Record<string, QuestState>;
+  score: ScoreData;
   worldState: {
     openedChest: string[];
     killedBosses: BossType[];

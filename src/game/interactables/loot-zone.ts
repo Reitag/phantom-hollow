@@ -8,6 +8,8 @@ import { LOOT_FACTORY } from '@/factories/loot-factory';
 import { ServiceKeys, ServiceLocator } from '@/infrastructure/service-locator';
 import { SaveService } from '@/infrastructure/save-service';
 import { InventoryItem } from '@/utils/types';
+import { QUEST_IDS } from '@/constants/quest-ids';
+import { LevelOneScene } from '@/scenes/level-one-scene';
 
 interface Loot {
   id: string;
@@ -18,7 +20,7 @@ interface LootZoneData {
   id: string;
   type: 'chest' | 'drop';
   zone: Phaser.GameObjects.Zone;
-  chestSprite?: Phaser.GameObjects.Image;
+  sprite?: Phaser.GameObjects.Image;
   loot: Loot[];
   activated: boolean;
   vfx?: Shining;
@@ -26,6 +28,7 @@ interface LootZoneData {
 
 export class LootZone extends Interactable {
   private lootZones: LootZoneData[] = [];
+  private crystals: (Phaser.GameObjects.Image | undefined)[] = new Array(3);
 
   constructor(scene: Phaser.Scene) {
     super(scene);
@@ -36,124 +39,54 @@ export class LootZone extends Interactable {
     // Static loot zone array
     const staticLootZones = this.triggerZones.getChildren();
 
-    // First static loot zone
-    const firstLootZone = this.scene.add
-      .image(
-        (staticLootZones[0] as Phaser.GameObjects.Zone).x,
-        (staticLootZones[0] as Phaser.GameObjects.Zone).y,
-        OBJECTS.CHEST_CLOSE,
-        0
-      )
-      .setOrigin(0, 0)
-      .setDepth(Z_POSITION.DECOR);
+    // Chests
+    for (let i = 0; i < 4; i++) {
+      const zoneEl = staticLootZones[i] as Phaser.GameObjects.Zone;
+      const chestSprite = this.scene.add
+        .image(zoneEl.x, zoneEl.y, OBJECTS.CHEST_CLOSE, 0)
+        .setOrigin(0, 0)
+        .setDepth(Z_POSITION.DECOR);
 
-    this.lootZones.push({
-      id: 'chest-1',
-      type: 'chest',
-      zone: staticLootZones[0] as Phaser.GameObjects.Zone,
-      chestSprite: firstLootZone,
-      loot: [
-        { id: 'health-potion', amount: 3 },
-        { id: 'protect-potion', amount: 2 },
-      ],
-      activated: false,
-      vfx: new Shining({
-        scene: this.scene,
-        position: {
-          x: (staticLootZones[0] as Phaser.GameObjects.Zone).x,
-          y: (staticLootZones[0] as Phaser.GameObjects.Zone).y,
-        },
-        keyName: MISC.SHINING,
-        frame: 0,
-      }),
-    });
+      let loot: Loot[] = [];
+      if (i === 0)
+        loot = [
+          { id: 'health-potion', amount: 3 },
+          { id: 'protect-potion', amount: 2 },
+        ];
+      else if (i === 1) loot = [{ id: 'spell-potion', amount: 2 }];
+      else if (i === 2) loot = [{ id: 'undying-potion', amount: 1 }];
+      else if (i === 3) loot = [{ id: 'lightning-potion', amount: 2 }];
 
-    // Second static loot zone
-    const secondLootZone = this.scene.add
-      .image(
-        (staticLootZones[1] as Phaser.GameObjects.Zone).x,
-        (staticLootZones[1] as Phaser.GameObjects.Zone).y,
-        OBJECTS.CHEST_CLOSE,
-        0
-      )
-      .setOrigin(0, 0)
-      .setDepth(Z_POSITION.DECOR);
+      this.lootZones.push({
+        id: `chest-${i + 1}`,
+        type: 'chest',
+        zone: zoneEl,
+        sprite: chestSprite,
+        loot,
+        activated: false,
+        vfx: new Shining({
+          scene: this.scene,
+          position: { x: zoneEl.x, y: zoneEl.y },
+          keyName: MISC.SHINING,
+          frame: 0,
+        }),
+      });
+    }
 
-    this.lootZones.push({
-      id: 'chest-2',
-      type: 'chest',
-      zone: staticLootZones[1] as Phaser.GameObjects.Zone,
-      chestSprite: secondLootZone,
-      loot: [{ id: 'spell-potion', amount: 2 }],
-      activated: false,
-      vfx: new Shining({
-        scene: this.scene,
-        position: {
-          x: (staticLootZones[1] as Phaser.GameObjects.Zone).x,
-          y: (staticLootZones[1] as Phaser.GameObjects.Zone).y,
-        },
-        keyName: MISC.SHINING,
-        frame: 0,
-      }),
-    });
-
-    // Third static loot zone
-    const thirdLootZone = this.scene.add
-      .image(
-        (staticLootZones[2] as Phaser.GameObjects.Zone).x,
-        (staticLootZones[2] as Phaser.GameObjects.Zone).y,
-        OBJECTS.CHEST_CLOSE,
-        0
-      )
-      .setOrigin(0, 0)
-      .setDepth(Z_POSITION.DECOR);
-
-    this.lootZones.push({
-      id: 'chest-3',
-      type: 'chest',
-      zone: staticLootZones[2] as Phaser.GameObjects.Zone,
-      chestSprite: thirdLootZone,
-      loot: [{ id: 'undying-potion', amount: 1 }],
-      activated: false,
-      vfx: new Shining({
-        scene: this.scene,
-        position: {
-          x: (staticLootZones[2] as Phaser.GameObjects.Zone).x,
-          y: (staticLootZones[2] as Phaser.GameObjects.Zone).y,
-        },
-        keyName: MISC.SHINING,
-        frame: 0,
-      }),
-    });
-
-    // Forth static loot zone
-    const forthLootZone = this.scene.add
-      .image(
-        (staticLootZones[3] as Phaser.GameObjects.Zone).x,
-        (staticLootZones[3] as Phaser.GameObjects.Zone).y,
-        OBJECTS.CHEST_CLOSE,
-        0
-      )
-      .setOrigin(0, 0)
-      .setDepth(Z_POSITION.DECOR);
-
-    this.lootZones.push({
-      id: 'chest-4',
-      type: 'chest',
-      zone: staticLootZones[3] as Phaser.GameObjects.Zone,
-      chestSprite: forthLootZone,
-      loot: [{ id: 'lightning-potion', amount: 2 }],
-      activated: false,
-      vfx: new Shining({
-        scene: this.scene,
-        position: {
-          x: (staticLootZones[3] as Phaser.GameObjects.Zone).x,
-          y: (staticLootZones[3] as Phaser.GameObjects.Zone).y,
-        },
-        keyName: MISC.SHINING,
-        frame: 0,
-      }),
-    });
+    // Spawn crystals as image
+    const crystals = (this.scene as LevelOneScene).getCrystalZones();
+    if (SaveService.getQuestState(QUEST_IDS.CRYSTAL) === 'pending') {
+      crystals.forEach((pos, index) => {
+        if (pos) {
+          this.crystals[index] = scene.add
+            .image(pos.x, pos.y, OBJECTS.CRYSTAL_WHITE)
+            .setOrigin(0, 0)
+            .setDepth(Z_POSITION.DECOR);
+        } else {
+          this.crystals[index] = undefined;
+        }
+      });
+    }
 
     if (save) {
       // Chests
@@ -164,8 +97,8 @@ export class LootZone extends Interactable {
           zone.vfx?.destroy();
           zone.vfx = undefined;
 
-          if (zone.chestSprite) {
-            zone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+          if (zone.sprite) {
+            zone.sprite.setTexture(OBJECTS.CHEST_OPEN);
           }
         }
       });
@@ -175,6 +108,20 @@ export class LootZone extends Interactable {
         if (drop.id === 'fireworm-fang-1') {
           const zone = scene.add.zone(drop.x - 14, drop.y, 32, 32).setOrigin(0, 0);
           this.createLootZone(drop.id, zone, drop.loot);
+        } else if (drop.id.startsWith('crystal-')) {
+          if (SaveService.getQuestState(QUEST_IDS.CRYSTAL) === 'waiting') {
+            const index = parseInt(drop.id.replace('crystal-', '')) - 1;
+
+            if (!isNaN(index) && index >= 0 && index < this.crystals.length) {
+              this.crystals[index] = scene.add
+                .image(drop.x, drop.y, OBJECTS.CRYSTAL_WHITE)
+                .setOrigin(0, 0)
+                .setDepth(Z_POSITION.DECOR);
+            }
+
+            const zone = scene.add.zone(drop.x, drop.y, 32, 32).setOrigin(0, 0);
+            this.createLootZone(drop.id, zone, drop.loot);
+          }
         } else {
           const zone = scene.add.zone(drop.x, drop.y, 32, 32).setOrigin(0, 0);
           this.createLootZone(drop.id, zone, drop.loot);
@@ -188,7 +135,7 @@ export class LootZone extends Interactable {
       id,
       type: 'drop',
       zone,
-      chestSprite: undefined,
+      sprite: undefined,
       loot,
       activated: false,
       vfx: new Shining({
@@ -237,8 +184,8 @@ export class LootZone extends Interactable {
     lootZone.loot = [];
 
     if (lootZone.type === 'chest') {
-      if (lootZone.chestSprite) {
-        lootZone.chestSprite.setTexture(OBJECTS.CHEST_OPEN);
+      if (lootZone.sprite) {
+        lootZone.sprite.setTexture(OBJECTS.CHEST_OPEN);
         ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.CHEST_OPEN);
       }
 
@@ -252,6 +199,17 @@ export class LootZone extends Interactable {
 
     if (lootZone.type === 'drop') {
       ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.LOOT_COLLECT);
+
+      // Same as dropId in LevelOneScene the function 'spawnLoot'
+      if (lootZone.id.startsWith('crystal-')) {
+        const index = parseInt(lootZone.id.replace('crystal-', '')) - 1;
+        const crystalAsset = this.crystals[index];
+
+        if (crystalAsset) {
+          crystalAsset.destroy();
+          this.crystals[index] = undefined;
+        }
+      }
 
       SaveService.patch({
         worldState: {

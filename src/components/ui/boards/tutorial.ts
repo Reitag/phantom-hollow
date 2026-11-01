@@ -1,10 +1,10 @@
-import { Board, Handlers } from '@/base/ui/board';
+import { Board } from '@/base/ui/board';
 import { UI } from '@/constants/asset-keys';
-import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { SCENE_SIZE } from '@/constants/scene-size';
+import { START_TUTORIAL_AND_FIRST_MISSION_DELAY } from '@/constants/ui';
 import { TUTORIAL_UI } from '@/constants/ui-coordinates';
+import { Z_POSITION } from '@/constants/z-position';
 import { SaveService } from '@/infrastructure/save-service';
-import { Position } from '@/utils/types';
 
 export class Tutorial extends Board {
   private closeButton: Phaser.GameObjects.Image;
@@ -22,7 +22,7 @@ export class Tutorial extends Board {
     this.board.setVisible(false);
 
     const bg = this.scene.add.image(0, 0, UI.TUTORIAL_BOARD);
-    this.board.add(bg);
+    this.board.add(bg).setDepth(Z_POSITION.TUTORIAL_BOARD);
 
     // Buttons
     const closeBtnPos = this.alignCoords(bg, TUTORIAL_UI.CLOSE_BTN.X, TUTORIAL_UI.CLOSE_BTN.Y);
@@ -60,7 +60,7 @@ export class Tutorial extends Board {
 
     // Check if the player starts new game
     if (!SaveService.hasSave()) {
-      this.scene.time.delayedCall(3000, () => {
+      this.scene.time.delayedCall(START_TUTORIAL_AND_FIRST_MISSION_DELAY, () => {
         this.toggleTutorial();
       });
     }
@@ -156,32 +156,5 @@ export class Tutorial extends Board {
       events.forEach(([event, handler]) => target.off(event, handler));
       this.bundleHandlers.delete(target);
     });
-  }
-
-  private attachListeners(target: Phaser.GameObjects.Image, handlers: Handlers): void {
-    target
-      .on('pointerover', handlers.onOver)
-      .on('pointerout', handlers.onOut)
-      .on('pointerdown', handlers.onDown)
-      .on('pointerup', handlers.onUp);
-  }
-
-  private createButtonHandlers(target: Phaser.GameObjects.Image, pos: Position): Handlers {
-    const createEffect = (color: number, alpha: number, yOffset = 0) => {
-      this.removeHoverEffect();
-      this.hoverEffect = this.scene.add
-        .graphics()
-        .fillStyle(color, alpha)
-        .fillRoundedRect(pos.x, pos.y + yOffset, target.width, target.height, 6);
-      this.board?.add(this.hoverEffect);
-    };
-
-    return {
-      onOver: () => createEffect(BUTTON_HOVERS.POINTEROVER.COLOR, BUTTON_HOVERS.POINTEROVER.ALPHA),
-      onOut: () => this.removeHoverEffect(),
-      onDown: () =>
-        createEffect(BUTTON_HOVERS.POINTERDOWN.COLOR, BUTTON_HOVERS.POINTERDOWN.ALPHA, 1),
-      onUp: () => {},
-    };
   }
 }

@@ -1,4 +1,4 @@
-import { MISC, UI } from '@/constants/asset-keys';
+import { AUDIO, BACKGROUNDS, MISC, UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { Z_POSITION } from '@/constants/z-position';
 
@@ -29,9 +29,9 @@ export abstract class BaseScene extends Phaser.Scene {
   public create(...args: any[]): void {
     const { key } = this.scene;
 
-    const hideTitle = ['LevelOneScene', 'IntroScene', 'CreditsScene'];
+    const hideTitle = ['LevelOneScene', 'IntroScene', 'CreditsScene', 'EndScoreScene'];
     const hideArt = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
-    const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
+    const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene', 'EndScoreScene'];
 
     if (!hideTitle.includes(key)) this.createGameTitle();
     if (!hideArt.includes(key)) this.createBackgroundArt();
@@ -52,7 +52,7 @@ export abstract class BaseScene extends Phaser.Scene {
   // Background art
   protected createBackgroundArt(): void {
     this.backgroundArt = this.add
-      .image(this.scale.width / 2, this.scale.height / 2, MISC.MAIN_ART)
+      .image(this.scale.width / 2, this.scale.height / 2, BACKGROUNDS.MAIN_SCENE_BG)
       .setOrigin(0.5)
       .setDepth(-1);
   }
@@ -95,7 +95,11 @@ export abstract class BaseScene extends Phaser.Scene {
 
     const handlers = {
       over: () => this.drawHover(button, BUTTON_HOVERS.POINTEROVER),
-      down: () => this.drawHover(button, BUTTON_HOVERS.POINTERDOWN),
+      down: () => {
+        this.drawHover(button, BUTTON_HOVERS.POINTERDOWN);
+        // Used this fallback solution because ServiceLocator is only available in the core game scene,
+        this.game.audioService.sfx.play(AUDIO.DEFAULT_CLICK);
+      },
       out: () => this.removeHoverEffect(),
       up: () => {
         this.removeHoverEffect();

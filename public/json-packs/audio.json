@@ -207,6 +207,21 @@
     },
     {
       "type": "audio",
+      "key": "default-click",
+      "url": "assets/audio/misc/default-click.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "quest-accept",
+      "url": "assets/audio/misc/quest-accept.mp3"
+    },
+    {
+      "type": "audio",
+      "key": "quest-complete",
+      "url": "assets/audio/misc/quest-complete.mp3"
+    },
+    {
+      "type": "audio",
       "key": "skeleton-warrior-aggro",
       "url": "assets/audio/aggro/skeleton-warrior-aggro.mp3"
     },

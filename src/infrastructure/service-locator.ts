@@ -8,6 +8,7 @@ import { SpellSystem } from '@/systems/spell-system';
 import { LootSystem } from '@/systems/loot-system';
 import { Sandbox } from '@/infrastructure/sandbox';
 import { InventorySystem } from '@/systems/inventory-system';
+import { ScoreTracker } from '@/systems/score-tracker';
 import { KeyboardController } from '@/components/controllers/keyboard-controller';
 import { SaveGame } from '@/utils/types';
 import { CollisionService } from './collision-service';
@@ -28,6 +29,7 @@ interface ServiceMap {
   collision: CollisionService;
   panel: PanelService;
   audio: AudioSystem;
+  scoreTracker: ScoreTracker;
   save: SaveGame | undefined;
 }
 
@@ -46,6 +48,7 @@ export const ServiceKeys = {
   collision: 'collision',
   panel: 'panel',
   audio: 'audio',
+  scoreTracker: 'scoreTracker',
   save: 'save',
 } as const;
 

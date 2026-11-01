@@ -12,6 +12,7 @@ function createWindow() {
     useContentSize: true,
     resizable: true,
     autoHideMenuBar: true,
+    icon: path.join(__dirname, 'favicon.png'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false, // false as default in new versions
