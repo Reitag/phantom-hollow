@@ -198,6 +198,11 @@ export class Character extends ArcadeSprite {
 
     this.isDead = true;
     this.onDeathStart?.();
+
+    if (!(this instanceof Player)) {
+      ServiceLocator.resolve(ServiceKeys.scoreTracker).addEnemiesDefeated(1);
+    }
+
     this.stateMachine.changeState(SHARED_STATES.DEATH);
   }
 }

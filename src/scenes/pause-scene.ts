@@ -1,7 +1,5 @@
 import { BaseScene } from '@/base/scene/base-scene';
 import { UI } from '@/constants/asset-keys';
-import { SaveService } from '@/infrastructure/save-service';
-import { ServiceLocator } from '@/infrastructure/service-locator';
 
 export class PauseScene extends BaseScene {
   constructor() {
@@ -20,14 +18,6 @@ export class PauseScene extends BaseScene {
     this.sound.pauseAll();
 
     this.add.rectangle(0, 0, width, height, 0x000000, 0.7).setOrigin(0);
-
-    // Title
-    /*this.add
-      .text(this.menuX, height / 2 - 80, 'PAUSED', {
-        font: 'bold 48px EB Garamond',
-        color: '#ffffff',
-      })
-      .setOrigin(0.5);*/
 
     let currentY = this.menuStartY;
 
@@ -67,9 +57,6 @@ export class PauseScene extends BaseScene {
   }
 
   private handleBackMainMenu(): void {
-    SaveService.clear();
-    ServiceLocator.clear();
-
     this.scene.stop('LevelOneScene');
     this.scene.stop('UiScene');
     this.scene.start('MainMenuScene');

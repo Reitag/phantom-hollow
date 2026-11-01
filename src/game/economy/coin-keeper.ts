@@ -20,6 +20,8 @@ export class CoinKeeper {
       this.balance += amount;
       this.ui.increaseCoinCounter(amount);
 
+      ServiceLocator.resolve(ServiceKeys.scoreTracker).addGoldEarned(amount);
+
       if (saveToData) {
         this.saveBalanceData();
       }

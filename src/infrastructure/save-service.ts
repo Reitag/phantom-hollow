@@ -25,7 +25,9 @@ const DEFAULT_SAVE: SaveGame = {
 export class SaveService {
   private static timer: ReturnType<typeof setInterval>;
 
-  private static SAVE_KEY = 'phantom-hollow-save-data';
+  //private static SAVE_KEY = 'phantom-hollow-save-data';
+  private static OLD_SAVE_KEY = 'phantom-hollow-save-data';
+  private static SAVE_KEY = 'embercrest-rising-save-data';
   private static isDirty = false;
 
   private static currentSave: SaveGame = structuredClone(DEFAULT_SAVE);
@@ -44,7 +46,22 @@ export class SaveService {
   }
 
   static load(): SaveGame {
-    const data = localStorage.getItem(this.SAVE_KEY);
+    //const data = localStorage.getItem(this.SAVE_KEY);
+    let data = localStorage.getItem(this.SAVE_KEY);
+
+    // Check old key
+    if (!data) {
+      const oldData = localStorage.getItem(this.OLD_SAVE_KEY);
+
+      if (oldData) {
+        data = oldData;
+
+        localStorage.setItem(this.SAVE_KEY, oldData);
+
+        localStorage.removeItem(this.OLD_SAVE_KEY);
+      }
+    }
+    // --- end of checking old key
 
     if (!data) {
       this.currentSave = structuredClone(DEFAULT_SAVE);
@@ -108,13 +125,21 @@ export class SaveService {
     return this.currentSave.quests?.[questId] ?? 'pending';
   }
 
-  static hasSave(): boolean {
+  /*static hasSave(): boolean {
     return localStorage.getItem(this.SAVE_KEY) !== null;
+  }*/
+  static hasSave(): boolean {
+    return (
+      localStorage.getItem(this.SAVE_KEY) !== null ||
+      localStorage.getItem(this.OLD_SAVE_KEY) !== null
+    );
   }
 
   static clear(isTotalRemove = false): void {
     if (isTotalRemove) {
       localStorage.removeItem(this.SAVE_KEY);
+      // Old key
+      localStorage.removeItem(this.OLD_SAVE_KEY);
     }
 
     this.currentSave = structuredClone(DEFAULT_SAVE);

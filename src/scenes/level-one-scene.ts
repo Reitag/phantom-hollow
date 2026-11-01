@@ -117,6 +117,8 @@ export class LevelOneScene extends BaseScene {
     if (this.isLevelInitialized) return;
     this.isLevelInitialized = true;
 
+    if (this.isLevelFinished) this.isLevelFinished = false;
+
     SaveService.start();
     ServiceLocator.register(ServiceKeys.save, save);
 
@@ -151,7 +153,6 @@ export class LevelOneScene extends BaseScene {
 
   public toggleLeveFinished(): void {
     this.isLevelFinished = true;
-    console.log('triggered');
   }
 
   private initKeyboard(): void {
@@ -740,6 +741,13 @@ export class LevelOneScene extends BaseScene {
   // --Ambient--
 
   // Music
+  private clearMusicTimer(): void {
+    if (this.musicTimer) {
+      this.musicTimer.destroy();
+      this.musicTimer = null;
+    }
+  }
+
   private createMusicZones(): void {
     const objectLayer = this.map.getObjectLayer('spawn-layer');
     if (!objectLayer) return;
@@ -779,11 +787,12 @@ export class LevelOneScene extends BaseScene {
         !this.pauseForRuinsTheme &&
         this.currentAmbient !== 'cave'
       ) {
-        if (this.musicTimer) {
+        /*if (this.musicTimer) {
           this.musicTimer.destroy();
           this.musicTimer = null;
-        }
-        this.ruinesTheme();
+        }*/
+        this.clearMusicTimer();
+        this.ruinsTheme();
       }
     } else if (!isCurrentlyInAnyZone && this.wasInRuinsZone) {
       this.wasInRuinsZone = false;
@@ -797,9 +806,11 @@ export class LevelOneScene extends BaseScene {
 
     const currentTrack = this.sound.get(MUSIC.MUSIC_1);
     if (currentTrack) {
+      currentTrack.off('complete'); // For delete old listeners
       currentTrack.once('complete', () => this.handleTrackComplete());
     } else {
-      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      this.clearMusicTimer();
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
     }
   }
 
@@ -807,33 +818,29 @@ export class LevelOneScene extends BaseScene {
     this.currentTheme = 'none';
 
     if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
-      this.ruinesTheme();
+      this.ruinsTheme();
     } else {
-      const timeDelayed = Phaser.Math.Between(180000, 240000); // 3 - 4 minuts
-      this.musicTimer = this.time.delayedCall(
-        timeDelayed,
-        () => this.defalultMusicLoop(),
-        [],
-        this
-      );
+      const timeDelayed = Phaser.Math.Between(144000, 162000); // 2.4 - 2.7 minutes
+      this.clearMusicTimer();
+      this.musicTimer = this.time.delayedCall(timeDelayed, () => this.defaultMusicLoop(), [], this);
     }
   }
 
-  private defalultMusicLoop(): void {
-    this.musicTimer = null;
+  private defaultMusicLoop(): void {
+    this.clearMusicTimer();
 
     if (this.currentAmbient === 'cave') {
-      this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
       return;
     }
 
     if (this.currentTheme === 'ruins') {
-      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
       return;
     }
 
     if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
-      this.ruinesTheme();
+      this.ruinsTheme();
       return;
     }
 
@@ -846,20 +853,21 @@ export class LevelOneScene extends BaseScene {
 
     const currentTrack = this.sound.get(randomKey);
     if (currentTrack) {
+      currentTrack.off('complete'); // Avoid leaks
       currentTrack.once('complete', () => this.handleTrackComplete());
     } else {
-      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
     }
   }
 
-  private ruinesTheme(): void {
+  private ruinsTheme(): void {
     this.currentTheme = 'ruins';
     this.pauseForRuinsTheme = true;
-
     this.audio?.playBackgroundMusic(MUSIC.MUSIC_4);
-    const ruinsTheme = this.sound.get(MUSIC.MUSIC_4);
 
+    const ruinsTheme = this.sound.get(MUSIC.MUSIC_4);
     if (ruinsTheme) {
+      ruinsTheme.off('complete'); // Avoid leaks
       ruinsTheme.once('complete', () => {
         this.currentTheme = 'none';
 
@@ -877,7 +885,8 @@ export class LevelOneScene extends BaseScene {
       });
     } else {
       this.pauseForRuinsTheme = false;
-      this.musicTimer = this.time.delayedCall(5000, () => this.defalultMusicLoop(), [], this);
+      this.clearMusicTimer();
+      this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
     }
   }
   // --Music
@@ -933,9 +942,8 @@ export class LevelOneScene extends BaseScene {
     ServiceLocator.resolve(ServiceKeys.panel).controlBar.removeAllControllPanelListeners();
 
     CollisionService.clear();
-    SaveService.clear();
     if (!this.isLevelFinished) {
-      console.log('triggered2');
+      SaveService.clear();
       ServiceLocator.clear();
     }
   }

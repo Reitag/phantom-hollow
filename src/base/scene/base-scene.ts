@@ -31,7 +31,7 @@ export abstract class BaseScene extends Phaser.Scene {
 
     const hideTitle = ['LevelOneScene', 'IntroScene', 'CreditsScene', 'EndScoreScene'];
     const hideArt = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
-    const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene'];
+    const hideVersion = ['LevelOneScene', 'IntroScene', 'UiScene', 'PauseScene', 'EndScoreScene'];
 
     if (!hideTitle.includes(key)) this.createGameTitle();
     if (!hideArt.includes(key)) this.createBackgroundArt();
