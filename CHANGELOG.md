@@ -6,6 +6,44 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.0-rc.1] - 2026-11-01
+
+### Added
+
+- Background  music
+- Progress bar on the loading screen
+- Default mouse click SFX
+- Ability to jump using Space key
+- Gold deduction upon player death
+- "Quit Game" button to the Main Menu (available in the Electron version only)
+- An icon for the Electron executable (.exe)
+- Quest sound effects (accept and complete actions)
+- Clickable arrows for scrolling text
+- Custom favicon and desktop icons
+- End-game score screen after game completion
+
+### Changed
+
+- Replaced scrolling intro text animation with a typewriter effect
+- Crystals are no longer static map objects; they now correctly disappear when picked up
+- Renamed currency from Coins to Gold across the game
+- Adjusted the "Main Menu" button position in the Pause Scene for better visibility
+- Renamed the local storage save key to match the new game title, with automatic data migration for existing players
+
+### Fixed
+
+- Audio bug where buff sounds triggered while loading a player save
+- The tutorial above the info button via z-index
+- Missing collisions for certain tiles to prevent the player from walking through them
+- The quest marker alignment above NPC Octius
+- A collision/behavior bug with spikes
+
+### Removed
+
+- The stroke border around the game canvas for a cleaner look
+- Disabled zombie sound effect
+
+
 ## [1.0.0-beta.3] - 2026-08-16
 
 ### Added
