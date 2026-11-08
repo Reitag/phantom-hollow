@@ -94,8 +94,21 @@ export class AudioSystem {
     }
   }
 
-  public playBackgroundMusic(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
+  /*public playBackgroundMusic(key: string, config?: Phaser.Types.Sound.SoundConfig): void {
     this.scene.game.audioService.music.play(key, config);
+  }*/
+  public playBackgroundMusic(
+    key: string,
+    config?: Phaser.Types.Sound.SoundConfig
+  ): Phaser.Sound.BaseSound | undefined {
+    this.scene.sound.getAllPlaying().forEach((sound) => {
+      if (sound.isMusic) {
+        sound.stop();
+        sound.destroy();
+      }
+    });
+
+    return this.scene.game.audioService.music.play(key, config);
   }
 
   // Return instance

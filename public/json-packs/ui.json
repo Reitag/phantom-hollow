@@ -3,12 +3,12 @@
     {
       "type": "image",
       "key": "inventory-slot",
-      "url": "assets/ui/inventory-slot.png"
+      "url": "assets/ui/slots/inventory-slot.png"
     },
     {
       "type": "image",
       "key": "control-slot",
-      "url": "assets/ui/control-slot.png"
+      "url": "assets/ui/slots/control-slot.png"
     },
     {
       "type": "image",
@@ -33,32 +33,32 @@
     {
       "type": "image",
       "key": "coin-ui",
-      "url": "assets/ui/coin-ui.png"
+      "url": "assets/ui/misc/coin-ui.png"
     },
     {
       "type": "image",
       "key": "health-bar",
-      "url": "assets/ui/health-bar.png"
+      "url": "assets/ui/health/health-bar.png"
     },
     {
       "type": "image",
       "key": "health-env",
-      "url": "assets/ui/health-env.png"
+      "url": "assets/ui/health/health-env.png"
     },
     {
       "type": "image",
       "key": "cast-bar",
-      "url": "assets/ui/cast-bar.png"
+      "url": "assets/ui/cast-bar/cast-bar.png"
     },
     {
       "type": "image",
       "key": "cast-bar-green",
-      "url": "assets/ui/cast-bar-green.png"
+      "url": "assets/ui/cast-bar/cast-bar-green.png"
     },
     {
       "type": "image",
       "key": "cast-env",
-      "url": "assets/ui/cast-env.png"
+      "url": "assets/ui/cast-bar/cast-env.png"
     },
     {
       "type": "image",

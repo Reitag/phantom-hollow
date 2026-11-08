@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.0-rc.2] - 2026-11-08
+
+### Added
+
+- Support for Numpad keys (1–4) to activate action slots alongside standard number keys.
+
+### Changed
+
+- The interval between music tracks was changed from 2.4–2.7 minutes to 30–60 seconds.
+- Player hitbox width was reduced for more accurate collision detection.
+- Extruded 32x32 tilesets and updated tilemap configuration (margin/spacing) to support extruded textures.
+- Adjusted several tiles on the map to improve jump navigation.
+- Unified canvas scaling and alignment via Phaser Scale Manager (FIT with min/max bounds and automatic dev/prod centering).
+
+### Fixed
+
+- Music playback logic so all in-game tracks play properly.
+- Floating damage numbers now display properly after a bat dive attack.
+- Prevented damage text stack overflow.
+- Visual seams between map tiles during camera movement.
+- Projectiles passing through specific map tiles.
+
+### Removed
+
+- Redundant CSS canvas size overrides and manual .dev-mode DOM class handling.
+
+
 ## [1.0.0-rc.1] - 2026-11-01
 
 ### Added

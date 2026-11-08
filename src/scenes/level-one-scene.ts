@@ -4,7 +4,6 @@ import { WORLD_PARAMS } from '@/constants/world-params';
 import { ARROW_STATS, SPEAR_HIT, SPIKE_HIT } from '@/constants/object-stats';
 import { Item } from '@/base/objects/item';
 import { AUDIO, BACKGROUNDS, MISC, MUSIC, OBJECTS } from '@/constants/asset-keys';
-import { Z_POSITION } from '@/constants/z-position';
 import { SCENE_SIZE } from '@/constants/scene-size';
 import { LIGHTNING_SHIELD } from '@/constants/modifier-stats';
 import { QUEST_IDS } from '@/constants/quest-ids';
@@ -81,6 +80,7 @@ export class LevelOneScene extends BaseScene {
   private lastMusicKey: string = '';
 
   private musicTimer: Phaser.Time.TimerEvent | null = null;
+  private ruinsPauseTimer: Phaser.Time.TimerEvent | null = null;
   private resumeSceneHandlerBind = this.resumeSceneHandler.bind(this);
   private musicZones: MusicZone[] = [];
   private wasInRuinsZone = false;
@@ -129,6 +129,14 @@ export class LevelOneScene extends BaseScene {
     }
 
     this.events.on('resume', this.resumeSceneHandlerBind);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.clearMusicTimer();
+      this.clearRuinsPauseTimer();
+      this.currentTheme = 'none';
+      this.pauseForRuinsTheme = false;
+      this.wasInRuinsZone = false;
+      this.isLevelInitialized = false;
+    });
 
     this.initKeyboard();
     this.initUiScene(() => this.createGameWorld());
@@ -180,8 +188,6 @@ export class LevelOneScene extends BaseScene {
         if (process.env.NODE_ENV === 'development') {
           this.scene.add('DebugScreen', DebugScreen, true);
           this.debugScreen = this.scene.get('DebugScreen');
-          // Debug graphic
-          this.physics.world.createDebugGraphic();
         }
         // Debug
       } else {
@@ -501,7 +507,7 @@ export class LevelOneScene extends BaseScene {
 
   private setupCamera(): void {
     this.camera = this.cameras.main;
-    this.camera.startFollow(this.player, true, 0.09, 0.09);
+    this.camera.startFollow(this.player, false, 1, 0);
     this.camera.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 
@@ -748,6 +754,13 @@ export class LevelOneScene extends BaseScene {
     }
   }
 
+  private clearRuinsPauseTimer(): void {
+    if (this.ruinsPauseTimer) {
+      this.ruinsPauseTimer.destroy();
+      this.ruinsPauseTimer = null;
+    }
+  }
+
   private createMusicZones(): void {
     const objectLayer = this.map.getObjectLayer('spawn-layer');
     if (!objectLayer) return;
@@ -787,10 +800,6 @@ export class LevelOneScene extends BaseScene {
         !this.pauseForRuinsTheme &&
         this.currentAmbient !== 'cave'
       ) {
-        /*if (this.musicTimer) {
-          this.musicTimer.destroy();
-          this.musicTimer = null;
-        }*/
         this.clearMusicTimer();
         this.ruinsTheme();
       }
@@ -802,11 +811,9 @@ export class LevelOneScene extends BaseScene {
   private setupMusicLoop(): void {
     this.currentTheme = 'default';
     this.lastMusicKey = MUSIC.MUSIC_1;
-    this.audio?.playBackgroundMusic(MUSIC.MUSIC_1);
 
-    const currentTrack = this.sound.get(MUSIC.MUSIC_1);
+    const currentTrack = this.audio?.playBackgroundMusic(MUSIC.MUSIC_1);
     if (currentTrack) {
-      currentTrack.off('complete'); // For delete old listeners
       currentTrack.once('complete', () => this.handleTrackComplete());
     } else {
       this.clearMusicTimer();
@@ -820,7 +827,7 @@ export class LevelOneScene extends BaseScene {
     if (this.wasInRuinsZone && !this.pauseForRuinsTheme) {
       this.ruinsTheme();
     } else {
-      const timeDelayed = Phaser.Math.Between(144000, 162000); // 2.4 - 2.7 minutes
+      const timeDelayed = Phaser.Math.Between(30000, 60000); // 30 - 60 secs
       this.clearMusicTimer();
       this.musicTimer = this.time.delayedCall(timeDelayed, () => this.defaultMusicLoop(), [], this);
     }
@@ -849,11 +856,9 @@ export class LevelOneScene extends BaseScene {
     this.lastMusicKey = randomKey;
 
     this.currentTheme = 'default';
-    this.audio?.playBackgroundMusic(randomKey);
 
-    const currentTrack = this.sound.get(randomKey);
+    const currentTrack = this.audio?.playBackgroundMusic(randomKey);
     if (currentTrack) {
-      currentTrack.off('complete'); // Avoid leaks
       currentTrack.once('complete', () => this.handleTrackComplete());
     } else {
       this.musicTimer = this.time.delayedCall(5000, () => this.defaultMusicLoop(), [], this);
@@ -863,16 +868,14 @@ export class LevelOneScene extends BaseScene {
   private ruinsTheme(): void {
     this.currentTheme = 'ruins';
     this.pauseForRuinsTheme = true;
-    this.audio?.playBackgroundMusic(MUSIC.MUSIC_4);
 
-    const ruinsTheme = this.sound.get(MUSIC.MUSIC_4);
+    const ruinsTheme = this.audio?.playBackgroundMusic(MUSIC.MUSIC_4);
     if (ruinsTheme) {
-      ruinsTheme.off('complete'); // Avoid leaks
       ruinsTheme.once('complete', () => {
         this.currentTheme = 'none';
 
-        // This is without musicTimer
-        this.time.delayedCall(
+        this.clearRuinsPauseTimer();
+        this.ruinsPauseTimer = this.time.delayedCall(
           100000,
           () => {
             this.pauseForRuinsTheme = false;

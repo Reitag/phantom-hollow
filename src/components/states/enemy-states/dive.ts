@@ -44,6 +44,7 @@ export class Dive extends CharacterState {
   }
 
   public onUpdate(delta: number): void {
+    if (this.isExploded) return;
     if (!this.player || this.player.getDead()) return;
 
     this.characterSpeed?.update(delta);
@@ -81,6 +82,11 @@ export class Dive extends CharacterState {
     this.isExploded = true;
 
     this.characterSpeed?.setMovementLock(true);
+
+    this.character.setVelocity(0, 0);
+    if (this.character.body && 'setAllowGravity' in this.character.body) {
+      this.character.body.setAllowGravity(false);
+    }
 
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.DEATH);
     this.playAnimation(animKey);
