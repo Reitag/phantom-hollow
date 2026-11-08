@@ -57,6 +57,7 @@ export class PauseScene extends BaseScene {
   }
 
   private handleBackMainMenu(): void {
+    this.sound.stopAll();
     this.scene.stop('LevelOneScene');
     this.scene.stop('UiScene');
     this.scene.start('MainMenuScene');

@@ -14,7 +14,6 @@ enum TooltipLayout {
 
 export class Text {
   private textContainer: Phaser.GameObjects.Text[] = [];
-  private damageDisplayContainer: Phaser.GameObjects.Text[] = [];
 
   // Tooltips
   private container: Phaser.GameObjects.Container | null = null;
@@ -76,16 +75,6 @@ export class Text {
     target: Character,
     isCritical: boolean
   ): void {
-    const scene = target.scene;
-    const { x, y } = target.getWorldTransformMatrix().transformPoint(0, 0);
-    const posX = x;
-    const posY = y - 20;
-
-    target.setDataEnabled();
-    const stack = target.getData('damageTextStack') ?? 0;
-    target.setData('damageTextStack', stack + 1);
-    const offsetY = stack * 14;
-
     if (typeof amount === 'number') {
       amount = Phaser.Math.RoundTo(amount, 0);
       if (amount === 0) return;
@@ -98,6 +87,16 @@ export class Text {
         scoreTracker.addDmgDone(amount);
       }
     }
+
+    const scene = target.scene;
+    const { x, y } = target.getWorldTransformMatrix().transformPoint(0, 0);
+    const posX = x;
+    const posY = y - 20;
+
+    target.setDataEnabled();
+    const stack = target.getData('damageTextStack') ?? 0;
+    target.setData('damageTextStack', stack + 1);
+    const offsetY = Math.min(stack * 14, 70);
 
     const fontSize = isCritical ? '24px' : '12px';
     const color = isCritical ? '#ffcc00' : '#ffffff';
@@ -113,6 +112,13 @@ export class Text {
       .setOrigin(0.5, 0.5)
       .setDepth(Z_POSITION.UI);
 
+    damageText.once(Phaser.GameObjects.Events.DESTROY, () => {
+      if (target && target.active) {
+        const current = target.getData('damageTextStack') ?? 1;
+        target.setData('damageTextStack', Math.max(0, current - 1));
+      }
+    });
+
     if (isCritical) {
       damageText.setScale(0.5);
       scene.tweens.add({
@@ -122,13 +128,15 @@ export class Text {
         duration: 200,
         ease: 'Back.easeOut',
         onComplete: () => {
+          if (!damageText.active) return;
           scene.tweens.add({
             targets: damageText,
             alpha: 0,
             y: posY - 100 - offsetY,
             duration: 1000,
             delay: 500,
-            onComplete: () => this.cleanupDamageText(damageText, target),
+            onComplete: () => damageText.destroy(),
+            onStop: () => damageText.destroy(), // if tweens kill all will activate
           });
         },
       });
@@ -139,15 +147,10 @@ export class Text {
         alpha: 0,
         duration: 2700,
         ease: 'Sine.easeOut',
-        onComplete: () => this.cleanupDamageText(damageText, target),
+        onComplete: () => damageText.destroy(),
+        onStop: () => damageText.destroy(), // if tweens kill all will activate
       });
     }
-  }
-
-  private cleanupDamageText(text: Phaser.GameObjects.Text, target: Character) {
-    text.destroy();
-    const current = target.getData('damageTextStack') ?? 1;
-    target.setData('damageTextStack', Math.max(0, current - 1));
   }
 
   // Tooltip text

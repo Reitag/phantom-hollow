@@ -21,7 +21,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   render: {
     antialias: true,
     pixelArt: false,
-    roundPixels: true,
+    roundPixels: false,
   },
   scale: {
     parent: 'app',
@@ -34,6 +34,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: { x: 0, y: WORLD_PARAMS.GRAVITY },
+      tileBias: 32,
       debug: false,
     },
   },
