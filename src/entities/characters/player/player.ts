@@ -66,7 +66,7 @@ export class Player extends Character {
     const spriteHeight = this.height;
     const spriteWidth = this.width;
     const bodyHeight = 30;
-    const bodyWidth = 6;
+    const bodyWidth = 7;
 
     this.arcadeBody.setSize(bodyWidth, bodyHeight);
     this.arcadeBody.setOffset((spriteWidth - bodyWidth) / 2, spriteHeight - bodyHeight);

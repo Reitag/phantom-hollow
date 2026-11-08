@@ -5,34 +5,6 @@ import {
   LayerDepths,
 } from '@/components/map/tilemap-types';
 
-/**
- * Handles creation of a Tiled map, including tilesets, tile layers, object layers, and layer depth setup.
- *
- * @param {Phaser.Scene} scene - The current Phaser scene where the map is being used.
- * @param {string} mapKey - The key of the Tiled map as loaded via `this.load.tilemapTiledJSON(...)`.
- * @param {Array<{ name: string, key: string }>} tilesetsConfig - Array of tileset config objects:
- *    - `name` must match the tileset name in your `.tmj` file.
- *    - `key` must match the tileset image key preloaded with Phaser.
- * @param {Array<{
- *    name: string,
- *    tilesets: string[],
- *    x?: number,
- *    y?: number,
- *    collide?: boolean
- * }>} tileLayersConfig - Array of tile layer configurations:
- *    - `name` must match the layer name in Tiled.
- *    - `tilesets` is an array of tileset names used in that layer.
- *    - `x`, `y` are optional positions.
- *    - `collide` determines if the layer should be set to collide using `collides: true` properties.
- * @param {Array<{
- *    name: string,
- *    render?: (obj: any, depth: number) => void
- * }>} objectLayersConfig - Array of object layer configurations:
- *    - `name` must match the object layer name in Tiled.
- *    - `render` is an optional callback to create game objects from Tiled objects.
- * @param {Record<string, number>} layerDepths - A map of layer names to their rendering depth (Phaser depth system).
- */
-
 export class Tilemap {
   private tilemap!: Phaser.Tilemaps.Tilemap;
   private tilesets: Record<string, Phaser.Tilemaps.Tileset> = {};
@@ -68,8 +40,22 @@ export class Tilemap {
   private createTilesets(): void {
     if (!this.tilesetsConfig) return;
 
-    for (const { name, key } of this.tilesetsConfig) {
-      const tileset = this.tilemap.addTilesetImage(name, key);
+    for (const {
+      name,
+      key,
+      tileWidth = this.tilemap.tileWidth,
+      tileHeight = this.tilemap.tileHeight,
+      margin = 0,
+      spacing = 0,
+    } of this.tilesetsConfig) {
+      const tileset = this.tilemap.addTilesetImage(
+        name,
+        key,
+        tileWidth,
+        tileHeight,
+        margin,
+        spacing
+      );
 
       if (!tileset) {
         console.warn(`Tileset '${name}' with key '${key}' could not be loaded.`);

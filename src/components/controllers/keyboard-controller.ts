@@ -17,7 +17,7 @@ export class KeyboardController extends InputController {
   private actionKey: Phaser.Input.Keyboard.Key;
   private utilityKey: Phaser.Input.Keyboard.Key;
 
-  private slotKeys: Phaser.Input.Keyboard.Key[];
+  private slotKeys: Phaser.Input.Keyboard.Key[][];
 
   constructor(input: Phaser.Input.Keyboard.KeyboardPlugin, slotCount = SLOT_KEYS_CODES.length) {
     super(slotCount);
@@ -32,9 +32,9 @@ export class KeyboardController extends InputController {
     this.jumpKey = input.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     this.jumpKeyAdvanced = input.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-    this.slotKeys = SLOT_KEYS_CODES.map(({ code, label }, index) => {
+    this.slotKeys = SLOT_KEYS_CODES.map(({ codes, label }, index) => {
       this.actionSlotLabels[index] = label;
-      return input.addKey(code);
+      return codes.map((code) => input.addKey(code));
     });
 
     // Action / interact / utility
@@ -62,9 +62,9 @@ export class KeyboardController extends InputController {
     this.utilityDown = this.utilityKey.isDown;
 
     // Slots
-    this.slotKeys.forEach((key, index) => {
-      this.actionSlotsDown[index] = key.isDown;
-      this.actionSlotsReleased[index] = Phaser.Input.Keyboard.JustUp(key);
+    this.slotKeys.forEach((keysGroup, index) => {
+      this.actionSlotsDown[index] = keysGroup.some((key) => key.isDown);
+      this.actionSlotsReleased[index] = keysGroup.some((key) => Phaser.Input.Keyboard.JustUp(key));
     });
   }
 }

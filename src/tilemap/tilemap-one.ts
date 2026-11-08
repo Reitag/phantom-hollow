@@ -33,12 +33,13 @@ export function createTilemapOne(scene: Phaser.Scene) {
   const mapKey = MAPS.LEVEL_1;
 
   const tilesetsConfig = [
-    { name: TILESET_NAMES.ANCIENT, key: TILESETS.ANCIENT_TILES },
-    { name: TILESET_NAMES.GROUND, key: TILESETS.GROUND_TILES },
-    { name: TILESET_NAMES.CLIFF, key: TILESETS.CLIFF_TILES },
-    { name: TILESET_NAMES.GRASS, key: TILESETS.GRASS_TILES },
-    { name: TILESET_NAMES.DIRT, key: TILESETS.DIRT_TILES },
+    { name: TILESET_NAMES.ANCIENT, key: TILESETS.ANCIENT_TILES, margin: 1, spacing: 2 },
+    { name: TILESET_NAMES.GROUND, key: TILESETS.GROUND_TILES, margin: 1, spacing: 2 },
+    { name: TILESET_NAMES.CLIFF, key: TILESETS.CLIFF_TILES, margin: 1, spacing: 2 },
+    { name: TILESET_NAMES.GRASS, key: TILESETS.GRASS_TILES, margin: 1, spacing: 2 },
+    { name: TILESET_NAMES.DIRT, key: TILESETS.DIRT_TILES, margin: 1, spacing: 2 },
   ];
+
   const tileLayersConfig = [
     {
       name: TILELAYER_NAMES.SPEAR,

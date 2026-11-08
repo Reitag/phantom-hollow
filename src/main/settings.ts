@@ -10,7 +10,7 @@ import { OptionsScene } from '@/scenes/options-scene';
 import { CreditsScene } from '@/scenes/credits-scene';
 import { EndScoreScene } from '@/scenes/end-score-scene';
 
-const scale = false;
+const isDev = process.env.NODE_ENV === 'development';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -27,15 +27,23 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     parent: 'app',
     width: SCENE_SIZE.WIDTH,
     height: SCENE_SIZE.HEIGHT,
-    mode: scale ? Phaser.Scale.FIT : Phaser.Scale.NONE,
-    autoCenter: scale ? Phaser.Scale.CENTER_BOTH : Phaser.Scale.NONE,
+    mode: Phaser.Scale.FIT,
+    autoCenter: isDev ? Phaser.Scale.NO_CENTER : Phaser.Scale.CENTER_BOTH,
+    min: {
+      width: 1024,
+      height: 640,
+    },
+    max: {
+      width: 1280,
+      height: 896,
+    },
   },
   physics: {
     default: 'arcade',
     arcade: {
       gravity: { x: 0, y: WORLD_PARAMS.GRAVITY },
       tileBias: 32,
-      debug: false,
+      debug: isDev,
     },
   },
   callbacks: {

@@ -188,8 +188,6 @@ export class LevelOneScene extends BaseScene {
         if (process.env.NODE_ENV === 'development') {
           this.scene.add('DebugScreen', DebugScreen, true);
           this.debugScreen = this.scene.get('DebugScreen');
-          // Debug graphic
-          this.physics.world.createDebugGraphic();
         }
         // Debug
       } else {
@@ -509,8 +507,7 @@ export class LevelOneScene extends BaseScene {
 
   private setupCamera(): void {
     this.camera = this.cameras.main;
-    this.camera.startFollow(this.player, true, 0.09, 0.09);
-    //this.camera.startFollow(this.player, true, 1, 0);
+    this.camera.startFollow(this.player, false, 1, 0);
     this.camera.setBounds(0, 0, WORLD_PARAMS.WIDTH, WORLD_PARAMS.HEIGHT);
   }
 

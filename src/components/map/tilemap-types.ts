@@ -1,6 +1,10 @@
 export interface TilesetConfig {
   name: string;
   key: string;
+  tileWidth?: number;
+  tileHeight?: number;
+  margin?: number;
+  spacing?: number;
 }
 
 export interface TileLayerConfig {
