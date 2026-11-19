@@ -1,5 +1,6 @@
 ========================================================================
-                              GAME CREDITS
+                           EMBERCREST RISING
+                     A Game by Split Screen Squad
 ========================================================================
 
 
@@ -16,7 +17,13 @@ ENGINE & TECHNOLOGIES
 * Phaser
   Created by Richard Davey (Richard Davey / Photon Storm Ltd).
   Official website: https://phaser.io
-  Distributed under the MIT License (the full text is included below).
+
+* Electron
+  Desktop runtime created by OpenJS Foundation and contributors.
+  Official website: https://www.electronjs.org
+
+Full open-source license texts are available in THIRD_PARTY_LICENSES.txt
+and LICENSES.chromium.html in the game directory.
 
 
 CHARACTERS & ENEMIES
@@ -47,7 +54,7 @@ TILESETS & ENVIRONMENT
 
 * "[LPC] Conifers" edited by bluecarrot16
   Source: https://opengameart.org/content/lpc-conifers
-  License: CC-BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+  License: CC-BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/)
   Based on original assets by:
   * b_o (https://opengameart.org/content/pine-tree-tiles)
   * Lanea Zimmerman (Sharm) (https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles)
@@ -133,10 +140,10 @@ AUDIO & SOUND EFFECTS
   License: Pixabay Content License
   Individual sounds by:
   * freesound_community (https://pixabay.com/users/freesound_community-46691455/)
-  * Dragon Studio (https://pixabay.com/ru/users/dragon-studio-38165424/)
-  * Yodguard (https://pixabay.com/ru/users/yodguard-12455005/)
-  * Liecio (https://pixabay.com/ru/users/liecio-3298866/)
-  * SoundReality (https://pixabay.com/ru/users/soundreality-31074404/)
+  * Dragon Studio (https://pixabay.com/users/dragon-studio-38165424/)
+  * Yodguard (https://pixabay.com/users/yodguard-12455005/)
+  * Liecio (https://pixabay.com/users/liecio-3298866/)
+  * SoundReality (https://pixabay.com/users/soundreality-31074404/)
   * floraphonic (https://pixabay.com/users/floraphonic-38928062/)
   * Tithuh (https://pixabay.com/users/tithuh-55562289/)
 
@@ -145,32 +152,3 @@ FONTS & TYPOGRAPHY
 ------------------------------------------------------------------------
 * "Volkhov" Font Family by Ivan Petrov / Cyreal
   Source: https://fonts.google.com/specimen/Volkhov
-  License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL)
-
-
-========================================================================
-                        LICENSES & LEGAL NOTICES
-========================================================================
-
-
-PHASER ENGINE LICENSE (MIT LICENSE)
-------------------------------------------------------------------------
-Copyright (c) 2013-2026 Richard Davey, Photon Storm Ltd.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.

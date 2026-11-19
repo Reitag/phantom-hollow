@@ -173,7 +173,9 @@ export class PreloadScene extends Phaser.Scene {
 
           registerGlobalAnimation(this.anims);
 
-          this.scene.start('MainMenuScene');
+          // Instead of menu, starting spalsh scene
+          //this.scene.start('MainMenuScene');
+          this.scene.start('SplashScene');
         });
       });
   }

@@ -3,6 +3,7 @@ import { UiScene } from '@/scenes/ui-scene';
 import { LevelOneScene } from '@/scenes/level-one-scene';
 import { WORLD_PARAMS } from '@/constants/world-params';
 import { SCENE_SIZE } from '@/constants/scene-size';
+import { SplashScene } from '@/scenes/splash-scene';
 import { MainMenuScene } from '@/scenes/main-menu';
 import { IntroScene } from '@/scenes/intro-scene';
 import { PauseScene } from '@/scenes/pause-scene';
@@ -86,6 +87,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   },
   scene: [
     PreloadScene,
+    SplashScene,
     MainMenuScene,
     OptionsScene,
     CreditsScene,

@@ -1,4 +1,4 @@
-appId: com.mygame.embercrestrising
+appId: com.splitscreensquad.embercrestrising
 productName: Embercrest Rising
 
 directories:
@@ -14,6 +14,8 @@ files:
 extraFiles:
   - from: "CREDITS.txt"
     to: "CREDITS.txt"
+  - from: "THIRD_PARTY_LICENSES.txt"
+    to: "THIRD_PARTY_LICENSES.txt"
 
 win:
   target:

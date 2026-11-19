@@ -26,7 +26,10 @@ export class Undying implements Modifier {
     if (!this.health) return;
 
     this.originalApplyDamage = this.health.applyDamage.bind(this.health);
-    ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.UNDYING);
+
+    // Check if the buff is being restored from a save file (set in player-handler in the Systems directory)
+    const isLoading = this.scene.registry.get('is_loading_save');
+    if (!isLoading) ServiceLocator.resolve(ServiceKeys.audio).play(AUDIO.UNDYING);
 
     this.health.applyDamage = (amount: number) => {
       if (!this.health) return;

@@ -6,6 +6,18 @@ export class CreditsScene extends BaseScene {
   private parentScene: MainMenuScene | null = null;
   private phaserLogo: Phaser.GameObjects.Image | null = null;
 
+  private readonly handleLogoClick = (): void => {
+    window.open('https://phaser.io', '_blank');
+  };
+
+  private readonly handleLogoOver = (): void => {
+    this.phaserLogo?.setAlpha(0.95);
+  };
+
+  private readonly handleLogoOut = (): void => {
+    this.phaserLogo?.setAlpha(0.7);
+  };
+
   constructor() {
     super('CreditsScene');
   }
@@ -14,12 +26,11 @@ export class CreditsScene extends BaseScene {
     super.create();
 
     this.parentScene = this.scene.get('MainMenuScene') as MainMenuScene;
+    const centerX = Math.round(this.menuX);
 
-    const centerX = this.menuX;
+    this.createSoftParchmentGlow(centerX, 285, 740, 520);
 
-    let currentY = 55;
-
-    const teamText =
+    const teamStr =
       `GAME DIRECTOR & LEAD PROGRAMMER\n` +
       `Ilya "Reitag" Chernov\n\n` +
       `ASSOCIATE PRODUCER, NARRATIVE & QA\n` +
@@ -29,20 +40,21 @@ export class CreditsScene extends BaseScene {
       `ORIGINAL SOUNDTRACK COMPOSER\n` +
       `Petr "PetRUalitY" Brabich`;
 
-    this.add
-      .text(centerX, currentY, teamText, {
-        fontFamily: 'Volkhov',
+    const teamText = this.add
+      .text(centerX, 52, teamStr, {
+        fontFamily: '"Volkhov", serif',
         fontSize: '12px',
         color: '#030303',
         align: 'center',
-        lineSpacing: 6,
+        lineSpacing: 5,
         fontStyle: 'bold',
       })
-      .setOrigin(0.5, 0);
+      .setOrigin(0.5, 0)
+      .setResolution(2);
 
-    currentY += 255;
+    let currentY = Math.round(teamText.y + teamText.displayHeight + 22);
 
-    const thirdParty =
+    const thirdPartyStr =
       `THIRD-PARTY ASSETS\n` +
       `Momonga • LuizMelo • Pixfinity • cptfoorman • Anokolisa • Foozle • GandalfHardcore • Ansimuz\n` +
       `Wenrexa • Pixel Explosive • Craftpix • La Red Games • Dusk Games • Pimen • Jz Pixels • Frostwindz\n` +
@@ -50,67 +62,155 @@ export class CreditsScene extends BaseScene {
       `Surt, KnoblePersona) • Ivan Petrov & Cyreal • freesound_community • Dragon Studio • Yodguard • Liecio\n` +
       `SoundReality • TomMusic • Daniel SoundsGood • Last Day Dreaming • floraphonic • Tithuh`;
 
-    this.add
-      .text(centerX, currentY, thirdParty, {
-        fontFamily: 'Volkhov',
-        fontSize: '12px',
+    const thirdPartyText = this.add
+      .text(centerX, currentY, thirdPartyStr, {
+        fontFamily: '"Volkhov", serif',
+        fontSize: '11px',
         color: '#030303',
         align: 'center',
-        lineSpacing: 6,
+        lineSpacing: 5,
         fontStyle: 'bold',
       })
-      .setOrigin(0.5, 0);
+      .setOrigin(0.5, 0)
+      .setResolution(2);
 
-    currentY += 135;
+    currentY = Math.round(thirdPartyText.y + thirdPartyText.displayHeight + 20);
 
-    const madeWithText = this.add
-      .text(centerX, currentY, `Made with`, {
-        fontFamily: 'Volkhov',
-        fontSize: '12px',
-        color: '#101010',
+    const divider = this.add.graphics();
+    divider.lineStyle(1, 0x030303, 0.25);
+    divider.lineBetween(centerX - 240, currentY, centerX + 240, currentY);
+
+    const footerY = currentY + 14;
+
+    const leftColX = centerX - 125;
+    const madeByLabel = this.add
+      .text(leftColX, footerY, 'A GAME BY', {
+        fontFamily: '"Volkhov", serif',
+        fontSize: '11px',
+        color: '#1a1a1a',
         align: 'center',
+        fontStyle: 'bold',
+        letterSpacing: 1,
       })
-      .setOrigin(0.5, 0);
+      .setOrigin(0.5, 0)
+      .setResolution(2);
 
-    currentY = madeWithText.y + madeWithText.displayHeight + 10;
+    const studioText = this.add
+      .text(leftColX, madeByLabel.y + madeByLabel.displayHeight + 4, 'SPLIT SCREEN SQUAD', {
+        fontFamily: '"Volkhov", serif',
+        fontSize: '13px',
+        color: '#030303',
+        align: 'center',
+        fontStyle: 'bold',
+        letterSpacing: 1,
+      })
+      .setOrigin(0.5, 0)
+      .setResolution(2);
+
+    const badge = this.add.graphics();
+    const outerRadius = 4.5;
+    const innerRadius = 2.6;
+    badge.lineStyle(1.2, 0x030303, 0.85);
+    badge.strokeCircle(0, 0, outerRadius);
+    badge.fillStyle(0x030303, 0.85);
+    badge.slice(0, 0, innerRadius, Phaser.Math.DegToRad(-90), Phaser.Math.DegToRad(90), false);
+    badge.fillPath();
+    badge.setPosition(
+      studioText.x + studioText.width / 2 + outerRadius + 5,
+      studioText.y + studioText.height * 0.1
+    );
+
+    const rightColX = centerX + 135;
+    const madeWithText = this.add
+      .text(rightColX, footerY, 'MADE WITH', {
+        fontFamily: '"Volkhov", serif',
+        fontSize: '11px',
+        color: '#1a1a1a',
+        align: 'center',
+        fontStyle: 'bold',
+        letterSpacing: 1,
+      })
+      .setOrigin(0.5, 0)
+      .setResolution(2);
 
     this.phaserLogo = this.add
-      .image(centerX, currentY, MISC.PHASER_PIXEL_MEDIUM_FLAT)
+      .image(
+        rightColX,
+        madeWithText.y + madeWithText.displayHeight + 4,
+        MISC.PHASER_PIXEL_MEDIUM_FLAT
+      )
       .setOrigin(0.5, 0)
-      .setAlpha(0.5)
+      .setAlpha(0.7)
       .setInteractive({ useHandCursor: true });
 
-    this.phaserLogo.on('pointerup', () => {
-      const url = 'https://phaser.io';
-      window.open(url, '_blank');
-    });
-
-    this.phaserLogo.on('pointerover', () => this.phaserLogo?.setAlpha(0.9));
-    this.phaserLogo.on('pointerout', () => this.phaserLogo?.setAlpha(0.5));
+    this.phaserLogo.on('pointerup', this.handleLogoClick);
+    this.phaserLogo.on('pointerover', this.handleLogoOver);
+    this.phaserLogo.on('pointerout', this.handleLogoOut);
 
     this.add
-      .text(centerX, this.phaserLogo.y + this.phaserLogo.displayHeight + 6, `v${Phaser.VERSION}`, {
-        fontFamily: 'Volkhov',
-        fontSize: '11px',
-        color: '#101010',
-        align: 'center',
-      })
-      .setOrigin(0.5, 0);
+      .text(
+        rightColX,
+        this.phaserLogo.y + this.phaserLogo.displayHeight + 3,
+        `v${Phaser.VERSION}`,
+        {
+          fontFamily: '"Volkhov", serif',
+          fontSize: '11px',
+          color: '#1a1a1a',
+          align: 'center',
+          fontStyle: 'bold',
+        }
+      )
+      .setOrigin(0.5, 0)
+      .setResolution(2);
 
     const backBtn = this.createButton(centerX, 550, {
       key: UI.MISC_UI_BACK_BTN,
       action: () => {
-        this.closeOptions();
+        this.closeCredits();
       },
     });
 
     this.buttons.push(backBtn);
   }
 
-  private closeOptions(): void {
-    this.phaserLogo?.disableInteractive();
-    this.phaserLogo?.destroy();
-    this.phaserLogo = null;
+  private createSoftParchmentGlow(x: number, y: number, w: number, h: number): void {
+    const key = 'credits_soft_glow';
+    if (!this.textures.exists(key)) {
+      const canvas = this.textures.createCanvas(key, w, h);
+      if (canvas) {
+        const ctx = canvas.getContext();
+        ctx.save();
+        ctx.translate(w / 2, h / 2);
+        ctx.scale(1, h / w);
+
+        const radius = w / 2;
+        const grad = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius);
+        grad.addColorStop(0, 'rgba(212, 193, 156, 0.58)');
+        grad.addColorStop(0.65, 'rgba(212, 193, 156, 0.32)');
+        grad.addColorStop(1, 'rgba(212, 193, 156, 0)');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(-radius, -radius, w, w);
+        ctx.restore();
+        canvas.refresh();
+      }
+    }
+    this.add.image(x, y, key);
+  }
+
+  private closeCredits(): void {
+    if (this.phaserLogo) {
+      this.phaserLogo.off('pointerup', this.handleLogoClick);
+      this.phaserLogo.off('pointerover', this.handleLogoOver);
+      this.phaserLogo.off('pointerout', this.handleLogoOut);
+      this.phaserLogo.disableInteractive();
+      this.phaserLogo.destroy();
+      this.phaserLogo = null;
+    }
+
+    if (this.textures.exists('credits_soft_glow')) {
+      this.textures.remove('credits_soft_glow');
+    }
 
     this.scene.wake('MainMenuScene');
     this.parentScene?.refreshMenu();

@@ -1,6 +1,12 @@
 {
   "name": "embercrest-rising",
-  "author": "Ilya Chernov",
+  "author": "Split Screen Squad",
+  "contributors": [
+    "Ilya \"Reitag\" Chernov",
+    "Artem \"sacrificengineer\" Sedov",
+    "Darya \"InkMoon\"",
+    "Petr \"PetRUalitY\" Brabich"
+  ],
   "description": "2D ARPG",
   "private": true,
   "version": "1.0.0-rc.2",

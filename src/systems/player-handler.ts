@@ -65,7 +65,7 @@ export class PlayerHandler {
       const modifiers = this.player.getModifier();
       save.buffs.forEach((buff) => {
         if (!modifiers.isModifierExist(buff)) {
-          const ui = ServiceLocator.resolve(ServiceKeys.ui);
+          /*const ui = ServiceLocator.resolve(ServiceKeys.ui);*/
 
           modifiers.addModifier(buff);
           modifiers.startModifier(buff, this.player);
