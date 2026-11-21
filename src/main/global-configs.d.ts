@@ -1,6 +1,13 @@
 import 'phaser';
 
 declare global {
+  interface Window {
+    electronAPI?: {
+      setFullscreen(flag: boolean): void;
+      getFullscreen(): Promise<boolean>;
+    };
+  }
+
   namespace Phaser {
     interface Game {
       audioService: {

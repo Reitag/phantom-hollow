@@ -192,3 +192,9 @@ export type SaveGame = {
     activePedestal: string | null;
   };
 };
+
+export type GameSettings = {
+  musicVolume: number;
+  sfxVolume: number;
+  fullscreen: boolean;
+};

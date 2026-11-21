@@ -282,6 +282,16 @@
     },
     {
       "type": "image",
+      "key": "misc-on-btn",
+      "url": "assets/ui/misc/misc-on-btn.png"
+    },
+    {
+      "type": "image",
+      "key": "misc-off-btn",
+      "url": "assets/ui/misc/misc-off-btn.png"
+    },
+    {
+      "type": "image",
       "key": "cursor",
       "url": "assets/ui/misc/cursor.png"
     },

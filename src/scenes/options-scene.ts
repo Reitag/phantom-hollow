@@ -2,12 +2,16 @@ import { BaseScene } from '@/base/scene/base-scene';
 import { Dialog } from '@/components/ui/dialog/dialog';
 import { UI } from '@/constants/asset-keys';
 import { SaveService } from '@/infrastructure/save-service';
+import { SettingsService } from '@/infrastructure/settings-service';
 import { MainMenuScene } from './main-menu';
 
 export class OptionsScene extends BaseScene {
   private parentScene: MainMenuScene | null = null;
   private showDeleteBtn: boolean = true;
   private fromPause: boolean = false;
+
+  private onEnterFullscreen?: () => void;
+  private onLeaveFullscreen?: () => void;
 
   constructor() {
     super('OptionsScene');
@@ -43,14 +47,17 @@ export class OptionsScene extends BaseScene {
     this.scene.bringToTop();
 
     const centerX = this.menuX;
-    let currentY = this.menuStartY - 120;
+    const startY = this.menuStartY - 200;
+    // Works from Main Menu
+    if (this.showDeleteBtn) this.createSoftParchmentGlow(centerX, 285, 740, 520);
 
-    this.createAudioControls(centerX, currentY);
+    this.createAudioControls(centerX, startY);
+    this.createDisplayControls(centerX, startY + 180);
 
     if (this.showDeleteBtn && SaveService.hasSave()) {
-      currentY += this.buttonHeight + this.menuGap * 3;
+      const deleteBtnY = startY + 280;
 
-      const deleteBtn = this.createButton(centerX, currentY + 120, {
+      const deleteBtn = this.createButton(centerX, deleteBtnY, {
         key: UI.MISC_UI_DLT_SAVE_DATA_BTN,
         action: () => {
           deleteBtn.disableInteractive();
@@ -87,10 +94,7 @@ export class OptionsScene extends BaseScene {
     let currentMusicVolume = Math.round(this.game.audioService.musicVolume * 100);
     let currentSFXVolume = Math.round(this.game.audioService.sfxVolume * 100);
 
-    let color = '#030303';
-    if (this.fromPause) {
-      color = '#ffffff';
-    }
+    const color = this.fromPause ? '#ffffff' : '#030303';
 
     // Music
     this.add
@@ -103,7 +107,7 @@ export class OptionsScene extends BaseScene {
       })
       .setOrigin(0.5);
 
-    const minusMusicBtn = this.createButton(x - 60, y + 40, {
+    const minusMusicBtn = this.createButton(x - 60, y + 35, {
       key: UI.MISC_UI_MINUS_BTN,
       action: () => {
         updateMusicVolume(currentMusicVolume - 10);
@@ -112,7 +116,7 @@ export class OptionsScene extends BaseScene {
     this.buttons.push(minusMusicBtn);
 
     const musicVolumeText = this.add
-      .text(x, y + 40, `${currentMusicVolume}%`, {
+      .text(x, y + 35, `${currentMusicVolume}%`, {
         fontFamily: 'Volkhov',
         fontSize: '16px',
         color: color,
@@ -121,7 +125,7 @@ export class OptionsScene extends BaseScene {
       })
       .setOrigin(0.5);
 
-    const plusMusicBtn = this.createButton(x + 60, y + 40, {
+    const plusMusicBtn = this.createButton(x + 60, y + 35, {
       key: UI.MISC_UI_PLUS_BTN,
       action: () => {
         updateMusicVolume(currentMusicVolume + 10);
@@ -139,7 +143,7 @@ export class OptionsScene extends BaseScene {
 
     // SFX
     this.add
-      .text(x, y + 100, 'SFX Volume', {
+      .text(x, y + 90, 'SFX Volume', {
         fontFamily: 'Volkhov',
         fontSize: '16px',
         color: color,
@@ -148,7 +152,7 @@ export class OptionsScene extends BaseScene {
       })
       .setOrigin(0.5);
 
-    const minusSfxBtn = this.createButton(x - 60, y + 140, {
+    const minusSfxBtn = this.createButton(x - 60, y + 125, {
       key: UI.MISC_UI_MINUS_BTN,
       action: () => {
         updateSFXVolume(currentSFXVolume - 10);
@@ -157,7 +161,7 @@ export class OptionsScene extends BaseScene {
     this.buttons.push(minusSfxBtn);
 
     const sfxVolumeText = this.add
-      .text(x, y + 140, `${currentSFXVolume}%`, {
+      .text(x, y + 125, `${currentSFXVolume}%`, {
         fontFamily: 'Volkhov',
         fontSize: '16px',
         color: color,
@@ -166,7 +170,7 @@ export class OptionsScene extends BaseScene {
       })
       .setOrigin(0.5);
 
-    const plusSfxBtn = this.createButton(x + 60, y + 140, {
+    const plusSfxBtn = this.createButton(x + 60, y + 125, {
       key: UI.MISC_UI_PLUS_BTN,
       action: () => {
         updateSFXVolume(currentSFXVolume + 10);
@@ -183,6 +187,64 @@ export class OptionsScene extends BaseScene {
     };
   }
 
+  private createDisplayControls(x: number, y: number): void {
+    const color = this.fromPause ? '#ffffff' : '#030303';
+
+    this.add
+      .text(x, y, 'Fullscreen', {
+        fontFamily: 'Volkhov',
+        fontSize: '16px',
+        color: color,
+        align: 'center',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+
+    const isElectron = Boolean(window.electronAPI);
+    let currentFullscreen = isElectron ? SettingsService.data.fullscreen : this.scale.isFullscreen;
+
+    const toggleBtn = this.createButton(x, y + 35, {
+      key: currentFullscreen ? UI.MISC_ON_BTN : UI.MISC_OFF_BTN,
+      action: () => {
+        if (window.electronAPI) {
+          currentFullscreen = !currentFullscreen;
+          window.electronAPI.setFullscreen(currentFullscreen);
+          SettingsService.patch({ fullscreen: currentFullscreen });
+          toggleBtn.setTexture(currentFullscreen ? UI.MISC_ON_BTN : UI.MISC_OFF_BTN);
+        } else {
+          if (this.scale.isFullscreen) {
+            this.scale.stopFullscreen();
+            SettingsService.patch({ fullscreen: false });
+          } else {
+            this.scale.startFullscreen();
+            SettingsService.patch({ fullscreen: true });
+          }
+        }
+      },
+    });
+    this.buttons.push(toggleBtn);
+
+    if (window.electronAPI) {
+      window.electronAPI.getFullscreen().then((realState) => {
+        currentFullscreen = realState;
+        if (toggleBtn.active) {
+          toggleBtn.setTexture(realState ? UI.MISC_ON_BTN : UI.MISC_OFF_BTN);
+        }
+      });
+    } else {
+      this.onEnterFullscreen = () => {
+        toggleBtn.setTexture(UI.MISC_ON_BTN);
+      };
+
+      this.onLeaveFullscreen = () => {
+        toggleBtn.setTexture(UI.MISC_OFF_BTN);
+      };
+
+      this.scale.on('enterfullscreen', this.onEnterFullscreen);
+      this.scale.on('leavefullscreen', this.onLeaveFullscreen);
+    }
+  }
+
   private closeOptions(): void {
     if (this.scene.get('MainMenuScene')) {
       this.scene.wake('MainMenuScene');
@@ -196,5 +258,19 @@ export class OptionsScene extends BaseScene {
     }
 
     this.scene.stop();
+  }
+
+  protected override cleanup(): void {
+    if (this.onEnterFullscreen) {
+      this.scale.off('enterfullscreen', this.onEnterFullscreen);
+      this.onEnterFullscreen = undefined;
+    }
+
+    if (this.onLeaveFullscreen) {
+      this.scale.off('leavefullscreen', this.onLeaveFullscreen);
+      this.onLeaveFullscreen = undefined;
+    }
+
+    super.cleanup();
   }
 }

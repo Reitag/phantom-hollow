@@ -168,13 +168,13 @@ export class PreloadScene extends Phaser.Scene {
 
           // Default sound volume
           this.sound.setVolume(1.0);
-          this.game.audioService.music.setVolume(0.4); // 40% Volume
-          this.game.audioService.sfx.setVolume(0.8); // 80% Volume
+          // Moved default volume handling to SettingsService
+          /*this.game.audioService.music.setVolume(0.4);
+          this.game.audioService.sfx.setVolume(0.8);*/
 
           registerGlobalAnimation(this.anims);
 
           // Instead of menu, starting spalsh scene
-          //this.scene.start('MainMenuScene');
           this.scene.start('SplashScene');
         });
       });

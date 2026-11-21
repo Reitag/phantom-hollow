@@ -173,31 +173,6 @@ export class CreditsScene extends BaseScene {
     this.buttons.push(backBtn);
   }
 
-  private createSoftParchmentGlow(x: number, y: number, w: number, h: number): void {
-    const key = 'credits_soft_glow';
-    if (!this.textures.exists(key)) {
-      const canvas = this.textures.createCanvas(key, w, h);
-      if (canvas) {
-        const ctx = canvas.getContext();
-        ctx.save();
-        ctx.translate(w / 2, h / 2);
-        ctx.scale(1, h / w);
-
-        const radius = w / 2;
-        const grad = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius);
-        grad.addColorStop(0, 'rgba(212, 193, 156, 0.58)');
-        grad.addColorStop(0.65, 'rgba(212, 193, 156, 0.32)');
-        grad.addColorStop(1, 'rgba(212, 193, 156, 0)');
-
-        ctx.fillStyle = grad;
-        ctx.fillRect(-radius, -radius, w, w);
-        ctx.restore();
-        canvas.refresh();
-      }
-    }
-    this.add.image(x, y, key);
-  }
-
   private closeCredits(): void {
     if (this.phaserLogo) {
       this.phaserLogo.off('pointerup', this.handleLogoClick);
@@ -206,10 +181,6 @@ export class CreditsScene extends BaseScene {
       this.phaserLogo.disableInteractive();
       this.phaserLogo.destroy();
       this.phaserLogo = null;
-    }
-
-    if (this.textures.exists('credits_soft_glow')) {
-      this.textures.remove('credits_soft_glow');
     }
 
     this.scene.wake('MainMenuScene');

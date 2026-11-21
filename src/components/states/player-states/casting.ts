@@ -17,6 +17,9 @@ export class Casting extends PlayerState {
   private castTime: number = 1;
   private sound: Phaser.Sound.BaseSound | null = null;
 
+  private castTimer: Phaser.Time.TimerEvent | null = null;
+  private instantCastTimer: Phaser.Time.TimerEvent | null = null;
+
   constructor(
     character: Player,
     input?: KeyboardController,
@@ -27,6 +30,8 @@ export class Casting extends PlayerState {
   }
 
   public onEnter(...args: unknown[]): void {
+    this.cleanupCast();
+
     const spell = args.find((elem): elem is string => typeof elem === 'string');
     if (spell === undefined) throw new Error('Expected string spell argument');
 
@@ -116,6 +121,36 @@ export class Casting extends PlayerState {
     }
   }
 
+  public onExit(): void {
+    this.interruptCast();
+    this.isInstantCasting = false;
+    this.instantCastTimer?.remove(false);
+    this.instantCastTimer = null;
+  }
+
+  private interruptCast(): void {
+    if (!this.isCasting) return;
+
+    this.cleanupCast();
+    this.character.anims.stop();
+    this.sound?.stop();
+    this.ui?.stopCast();
+  }
+
+  private cleanupCast(): void {
+    this.isCasting = false;
+
+    if (this.castTimer) {
+      this.castTimer.remove(false);
+      this.castTimer = null;
+    }
+
+    const animStartCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_START);
+    const animEndCast = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.CAST_END);
+    this.character.off(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animStartCast);
+    this.character.off(Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + animEndCast);
+  }
+
   private consumeInstantBuff(): void {
     (this.character.getStats().damage.spellPower as SpellPower).allowInstantCast = false;
     this.character.getModifier().removeModifier(ARCANE_MIND.id);
@@ -142,7 +177,9 @@ export class Casting extends PlayerState {
       }
     });
 
-    this.character.scene.time.delayedCall(duration, () => {
+    this.castTimer = this.character.scene.time.delayedCall(duration, () => {
+      this.castTimer = null;
+
       if (this.isCasting) {
         if (!this.character.getDead()) this.playAnimation(animEndCast);
         onComplete();
@@ -161,8 +198,10 @@ export class Casting extends PlayerState {
     const animKey = this.character.resolveAnimation(CHARACTER_ANIMATION_KEYS.CAST.INSTANT_CAST);
     this.playAnimation(animKey);
 
+    this.instantCastTimer?.remove(false);
     this.character.scene.time.delayedCall(200, () => {
       this.isInstantCasting = false;
+      this.instantCastTimer = null;
     });
 
     onComplete();

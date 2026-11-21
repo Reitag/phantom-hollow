@@ -1,3 +1,4 @@
+import { SettingsService } from '@/infrastructure/settings-service';
 import { PreloadScene } from '@/scenes/preload';
 import { UiScene } from '@/scenes/ui-scene';
 import { LevelOneScene } from '@/scenes/level-one-scene';
@@ -49,9 +50,11 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   },
   callbacks: {
     preBoot: function (game) {
+      const savedSettings = SettingsService.load();
+
       game.audioService = {
-        musicVolume: 0,
-        sfxVolume: 0,
+        musicVolume: savedSettings.musicVolume,
+        sfxVolume: savedSettings.sfxVolume,
 
         music: {
           play: (key, config = {}) => {
@@ -66,6 +69,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
           },
           setVolume: (volume) => {
             game.audioService.musicVolume = volume;
+            SettingsService.patch({ musicVolume: volume });
           },
         },
 
@@ -80,6 +84,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
           },
           setVolume: (volume) => {
             game.audioService.sfxVolume = volume;
+            SettingsService.patch({ sfxVolume: volume });
           },
         },
       };

@@ -218,6 +218,8 @@ export const UI = {
   MISC_PREV_DIS_BTN: 'misc-prev-dis-btn',
   MISC_NEXT_DIS_BTN: 'misc-next-dis-btn',
   MISC_UI_DLT_SAVE_DATA_BTN: 'misc-ui-dlt-save-data-btn',
+  MISC_ON_BTN: 'misc-on-btn',
+  MISC_OFF_BTN: 'misc-off-btn',
   CURSOR: 'cursor',
   HEALTH_POTION_ICON: 'health-potion-icon',
   NATURE_POTION_ICON: 'nature-potion-icon',
