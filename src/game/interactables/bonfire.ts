@@ -27,7 +27,7 @@ export class Bonfire extends Interactable {
   private circle: Phaser.GameObjects.Arc | null = null;
 
   // Dialog
-  private dialog: Dialog | null = null;
+  //private dialog: Dialog | null = null;
 
   constructor(scene: Phaser.Scene) {
     super(scene);
@@ -95,7 +95,7 @@ export class Bonfire extends Interactable {
 
     const uiScene = this.scene.scene.get('UiScene');
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
-    this.dialog = new Dialog(uiScene);
+    //this.dialog = new Dialog(uiScene);
 
     // Already active
     if (bonfire.activated) {
@@ -103,7 +103,11 @@ export class Bonfire extends Interactable {
       return;
     }
 
-    this.dialog.setWarningDialog('Set this campfire as a new spawn point?\nCost: 10 GOLD.');
+    ui.openConfirmDialog('Set this campfire as a new spawn point?\nCost: 10 GOLD.', () => {
+      this.settingNewSpawnPoint(bonfire);
+    });
+
+    /*this.dialog.setWarningDialog('Set this campfire as a new spawn point?\nCost: 10 GOLD.');
 
     this.dialog.once('confirm', () => {
       this.settingNewSpawnPoint(bonfire);
@@ -112,16 +116,18 @@ export class Bonfire extends Interactable {
     this.dialog.once('cancel', () => {
       this.destroyDialogBox();
       return;
-    });
+    });*/
   }
 
   protected onLeave(): void {
     this.ui.hideTooltip();
     this.stopHealing();
 
-    if (this.dialog) {
+    /*if (this.dialog) {
       this.destroyDialogBox();
-    }
+    }*/
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    ui.closeActiveDialog();
   }
 
   private settingNewSpawnPoint(bonfire: BonfireData): void {
@@ -131,7 +137,7 @@ export class Bonfire extends Interactable {
 
     // Not enough coins
     if (!coinKeeper.removeCoins(cost)) {
-      this.destroyDialogBox();
+      //this.destroyDialogBox();
       return;
     }
 
@@ -229,10 +235,10 @@ export class Bonfire extends Interactable {
     return this.bonfires.find((bonfire) => bonfire.zone === this.activeZone) ?? null;
   }
 
-  private destroyDialogBox(): void {
+  /*private destroyDialogBox(): void {
     if (this.dialog) {
       this.dialog.destroy();
       this.dialog = null;
     }
-  }
+  }*/
 }

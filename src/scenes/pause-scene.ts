@@ -40,11 +40,15 @@ export class PauseScene extends BaseScene {
     this.buttons.push(optionsBtn);
 
     // Menu
-    const specialMenyGap = 40;
     currentY += this.buttonHeight + this.menuGap;
-    const menuBtn = this.createButton(this.menuX, currentY + specialMenyGap, {
+    const menuBtn = this.createButton(this.menuX, currentY, {
       key: UI.PAUSE_UI_MAIN_MENU_BTN,
-      action: () => this.handleBackMainMenu(),
+
+      action: () => {
+        this.openConfirmDialog('Return to Main Menu? Unsaved progress will be lost.', () =>
+          this.handleBackMainMenu()
+        );
+      },
     });
     this.buttons.push(menuBtn);
   }

@@ -27,8 +27,6 @@ export class Dialog extends Phaser.Events.EventEmitter {
       font: '12px Arial',
       color: '#151515',
       stroke: '#dddddd',
-      //color: '#dddddd',
-      //stroke: '#151515',
       strokeThickness: 1,
       align: 'left',
       wordWrap: {
@@ -153,5 +151,9 @@ export class Dialog extends Phaser.Events.EventEmitter {
     if (this.yesButton) this.detachButtonEvents(this.yesButton);
     if (this.noButton) this.detachButtonEvents(this.noButton);
     if (this.warningDialog) this.warningDialog.destroy(true);
+
+    this.warningDialog = null;
+    this.yesButton = null;
+    this.noButton = null;
   }
 }

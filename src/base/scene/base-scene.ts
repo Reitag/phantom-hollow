@@ -1,3 +1,4 @@
+import { Dialog } from '@/components/ui/dialog/dialog';
 import { AUDIO, BACKGROUNDS, MISC, UI } from '@/constants/asset-keys';
 import { BUTTON_HOVERS } from '@/constants/button-hovers';
 import { Z_POSITION } from '@/constants/z-position';
@@ -8,6 +9,7 @@ export abstract class BaseScene extends Phaser.Scene {
   protected gameTitle: Phaser.GameObjects.Image | null = null;
   protected backgroundArt: Phaser.GameObjects.Image | null = null;
   protected gameVersion: Phaser.GameObjects.Text | null = null;
+  protected activeDialog: Dialog | null = null;
 
   constructor(key: string) {
     super(key);
@@ -156,6 +158,38 @@ export abstract class BaseScene extends Phaser.Scene {
     }
   }
 
+  protected openConfirmDialog(text: string, onConfirm: () => void, onCancel?: () => void): void {
+    if (this.activeDialog) return;
+
+    this.removeHoverEffect();
+    this.buttons.forEach((button) => button.disableInteractive());
+
+    const dialog = new Dialog(this);
+    this.activeDialog = dialog;
+    dialog.setWarningDialog(text);
+
+    const cleanupListeners = () => {
+      dialog.off('confirm', handleConfirm);
+      dialog.off('cancel', handleCancel);
+      this.activeDialog = null;
+    };
+
+    const handleConfirm = () => {
+      cleanupListeners();
+      this.buttons.forEach((button) => button.setInteractive());
+      onConfirm();
+    };
+
+    const handleCancel = () => {
+      cleanupListeners();
+      this.buttons.forEach((button) => button.setInteractive());
+      onCancel?.();
+    };
+
+    dialog.on('confirm', handleConfirm);
+    dialog.on('cancel', handleCancel);
+  }
+
   protected createSoftParchmentGlow(x: number, y: number, w: number, h: number): void {
     const key = 'soft_glow';
     if (!this.textures.exists(key)) {
@@ -198,5 +232,9 @@ export abstract class BaseScene extends Phaser.Scene {
     this.backgroundArt = null;
     this.gameVersion?.destroy();
     this.gameVersion = null;
+    this.activeDialog?.destroy();
+    this.activeDialog = null;
+
+    this.removeHoverEffect();
   }
 }

@@ -112,7 +112,19 @@ export class UiScene extends BaseScene {
     SaveService.setQuestState(QUEST_IDS.MAIN_QUEST, 'waiting');
   }
 
-  protected cleanup(): void {
+  /*protected cleanup(): void {
     this.detachStartMissionBtn();
+  }*/
+  protected override cleanup(): void {
+    this.detachStartMissionBtn();
+    this.ui?.closeActiveDialog();
+
+    if (this.overlayGraphics) {
+      this.tweens.killTweensOf(this.overlayGraphics);
+      this.overlayGraphics.destroy();
+      this.overlayGraphics = null;
+    }
+
+    super.cleanup();
   }
 }

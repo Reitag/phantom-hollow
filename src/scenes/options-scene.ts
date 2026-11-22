@@ -1,5 +1,4 @@
 import { BaseScene } from '@/base/scene/base-scene';
-import { Dialog } from '@/components/ui/dialog/dialog';
 import { UI } from '@/constants/asset-keys';
 import { SaveService } from '@/infrastructure/save-service';
 import { SettingsService } from '@/infrastructure/settings-service';
@@ -19,6 +18,9 @@ export class OptionsScene extends BaseScene {
 
   public init(data?: { showDeleteBtn?: boolean; fromPause?: boolean }): void {
     super.init();
+    this.showDeleteBtn = data?.showDeleteBtn ?? true;
+    this.fromPause = data?.fromPause ?? false;
+
     if (data && data.showDeleteBtn !== undefined) {
       this.showDeleteBtn = data.showDeleteBtn;
     }
@@ -56,23 +58,14 @@ export class OptionsScene extends BaseScene {
 
     if (this.showDeleteBtn && SaveService.hasSave()) {
       const deleteBtnY = startY + 280;
-
       const deleteBtn = this.createButton(centerX, deleteBtnY, {
         key: UI.MISC_UI_DLT_SAVE_DATA_BTN,
         action: () => {
-          deleteBtn.disableInteractive();
-
-          const dialog = new Dialog(this);
-          dialog.setWarningDialog('Are you sure you want to delete progress?');
-
-          dialog.once('confirm', () => {
+          this.openConfirmDialog('Are you sure you want to delete progress?', () => {
             SaveService.clear(true);
+            this.removeButtonListeners(deleteBtn);
             deleteBtn.destroy();
             this.buttons = this.buttons.filter((btn) => btn !== deleteBtn);
-          });
-
-          dialog.once('cancel', () => {
-            deleteBtn.setInteractive();
           });
         },
       });
@@ -246,17 +239,12 @@ export class OptionsScene extends BaseScene {
   }
 
   private closeOptions(): void {
-    if (this.scene.get('MainMenuScene')) {
-      this.scene.wake('MainMenuScene');
-    }
-    if (this.scene.get('PauseScene')) {
+    if (this.fromPause) {
       this.scene.wake('PauseScene');
+    } else {
+      this.scene.wake('MainMenuScene');
+      this.parentScene?.refreshMenu();
     }
-
-    if (this.parentScene && typeof this.parentScene.refreshMenu === 'function') {
-      this.parentScene.refreshMenu();
-    }
-
     this.scene.stop();
   }
 

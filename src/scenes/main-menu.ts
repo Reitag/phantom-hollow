@@ -1,5 +1,4 @@
 import { BaseScene } from '@/base/scene/base-scene';
-import { Dialog } from '@/components/ui/dialog/dialog';
 import { UI } from '@/constants/asset-keys';
 import { SaveService } from '@/infrastructure/save-service';
 
@@ -31,23 +30,13 @@ export class MainMenuScene extends BaseScene {
         key: UI.MENU_UI_START_BTN,
         action: () => {
           if (hasSave) {
-            this.buttons.forEach((button) => {
-              button.disableInteractive();
-            });
-
-            const dialog = new Dialog(this);
-            dialog.setWarningDialog('Starting a new game overwrites your current save. Continue?');
-
-            dialog.once('confirm', () => {
-              SaveService.clear(true);
-              this.scene.start('IntroScene');
-            });
-
-            dialog.once('cancel', () => {
-              this.buttons.forEach((button) => {
-                button.setInteractive();
-              });
-            });
+            this.openConfirmDialog(
+              'Starting a new game overwrites your current save. Continue?',
+              () => {
+                SaveService.clear(true);
+                this.scene.start('IntroScene');
+              }
+            );
           } else {
             this.scene.start('IntroScene');
           }

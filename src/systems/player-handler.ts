@@ -65,8 +65,6 @@ export class PlayerHandler {
       const modifiers = this.player.getModifier();
       save.buffs.forEach((buff) => {
         if (!modifiers.isModifierExist(buff)) {
-          /*const ui = ServiceLocator.resolve(ServiceKeys.ui);*/
-
           modifiers.addModifier(buff);
           modifiers.startModifier(buff, this.player);
         }
@@ -98,7 +96,7 @@ export class PlayerHandler {
       this.setPenaltyToPlayer();
 
       const ui = ServiceLocator.resolve(ServiceKeys.ui);
-      const dialog = ui.addWarningDialog('Do you want to return to your resurrection point?');
+      /*const dialog = ui.addWarningDialog('Do you want to return to your resurrection point?');
 
       dialog.once('confirm', () => {
         this.respawnAfterResurrect();
@@ -112,7 +110,21 @@ export class PlayerHandler {
           this.scene.scene.stop('LevelOneScene');
           this.scene.scene.start('MainMenuScene');
         });
-      });
+      });*/
+      ui.openConfirmDialog(
+        'Do you want to return to your resurrection point?',
+        () => {
+          this.respawnAfterResurrect();
+        },
+        () => {
+          this.scene.cameras.main.fadeOut(500);
+          this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+            this.scene.scene.stop('UiScene');
+            this.scene.scene.stop('LevelOneScene');
+            this.scene.scene.start('MainMenuScene');
+          });
+        }
+      );
     }
   }
 

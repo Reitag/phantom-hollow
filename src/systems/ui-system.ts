@@ -19,6 +19,8 @@ import { QuestLog } from '@/components/ui/boards/quest-log';
 import { Tutorial } from '@/components/ui/boards/tutorial';
 
 export class UiSystem {
+  private activeDialog: Dialog | null = null;
+
   private healthBar: PlayerHealthBar;
   private healthBarAnimator: HealthBarAnimator;
 
@@ -134,11 +136,45 @@ export class UiSystem {
     this.coins.decreaseCoins(amount);
   }
 
-  public addWarningDialog(text: string): Dialog {
+  /*public addWarningDialog(text: string): Dialog {
     const dialog = new Dialog(this.uiScene);
     dialog.setWarningDialog(text);
     return dialog;
+  }*/
+
+  // Dialog
+  public openConfirmDialog(text: string, onConfirm: () => void, onCancel?: () => void): void {
+    if (this.activeDialog) return;
+
+    const dialog = new Dialog(this.uiScene);
+    this.activeDialog = dialog;
+    dialog.setWarningDialog(text);
+
+    const cleanupListeners = () => {
+      dialog.off('confirm', handleConfirm);
+      dialog.off('cancel', handleCancel);
+      this.activeDialog = null;
+    };
+
+    const handleConfirm = () => {
+      cleanupListeners();
+      onConfirm();
+    };
+
+    const handleCancel = () => {
+      cleanupListeners();
+      onCancel?.();
+    };
+
+    dialog.on('confirm', handleConfirm);
+    dialog.on('cancel', handleCancel);
   }
+
+  public closeActiveDialog(): void {
+    this.activeDialog?.destroy();
+    this.activeDialog = null;
+  }
+  // End dialog
 
   public addWarningtext(text: string): void {
     this.text.addWarningTextOnScreen(text);

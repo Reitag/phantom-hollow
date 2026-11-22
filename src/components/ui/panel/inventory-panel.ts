@@ -161,7 +161,7 @@ export class InventoryPanel extends Panel {
     },
   };
 
-  private confirmDestroy(fromIndex: number): void {
+  /*private confirmDestroy(fromIndex: number): void {
     const ui = ServiceLocator.resolve(ServiceKeys.ui);
     const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
 
@@ -176,6 +176,23 @@ export class InventoryPanel extends Panel {
       inventory.updateUI();
       dialog.destroy();
     });
+  }*/
+  private confirmDestroy(fromIndex: number): void {
+    // Move the icon back to slot
+    this.moveItemToIndex(fromIndex);
+
+    const ui = ServiceLocator.resolve(ServiceKeys.ui);
+    const inventory = ServiceLocator.resolve(ServiceKeys.inventorySystem);
+
+    ui.openConfirmDialog(
+      'Do you want to destroy this item?',
+      () => {
+        inventory.destroySlot(fromIndex);
+      },
+      () => {
+        inventory.updateUI();
+      }
+    );
   }
 
   private moveItemToIndex(index: number): void {
